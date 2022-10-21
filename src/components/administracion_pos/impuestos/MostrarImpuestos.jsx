@@ -89,7 +89,7 @@ const MostrarSucursales = () => {
 
   return (
     <div className="container">
-      <h3>Lista de Sucursales</h3>
+      <h3>Lista de Impuestos</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
@@ -105,7 +105,7 @@ const MostrarSucursales = () => {
               aria-label="First group"
             >
               <Link
-                to="/crearsucursales"
+                to="/crearimpuesto"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

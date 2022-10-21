@@ -138,6 +138,7 @@ const Formulario = () => {
                     id="tipoImpuesto"
                     name="tipo"
                   >
+                    <option value="">Seleccionar...</option>
                     <option value="Inclusivo">Inclusivo</option>
                     <option value="Exclusivo">Exclusivo</option>
                   </Field>
@@ -177,7 +178,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarsucursales"
+              to="/mostrarimpuestos"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

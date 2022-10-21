@@ -149,7 +149,7 @@ const Formulario = () => {
             </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrarsucursales" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
+            <Link to="/mostrardescuentos" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
 
            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (

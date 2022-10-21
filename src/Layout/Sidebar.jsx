@@ -76,27 +76,57 @@ function Sidebar() {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link to="/">
+              <Link to="/mostrarcategorias">
                 <i className="bi bi-circle"></i>
-                <span>Opción 1</span>
+                <span>Categorías</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarsucursales">
+                <i className="bi bi-circle"></i>
+                <span>Sucursales</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarimpuestos">
+                <i className="bi bi-circle"></i>
+                <span>Impuestos</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrardescuentos">
+                <i className="bi bi-circle"></i>
+                <span>Descuentos</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarmetodopago">
+                <i className="bi bi-circle"></i>
+                <span>Métodos de Pago</span>
               </Link>
             </li>
             <li>
               <Link to="/">
                 <i className="bi bi-circle"></i>
-                <span>Opción 2</span>
+                <span>Modo Pedido</span>
               </Link>
             </li>
             <li>
               <Link to="/">
                 <i className="bi bi-circle"></i>
-                <span>Opción 3</span>
+                <span>Talonario SAR</span>
               </Link>
             </li>
             <li>
               <Link to="/">
                 <i className="bi bi-circle"></i>
-                <span>Opción 4</span>
+                <span>POS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/">
+                <i className="bi bi-circle"></i>
+                <span>Mesas</span>
               </Link>
             </li>
           </ul>
