@@ -1,51 +1,70 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const URL = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id: "",
+          id_categoria: "",
           descripcion: "",
-          estado: "Activo",
+          creado_por: null,
+          fecha_creacion: null,
+          modificado_por: null,
+          fecha_modificacion: null,
+          activo: "1",
         }}
-
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
           // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un id";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El id solo puede contener números";
+          if (!valores.id_categoria) {
+            errores.id_categoria = "Por favor ingresa un id";
+          } else if (!/^^[0-9]+$/.test(valores.id_categoria)) {
+            errores.id_categoria = "El id solo puede contener números";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } 
+          }
 
-          
           // Validacion estado
-          if (!valores.estado) {
-            errores.estado = "Por favor ingresa un estado";
-          } 
-
+          if (!valores.activo) {
+            errores.activo = "Por favor ingresa un estado";
+          }
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
+        onSubmit={async (valores) => {
           //Enviar los datos (petición Post)
+          //procedimineto para guardar el nuevo registro
+          try {
+            const res = await axios.post(URL, valores);
+            console.log(valores);
+               if (res.status === 200) {
+                alert("Guardado!");
+              } else {
+                alert("ERROR al Guardar :(");
+              }
+            navigate("/mostrarcategorias");
+          } catch (error) {
+            console.log(error);
+            alert("ERROR - No se ha podido insertar :(");
+          }
+
           console.log("Formulario enviado");
-
-
-          resetForm();
           setFormularioEnviado(true);
         }}
       >
@@ -62,13 +81,15 @@ const Formulario = () => {
                     type="text"
                     className="form-control"
                     id="idCategoria"
-                    name="id"
+                    name="id_categoria"
                     placeholder="ID de Categoria..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="id_categoria"
+                    component={() => (
+                      <div className="error">{errors.id_categoria}</div>
+                    )}
                   />
                 </div>
               </div>
@@ -105,27 +126,32 @@ const Formulario = () => {
                   as="select"
                   className="form-select"
                   id="estadoCategoria"
-                  name="estado"
-                > 
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
+                  name="activo"
+                >
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </Field>
 
                 <ErrorMessage
-                  name="estado"
-                  component={() => (
-                    <div className="error">{errors.estado}</div>
-                  )}
+                  name="activo"
+                  component={() => <div className="error">{errors.activo}</div>}
                 />
               </div>
               <hr />
             </div>
 
+            <button className="btn btn-success mb-3 me-2" type="submit">
+              Guardar
+            </button>
+            <Link
+              to="/mostrarcategorias"
+              type="button"
+              className="btn btn-danger mb-3 me-2"
+            >
+              Cancelar
+            </Link>
 
-            <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrarcategorias" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
-
-           {/*Mostrar mensaje de exito al enviar formulario */}
+            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
               <p className="exito">Formulario enviado con exito!</p>
             )}

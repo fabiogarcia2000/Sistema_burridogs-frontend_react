@@ -7,7 +7,7 @@ import Footer from "../Layout/Footer";
 import Home from "../pages/Home";
 import Productos from "../pages/inventario/Productos";
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
-import CrearSucursal from "../components/administracion_pos/sucursales/CrearSucursal";
+import CrearSucursal from "../components/administracion_pos/sucursales/PruebaCrearSucursal";
 import EditarSucursal from "../components/administracion_pos/sucursales/EditarSucursal";
 import MostrarCategorias from "../components/administracion_pos/categorias/MostrarCategorias";
 import CrearCategoria from "../components/administracion_pos/categorias/CrearCategoria"
@@ -32,7 +32,7 @@ function Rutas() {
             <Route path="/" element={<Home />} />
             {/*Rutas Administración POS*/}
             <Route path="/mostrarsucursales" element={<MostrarSucursales />} />
-            <Route path="/crearsucursales" element={<CrearSucursal />} />
+            <Route path="/crearsucursales/:id/:type" element={<CrearSucursal />} />
             <Route path='/editarsucursal/:id/:type' element={<EditarSucursal />} />
             <Route path="/mostrarcategorias" element={<MostrarCategorias />} />
             <Route path="/crearcategoria" element={<CrearCategoria />} />

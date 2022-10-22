@@ -4,10 +4,12 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 
-const URL = "https://jsonplaceholder.typicode.com/comments";
+const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
+const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
 
 const MostrarSucursales = () => {
   //Configurar los hooks
+  const [registroDelete, setRegistroDelete] = useState(0);
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
@@ -16,7 +18,7 @@ const MostrarSucursales = () => {
   //procedimineto para mostrar todos los registros
   const getRegistros = async () => {
     try {
-      const res = await axios.get(URL);
+      const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
@@ -25,9 +27,20 @@ const MostrarSucursales = () => {
   };
 
   //procedimineto para eliminar un registro
-  const deleteRegistro = async (id) => {
-    await axios.delete(`${URL}${id}`);
-    getRegistros();
+  const deleteRegistro = async () => {
+    try {
+      console.log(registroDelete)
+      const res = await axios.delete(`${UrlEliminar}${2}`);
+      getRegistros();
+      if (res.status === 200) {
+        alert("Eliminado!"); 
+      } else {
+        alert("ERROR al Eliminar :(");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("ERROR - No se ha podido eliminar :(");
+    }
   };
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -37,25 +50,43 @@ const MostrarSucursales = () => {
   const columns = [
     {
       name: "ID",
-      selector: (row) => row.id,
+      selector: (row) => row.id_categoria,
       sortable: true,
       maxWidth: "1px", //ancho de la columna
     },
     {
-      name: "NOMBRE",
-      selector: (row) => row.name,
+      name: "DESCRIPCIÓN",
+      selector: (row) => row.descripcion,
       sortable: true,
       maxWidth: "350px",
     },
     {
-      name: "EMAIL",
-      selector: (row) => row.email,
+      name: "CREADO POR",
+      selector: (row) => row.creado_por,
       sortable: true,
       maxWidth: "250px",
     },
     {
-      name: "CONTENIDO",
-      selector: (row) => row.body,
+      name: "FECHA CREACIÓN",
+      selector: (row) => row.fecha_creacion,
+      sortable: true,
+      maxWidth: "500px",
+    },
+    {
+      name: "MODIFICADO POR",
+      selector: (row) => row.modificado_por,
+      sortable: true,
+      maxWidth: "500px",
+    },
+    {
+      name: "FECHA MODIFICACIÓN",
+      selector: (row) => row.fecha_modificacion,
+      sortable: true,
+      maxWidth: "500px",
+    },
+    {
+      name: "ESTADO",
+      selector: (row) => row.activo,
       sortable: true,
       maxWidth: "500px",
     },
@@ -63,12 +94,24 @@ const MostrarSucursales = () => {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link to={`/editarsucursal/${row.id}/edit`} type="button" className="btn btn-light" title="Editar">
+          <Link
+            to={`/editarsucursal/${row.id}/edit`}
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+          >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
-
           &nbsp;
-          <button className="btn btn-light" title="Eliminar" onClick={abrirModalEliminar}>
+          <button
+            className="btn btn-light"
+            title="Eliminar"
+            onClick={() => {
+              setRegistroDelete(row.id);
+              console.log(row.id)
+              abrirModalEliminar();
+            }}
+          >
             <i className="fa-solid fa-trash"></i>
           </button>
         </>
@@ -176,7 +219,6 @@ const MostrarSucursales = () => {
         />
       </div>
 
-
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
         <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
@@ -184,7 +226,13 @@ const MostrarSucursales = () => {
           <p>¿Está seguro de Eliminar este Registro?</p>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onClick={abrirModalEliminar}>
+          <Button
+            color="danger"
+            onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+          >
             Eliminar
           </Button>
           <Button color="secondary" onClick={abrirModalEliminar}>

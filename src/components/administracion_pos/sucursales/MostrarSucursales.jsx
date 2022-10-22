@@ -63,7 +63,7 @@ const MostrarSucursales = () => {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link to={`/editarsucursal/${row.id}/edit`} type="button" className="btn btn-light" title="Editar">
+          <Link to={`/crearsucursales/${row.id}/edit`} type="button" className="btn btn-light" title="Editar">
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
 
@@ -105,7 +105,7 @@ const MostrarSucursales = () => {
               aria-label="First group"
             >
               <Link
-                to="/crearsucursales"
+                to={`/crearsucursales/0/new`}
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
