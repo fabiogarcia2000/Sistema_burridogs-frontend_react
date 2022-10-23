@@ -1,0 +1,126 @@
+img{
+    background-size: cover;
+    position: fixed;
+    filter: blur(5px);
+    width: 100%;
+    height: 110%;
+}
+body{
+    margin: 0;
+    padding: 0;
+    font-family: roboto;
+}
+
+.formulario{
+ position: absolute;
+    top: 50%;
+    left:50%;
+    width: 400px; 
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.788);
+    border-radius: 10px;
+}
+
+.formulario h1{
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 2px solid rgba(27, 2, 2, 0.315);
+    margin: 30px 0;;
+
+}
+.formulario .inputs{
+    padding: 0 40px;
+    font-weight: bold;
+}
+
+.inputs .username{
+    position: relative;
+    border-bottom: 2px solid rgba(27, 2, 2, 0.315);
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.username input{
+    width: 85%;
+    padding: 0 5px;
+    font-size: 16px;
+    border: none;
+    background: none;
+    outline: none;
+
+}
+.username label{
+    top:-15px;
+    color: rgb(0, 0, 0);
+    position: absolute;
+    font-weight: bold;
+}
+
+.username span::before{
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    background: gray;
+    transition: .5s;
+
+}
+
+::placeholder{
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.fa{
+    margin-right: -1px;
+}
+
+.ojos{
+    position: absolute;
+}
+
+#vista1{
+    display: none;
+}
+
+.username input:focus ~ span::before,
+.username input:focus ~ span::before{
+    width: 100%;
+}
+
+#recordar{
+   text-align: center;
+    color: rgb(240, 41, 41);
+    cursor: pointer;
+    margin: 0px 0 20px 0;
+    text-decoration: underline;
+  
+}
+
+.mensaje{
+    text-align: center;
+    color: rgb(240, 41, 41);
+    cursor: pointer;
+    margin: 0px 10px 20px 10px;
+}
+
+.btn{
+    width: 100%;
+    height: 50px;
+    margin: 10px 0 20px 0;
+    border:1px solid;
+    background: rgb(226, 40, 40);
+    border-radius: 25px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    outline: none;
+}
+
+
+.btn:hover{
+    border-color: rgb(0, 0, 0);
+    transition: .5s;
+}
+

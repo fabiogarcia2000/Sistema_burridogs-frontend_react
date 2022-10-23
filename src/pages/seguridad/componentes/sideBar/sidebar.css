@@ -1,0 +1,49 @@
+.sideBarcss{
+    width: 250px!important;
+    height: 100%!important;
+    float: left;
+    background:#e2e2e2;
+    bottom: 0px!important;
+    position: fixed;
+    min-height: 92vh;
+    padding-top: 100px;
+    padding-left:5px ;
+}
+.contenedorrutas{
+    /* background-color: blue; */
+    float: left;
+    width: 85%;
+    min-height: 850px;
+    height: 100%;
+    margin-top: 115px;
+    margin-left: 269px;
+}
+
+.padre{
+    /* background-color: #424242; */
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    
+}
+.hijos{
+    padding-top: 10px;
+    height: 330px;
+    margin-top: 15px;
+    /* background-color: #E2E2E2; */
+}
+.nodoHijo{
+    width: 100%;
+    float: left;
+    padding-left: 10px;
+    margin-top: 2px;
+}
+.txtPadre{
+text-align: center;   
+font-weight: bold;
+width: 94%;
+position: absolute;
+background-color: #424242;
+margin-bottom: 10px;
+}
