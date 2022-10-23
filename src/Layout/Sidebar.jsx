@@ -8,13 +8,11 @@ function Sidebar() {
   return (
     <aside id="sidebar" className={classSidebar}>
       <ul className="sidebar-nav" id="sidebar-nav">
-        
         <li className="nav-item">
           <Link className="nav-link " to="/">
             <i className="bi bi-grid"></i> <span>Dashboard</span>
           </Link>
         </li>
-
 
         <li className="nav-item">
           <Link
@@ -149,27 +147,33 @@ function Sidebar() {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link to="/">
+              <Link to="/mostrararticulos">
                 <i className="bi bi-circle"></i>
-                <span>Opción 1</span>
+                <span>Artículos</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarmateriales">
                 <i className="bi bi-circle"></i>
-                <span>Opción 2</span>
+                <span>Lista de Materiales</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarunidadesmedida">
                 <i className="bi bi-circle"></i>
-                <span>Opción 3</span>
+                <span>Unidades de Medida</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostraringresomds">
                 <i className="bi bi-circle"></i>
-                <span>Opción 4</span>
+                <span>Ingreso de Mercadería</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarsalidamds">
+                <i className="bi bi-circle"></i>
+                <span>Salida de Mercadería</span>
               </Link>
             </li>
           </ul>
