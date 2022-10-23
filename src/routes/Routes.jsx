@@ -38,6 +38,14 @@ import MostrarSalidaMds from "../components/inventario/salida_mds/MostrarSalidaM
 import CrearSalidaMds from "../components/inventario/salida_mds/CrearSalidaMds";
 import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds";
 
+//---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
+//USUARIOS
+import MostrarUsuarios from "../components/seguridad/usuario/MostrarUsuarios";
+import CrearUsuario from "../components/seguridad/usuario/MostrarUsuarios";
+import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
+
+
+
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
 
