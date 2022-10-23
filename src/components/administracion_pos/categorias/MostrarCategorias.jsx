@@ -9,7 +9,7 @@ const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
 
 const MostrarSucursales = () => {
   //Configurar los hooks
-  const [registroDelete, setRegistroDelete] = useState(0);
+  const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
@@ -30,7 +30,8 @@ const MostrarSucursales = () => {
   const deleteRegistro = async () => {
     try {
       console.log(registroDelete)
-      const res = await axios.delete(`${UrlEliminar}${2}`);
+      console.log("id arriba")
+      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
         alert("Eliminado!"); 
@@ -95,7 +96,7 @@ const MostrarSucursales = () => {
       cell: (row) => (
         <>
           <Link
-            to={`/editarsucursal/${row.id}/edit`}
+            to={`/editarsucursal/${row.id_categoria}/edit`}
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -107,8 +108,8 @@ const MostrarSucursales = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id);
-              console.log(row.id)
+              setRegistroDelete(row.id_categoria);
+              console.log(row.id_categoria);
               abrirModalEliminar();
             }}
           >

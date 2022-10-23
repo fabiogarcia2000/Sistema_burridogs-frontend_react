@@ -51,7 +51,7 @@ const Formulario = () => {
           //Enviar los datos (petición Post)
           //procedimineto para guardar el nuevo registro
           try {
-            const res = await axios.post(URL, valores);
+            const res = await axios.put(URL + valores.id_categoria, valores);
             console.log(valores);
                if (res.status === 200) {
                 alert("Guardado!");
