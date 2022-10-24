@@ -3,6 +3,7 @@ import './login.css';
 import burridogs from './loginbg.jpg';
 import { useHistory } from "react-router-dom";
  import {Registro} from "./../registro/Registro";
+ 
 
 
 export default function Login(props) {
@@ -35,6 +36,7 @@ export default function Login(props) {
         const data = {
             "usuario": refNombreUsuario.current.value,
             "pass": RefContrasena.current.value
+
         };
         console.log(data);
         enviarData ('http://localhost:3000/api/seguridad/login', data);

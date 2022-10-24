@@ -123,7 +123,7 @@ function Rutas() {
             {/*Rutas contabilidad*/}
 
             {/*Rutas seguridad*/}
-            <Route path="/login" element={<Registro />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/usuarios" element={<MostrarUsuarios />} />
 

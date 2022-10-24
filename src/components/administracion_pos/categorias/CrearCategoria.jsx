@@ -53,11 +53,11 @@ const Formulario = () => {
           try {
             const res = await axios.put(URL + valores.id_categoria, valores);
             console.log(valores);
-               if (res.status === 200) {
-                alert("Guardado!");
-              } else {
-                alert("ERROR al Guardar :(");
-              }
+            if (res.status === 200) {
+              alert("Guardado!");
+            } else {
+              alert("ERROR al Guardar :(");
+            }
             navigate("/mostrarcategorias");
           } catch (error) {
             console.log(error);
