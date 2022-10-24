@@ -2,12 +2,32 @@ import React from 'react';
 import { useForm } from "react-hook-form";
 import './Registro.css';
 import burridogs from './loginbg.jpg';
+import axios from 'axios';
+
+const URL = "http://190.53.243.69:3001/ms_registro/actualizar-insertar/";
 
 const Registro = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data);
+        try {
+            const res = await axios.put(URL, data);
+               if (res.status === 200) {
+                alert("Guardado!");
+              } else {
+                alert("ERROR al Guardar :(");
+              }
+          } catch (error) {
+            console.log(error);
+            alert("ERROR - No se ha podido insertar :(");
+          }
+
+
+
+
+
+
     }
 
     return <div className="background">
@@ -24,9 +44,9 @@ const Registro = () => {
                         <div className="fa fa-user-o"></div>
                         <input
                             type="text"
-                            name='nombre'
+                            name='nombre_usuario'
                             placeholder="Ingrese su nombre de usuario"
-                            {...register('nombre', {
+                            {...register('nombre_usuario', {
                                 required: true
                             })}
                         />
@@ -37,9 +57,9 @@ const Registro = () => {
                     <div className="username">
                         <input
                             type="text"
-                            name='correo'
+                            name='correo_electronico'
                             placeholder="Ingrese su correo electrónico"
-                            {...register("correo", {
+                            {...register("correo_electronico", {
                                 required: {
                                     value: true,
                                     message: "El campo es requerido"
