@@ -5,18 +5,12 @@ import { useParams } from "react-router-dom";
 
 const EditarUnidadMedida = () => {
   const { id } = useParams();
-  const { type } = useParams();
-  console.log(id);
-  console.log(type);
+
 
   //Configurar los hooks
   const [formularioEnviado, setFormularioEnviado] = useState(false);
 
-  if (type === "new") {
-    console.log("Crear Nuevo registro");
-  } else if (type === "edit") {
-    console.log("Editar un registro");
-  }
+
 
   return (
     <div className="container">

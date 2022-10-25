@@ -52,11 +52,11 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
-import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
+//import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
 //import CrearUsuario from "../components/seguridad/usuario/CrearUsuario";
 //import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
-import Login from "../pages/seguridad/login/Login"
-import Registro from "../pages/seguridad/registro/Registro"
+//import Login from "../pages/seguridad/login/Login"
+//import Registro from "../pages/seguridad/registro/Registro"
 
 
 
@@ -161,9 +161,7 @@ function Rutas() {
             {/*Rutas contabilidad*/}
 
             {/*Rutas seguridad*/}
-            <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Registro />} />
-            <Route path="/usuarios" element={<MostrarUsuarios />} />
+
 
 
             {/*Rutas reportes*/}
