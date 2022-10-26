@@ -45,7 +45,11 @@ import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
 //import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
 import Login from "../pages/seguridad/login/Login"
 import Registro from "../pages/seguridad/registro/Registro"
-
+import Pregunta from "../pages/seguridad/preguntas/Preguntas"
+import CambioContra from "../pages/seguridad/cambio_contrasena/cambio_contrasena"
+import RecuperacionContra from "../pages/seguridad/recuperacion_contrasena/recuperacion_contrasena"
+import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperacion_correo"
+import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/recuperacion_preguntas"
 
 
 function Rutas() {
@@ -126,7 +130,11 @@ function Rutas() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/usuarios" element={<MostrarUsuarios />} />
-
+            <Route path="/Preguntas" element={<Pregunta />} />
+            <Route path="/cambio_contrasena" element={<CambioContra />} />
+            <Route path="/recuperacion_contrasena" element={<RecuperacionContra />} />
+            <Route path="/recuperacion_correo" element={<RecuperacionCorreo />} />
+            <Route path="/recuperacion_preguntas" element={<RecuperacionPreguntas />} />
 
             {/*Rutas reportes*/}
 

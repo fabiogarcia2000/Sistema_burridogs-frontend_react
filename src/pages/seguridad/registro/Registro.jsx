@@ -38,7 +38,7 @@ const Registro = () => {
                 alt="burridogs" />
             <div className="formulario">
                 <div className="inputs">
-                    <h1>Inicio de Sesión</h1>
+                    <h1>Registro</h1>
 
                     <label>Nombre de usuario</label>
                     <div className="username">
@@ -105,18 +105,14 @@ const Registro = () => {
                         <input
                             type='password'
                             placeholder="Ingrese su contraseña"
-                            
+
                         />
-                  
                     </div>
-
-
-                    <button className='btn'>Ingresar</button>
+                    <button className='btn'>Registrarse</button>
 
                 </div>
             </div >
         </form>
-
     </div>
 }
 export default Registro;
