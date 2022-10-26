@@ -37,18 +37,6 @@ class Login extends React.Component {
 
     manejadorBoton = () => {
 
-        /* console.log(this.state.form)
-         await axios.get(URL, { params: { nombre_usuario: this.state.form.nombre_usuario, contrasena: this.state.form.contrasena } })
-             .then(response => {
-                 console.log(response.data);
-             })
-             .catch(error => {
-                 console.log(error);
- 
-             })
- 
- 
-     }*/
             console.log(this.state.form)
             axios.get(URL, this.state.form)
                 .then(response => {
@@ -74,15 +62,6 @@ class Login extends React.Component {
      };
 
 
-    /* try {
-               const response = await axios.get(URL);
-               this.setState(response.this.state.form);
-             } catch (error) {
-               console.log(error);
-               alert("ERROR - No se ha podido conectar con el servidor :(");
-             }
-           };*/
-
     render() {
         return (
             <React.Fragment>
@@ -101,13 +80,13 @@ class Login extends React.Component {
                                         {this.state.errorMsg}
                                     </div>
                                 }
-                                <label>Nombre de usuario</label>
+                                <label>Usuario</label>
                                 <div className="username">
                                     <div className="fa fa-user-o"></div>
                                     <input
                                         type="text"
                                         name='nombre_usuario'
-                                        placeholder="Ingrese su nombre de usuario"
+                                        placeholder="Ingrese su usuario"
                                         onChange={this.manejadorChange}
                                     />
                                 </div>
