@@ -55,6 +55,7 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 import Login from "../pages/seguridad/login/Login"
 import Registro from "../pages/seguridad/registro/Registro"
 import Pregunta from "../pages/seguridad/preguntas/Preguntas"
+import Usuarios from "../pages/seguridad/usuarios/Usuarios"
 import CambioContra from "../pages/seguridad/cambio_contrasena/cambio_contrasena"
 import RecuperacionContra from "../pages/seguridad/recuperacion_contrasena/recuperacion_contrasena"
 import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperacion_correo"
@@ -165,7 +166,7 @@ function Rutas() {
 
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
-            <Route path="/usuarios" element={<MostrarUsuarios />} />
+            <Route path="/usuarios" element={<Usuarios />} />
             <Route path="/Preguntas" element={<Pregunta />} />
             <Route path="/cambio_contrasena" element={<CambioContra />} />
             <Route path="/recuperacion_contrasena" element={<RecuperacionContra />} />
