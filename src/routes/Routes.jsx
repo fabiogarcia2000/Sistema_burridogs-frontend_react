@@ -52,12 +52,13 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
-//import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
-//import CrearUsuario from "../components/seguridad/usuario/CrearUsuario";
-//import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
-//import Login from "../pages/seguridad/login/Login"
-//import Registro from "../pages/seguridad/registro/Registro"
-
+import Login from "../pages/seguridad/login/Login"
+import Registro from "../pages/seguridad/registro/Registro"
+import Pregunta from "../pages/seguridad/preguntas/Preguntas"
+import CambioContra from "../pages/seguridad/cambio_contrasena/cambio_contrasena"
+import RecuperacionContra from "../pages/seguridad/recuperacion_contrasena/recuperacion_contrasena"
+import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperacion_correo"
+import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/recuperacion_preguntas"
 
 
 function Rutas() {
@@ -161,6 +162,15 @@ function Rutas() {
             {/*Rutas contabilidad*/}
 
             {/*Rutas seguridad*/}
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/usuarios" element={<MostrarUsuarios />} />
+            <Route path="/Preguntas" element={<Pregunta />} />
+            <Route path="/cambio_contrasena" element={<CambioContra />} />
+            <Route path="/recuperacion_contrasena" element={<RecuperacionContra />} />
+            <Route path="/recuperacion_correo" element={<RecuperacionCorreo />} />
+            <Route path="/recuperacion_preguntas" element={<RecuperacionPreguntas />} />
 
 
 
