@@ -52,13 +52,12 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
-<<<<<<< HEAD
 //import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
 //import CrearUsuario from "../components/seguridad/usuario/CrearUsuario";
 //import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
 //import Login from "../pages/seguridad/login/Login"
 //import Registro from "../pages/seguridad/registro/Registro"
-=======
+
 import Login from "../pages/seguridad/login/Login"
 import Registro from "../pages/seguridad/registro/Registro"
 import Pregunta from "../pages/seguridad/preguntas/Preguntas"
@@ -68,7 +67,6 @@ import RecuperacionContra from "../pages/seguridad/recuperacion_contrasena/recup
 import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperacion_correo"
 import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/recuperacion_preguntas"
 
->>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -164,8 +162,6 @@ function Rutas() {
             {/*Rutas contabilidad*/}
 
             {/*Rutas seguridad*/}
-<<<<<<< HEAD
-=======
 
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
@@ -177,7 +173,7 @@ function Rutas() {
             <Route path="/recuperacion_preguntas" element={<RecuperacionPreguntas />} />
 
 
->>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
+
 
             {/*Rutas reportes*/}
 
