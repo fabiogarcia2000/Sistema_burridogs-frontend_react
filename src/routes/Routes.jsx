@@ -17,6 +17,18 @@ import MostrarImpuestos from "../components/administracion_pos/impuestos/Mostrar
 import CrearImpuestos from "../components/administracion_pos/impuestos/CrearImpuesto";
 import MostrarMetodosPagos from "../components/administracion_pos/metodoPago/MostrarMetodoPago";
 import CrearMetodoPago from "../components/administracion_pos/metodoPago/CrearMetodoPago";
+import CrearModoPedido from "../components/administracion_pos/modoPedido/CrearModoPedido";
+import EditarModoPedido from "../components/administracion_pos/modoPedido/EditarModoPedido"
+import MostrarModoPedido from "../components/administracion_pos/modoPedido/MostrarModoPedido";
+import CrearTalonarioSAR from "../components/administracion_pos/talonarioSAR/crearTaSAR";
+import EditarTalonarioSAR from "../components/administracion_pos/talonarioSAR/editarTaSAR"
+import MostrarTalonarioSAR from "../components/administracion_pos/talonarioSAR/mostrarTaSAR";
+import CrearPOS from "../components/administracion_pos/POS/CrearPOS";
+import EditarPOS from "../components/administracion_pos/POS/EditarPOS";
+import MostrarPOS from "../components/administracion_pos/POS/MostrarPOS";
+import CrearMesas from "../components/administracion_pos/mesas/CrearMesas";
+import EditarMesas from "../components/administracion_pos/mesas/EditarMesas";
+import MostrarMesas from "../components/administracion_pos/mesas/MostrarMesas";
 
 import MostrarArticulos from "../components/inventario/articulos/MostrarArticulos";
 import CrearArticulo from "../components/inventario/articulos/CrearArticulo";
@@ -40,11 +52,23 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
+<<<<<<< HEAD
 //import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
 //import CrearUsuario from "../components/seguridad/usuario/CrearUsuario";
 //import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
 //import Login from "../pages/seguridad/login/Login"
 //import Registro from "../pages/seguridad/registro/Registro"
+=======
+import Login from "../pages/seguridad/login/Login"
+import Registro from "../pages/seguridad/registro/Registro"
+import Pregunta from "../pages/seguridad/preguntas/Preguntas"
+import Usuarios from "../pages/seguridad/usuarios/Usuarios"
+import CambioContra from "../pages/seguridad/cambio_contrasena/cambio_contrasena"
+import RecuperacionContra from "../pages/seguridad/recuperacion_contrasena/recuperacion_contrasena"
+import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperacion_correo"
+import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/recuperacion_preguntas"
+
+>>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -71,7 +95,33 @@ function Rutas() {
               element={<MostrarMetodosPagos />}
             />
             <Route path="/crearmetodopago" element={<CrearMetodoPago />} />
-
+            <Route path="/mostrarmodopedido" element={<MostrarModoPedido />}/>
+            <Route path="/crearmodopedido" element={<CrearModoPedido />} />
+            <Route
+              path="/editarmodopedido/:id/:type"
+              element={<EditarModoPedido />}
+            />
+            <Route path="/creartalonarioSAR" element={<CrearTalonarioSAR />}/>
+            <Route
+              path="/editarTaSAR/:id/:type"
+              element={<EditarTalonarioSAR />}
+            />
+            <Route path="/mostrartalonarioSAR" element={<MostrarTalonarioSAR />} />
+            <Route path="/crearPOS" element={<CrearPOS />}/>
+            
+            <Route path="/mostrarPOS" element={<MostrarPOS />} />
+            <Route
+              path="/editarPOS/:id/:type"
+              element={<EditarPOS />}
+            />
+            <Route path="/crearMesas" element={<CrearMesas />}/>
+            
+            <Route path="/mostrarMesas" element={<MostrarMesas />} />
+            <Route
+              path="/editarMesas/:id/:type"
+              element={<EditarMesas />}
+            />
+              
             <Route path="/productos" element={<Productos />} />
             {/*Rutas inventario*/}
 
@@ -114,6 +164,20 @@ function Rutas() {
             {/*Rutas contabilidad*/}
 
             {/*Rutas seguridad*/}
+<<<<<<< HEAD
+=======
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/usuarios" element={<Usuarios />} />
+            <Route path="/Preguntas" element={<Pregunta />} />
+            <Route path="/cambio_contrasena" element={<CambioContra />} />
+            <Route path="/recuperacion_contrasena" element={<RecuperacionContra />} />
+            <Route path="/recuperacion_correo" element={<RecuperacionCorreo />} />
+            <Route path="/recuperacion_preguntas" element={<RecuperacionPreguntas />} />
+
+
+>>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
 
             {/*Rutas reportes*/}
 

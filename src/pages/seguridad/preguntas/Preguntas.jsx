@@ -1,40 +1,75 @@
-import React, { useRef } from 'react';
+import React, { useState } from "react";
 import '../preguntas/login.css';
 import burridogs from '../preguntas/loginbg.jpg';
+import axios from 'axios';
 
-//url 
-/*const URL_LOGIN = ""
+const URLget = "http://190.53.243.69:3001/ms_pregunta/getall";
+const URLput = "http://190.53.243.69:3001/ms_pregunta_usuario/actualizar-insertar/";
 
+class Pregunta extends React.Component {
 
-const enviarData = async (url, data) => {
+    //const navigate = useNavigate();
+    state = {
+        preguntas: [],
 
-    const resp = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-type': 'application/json'
-        }
-    });
+        form: {
+            respuesta: ""
+        },
+        error: false,
+        errorMsg: ""
+    };
 
-    const json = await resp.json();
-}*/
-
-export default function Pregunta(props) {
-
+    componentDidMount() {
+        axios
+            .get(URLget)
+            .then(response => {
+                console.log(response);
+                this.setState({ preguntas: response.data })
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
     //capturar los datos ingresados
-   /* const refPregunta = useRef(null);
-    const RefRespuesta = useRef(null);
 
-    const handleLogin = () => {
-        const data = {
-          //  "usuario": refPregunta.current.value,
-            "contra": RefRespuesta.current.value
-        };
-        console.log(data);
-        //enviarData (URL_LOGIN, data);*/
+    manejadorChange = async e => {
+        await this.setState({
+            form: {
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
 
-    return (
-        <div className="background">
+    manejadorBoton = () => {
+
+        console.log(this.state.form)
+        axios.put(URLput, this.state.form)
+            .then(res => {
+                console.log(res)
+                try {
+                    const res = axios
+                        .put(URLput + this.state.form);
+                    console.log(this.state.form);
+                    if (res.status === 200) {
+                        alert("Guardado!");
+                    } else {
+                        alert("ERROR al Guardar :(");
+                    }
+                    // navigate("/mostrarcategorias");
+                } catch (error) {
+                    console.log(error);
+                    alert("ERROR - No se ha podido insertar :(");
+                }
+
+                console.log("Formulario enviado");
+                //  setFormularioEnviado(true);
+            })
+    }
+
+
+    render() {
+        return (< div className="background" >
             <img
                 src={burridogs}
                 alt="burridogs" />
@@ -44,30 +79,34 @@ export default function Pregunta(props) {
                 <h1>Preguntas secretas</h1>
                 <div className="inputs">
                     <label>Pregunta</label>
-                    <div className="username">
-                        <div className="fa fa-user-o"></div>
-                        <input
-                            type="text"
-                            placeholder="Seleccione su pregunta"
-                        />
+
+                    <div className="form-group">
+                        <select name='preguntas' className='form-control'>
+                            {this.state.preguntas.map(elemento => (
+                                <option key={elemento.id_pregunta} value={elemento.id_pregunta}>{elemento.pregunta} </option>
+                            )
+                            )}
+                        </select>
                     </div>
 
                     <label>Respuesta</label>
                     <div className="username">
                         <input
-                            type='password'
+                            type='text'
+                            name='respuesta'
                             placeholder="Ingrese su respuesta"
-                            //ref={RefRespuesta}
+                            onChange={this.manejadorChange}
                         />
                     </div>
 
                     <button
-                       // onClick={handleLogin}
-                        className='btn'>Ingresar</button>
-
+                        onClick={this.manejadorBoton}
+                        className='btn'>Siguiente</button>
                 </div>
-
             </div>
-        </div>
-    )
-}
+        </div >
+        )
+    };
+};
+
+export default Pregunta

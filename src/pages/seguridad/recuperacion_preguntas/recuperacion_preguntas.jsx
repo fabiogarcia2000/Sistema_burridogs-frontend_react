@@ -1,37 +1,12 @@
-import React, { useRef } from 'react';
+import React, { Component, useRef } from 'react';
 import '../recuperacion_preguntas/login.css';
 import burridogs from '../recuperacion_preguntas/loginbg.jpg';
+import axios from 'axios';
 
-//url 
-/*const URL_LOGIN = ""
-
-
-const enviarData = async (url, data) => {
-
-    const resp = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-type': 'application/json'
-        }
-    });
-
-    const json = await resp.json();
-}*/
 
 export default function RecuperacionPreguntas(props) {
 
-    //capturar los datos ingresados
-   /* const refPregunta = useRef(null);
-    const RefRespuesta = useRef(null);
 
-    const handleLogin = () => {
-        const data = {
-          //  "usuario": refPregunta.current.value,
-            "contra": RefRespuesta.current.value
-        };
-        console.log(data);
-        //enviarData (URL_LOGIN, data);*/
 
     return (
         <div className="background">
@@ -47,7 +22,7 @@ export default function RecuperacionPreguntas(props) {
                     <div className="username">
                         <div className="fa fa-user-o"></div>
                         <input
-                            type="text"
+                            type="combobox"
                             placeholder="Seleccione su pregunta"
                         />
                     </div>

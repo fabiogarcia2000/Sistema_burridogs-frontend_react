@@ -49,6 +49,7 @@ const Formulario = () => {
           try {
             const res = await axios.put(`${URL}${valores.cod_categoria}`, valores);
             console.log(valores);
+<<<<<<< HEAD
             console.log("Guardando....");
                if (res.status === 200) {
                 alert("Guardado!");
@@ -56,6 +57,14 @@ const Formulario = () => {
                 alert("ERROR al Guardar :(");
               }
             
+=======
+            if (res.status === 200) {
+              alert("Guardado!");
+            } else {
+              alert("ERROR al Guardar :(");
+            }
+            navigate("/mostrarcategorias");
+>>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
           } catch (error) {
             console.log(error);
             alert("ERROR - No se ha podido insertar :(");

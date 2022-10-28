@@ -3,25 +3,36 @@ import { useForm } from "react-hook-form";
 import './Registro.css';
 import burridogs from './loginbg.jpg';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { render } from '@testing-library/react';
 
-const URL = "http://190.53.243.69:3001/ms_registro/actualizar-insertar/";
+const URL = "http://190.53.243.69:3001/ms_registro/autoregistro";
 
 const Registro = () => {
+
+    const navigate = useNavigate();
+
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
         console.log(data);
         try {
-            const res = await axios.put(URL, data);
-               if (res.status === 200) {
+            const res = await axios.post(URL, data);
+            if (res.status === 200) {
                 alert("Guardado!");
-              } else {
+                navigate("../Login")
+
+            } else {
                 alert("ERROR al Guardar :(");
-              }
-          } catch (error) {
+            }
+        } catch (error) {
             console.log(error);
             alert("ERROR - No se ha podido insertar :(");
+<<<<<<< HEAD
           }
+=======
+        }
+>>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
     }
 
     return <div className="background">
@@ -31,7 +42,7 @@ const Registro = () => {
                 alt="burridogs" />
             <div className="formulario">
                 <div className="inputs">
-                    <h1>Inicio de Sesión</h1>
+                    <h1>Registro</h1>
 
                     <label>Nombre de usuario</label>
                     <div className="username">
@@ -43,6 +54,7 @@ const Registro = () => {
                             {...register('nombre_usuario', {
                                 required: true
                             })}
+
                         />
                         {errors.nombre && <span>{errors.nombre.message}</span>}
                     </div>
@@ -97,15 +109,14 @@ const Registro = () => {
                         <input
                             type='password'
                             placeholder="Ingrese su contraseña"
+
                         />
                     </div>
-
-                    <button className='btn'>Ingresar</button>
+                    <button className='btn'>Registrarse</button>
 
                 </div>
             </div >
         </form>
-
     </div>
 }
 export default Registro;

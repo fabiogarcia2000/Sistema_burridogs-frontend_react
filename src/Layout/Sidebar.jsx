@@ -103,26 +103,26 @@ function Sidebar() {
                 <span>Métodos de Pago</span>
               </Link>
             </li>
-            <li>
-              <Link to="/">
+           <li>
+              <Link to="/mostrarmodopedido">
                 <i className="bi bi-circle"></i>
                 <span>Modo Pedido</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrartalonarioSAR">
                 <i className="bi bi-circle"></i>
                 <span>Talonario SAR</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarPOS">
                 <i className="bi bi-circle"></i>
                 <span>POS</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarmesas">
                 <i className="bi bi-circle"></i>
                 <span>Mesas</span>
               </Link>

@@ -1,41 +1,45 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useParams } from "react-router-dom";
 
-const EditarUnidadMedida = () => {
-  const { id } = useParams();
-
-
-  //Configurar los hooks
+const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
-
-
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
-
         initialValues={{
-          id: id,
+          id_modo_pedido: "",
           descripcion: "",
+          creado_por: "",
+          fecha_creacion: "",
+          modificado_por: "",
+          fecha_modificacion: "",
+          estado: "Activo",
         }}
+
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
           // Validacion id
           if (!valores.id) {
-            errores.id = "Por favor ingresa un código";
+            errores.id = "Por favor ingresa un id";
           } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El código solo puede contener números";
+            errores.id = "El id solo puede contener números";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          }
+          } 
+
+          // Validacion estado
+          if (!valores.estado) {
+            errores.estado = "Por favor ingresa un estado";
+          } 
+
 
           return errores;
         }}
@@ -43,45 +47,48 @@ const EditarUnidadMedida = () => {
           //Enviar los datos (petición Post)
           console.log("Formulario enviado");
 
+
           resetForm();
           setFormularioEnviado(true);
         }}
       >
         {({ errors }) => (
           <Form className="formulario">
-            <h3 className="mb-3">Editar Unidad de Medida</h3>
+            <h3 className="mb-3">Nuevo Modo Pedido</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idSucursal" className="form-label">
-                    Código:
+                  <label htmlFor="idModoPedido" className="form-label">
+                    ID de Modo Pedido:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idSucursal"
+                    id="idModoPedido"
                     name="id"
-                    placeholder="Código de la medida..."
+                    placeholder="ID de ModoPedido..."
                   />
 
                   <ErrorMessage
                     name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    component={() => (
+                      <div className="error">{errors.id}</div>
+                    )}
                   />
                 </div>
               </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="descripcionSucursal" className="form-label">
+                  <label htmlFor="descripcionModoPedido" className="form-label">
                     Descripción:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionSucursal"
+                    id="descripcionModoPedido"
                     name="descripcion"
-                    placeholder="Descripcion de la unidad de medida..."
+                    placeholder="Descripcion..."
                   />
 
                   <ErrorMessage
@@ -94,18 +101,36 @@ const EditarUnidadMedida = () => {
               </div>
             </div>
 
-            <button className="btn btn-success mb-3 me-2" type="submit">
-              Guardar
-            </button>
-            <Link
-              to="/mostrarunidadesmedida"
-              type="button"
-              className="btn btn-danger mb-3 me-2"
-            >
-              Cancelar
-            </Link>
+            <div className="row g-3">
+              <div className="col-md-4 mb-3">
+                <label htmlFor="estadoModoPedido" className="form-label">
+                  Estado:
+                </label>
+                <Field
+                  as="select"
+                  className="form-select"
+                  id="estadoMetodoPedido"
+                  name="estado"
+                > 
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                </Field>
 
-            {/*Mostrar mensaje de exito al enviar formulario */}
+                <ErrorMessage
+                  name="estado"
+                  component={() => (
+                    <div className="error">{errors.estado}</div>
+                  )}
+                />
+              </div>
+              <hr />
+            </div>
+
+
+            <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
+            <Link to="/mostrarmodopedido" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
+
+           {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
               <p className="exito">Formulario enviado con exito!</p>
             )}
@@ -116,4 +141,4 @@ const EditarUnidadMedida = () => {
   );
 };
 
-export default EditarUnidadMedida;
+export default Formulario;

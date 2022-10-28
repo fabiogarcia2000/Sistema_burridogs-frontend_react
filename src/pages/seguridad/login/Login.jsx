@@ -1,102 +1,138 @@
-import React, { useRef } from 'react';
+import React from 'react';
+//import React, { Component, useRef } from 'react';
 import './login.css';
 import burridogs from './loginbg.jpg';
-import { useHistory } from "react-router-dom";
- import {Registro} from "./../registro/Registro";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
-export default function Login(props) {
+const URL = "http://190.53.243.69:3001/ms_login/login";
 
-    const enviarData = async (url, data) => {
 
-        const resp = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then(response => response.json())
-        .then(responseJson => {  
-            console.log(responseJson)
-            if(responseJson[0].msg=="DATOS CORRECTOS"){
-                //return <Registro/>;
-               // this.props.history.push("./pages/login/Login")
-                // history.push('./pages/login/Login')
-              // React.lazy(() => import("./../usuarios/Usuarios"));
-            }
-        });
-    
-    }
+class Login extends React.Component {
+
+
     //capturar los datos ingresados
-    const refNombreUsuario = useRef(null);
-    const RefContrasena = useRef(null);
-
-    const handleLogin = () => {
-        const data = {
-            "usuario": refNombreUsuario.current.value,
-            "pass": RefContrasena.current.value
-        };
-        console.log(data);
-        enviarData ('http://localhost:3000/api/seguridad/login', data);
-
+    state = {
+        form: {
+            nombre_usuario: "",
+            contrasena: ""
+        },
+        error: false,
+        errorMsg: ""
     }
 
-    return (
-        <div className="background">
-            <img
-                src={burridogs}
-                alt="burridogs" />
+    manejadorSubmit = e => {
+        e.preventDefault();
+    }
 
-            <div className="formulario">
+    manejadorChange = async e => {
+        await this.setState({
+            form: {
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
 
-                <h1>Inicio de Sesión</h1>
-                <div className="inputs">
-                    <label>Nombre de usuario</label>
-                    <div className="username">
-                        <div className="fa fa-user-o"></div>
-                        <input
-                            type="text"
-                            placeholder="Ingrese su nombre de usuario"
-                            ref={refNombreUsuario}
-                        />
+    manejadorBoton = () => {
+
+            console.log(this.state.form)
+            axios.get(URL, this.state.form)
+                .then(response => {
+                    console.log(response)
+                    if (response.data === 200) {
+                        console.log(response)
+                        //  localStorage.setItem
+                        console.log("entro correctamente")
+                    } else {
+                        this.setState({
+                            error: true,
+                            errorMsg: "fallamos"
+
+                        })
+                    }
+                }).catch(error => {
+                    console.log(error);
+                    this.setState({
+                        error: true,
+                        errorMsg: "Error al conectar con la api"
+                    })
+                })
+     };
+
+
+    render() {
+        return (
+            <React.Fragment>
+                <div className="background">
+                    <img
+                        src={burridogs}
+                        alt="burridogs" />
+
+                    <div className="formulario">
+
+                        <h1>Inicio de Sesión</h1>
+                        <form onSubmit={this.manejadorSubmit}>
+                            <div className="inputs">
+                                {this.state.error === true &&
+                                    <div className="alert alert-danger" role="alert">
+                                        {this.state.errorMsg}
+                                    </div>
+                                }
+                                <label>Usuario</label>
+                                <div className="username">
+                                    <div className="fa fa-user-o"></div>
+                                    <input
+                                        type="text"
+                                        name='nombre_usuario'
+                                        placeholder="Ingrese su usuario"
+                                        onChange={this.manejadorChange}
+                                    />
+                                </div>
+
+                                <label>Contraseña</label>
+                                <div className="username">
+                                    <input
+                                        type='password'
+                                        name='contrasena'
+                                        placeholder="Ingrese su contraseña" required
+                                        onChange={this.manejadorChange}
+                                    />
+                                </div>
+
+                                <button
+                                    onClick={this.manejadorBoton}
+                                    className="btn">Ingresar
+
+                                </button>
+
+
+                                <Link
+                                    to="/recuperacion_contrasena"
+                                    type="btn"
+                                    className="btn btn-danger mb-3 me-2"
+                                >
+                                    ¿Olvidó su contraseña?
+                                </Link>
+
+
+                                <Link
+                                    to="/registro"
+                                    type="btn"
+                                    className="btn btn-danger mb-3 me-2"
+                                >
+                                    Registrarse
+                                </Link>
+
+                            </div>
+                        </form>
                     </div>
 
-                    <label>Contraseña</label>
-                    <div className="username">
-                        <input
-                            type='password'
-                            placeholder="Ingrese su contraseña"
-                            ref={RefContrasena}
-                       /* secureTextEntry={isSecureEntry}
-                        icon={
-                            <TouchableOpacity
-                                onPress={() => { 
-                                    setIsSecureEntry((prev) => !prev);
-                                }}>
-                                <Text>{isSecureEntry ? 'show' : 'Hide'}</Text>
-                            </TouchableOpacity>
-                        }
-                        iconPosition="right"
-                        onChangeText={(value) => {
-                            onChange({name: 'password',value});
-                        }}*/
-                        />
-                        
-                    </div>
-
-                    <button
-                        onClick={handleLogin}
-                        className="btn">Ingresar</button>
-
-                    <div id="recordar" className='card-footer'>
-                        <a href="https://">¿Olvidó su contraseña?</a>
-                    </div>
-
-
-                    <button className='btn'>Registrarse</button>
                 </div>
-
-            </div>
-        </div>
-    )
+            </React.Fragment>
+        )
+    }
 }
+export default Login
+
