@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { useGlobalState } from "../../stateEdit"; 
 import axios from "axios";
 
 const URL = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
-const Formulario = () => {
+
+ const FormularioEditar = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [edit, updateEdit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
 
@@ -16,19 +19,20 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          cod_categoria: "",
-          descripcion: "",
-          activo: "1",
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",         
+          cod_categoria: edit.cod_categoria,
+          descripcion: edit.descripcion,
+          activo: edit.activo,
+          modificado_por: "autorPrueba",
+          fecha_modificacion: "2022/10/27"
         }}
+
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
           // Validacion de código
           if (!valores.cod_categoria) {
-            errores.cod_categoria = "Por favor ingresa un código";
+            errores.cod_categoria = "Por favor ingresar un código";
           }
 
           // Validacion descripción
@@ -44,31 +48,23 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //Enviar los datos (petición Put)
+          //Enviar los datos (petición Post)
           //procedimineto para guardar el nuevo registro
           try {
             const res = await axios.put(`${URL}${valores.cod_categoria}`, valores);
             console.log(valores);
-
-            console.log("Guardando....");
+            console.log("Insertando....");
                if (res.status === 200) {
                 alert("Guardado!");
               } else {
                 alert("ERROR al Guardar :(");
               }
-
-            if (res.status === 200) {
-              alert("Guardado!");
-            } else {
-              alert("ERROR al Guardar :(");
-            }
-            navigate("/mostrarcategorias");
-
+            
           } catch (error) {
             console.log(error);
             alert("ERROR - No se ha podido insertar :(");
           }
-
+  
           console.log("Formulario enviado");
           setFormularioEnviado(true);
           navigate("/mostrarcategorias");
@@ -76,7 +72,7 @@ const Formulario = () => {
       >
         {({ errors }) => (
           <Form className="formulario">
-            <h3 className="mb-3">Nueva Categoría</h3>
+            <h3 className="mb-3">Editar Categoría</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -89,6 +85,7 @@ const Formulario = () => {
                     id="codCategoria"
                     name="cod_categoria"
                     placeholder="Código..."
+                    
                   />
 
                   <ErrorMessage
@@ -157,9 +154,9 @@ const Formulario = () => {
               Cancelar
             </Link>
 
-            {/*Mostrar mensaje de éxito al enviar formulario */}
+            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
-              <p className="exito">Formulario enviado con éxito!</p>
+              <p className="exito">Formulario enviado con exito!</p>
             )}
           </Form>
         )}
@@ -168,4 +165,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default FormularioEditar;
