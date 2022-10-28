@@ -335,7 +335,7 @@ function Sidebar() {
         <li className="nav-heading">Más</li>
         <li className="nav-item">
           <Link className="nav-link collapsed" to="/">
-            <i class="bi bi-person"></i> <span>Opción 1</span>
+            <i className="bi bi-person"></i> <span>Opción 1</span>
           </Link>
         </li>
         <li className="nav-item">

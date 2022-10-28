@@ -7,7 +7,7 @@ import Footer from "../Layout/Footer";
 import Home from "../pages/Home";
 import Productos from "../pages/inventario/Productos";
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
-import CrearSucursal from "../components/administracion_pos/sucursales/PruebaCrearSucursal";
+import EditarCategoria from "../components/administracion_pos/categorias/EditarCategoria";
 import EditarSucursal from "../components/administracion_pos/sucursales/EditarSucursal";
 import MostrarCategorias from "../components/administracion_pos/categorias/MostrarCategorias";
 import CrearCategoria from "../components/administracion_pos/categorias/CrearCategoria";
@@ -40,13 +40,11 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
-import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
+//import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
 //import CrearUsuario from "../components/seguridad/usuario/CrearUsuario";
 //import EditarUsuario from "../components/seguridad/usuario/MostrarUsuarios";
-import Login from "../pages/seguridad/login/Login"
-import Registro from "../pages/seguridad/registro/Registro"
-
-
+//import Login from "../pages/seguridad/login/Login"
+//import Registro from "../pages/seguridad/registro/Registro"
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -61,16 +59,9 @@ function Rutas() {
             <Route path="/" element={<Home />} />
             {/*Rutas Administración POS*/}
             <Route path="/mostrarsucursales" element={<MostrarSucursales />} />
-            <Route
-              path="/crearsucursales/:id/:type"
-              element={<CrearSucursal />}
-            />
-            <Route
-              path="/editarsucursal/:id/:type"
-              element={<EditarSucursal />}
-            />
             <Route path="/mostrarcategorias" element={<MostrarCategorias />} />
             <Route path="/crearcategoria" element={<CrearCategoria />} />
+            <Route path="/editarcategoria/:id" element={<EditarCategoria />} />
             <Route path="/mostrardescuentos" element={<MostrarDescuentos />} />
             <Route path="/creardescuento" element={<CrearDescuento />} />
             <Route path="/mostrarimpuestos" element={<MostrarImpuestos />} />
@@ -123,10 +114,6 @@ function Rutas() {
             {/*Rutas contabilidad*/}
 
             {/*Rutas seguridad*/}
-            <Route path="/login" element={<Registro />} />
-            <Route path="/registro" element={<Registro />} />
-            <Route path="/usuarios" element={<MostrarUsuarios />} />
-
 
             {/*Rutas reportes*/}
 

@@ -22,12 +22,6 @@ const Registro = () => {
             console.log(error);
             alert("ERROR - No se ha podido insertar :(");
           }
-
-
-
-
-
-
     }
 
     return <div className="background">

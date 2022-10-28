@@ -13,7 +13,7 @@ const Formulario = () => {
   //Configurar los hooks
   const [formularioEnviado, setFormularioEnviado] = useState(false);
   
-  const [valoresEditar, setvaloresEditar] = useState('654');
+  const [valoresEditar, setvaloresEditar] = useState([]);
   const [valoresEditar2, setvaloresEditar2] = useState('');
 
   const { id }  = useParams();
@@ -38,12 +38,9 @@ const Formulario = () => {
   const registro = async () => {
     try {
       const res = await axios.get(`${URL}${id}`);
-      setvaloresEditar(res.data.id);
-      setvaloresEditar2(res.data.title);
+      setvaloresEditar(res.data);
 
-
-      console.log((valoresEditar));
-      console.log(valoresEditar2);
+      console.log(res.data);
 
     } catch (error) {
       console.log(error);
