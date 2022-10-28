@@ -16,19 +16,23 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          cod_categoria: "",
+          id_categoria: "",
           descripcion: "",
+          creado_por: null,
+          fecha_creacion: null,
+          modificado_por: null,
+          fecha_modificacion: null,
           activo: "1",
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",         
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion de código
-          if (!valores.cod_categoria) {
-            errores.cod_categoria = "Por favor ingresa un código";
+          // Validacion id
+          if (!valores.id_categoria) {
+            errores.id_categoria = "Por favor ingresa un id";
+          } else if (!/^^[0-9]+$/.test(valores.id_categoria)) {
+            errores.id_categoria = "El id solo puede contener números";
           }
 
           // Validacion descripción
@@ -44,18 +48,22 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //Enviar los datos (petición Put)
+          //Enviar los datos (petición Post)
           //procedimineto para guardar el nuevo registro
           try {
-            const res = await axios.put(`${URL}${valores.cod_categoria}`, valores);
+            const res = await axios.put(URL + valores.id_categoria, valores);
             console.log(valores);
 <<<<<<< HEAD
+<<<<<<< HEAD
             console.log("Guardando....");
+=======
+>>>>>>> parent of ca7bf99 (crud completo en categoria)
                if (res.status === 200) {
                 alert("Guardado!");
               } else {
                 alert("ERROR al Guardar :(");
               }
+<<<<<<< HEAD
             
 =======
             if (res.status === 200) {
@@ -65,6 +73,9 @@ const Formulario = () => {
             }
             navigate("/mostrarcategorias");
 >>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
+=======
+            navigate("/mostrarcategorias");
+>>>>>>> parent of ca7bf99 (crud completo en categoria)
           } catch (error) {
             console.log(error);
             alert("ERROR - No se ha podido insertar :(");
@@ -72,30 +83,29 @@ const Formulario = () => {
 
           console.log("Formulario enviado");
           setFormularioEnviado(true);
-          navigate("/mostrarcategorias");
         }}
       >
         {({ errors }) => (
           <Form className="formulario">
-            <h3 className="mb-3">Nueva Categoría</h3>
+            <h3 className="mb-3">Nueva Categoria</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="codCategoria" className="form-label">
-                    Código:
+                  <label htmlFor="idCategoria" className="form-label">
+                    ID de Categoria:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="codCategoria"
-                    name="cod_categoria"
-                    placeholder="Código..."
+                    id="idCategoria"
+                    name="id_categoria"
+                    placeholder="ID de Categoria..."
                   />
 
                   <ErrorMessage
-                    name="cod_categoria"
+                    name="id_categoria"
                     component={() => (
-                      <div className="error">{errors.cod_categoria}</div>
+                      <div className="error">{errors.id_categoria}</div>
                     )}
                   />
                 </div>
@@ -158,9 +168,9 @@ const Formulario = () => {
               Cancelar
             </Link>
 
-            {/*Mostrar mensaje de éxito al enviar formulario */}
+            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
-              <p className="exito">Formulario enviado con éxito!</p>
+              <p className="exito">Formulario enviado con exito!</p>
             )}
           </Form>
         )}

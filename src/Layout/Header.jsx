@@ -49,7 +49,7 @@ function Header() {
               <li className="dropdown-header">                
                 Tienes 4 notificaciones nuevas
                 <Link to="/">
-                  <span className="badge rounded-pill bg-primary p-2 ms-2">
+                  <span class="badge rounded-pill bg-primary p-2 ms-2">
                   Ver todo
                   </span>
                 </Link>

@@ -30,9 +30,18 @@ const Registro = () => {
             alert("ERROR - No se ha podido insertar :(");
 <<<<<<< HEAD
           }
+<<<<<<< HEAD
 =======
         }
 >>>>>>> 4fc0773107b1b2afa3ecbdd809dafca2491d9834
+=======
+
+
+
+
+
+
+>>>>>>> parent of ca7bf99 (crud completo en categoria)
     }
 
     return <div className="background">

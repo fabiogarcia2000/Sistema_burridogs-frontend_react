@@ -64,7 +64,7 @@ const MostrarMateriales = () => {
       name: "SOCIO DE NEGOCIO",
       selector: (row) => row.body,
       sortable: true,
-      maxWidth: "400px",
+      maxWidth: "230px",
     },
 
     {
