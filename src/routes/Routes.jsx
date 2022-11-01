@@ -47,6 +47,10 @@ import MostrarArticulos from "../components/inventario/articulos/MostrarArticulo
 import CrearArticulo from "../components/inventario/articulos/CrearArticulo";
 import EditarArticulo from "../components/inventario/articulos/EditarArticulo";
 
+import CrearCentroCosto from "../components/inventario/centro_Costo/CrearCentroCosto";
+import EditarCentroCosto from "../components/inventario/centro_Costo/EditarCentroCosto";
+import MostrarCentroCosto from "../components/inventario/centro_Costo/MostrarCentroCosto";
+
 import MostrarMateriales from "../components/inventario/materiales/MostrarMateriales";
 import CrearMaterial from "../components/inventario/materiales/CrearMaterial";
 import EditarMaterial from "../components/inventario/materiales/EditarMateriales";
@@ -144,6 +148,12 @@ function Rutas() {
               
             <Route path="/productos" element={<Productos />} />
             {/*Rutas inventario*/}
+            <Route path="/mostrarcentrocosto" element={<MostrarCentroCosto />} />
+            <Route path="/crearcentrocosto" element={<CrearCentroCosto />} />
+            <Route
+              path="/editarcentrocosto/:id/:type"
+              element={<EditarCentroCosto />}
+            />
 
             <Route path="/mostrararticulos" element={<MostrarArticulos />} />
             <Route path="/creararticulo" element={<CrearArticulo />} />
