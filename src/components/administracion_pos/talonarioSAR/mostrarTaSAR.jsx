@@ -36,63 +36,90 @@ const MostrarTalonarioSAR = () => {
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "CÓDIGO",
+      name: "ID",
       selector: (row) => row.id,
       sortable: true,
       maxWidth: "120px", //ancho de la columna
     },
     {
-      name: "TIPO",
+      name: "CAI",
       selector: (row) => row.name,
       sortable: true,
       maxWidth: "150px",
     },
     {
-      name: "DESCRIPCIÓN",
+      name: "Sucursal SAR",
       selector: (row) => row.email,
       sortable: true,
       maxWidth: "350px",
     },
     {
-      name: "DESCRIPCIÓN CORTA",
+      name: "Terminal SAR",
       selector: (row) => row.body,
       sortable: true,
       maxWidth: "200px",
     },
 
     {
-      name: "IMPUESTO",
+      name: "Correlativo Inicial",
       selector: (row) => row.body,
       sortable: true,
       maxWidth: "130px",
     },
 
     {
-      name: "CATEGORIA",
+      name: "Correlativo Final",
       selector: (row) => row.body,
       sortable: true,
       maxWidth: "150px",
     },
 
     {
-      name: "UNIDAD DE VENTA",
+      name: "Correlativo Actual",
       selector: (row) => row.body,
       sortable: true,
       maxWidth: "160px",
     },
 
     {
-      name: "CÓDIGO DE BARRA",
+      name: "CREADO POR",
+      selector: (row) => row.body,
+      sortable: true,
+      maxWidth: "130px",
+    },
+
+    {
+      name: "FECHA DE CREACION",
+      selector: (row) => row.body,
+      sortable: true,
+      maxWidth: "150px",
+    },
+
+    {
+      name: "MODIFICADO POR",
+      selector: (row) => row.body,
+      sortable: true,
+      maxWidth: "160px",
+    },
+
+    {
+      name: "FECHA DE MODIFICACION",
       selector: (row) => row.body,
       sortable: true,
       maxWidth: "180px",
     },
     {
+        name: "ESTADO",
+        selector: (row) => row.activo,
+        sortable: true,
+        maxWidth: "300px",
+      },
+    {
       name: "ACCIONES",
       cell: (row) => (
         <>
           <Link
-            to={`/EditarTalonarioSAR/${row.id}/edit`}
+            to={`/editarTaSAR/${row.id}/edit`}
             type="button"
             className="btn btn-light"
             title="Editar"
