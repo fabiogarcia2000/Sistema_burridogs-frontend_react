@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
-import { useGlobalState } from "../../stateEdit"; 
+import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 
-const URL = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
 
  const FormularioEditar = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
-  const [edit, updateEdit] = useGlobalState('registroEdit')
+  const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ const URL = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
           //Enviar los datos (petición Post)
           //procedimineto para guardar el nuevo registro
           try {
-            const res = await axios.put(`${URL}${valores.cod_categoria}`, valores);
+            const res = await axios.put(`${URLEditar}${valores.cod_categoria}`, valores);
             console.log(valores);
             console.log("Insertando....");
                if (res.status === 200) {

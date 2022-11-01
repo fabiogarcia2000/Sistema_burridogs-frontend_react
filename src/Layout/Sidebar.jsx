@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useGlobalState } from "./responseClass";
+import { useGlobalState } from "../globalStates/globalStates";
 
 function Sidebar() {
-  const [classSidebar] = useGlobalState("sidebar_class");
+  const [classSidebar] = useGlobalState('sidebar_class');
+  console.log(classSidebar)
 
   return (
     <aside id="sidebar" className={classSidebar}>
@@ -146,13 +147,8 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-            <Link to="/mostrarcentrocosto">
-                <i className="bi bi-circle"></i>
-                <span>Centro de Costo</span>
-              </Link>
-            </li>  
             <li>
-             <Link to="/mostrararticulos">
+              <Link to="/mostrararticulos">
                 <i className="bi bi-circle"></i>
                 <span>Artículos</span>
               </Link>
@@ -340,7 +336,7 @@ function Sidebar() {
         <li className="nav-heading">Más</li>
         <li className="nav-item">
           <Link className="nav-link collapsed" to="/">
-            <i class="bi bi-person"></i> <span>Opción 1</span>
+            <i className="bi bi-person"></i> <span>Opción 1</span>
           </Link>
         </li>
         <li className="nav-item">

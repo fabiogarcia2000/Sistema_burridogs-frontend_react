@@ -3,9 +3,11 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { setGlobalState } from "../../../globalStates/globalStates"; 
+
 
 const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";
-const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
+const UrlEliminar = "http://190.53.243.69:3001/descuento/eliminar/";
 
 const MostrarSucursales = () => {
   //Configurar los hooks
@@ -15,7 +17,7 @@ const MostrarSucursales = () => {
     getRegistros();
   }, []);
 
-  //procedimineto para mostrar todos los registros
+  //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
       const res = await axios.get(UrlMostrar);
@@ -30,7 +32,6 @@ const MostrarSucursales = () => {
   const deleteRegistro = async () => {
     try {
       console.log(registroDelete)
-      console.log("id arriba")
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
@@ -47,71 +48,69 @@ const MostrarSucursales = () => {
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [registroVerMas, setRegistroVerMas] = useState({});
+
   //Configuramos las columnas de la tabla
   const columns = [
     {
       name: "ID",
       selector: (row) => row.id_descuento,
       sortable: true,
-      maxWidth: "1px", //ancho de la columna
+    },
+    {
+      name: "CÓDIGO",
+      selector: (row) => row.cod_descuento,
+      sortable: true,
     },
     {
       name: "DESCRIPCIÓN",
       selector: (row) => row.descripcion,
       sortable: true,
-      maxWidth: "250px",
     },
     {
       name: "PORCENTAJE",
       selector: (row) => row.porcentaje,
       sortable: true,
-      maxWidth: "150px",
-    },
-    {
-      name: "CREADO POR",
-      selector: (row) => row.creado_por,
-      sortable: true,
-      maxWidth: "150px",
-    },
-    {
-      name: "FECHA DE CREACIÓN",
-      selector: (row) => row.fecha_creacion,
-      sortable: true,
-      maxWidth: "500px",
-    },
-    {
-      name: "MODIFICADO POR",
-      selector: (row) => row.modificado_por,
-      sortable: true,
-      maxWidth: "400px",
-    },
-    {
-      name: "FECHA DE MODIFICACIÓN",
-      selector: (row) => row.fecha_modificacion,
-      sortable: true,
-      maxWidth: "500px",
     },
     {
       name: "ESTADO",
-      selector: (row) => row.activo,
+      selector: (row) => row.activo === "1"? 'Activo' : 'Inactivo',
       sortable: true,
-      maxWidth: "110px",
     },
     {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link to={`/editarsucursal/${row.id}/edit`} type="button" className="btn btn-light" title="Editar">
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setRegistroVerMas(row);
+            }}
+          >
+            <i className="fa-solid fa-eye"></i>
+          </Link>
+          &nbsp;
+          <Link
+            to="/editardescuento"
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => setGlobalState('registroEdit', row)}
+          >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
-
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_categoria);
-              console.log(row.id_categoria);
+              setRegistroDelete(row.cod_descuento);
               abrirModalEliminar();
             }}
           >
@@ -134,8 +133,9 @@ const MostrarSucursales = () => {
   };
 
   return (
+    
     <div className="container">
-      <h3>Lista de Descuentos</h3>
+      <h3>Descuentos</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
@@ -223,6 +223,66 @@ const MostrarSucursales = () => {
       </div>
 
 
+
+{/* Ventana Modal de ver más*/}
+<Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">CÓDIGO: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.cod_descuento} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">CREADO POR: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.creado_por} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">FECHA DE CREACIÓN: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.fecha_creacion} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">MODIFICADO POR: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.modificado_por} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.fecha_modificacion} </p>
+          </div>
+        </div>         
+          
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
         <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
@@ -230,7 +290,7 @@ const MostrarSucursales = () => {
           <p>¿Está seguro de Eliminar este Registro?</p>
         </ModalBody>
         <ModalFooter>
-        <Button
+          <Button
             color="danger"
             onClick={() => {
               deleteRegistro();
@@ -244,6 +304,7 @@ const MostrarSucursales = () => {
           </Button>
         </ModalFooter>
       </Modal>
+
     </div>
   );
 };

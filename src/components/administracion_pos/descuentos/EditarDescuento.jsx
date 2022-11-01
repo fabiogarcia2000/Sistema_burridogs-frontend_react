@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 
-const URLCrear = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
 
@@ -16,10 +18,10 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          cod_descuento: "",
-          descripcion: "",
-          porcentaje: "",
-          activo: "1",
+          cod_descuento: edit.cod_descuento,
+          descripcion: edit.descripcion,
+          porcentaje: edit.porcentaje,
+          activo: edit.activo,
           creado_por: "autorPrueba",
           fecha_creacion: "2022/10/27",
         }}
@@ -54,7 +56,7 @@ const Formulario = () => {
         onSubmit={async (valores) => {
          //procedimineto para guardar el nuevo registro
          try {
-          const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
+          const res = await axios.put(`${URLEditar}${valores.cod_descuento}`, valores);
           console.log(res.data);
 
           console.log("Guardando....");

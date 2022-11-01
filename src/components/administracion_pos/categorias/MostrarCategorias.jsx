@@ -3,7 +3,8 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { useGlobalState } from "../../stateEdit"; 
+import { setGlobalState } from "../../../globalStates/globalStates"; 
+
 
 const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
@@ -12,12 +13,11 @@ const MostrarSucursales = () => {
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
-  const [edit, updateEdit] = useGlobalState('registroEdit')
   useEffect(() => {
     getRegistros();
   }, []);
 
-  //procedimineto para mostrar todos los registros
+  //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
       const res = await axios.get(UrlMostrar);
@@ -92,11 +92,11 @@ const MostrarSucursales = () => {
           </Link>
           &nbsp;
           <Link
-            to={`/editarcategoria/${row.id_categoria}`}
+            to="/editarcategoria"
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => updateEdit(row)}
+            onClick={() => setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
@@ -127,7 +127,7 @@ const MostrarSucursales = () => {
     selectAllRowsItemText: "Todos",
   };
 
-  return (
+  return (    
     <div className="container">
       <h3>Categorías</h3>
       <br />
@@ -219,10 +219,8 @@ const MostrarSucursales = () => {
 
 
 {/* Ventana Modal de ver más*/}
-
-
 <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
-        <ModalHeader toggle={abrirModalVerMas}>Detalles de Categoria</ModalHeader>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
         <ModalBody>
 
         <div className="row g-3">
@@ -231,24 +229,6 @@ const MostrarSucursales = () => {
           </div>
           <div className="col-sm-6">
           <p> {registroVerMas.cod_categoria} </p>
-          </div>
-        </div>
-
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">DESCRIPCIÓN: </p>
-          </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.descripcion} </p>
-          </div>
-        </div>
-
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">ESTADO: </p>
-          </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.activo === "1"? 'Activo' : 'Inactivo'} </p>
           </div>
         </div>
 

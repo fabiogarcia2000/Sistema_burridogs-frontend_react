@@ -4,7 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const URL = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
+const URLCrear = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
+
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
@@ -24,46 +25,45 @@ const Formulario = () => {
         }}
         //Funcion para validar
         validate={(valores) => {
-          let errores = {};
+            let errores = {};
 
-          // Validacion de código
-          if (!valores.cod_categoria) {
-            errores.cod_categoria = "Por favor ingresa un código";
-          }
+            // Validacion de código no vacio
+            if (!valores.cod_categoria) {
+              errores.cod_categoria = "Por favor ingresa un código";
+            }
 
-          // Validacion descripción
-          if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresa una descripción";
-          }
-
-          // Validacion estado
-          if (!valores.activo) {
-            errores.activo = "Por favor ingresa un estado";
-          }
-
-          return errores;
+  
+            // Validacion descripción
+            if (!valores.descripcion) {
+              errores.descripcion = "Por favor ingresa una descripción";
+            }
+  
+            // Validacion estado
+            if (!valores.activo) {
+              errores.activo = "Por favor ingresa un estado";
+            }
+  
+            return errores;
+          
         }}
         onSubmit={async (valores) => {
-          //Enviar los datos (petición Put)
           //procedimineto para guardar el nuevo registro
           try {
-            const res = await axios.put(`${URL}${valores.cod_categoria}`, valores);
-            console.log(valores);
+              const res = await axios.put(`${URLCrear}${valores.cod_categoria}`, valores);
+              console.log(res.data);
 
-            console.log("Guardando....");
-               if (res.status === 200) {
+              console.log("Guardando....");
+                if (res.status === 200) {
+                  alert("Guardado!");
+                } else {
+                  alert("ERROR al Guardar :(");
+                }
+
+              if (res.status === 200) {
                 alert("Guardado!");
               } else {
                 alert("ERROR al Guardar :(");
               }
-
-            if (res.status === 200) {
-              alert("Guardado!");
-            } else {
-              alert("ERROR al Guardar :(");
-            }
-            navigate("/mostrarcategorias");
-
           } catch (error) {
             console.log(error);
             alert("ERROR - No se ha podido insertar :(");

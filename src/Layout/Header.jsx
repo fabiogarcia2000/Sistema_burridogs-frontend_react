@@ -1,32 +1,33 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import { setGlobalState } from "./responseClass";
+import { setGlobalState } from "../globalStates/globalStates.js";
 
-import logo from "../assets/img/logo1.png";
+import logoEmpresa from "../assets/img/logo1.png";
 import imgPerfil from "../assets/img/profile-img.jpg";
 
 function Header() {
   //(LineLink 9-24) Asignar valores de manerLink global, al dar click al boton de menu, estos valores seran usados en el Sidebar.jsx, Footer.jsx
   const [isMenuClicked, setIsMenuClicked] = useState(true);
 
-  const updateClassMenu = () => {
+  const updateClassMenu = () => { 
+
     if (isMenuClicked) {
-      setGlobalState("sidebar_class", "colapse sidebar");
-      setGlobalState("main_class", "colapse_main");
-      setGlobalState("footer_class", "colapse_footer");
+      setGlobalState('sidebar_class', "colapse sidebar");
+      setGlobalState('main_class', "colapse_main");
+      setGlobalState('footer_class', "colapse_footer");
     } else {
-      setGlobalState("sidebar_class", "sidebar");
-      setGlobalState("main_class", "main");
-      setGlobalState("footer_class", "footer");
+      setGlobalState('sidebar_class', "sidebar");
+      setGlobalState('main_class', "main");
+      setGlobalState('footer_class', "footer");
     }
     setIsMenuClicked(!isMenuClicked);
   };
 
   return (
-    <header id="header" className="header fixed-top d-flex align-items-center">
+    <header id="headerGeneral" className="headerGeneral fixed-top d-flex align-items-center">
       <div className="d-flex align-items-center justify-content-between">
-        <Link to="/" className="logo d-flex align-items-center">
-          <img src={logo} alt="" />
+        <Link to="/" className="logoGeneral d-flex align-items-center">
+        <img src={logoEmpresa} alt=""/>
         </Link>
 
         <div className="burger-menu" onClick={updateClassMenu}>
@@ -49,7 +50,7 @@ function Header() {
               <li className="dropdown-header">                
                 Tienes 4 notificaciones nuevas
                 <Link to="/">
-                  <span class="badge rounded-pill bg-primary p-2 ms-2">
+                  <span className="badge rounded-pill bg-primary p-2 ms-2">
                   Ver todo
                   </span>
                 </Link>
