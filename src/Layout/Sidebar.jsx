@@ -146,8 +146,13 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
+            <Link to="/mostrarcentrocosto">
+                <i className="bi bi-circle"></i>
+                <span>Centro de Costo</span>
+              </Link>
+            </li>  
             <li>
-              <Link to="/mostrararticulos">
+             <Link to="/mostrararticulos">
                 <i className="bi bi-circle"></i>
                 <span>Artículos</span>
               </Link>
