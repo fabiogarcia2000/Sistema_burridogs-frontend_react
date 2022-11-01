@@ -33,6 +33,9 @@ import MostrarMesas from "../components/administracion_pos/mesas/MostrarMesas";
 import MostrarArticulos from "../components/inventario/articulos/MostrarArticulos";
 import CrearArticulo from "../components/inventario/articulos/CrearArticulo";
 import EditarArticulo from "../components/inventario/articulos/EditarArticulo";
+import CrearCentroCosto from "../components/inventario/centro_Costo/CrearCentroCosto";
+import EditarCentroCosto from "../components/inventario/centro_Costo/EditarCentroCosto";
+import MostrarCentroCosto from "../components/inventario/centro_Costo/MostrarCentroCosto";
 
 import MostrarMateriales from "../components/inventario/materiales/MostrarMateriales";
 import CrearMaterial from "../components/inventario/materiales/CrearMaterial";
@@ -140,6 +143,12 @@ function Rutas() {
             <Route path="/productos" element={<Productos />} />
             {/*Rutas inventario*/}
 
+            <Route path="/mostrarcentrocosto" element={<MostrarCentroCosto />} />
+            <Route path="/crearcentrocosto" element={<CrearCentroCosto />} />
+            <Route
+              path="/editarcentrocosto/:id/:type"
+              element={<EditarCentroCosto />}
+            />
             <Route path="/mostrararticulos" element={<MostrarArticulos />} />
             <Route path="/creararticulo" element={<CrearArticulo />} />
             <Route
