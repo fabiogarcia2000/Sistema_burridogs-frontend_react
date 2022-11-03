@@ -4,7 +4,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 
-const URL = "https://jsonplaceholder.typicode.com/comments";
+const UrlMostrar = "http://190.53.243.69:3001/unidad_medida/getall/";
+const UrlEliminar = "http://190.53.243.69:3001/unidad_medida/eliminar/";
 
 const MostrarUnidadesMedida = () => {
   //Configurar los hooks
@@ -16,7 +17,7 @@ const MostrarUnidadesMedida = () => {
   //procedimineto para mostrar todos los registros
   const getRegistros = async () => {
     try {
-      const res = await axios.get(URL);
+      const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
@@ -26,7 +27,7 @@ const MostrarUnidadesMedida = () => {
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async (id) => {
-    await axios.delete(`${URL}${id}`);
+    await axios.delete(`${UrlEliminar}${id}`);
     getRegistros();
   };
   //Ventana modal de confirmación de eliminar
