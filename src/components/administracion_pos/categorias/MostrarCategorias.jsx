@@ -17,6 +17,7 @@ const MostrarSucursales = () => {
     getRegistros();
   }, []);
 
+
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -44,6 +45,25 @@ const MostrarSucursales = () => {
       alert("ERROR - No se ha podido eliminar :(");
     }
   };
+
+  //Barra de busqueda
+    const [ busqueda, setBusqueda ] = useState("")
+    //capturar valor a buscar
+    const valorBuscar = (e) => {
+      setBusqueda(e.target.value)   
+  }
+  //metodo de filtrado 
+  let results = []
+   if(!busqueda){
+       results = registros
+   }else{
+        results = registros.filter( (dato) =>
+        dato.cod_categoria.toString().includes(busqueda.toLocaleLowerCase()) || 
+        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())        
+        )
+   };
+
+    
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
@@ -195,8 +215,10 @@ const MostrarSucursales = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por código o descripción..."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>
@@ -207,7 +229,7 @@ const MostrarSucursales = () => {
       <div className="row">
         <DataTable
           columns={columns}
-          data={registros}
+          data={results}
           pagination
           paginationComponentOptions={paginationComponentOptions}
           highlightOnHover
