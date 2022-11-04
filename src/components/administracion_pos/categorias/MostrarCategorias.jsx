@@ -48,11 +48,11 @@ const MostrarSucursales = () => {
 
   //Barra de busqueda
     const [ busqueda, setBusqueda ] = useState("")
-    //capturar valor a buscar
+      //capturar valor a buscar
     const valorBuscar = (e) => {
       setBusqueda(e.target.value)   
   }
-  //metodo de filtrado 
+      //metodo de filtrado 
   let results = []
    if(!busqueda){
        results = registros

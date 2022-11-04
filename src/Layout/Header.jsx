@@ -27,7 +27,7 @@ function Header() {
     <header id="headerGeneral" className="headerGeneral fixed-top d-flex align-items-center">
       <div className="d-flex align-items-center justify-content-between">
         <Link to="/" className="logoGeneral d-flex align-items-center">
-        <img src={logoEmpresa} alt=""/>
+          <img src={logoEmpresa} alt="Logo Empresa" />
         </Link>
 
         <div className="burger-menu" onClick={updateClassMenu}>

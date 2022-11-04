@@ -9,6 +9,7 @@ const URLCrear = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [data, setData] = useState('')
 
   const navigate = useNavigate();
 
@@ -17,6 +18,7 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
+          id_categoria: null,
           cod_categoria: "",
           descripcion: "",
           activo: "1",
@@ -48,25 +50,21 @@ const Formulario = () => {
         }}
         onSubmit={async (valores) => {
           //procedimineto para guardar el nuevo registro
+          console.log(valores)
           try {
               const res = await axios.put(`${URLCrear}${valores.cod_categoria}`, valores);
-              console.log(res.data);
-
-              console.log("Guardando....");
+              setData(res.data.description);
+              console.log(res.data.description)
                 if (res.status === 200) {
                   alert("Guardado!");
-                } else {
-                  alert("ERROR al Guardar :(");
+                } else if (res.status === 520){
+                  alert("Ya éxiste un registro con ese código");
+                }else{
+                  alert("Error al guardar");
                 }
-
-              if (res.status === 200) {
-                alert("Guardado!");
-              } else {
-                alert("ERROR al Guardar :(");
-              }
           } catch (error) {
             console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
+            alert(data);
           }
 
           console.log("Formulario enviado");

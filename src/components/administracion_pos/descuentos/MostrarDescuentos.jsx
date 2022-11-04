@@ -44,6 +44,25 @@ const MostrarSucursales = () => {
       alert("ERROR - No se ha podido eliminar :(");
     }
   };
+
+  //Barra de busqueda
+  const [ busqueda, setBusqueda ] = useState("")
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+  setBusqueda(e.target.value)   
+  }
+  //metodo de filtrado 
+  let results = []
+  if(!busqueda){
+  results = registros
+  }else{
+    results = registros.filter( (dato) =>
+    dato.cod_descuento.toString().includes(busqueda.toLocaleLowerCase()) || 
+    dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())        
+    )
+  };
+
+
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
@@ -55,11 +74,6 @@ const MostrarSucursales = () => {
 
   //Configuramos las columnas de la tabla
   const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id_descuento,
-      sortable: true,
-    },
     {
       name: "CÓDIGO",
       selector: (row) => row.cod_descuento,
@@ -201,8 +215,10 @@ const MostrarSucursales = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por código o descripción..."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>
@@ -213,7 +229,7 @@ const MostrarSucursales = () => {
       <div className="row">
         <DataTable
           columns={columns}
-          data={registros}
+          data={results}
           pagination
           paginationComponentOptions={paginationComponentOptions}
           highlightOnHover

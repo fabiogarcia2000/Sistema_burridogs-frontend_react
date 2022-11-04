@@ -19,6 +19,7 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
       <Formik
         //valores iniciales
         initialValues={{
+          id_categoria: edit.id_categoria,
           cod_categoria: edit.cod_categoria,
           descripcion: edit.descripcion,
           activo: edit.activo,
@@ -48,14 +49,14 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
           return errores;
         }}
         onSubmit={async (valores) => {
-          //Enviar los datos (petición Post)
-          //procedimineto para guardar el nuevo registro
+          //procedimineto para guardar el los cambios
           try {
             const res = await axios.put(`${URLEditar}${valores.cod_categoria}`, valores);
             console.log(valores);
             console.log("Insertando....");
                if (res.status === 200) {
                 alert("Guardado!");
+                navigate("/mostrarcategorias");
               } else {
                 alert("ERROR al Guardar :(");
               }

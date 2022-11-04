@@ -10,7 +10,7 @@ import Home from "../pages/Home";
 import Productos from "../pages/inventario/Productos";
 
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
-import CrearSucursal from "../components/administracion_pos/sucursales/PruebaCrearSucursal";
+import CrearSucursal from "../components/administracion_pos/sucursales/CrearSucursal";
 import EditarSucursal from "../components/administracion_pos/sucursales/EditarSucursal";
 
 import MostrarCategorias from "../components/administracion_pos/categorias/MostrarCategorias";
@@ -100,11 +100,11 @@ function Rutas() {
             {/*Rutas Administración POS*/}
             <Route path="/mostrarsucursales" element={<MostrarSucursales />} />
             <Route
-              path="/crearsucursales"
+              path="/crearsucursal"
               element={<CrearSucursal />}
             />
             <Route
-              path="/editarsucursal/:id/:type"
+              path="/editarsucursal"
               element={<EditarSucursal />}
             />
             <Route path="/mostrarcategorias" element={<MostrarCategorias />} />

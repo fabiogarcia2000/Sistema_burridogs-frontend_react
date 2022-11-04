@@ -1,104 +1,123 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const Formulario = () => {
+const URLCrear = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
+
+const CrearSucursal = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [data, setData] = useState('')
+
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id: "",
+          cod_sucursal: "",
           descripcion: "",
           direccion: "",
-          telefono: "",
-          rtn: "",
-          centroCosto: "",
-          estado: "Activo",
+          telefono:"",
+          rtn:"",
+          id_centro_costo:"1",
+          id_mapa: undefined,
+          activo:"1",
+          creado_por:"autorPrueba",
+          fecha_creacion:"2022/11/03",
         }}
-
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un id";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El id solo puede contener números";
+          // Validacion codigo
+          if (!valores.cod_sucursal) {
+            errores.cod_sucursal = "Por favor ingresa un código";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } 
+          }
 
           // Validacion dirección
           if (!valores.direccion) {
             errores.direccion = "Por favor ingresa una dirección";
-          } 
+          }
 
           // Validacion teléfono
           if (!valores.telefono) {
             errores.telefono = "Por favor ingresa un teléfono";
-          } 
-
-          // Validacion teléfono
-          if (!valores.telefono) {
-            errores.telefono = "Por favor ingresa un teléfono";
-          } 
+          }
 
           // Validacion rtn
           if (!valores.rtn) {
             errores.rtn = "Por favor ingresa un rtn";
           } else if (!/^^[0-9]+$/.test(valores.rtn)) {
-            errores.id = "El rtn solo puede contener números";
+            errores.rtn = "El rtn solo puede contener números";
           }
 
-          // Validacion ID de Centro de Costo
-          if (!valores.centroCosto) {
-            errores.centroCosto = "Por favor ingresa un ID de Centro de Costo";
-          } 
+          // Validacion de Centro de Costo
+          if (!valores.id_centro_costo) {
+            errores.id_centro_costo = "Por favor seleccione un Centro de Costos";
+          }
+
+           // Validacion de mapa
+           //if (!valores.id_mapa) {
+            //errores.id_mapa = "Por favor seleccione un mapa";
+          //}
 
           // Validacion estado
-          if (!valores.estado) {
-            errores.estado = "Por favor ingresa un estado";
-          } 
-
+          if (!valores.activo) {
+            errores.activo = "Por favor seleccione un estado";
+          }
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
-          console.log("Formulario enviado");
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el nuevo registro
+          console.log(valores);
+          try {
+            const res = await axios.put(`${URLCrear}${valores.cod_sucursal}`, valores);
+              if (res.status === 200) {
+                alert("Guardado!");
+              } else if (res.status === 520){
+                alert("Ya éxiste un registro con ese código");
+              }else{
+                alert("Error al guardar");
+              }
+        } catch (error) {
+          console.log(error);
+          alert(data);
+        }
 
-
-          resetForm();
-          setFormularioEnviado(true);
+        console.log("Formulario enviado");
+        setFormularioEnviado(true);
+        navigate("/mostrarsucursales");
         }}
       >
         {({ errors }) => (
           <Form className="formulario">
-            <h3 className="mb-3">Nueva Sucursal</h3>
+            <h3 className="mb-3">Crear Sucursal</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idSucursal" className="form-label">
-                    ID de Sucursal:
+                    Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="idSucursal"
-                    name="id"
+                    name="cod_sucursal"
                     placeholder="ID de Sucursal..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="cod_sucursal"
+                    component={() => <div className="error">{errors.cod_sucursal}</div>}
                   />
                 </div>
               </div>
@@ -195,25 +214,52 @@ const Formulario = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="centroCostoSucursal" className="form-label">
-                    ID de Centro de Costo:
+                  <label htmlFor="centroCosto" className="form-label">
+                    Centro de Costo:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="centroCostoSucursal"
-                    name="centroCosto"
-                    placeholder="ID de Centro Costo..."
-                  />
+                  as="select"
+                  className="form-select"
+                  id="centroCosto"
+                  name="id_centro_costo"
+                >
+                  <option value="">Seleccionar...</option>
+                  <option value="1">Centro 1</option>
+                  <option value="2">Centro 2</option>
+                </Field>
 
                   <ErrorMessage
-                    name="centroCosto"
+                    name="id_centro_costo"
                     component={() => (
-                      <div className="error">{errors.centroCosto}</div>
+                      <div className="error">{errors.id_centro_costo}</div>
                     )}
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-md-4 mb-3">
+                <label htmlFor="mapa" className="form-label">
+                  Mapa:
+                </label>
+                <Field
+                  as="select"
+                  className="form-select"
+                  id="mapa"
+                  name="id_mapa"
+                >
+                  <option value="">Seleccional...</option>
+                  <option value="1">Mapa 1</option>
+                  <option value="2">Mapa 2</option>
+                </Field>
+
+                <ErrorMessage
+                  name="id_mapa"
+                  component={() => <div className="error">{errors.id_mapa}</div>}
+                />
+              </div>
+              <hr />
             </div>
 
             <div className="row g-3">
@@ -226,26 +272,31 @@ const Formulario = () => {
                   className="form-select"
                   id="estadoSucursal"
                   name="estado"
-                > 
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
+                >
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </Field>
 
                 <ErrorMessage
                   name="estado"
-                  component={() => (
-                    <div className="error">{errors.estado}</div>
-                  )}
+                  component={() => <div className="error">{errors.estado}</div>}
                 />
               </div>
               <hr />
             </div>
 
+            <button className="btn btn-success mb-3 me-2" type="submit">
+              Guardar
+            </button>
+            <Link
+              to="/mostrarsucursales"
+              type="button"
+              className="btn btn-danger mb-3 me-2"
+            >
+              Cancelar
+            </Link>
 
-            <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrarsucursales" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
-
-           {/*Mostrar mensaje de exito al enviar formulario */}
+            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
               <p className="exito">Formulario enviado con exito!</p>
             )}
@@ -256,4 +307,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default CrearSucursal;
