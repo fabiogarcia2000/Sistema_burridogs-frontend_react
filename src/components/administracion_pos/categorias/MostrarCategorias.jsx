@@ -76,11 +76,6 @@ const MostrarSucursales = () => {
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID",
-      selector: (row) => row.id_categoria,
-      sortable: true,
-    },
-    {
       name: "CÓDIGO",
       selector: (row) => row.cod_categoria,
       sortable: true,

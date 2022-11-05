@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 
-const URLCrear = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/metodo_pago/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+
+  const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
 
@@ -16,42 +19,44 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          cod_impuesto: "",
-          descripcion: "",
-          porcentaje: "",
-          tipo: "",
-          activo: "1",
+          cod_metodo_pago: edit.cod_metodo_pago,
+          descripcion:edit.descripcion,
+          tipo:edit.tipo,
+          cuenta_contable:edit.cuenta_contable,
+          activo:edit.activo,
           creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",
+          fecha_creacion: "2022/11/04",
         }}
+
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
           // Validacion id
-          if (!valores.cod_impuesto) {
-            errores.cod_impuesto = "Por favor ingrese un código";
-          }
+          if (!valores.cod_metodo_pago) {
+            errores.cod_metodo_pago = "Por favor ingrese un código";
+          } 
 
           // Validacion descripción
           if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresa una descripción";
-          }
-
-          // Validacion porcentaje
-          if (!valores.porcentaje) {
-            errores.porcentaje = "Por favor ingresar un porcentaje";
-          }
+            errores.descripcion = "Por favor ingresar una descripción";
+          } 
 
           // Validacion tipo
           if (!valores.tipo) {
-            errores.tipo = "Por favor seleccione un tipo de Impuesto";
-          }
+            errores.tipo = "Por favor seleccionar un tipo";
+          } 
+
+          // Validacion cuenta Contable
+          if (!valores.cuenta_contable) {
+            errores.cuenta_contable = "Por favor seleccionar una cuenta contable";
+          } 
 
           // Validacion estado
           if (!valores.activo) {
             errores.activo = "Por favor seleccione un estado";
-          }
+          } 
+
 
           return errores;
         }}
@@ -59,7 +64,8 @@ const Formulario = () => {
           //procedimineto para guardar el nuevo registro
           console.log(valores)
           try {
-              const res = await axios.put(`${URLCrear}${valores.cod_impuesto}`, valores);
+              const res = await axios.put(`${URLEditar}${valores.cod_metodo_pago}`, valores);
+              console.log("Insertando....");
                 if (res.status === 200) {
                   alert("Guardado!");
                 } else{
@@ -71,42 +77,42 @@ const Formulario = () => {
 
           console.log("Formulario enviado");
           setFormularioEnviado(true);
-          navigate("/mostrarimpuestos");
+          navigate("/mostrarmetodospago");
         }}
       >
         {({ errors }) => (
           <Form className="formulario">
-            <h3 className="mb-3">Nuevo Impuesto</h3>
+            <h3 className="mb-3">Nuevo Método de Pago</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idImpuesto" className="form-label">
+                  <label htmlFor="idMetodoPago" className="form-label">
                     Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idImpuesto"
-                    name="cod_impuesto"
+                    id="idMetodoPago"
+                    name="cod_metodo_pago"
                     placeholder="Código..."
                   />
 
                   <ErrorMessage
-                    name="cod_impuesto"
-                    component={() => <div className="error">{errors.cod_impuesto}</div>}
+                    name="cod_metodo_pago"
+                    component={() => <div className="error">{errors.cod_metodo_pago}</div>}
                   />
                 </div>
               </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="descripcionImpuesto" className="form-label">
+                  <label htmlFor="descripcionMetodoPago" className="form-label">
                     Descripción:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionImpuesto"
+                    id="descripcionMetodoPago"
                     name="descripcion"
                     placeholder="Descripción..."
                   />
@@ -124,21 +130,23 @@ const Formulario = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="porcentajeImpuesto" className="form-label">
-                    Porcentaje:
+                  <label htmlFor="tipoMetodoPago" className="form-label">
+                    Tipo:
                   </label>
                   <Field
-                    type="number"
-                    className="form-control"
-                    id="porcentajeImpuesto"
-                    name="porcentaje"
-                    placeholder="Porcentaje..."
-                  />
+                  as="select"
+                  className="form-select"
+                  id="tipo"
+                  name="tipo"
+                > 
+                  <option value="">Seleccionar...</option>
+                  <option value="E">E</option>
+                </Field>
 
                   <ErrorMessage
-                    name="porcentaje"
+                    name="tipo"
                     component={() => (
-                      <div className="error">{errors.porcentaje}</div>
+                      <div className="error">{errors.tipo}</div>
                     )}
                   />
                 </div>
@@ -146,23 +154,24 @@ const Formulario = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="tipoImpuesto" className="form-label">
-                    Tipo de Impuesto:
+                  <label htmlFor="cuentaContable" className="form-label">
+                    Cuenta Contable:
                   </label>
                   <Field
-                    as="select"
-                    className="form-select"
-                    id="tipoImpuesto"
-                    name="tipo"
-                  >
-                    <option value="">Seleccionar...</option>
-                    <option value="I">Inclusivo</option>
-                    <option value="E">Exclusivo</option>
-                  </Field>
+                  as="select"
+                  className="form-select"
+                  id="cuentaContable"
+                  name="cuenta_contable"
+                > 
+                  <option value="">Seleccionar...</option>
+                  <option value="100012425">Efectivo</option>
+                </Field>
 
                   <ErrorMessage
-                    name="tipo"
-                    component={() => <div className="error">{errors.tipo}</div>}
+                    name="cuenta_contable"
+                    component={() => (
+                      <div className="error">{errors.cuenta_contable}</div>
+                    )}
                   />
                 </div>
               </div>
@@ -170,39 +179,34 @@ const Formulario = () => {
 
             <div className="row g-3">
               <div className="col-md-4 mb-3">
-                <label htmlFor="estadoImpuesto" className="form-label">
+                <label htmlFor="estadoMetodoPago" className="form-label">
                   Estado:
                 </label>
                 <Field
                   as="select"
                   className="form-select"
-                  id="estadoImpuesto"
+                  id="estadoMetodoPago"
                   name="activo"
-                >
+                > 
                   <option value="1">Activo</option>
                   <option value="0">Inactivo</option>
                 </Field>
 
                 <ErrorMessage
                   name="activo"
-                  component={() => <div className="error">{errors.activo}</div>}
+                  component={() => (
+                    <div className="error">{errors.activo}</div>
+                  )}
                 />
               </div>
               <hr />
             </div>
 
-            <button className="btn btn-success mb-3 me-2" type="submit">
-              Guardar
-            </button>
-            <Link
-              to="/mostrarimpuestos"
-              type="button"
-              className="btn btn-danger mb-3 me-2"
-            >
-              Cancelar
-            </Link>
 
-            {/*Mostrar mensaje de exito al enviar formulario */}
+            <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
+            <Link to="/mostrarmetodospago" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
+
+           {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
               <p className="exito">Formulario enviado con exito!</p>
             )}

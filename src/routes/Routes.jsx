@@ -23,9 +23,11 @@ import EditarDescuento from "../components/administracion_pos/descuentos/EditarD
 
 import MostrarImpuestos from "../components/administracion_pos/impuestos/MostrarImpuestos";
 import CrearImpuestos from "../components/administracion_pos/impuestos/CrearImpuesto";
+import EditarImpuestos from "../components/administracion_pos/impuestos/EditarImpuesto";
 
 import MostrarMetodosPagos from "../components/administracion_pos/metodoPago/MostrarMetodoPago";
 import CrearMetodoPago from "../components/administracion_pos/metodoPago/CrearMetodoPago";
+import EditarMetodoPago from "../components/administracion_pos/metodoPago/EditarMetodoPago";
 
 import CrearModoPedido from "../components/administracion_pos/modoPedido/CrearModoPedido";
 import EditarModoPedido from "../components/administracion_pos/modoPedido/EditarModoPedido"
@@ -117,11 +119,12 @@ function Rutas() {
 
             <Route path="/mostrarimpuestos" element={<MostrarImpuestos />} />
             <Route path="/crearimpuesto" element={<CrearImpuestos />} />
-            <Route
-              path="/mostrarmetodopago"
-              element={<MostrarMetodosPagos />}
-            />
+            <Route path="/editarimpuesto" element={<EditarImpuestos />} />
+
+            <Route path="/mostrarmetodospago" element={<MostrarMetodosPagos />} />
             <Route path="/crearmetodopago" element={<CrearMetodoPago />} />
+            <Route path="/editarmetodopago" element={<EditarMetodoPago />} />
+
             <Route path="/mostrarmodopedido" element={<MostrarModoPedido />}/>
             <Route path="/crearmodopedido" element={<CrearModoPedido />} />
             <Route

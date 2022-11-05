@@ -99,7 +99,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/mostrarmetodopago">
+              <Link to="/mostrarmetodospago">
                 <i className="bi bi-circle"></i>
                 <span>Métodos de Pago</span>
               </Link>

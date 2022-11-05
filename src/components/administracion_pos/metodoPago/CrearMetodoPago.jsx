@@ -1,20 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const URLCrear = "http://190.53.243.69:3001/metodo_pago/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id: "",
+          cod_metodo_pago: "",
           descripcion: "",
           tipo: "",
-          cuentaContable: "",
-          estado: "Activo",
+          cuenta_contable: "",
+          activo: "1",
+          creado_por: "autorPrueba",
+          fecha_creacion: "2022/10/27",
         }}
 
         //Funcion para validar
@@ -22,11 +30,9 @@ const Formulario = () => {
           let errores = {};
 
           // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un id";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El id solo puede contener números";
-          }
+          if (!valores.cod_metodo_pago) {
+            errores.cod_metodo_pago = "Por favor ingrese un código";
+          } 
 
           // Validacion descripción
           if (!valores.descripcion) {
@@ -39,25 +45,35 @@ const Formulario = () => {
           } 
 
           // Validacion cuenta Contable
-          if (!valores.cuentaContable) {
-            errores.cuentaContable = "Por favor seleccionar una cuenta contable";
+          if (!valores.cuenta_contable) {
+            errores.cuenta_contable = "Por favor seleccionar una cuenta contable";
           } 
 
           // Validacion estado
-          if (!valores.estado) {
-            errores.estado = "Por favor seleccione un estado";
+          if (!valores.activo) {
+            errores.activo = "Por favor seleccione un estado";
           } 
 
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el nuevo registro
+          console.log(valores)
+          try {
+              const res = await axios.put(`${URLCrear}${valores.cod_metodo_pago}`, valores);
+                if (res.status === 200) {
+                  alert("Guardado!");
+                } else{
+                  alert("Error al guardar");
+                }
+          } catch (error) {
+            console.log(error);
+          }
+
           console.log("Formulario enviado");
-
-
-          resetForm();
           setFormularioEnviado(true);
+          navigate("/mostrarmetodospago");
         }}
       >
         {({ errors }) => (
@@ -67,19 +83,19 @@ const Formulario = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idMetodoPago" className="form-label">
-                    ID:
+                    Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="idMetodoPago"
-                    name="id"
-                    placeholder="ID de Método de Pago..."
+                    name="cod_metodo_pago"
+                    placeholder="Código..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="cod_metodo_pago"
+                    component={() => <div className="error">{errors.cod_metodo_pago}</div>}
                   />
                 </div>
               </div>
@@ -114,12 +130,14 @@ const Formulario = () => {
                     Tipo:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="tipoMetodoPago"
-                    name="tipo"
-                    placeholder="Tipo..."
-                  />
+                  as="select"
+                  className="form-select"
+                  id="tipo"
+                  name="tipo"
+                > 
+                  <option value="">Seleccionar...</option>
+                  <option value="E">E</option>
+                </Field>
 
                   <ErrorMessage
                     name="tipo"
@@ -132,21 +150,23 @@ const Formulario = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="cuenta" className="form-label">
+                  <label htmlFor="cuentaContable" className="form-label">
                     Cuenta Contable:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="cuenta"
-                    name="cuentaContable"
-                    placeholder="Cuenta Contable..."
-                  />
+                  as="select"
+                  className="form-select"
+                  id="cuentaContable"
+                  name="cuenta_contable"
+                > 
+                  <option value="">Seleccionar...</option>
+                  <option value="100012425">Efectivo</option>
+                </Field>
 
                   <ErrorMessage
-                    name="cuentaContable"
+                    name="cuenta_contable"
                     component={() => (
-                      <div className="error">{errors.cuentaContable}</div>
+                      <div className="error">{errors.cuenta_contable}</div>
                     )}
                   />
                 </div>
@@ -162,16 +182,16 @@ const Formulario = () => {
                   as="select"
                   className="form-select"
                   id="estadoMetodoPago"
-                  name="estado"
+                  name="activo"
                 > 
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </Field>
 
                 <ErrorMessage
-                  name="estado"
+                  name="activo"
                   component={() => (
-                    <div className="error">{errors.estado}</div>
+                    <div className="error">{errors.activo}</div>
                   )}
                 />
               </div>
@@ -180,7 +200,7 @@ const Formulario = () => {
 
 
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrarmetodopago" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
+            <Link to="/mostrarmetodospago" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
 
            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
