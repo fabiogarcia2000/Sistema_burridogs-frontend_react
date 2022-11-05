@@ -3,20 +3,25 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { setGlobalState } from "../../../globalStates/globalStates"; 
 
-const URL = "https://jsonplaceholder.typicode.com/comments";
+
+const UrlMostrar =  "http://190.53.243.69:3001/modo_pedido/getall";
+const UrlEliminar = "http://190.53.243.69:3001/modo_pedido/eliminar/";
 
 const MostrarModoPedido = () => {
   //Configurar los hooks
+  const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);
 
-  //procedimineto para mostrar todos los registros
+
+  //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
-      const res = await axios.get(URL);
+      const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
@@ -24,15 +29,49 @@ const MostrarModoPedido = () => {
     }
   };
 
-
- //procedimineto para eliminar un registro
-  const deleteRegistro = async (id) => {
-    await axios.delete(`${URL}${id}`);
-    getRegistros();
+  //procedimineto para eliminar un registro
+  const deleteRegistro = async () => {
+    try {
+      console.log(registroDelete)
+      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      getRegistros();
+      if (res.status === 200) {
+        alert("Eliminado!"); 
+      } else {
+        alert("ERROR al Eliminar :(");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("ERROR - No se ha podido eliminar :(");
+    }
   };
+
+  //Barra de busqueda
+    const [ busqueda, setBusqueda ] = useState("")
+    //capturar valor a buscar
+    const valorBuscar = (e) => {
+      setBusqueda(e.target.value)   
+  }
+  //metodo de filtrado 
+  let results = []
+   if(!busqueda){
+       results = registros
+   }else{
+        results = registros.filter( (dato) =>
+        dato.cod_modo_pedido.toString().includes(busqueda.toLocaleLowerCase()) || 
+        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())        
+        )
+   };
+
+    
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
+
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [registroVerMas, setRegistroVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -40,54 +79,56 @@ const MostrarModoPedido = () => {
       name: "ID",
       selector: (row) => row.id_modo_pedido,
       sortable: true,
-      maxWidth: "1px", //ancho de la columna
     },
     {
-      name: "DESCRIPCION",
+      name: "CÓDIGO",
+      selector: (row) => row.cod_modo_pedido,
+      sortable: true,
+    },
+    {
+      name: "DESCRIPCIÓN",
       selector: (row) => row.descripcion,
       sortable: true,
-      maxWidth: "350px",
     },
     {
-      name: "CREADO POR",
-      selector: (row) => row.creado_por,
+      name: "ESTADO",
+      selector: (row) => row.activo === "1"? 'Activo' : 'Inactivo',
       sortable: true,
-      maxWidth: "250px",
     },
-    {
-      name: "FECHA DE CREACION",
-      selector: (row) => row.fecha_creacion,
-      sortable: true,
-      maxWidth: "500px",
-    },
-    {
-        name: "MODIFICADO POR",
-        selector: (row) => row.modificado_por,
-        sortable: true,
-        maxWidth: "500px",
-    },
-    {
-        name: "FECHA DE MODIFICACION",
-        selector: (row) => row.fecha_modificacion,
-        sortable: true,
-        maxWidth: "500px",
-    },
-    {
-        name: "ESTADO",
-        selector: (row) => row.activo,
-        sortable: true,
-        maxWidth: "500px",
-      },
     {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link to={`/EditarModoPedido/${row.id_modo_pedido}/edit`} type="button" className="btn btn-light" title="Editar">
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setRegistroVerMas(row);
+            }}
+          >
+            <i className="fa-solid fa-eye"></i>
+          </Link>
+          &nbsp;
+          <Link
+            to="/editarmodopedido"
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => setGlobalState('registroEdit', row)}
+          >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
-            
           &nbsp;
-          <button className="btn btn-light" title="Eliminar" onClick={abrirModalEliminar}>
+          <button
+            className="btn btn-light"
+            title="Eliminar"
+            onClick={() => {
+              setRegistroDelete(row.cod_modo_pedido);
+              abrirModalEliminar();
+            }}
+          >
             <i className="fa-solid fa-trash"></i>
           </button>
         </>
@@ -106,9 +147,9 @@ const MostrarModoPedido = () => {
     selectAllRowsItemText: "Todos",
   };
 
-  return (
+  return (    
     <div className="container">
-      <h3>Lista de Modo Pedido</h3>
+      <h3>Modo del Pedido</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
@@ -174,8 +215,10 @@ const MostrarModoPedido = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por código o descripción..."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>
@@ -186,7 +229,7 @@ const MostrarModoPedido = () => {
       <div className="row">
         <DataTable
           columns={columns}
-          data={registros}
+          data={results}
           pagination
           paginationComponentOptions={paginationComponentOptions}
           highlightOnHover
@@ -196,6 +239,66 @@ const MostrarModoPedido = () => {
       </div>
 
 
+
+{/* Ventana Modal de ver más*/}
+<Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">CÓDIGO: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.cod_modo_pedido} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">CREADO POR: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.creado_por} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">FECHA DE CREACIÓN: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.fecha_creacion} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">MODIFICADO POR: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.modificado_por} </p>
+          </div>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-sm-6">
+          <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+          </div>
+          <div className="col-sm-6">
+          <p> {registroVerMas.fecha_modificacion} </p>
+          </div>
+        </div>         
+          
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
         <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
@@ -203,7 +306,13 @@ const MostrarModoPedido = () => {
           <p>¿Está seguro de Eliminar este Registro?</p>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onClick={abrirModalEliminar}>
+          <Button
+            color="danger"
+            onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+          >
             Eliminar
           </Button>
           <Button color="secondary" onClick={abrirModalEliminar}>
@@ -211,6 +320,7 @@ const MostrarModoPedido = () => {
           </Button>
         </ModalFooter>
       </Modal>
+
     </div>
   );
 };

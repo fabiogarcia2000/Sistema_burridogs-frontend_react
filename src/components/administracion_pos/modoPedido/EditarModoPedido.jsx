@@ -1,90 +1,97 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { useGlobalState } from "../../../globalStates/globalStates"; 
+import axios from "axios";
 
-const EditarModoPedido = () => {
-    const { id } = useParams();
-    const { type } = useParams();
-    console.log(id);
-    console.log(type);
-  
-    //Configurar los hooks
-    const [formularioEnviado, setFormularioEnviado] = useState(false);
-  
-    if (type === "new") {
-      console.log("Crear Nuevo registro");
-    } else if (type === "edit") {
-      console.log("Editar un registro");
-    }
+const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
+
+
+ const FormularioEditar = () => {
+  const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [edit] = useGlobalState('registroEdit')
+
+  const navigate = useNavigate();
+
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id_modo_pedido: id,
-          descripcion: "",
-          creado_por: "",
-          fecha_creacion: "",
-          modificado_por: "",
-          fecha_modificacion: "",
-          estado: "Activo",
+          cod_modo_pedido: edit.cod_modo_pedido,
+          descripcion: edit.descripcion,
+          activo: edit.activo,
+          modificado_por: "autorPrueba",
+          fecha_modificacion: "2022/10/27"
         }}
 
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id_modo_pedido) {
-            errores.id_modo_pedido = "Por favor ingresa un id";
-          } else if (!/^^[0-9]+$/.test(valores.id_modo_pedido)) {
-            errores.id_modo_pedido = "El id solo puede contener números";
+          // Validacion de código
+          if (!valores.cod_modo_pedido) {
+            errores.cod_centro_costo = "Por favor ingresar un código";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } 
+          }
 
           // Validacion estado
-          if (!valores.estado) {
-            errores.estado = "Por favor ingresa un estado";
-          } 
-
+          if (!valores.activo) {
+            errores.activo = "Por favor ingresa un estado";
+          }
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
+        onSubmit={async (valores) => {
           //Enviar los datos (petición Post)
+          //procedimineto para guardar el nuevo registro
+          try {
+            const res = await axios.put(`${URLEditar}${valores.cod_modo_pedido}`, valores);
+            console.log(valores);
+            console.log("Insertando....");
+               if (res.status === 200) {
+                alert("Guardado!");
+              } else {
+                alert("ERROR al Guardar :(");
+              }
+            
+          } catch (error) {
+            console.log(error);
+            alert("ERROR - No se ha podido insertar :(");
+          }
+  
           console.log("Formulario enviado");
-
-
-          resetForm();
           setFormularioEnviado(true);
+          navigate("/mostrarmodopedido");
         }}
       >
         {({ errors }) => (
           <Form className="formulario">
-            <h3 className="mb-3">Nuevo Modo Pedido</h3>
+            <h3 className="mb-3">Editar Modo Pedido</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idModoPedido" className="form-label">
-                    ID de Modo Pedido:
+                  <label htmlFor="codModoPedido" className="form-label">
+                    Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idModoPedido"
-                    name="id"
-                    placeholder="ID de ModoPedido..."
+                    id="codModoPedido"
+                    name="cod_modo_pedido"
+                    placeholder="Código..."
+                    
                   />
 
                   <ErrorMessage
-                    name="id"
+                    name="cod_centro_costo"
                     component={() => (
-                      <div className="error">{errors.id_modo_pedido}</div>
+                      <div className="error">{errors.cod_modo_pedido}</div>
                     )}
                   />
                 </div>
@@ -100,7 +107,7 @@ const EditarModoPedido = () => {
                     className="form-control"
                     id="descripcionModoPedido"
                     name="descripcion"
-                    placeholder="Descripcion..."
+                    placeholder="Descripción..."
                   />
 
                   <ErrorMessage
@@ -121,28 +128,33 @@ const EditarModoPedido = () => {
                 <Field
                   as="select"
                   className="form-select"
-                  id="estadoMetodoPedido"
-                  name="estado"
-                > 
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
+                  id="estadoModoPedido"
+                  name="activo"
+                >
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </Field>
 
                 <ErrorMessage
-                  name="estado"
-                  component={() => (
-                    <div className="error">{errors.estado}</div>
-                  )}
+                  name="activo"
+                  component={() => <div className="error">{errors.activo}</div>}
                 />
               </div>
               <hr />
             </div>
 
+            <button className="btn btn-success mb-3 me-2" type="submit">
+              Guardar
+            </button>
+            <Link
+              to="/mostrarmodopedido"
+              type="button"
+              className="btn btn-danger mb-3 me-2"
+            >
+              Cancelar
+            </Link>
 
-            <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrarmodopedido" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
-
-           {/*Mostrar mensaje de exito al enviar formulario */}
+            {/*Mostrar mensaje de exito al enviar formulario */}
             {formularioEnviado && (
               <p className="exito">Formulario enviado con exito!</p>
             )}
@@ -153,4 +165,4 @@ const EditarModoPedido = () => {
   );
 };
 
-export default EditarModoPedido;
+export default FormularioEditar;
