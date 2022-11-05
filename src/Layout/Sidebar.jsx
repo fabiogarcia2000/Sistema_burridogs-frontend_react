@@ -153,6 +153,14 @@ function Sidebar() {
                 <span>Artículos</span>
               </Link>
             </li>
+
+            <li>
+              <Link to="/MostrarCentroCosto">
+                <i className="bi bi-circle"></i>
+                <span>Centro de costo</span>
+              </Link> 
+            </li>
+
             <li>
               <Link to="/mostrarmateriales">
                 <i className="bi bi-circle"></i>
