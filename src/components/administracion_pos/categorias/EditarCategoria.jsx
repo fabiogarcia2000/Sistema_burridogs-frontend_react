@@ -84,7 +84,7 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
                     id="codCategoria"
                     name="cod_categoria"
                     placeholder="Código..."
-                    
+                    disabled readonly
                   />
 
                   <ErrorMessage

@@ -95,6 +95,7 @@ const Formulario = () => {
                     id="idMetodoPago"
                     name="cod_metodo_pago"
                     placeholder="Código..."
+                    disabled readonly
                   />
 
                   <ErrorMessage

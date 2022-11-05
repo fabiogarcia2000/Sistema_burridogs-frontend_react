@@ -102,7 +102,7 @@ const EditarSucursal = () => {
       >
         {({ errors }) => (
           <Form className="formulario">
-          <h3 className="mb-3">Crear Sucursal</h3>
+          <h3 className="mb-3">Editar Sucursal</h3>
           <div className="row g-3">
             <div className="col-sm-6">
               <div className="mb-3">
@@ -115,6 +115,7 @@ const EditarSucursal = () => {
                   id="idSucursal"
                   name="cod_sucursal"
                   placeholder="ID de Sucursal..."
+                  disabled readonly
                 />
 
                 <ErrorMessage

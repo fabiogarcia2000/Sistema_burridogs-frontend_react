@@ -97,6 +97,7 @@ const Formulario = () => {
                     id="idDescuento"
                     name="cod_descuento"
                     placeholder="ID de Descuento..."
+                    disabled readonly
                   />
 
                   <ErrorMessage

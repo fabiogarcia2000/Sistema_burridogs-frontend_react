@@ -92,6 +92,7 @@ const FormularioEditar = () => {
                     id="idImpuesto"
                     name="cod_impuesto"
                     placeholder="Código..."
+                    disabled readonly
                   />
 
                   <ErrorMessage

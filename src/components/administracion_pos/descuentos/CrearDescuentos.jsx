@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const URLCrear = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
 
@@ -10,6 +11,24 @@ const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   const navigate = useNavigate();
+
+  //alerta exito
+  const mostrarAlertaExito = () =>{
+    Swal.fire(
+      'Guardado!!',
+      'El registro se guardó con éxito',
+      'success'
+    )
+  };
+
+  //alerta error
+  const mostrarAlertaError = () =>{
+    Swal.fire(
+      'Error',
+      'No se ha podido guardar',
+      'error'
+    )
+  };
 
   return (
     <div className="container">
@@ -55,24 +74,15 @@ const Formulario = () => {
          //procedimineto para guardar el nuevo registro
          try {
           const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
-          console.log(res.data);
-
-          console.log("Guardando....");
              if (res.status === 200) {
-              alert("Guardado!");
+              mostrarAlertaExito();
             } else {
-              alert("ERROR al Guardar :(");
+              mostrarAlertaError();
             }
-
-          if (res.status === 200) {
-            alert("Guardado!");
-          } else {
-            alert("ERROR al Guardar :(");
-          }
 
         } catch (error) {
           console.log(error);
-          alert("ERROR - No se ha podido insertar :(");
+          mostrarAlertaError();
         }
 
         console.log("Formulario enviado");
