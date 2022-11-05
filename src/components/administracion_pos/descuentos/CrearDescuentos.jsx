@@ -12,24 +12,29 @@ const Formulario = () => {
 
   const navigate = useNavigate();
 
-  //alerta exito
+  //Alertas de éxito o error
+  //alerta de éxito al insertar un registro
   const mostrarAlertaExito = () =>{
-    Swal.fire(
-      'Guardado!!',
-      'El registro se guardó con éxito',
-      'success'
-    )
+    Swal.fire({
+      title: '¡Guardado!',
+      text: "El descuento se creó con éxito",
+      icon: 'success',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Ok'
+    })
   };
 
-  //alerta error
+  //alerta de error al crear un registro 
   const mostrarAlertaError = () =>{
-    Swal.fire(
-      'Error',
-      'No se ha podido guardar',
-      'error'
-    )
+    Swal.fire({
+      title: 'Error',
+      text:  'No se pudo crear el nuevo descuento',
+      icon: 'error',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Ok'
+    })
   };
-
+ 
   return (
     <div className="container">
       <Formik
@@ -104,7 +109,7 @@ const Formulario = () => {
                     className="form-control"
                     id="idDescuento"
                     name="cod_descuento"
-                    placeholder="ID de Descuento..."
+                    placeholder="Código..."
                   />
 
                   <ErrorMessage

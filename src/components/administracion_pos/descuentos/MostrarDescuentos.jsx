@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates"; 
+import Swal from "sweetalert2";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";
@@ -24,7 +25,7 @@ const MostrarSucursales = () => {
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido conectar con el servidor :(");
+      alert("Error al mostrar los datos")
     }
   };
 
@@ -145,6 +146,7 @@ const MostrarSucursales = () => {
     selectAllRowsItem: true,
     selectAllRowsItemText: "Todos",
   };
+
 
   return (
     
