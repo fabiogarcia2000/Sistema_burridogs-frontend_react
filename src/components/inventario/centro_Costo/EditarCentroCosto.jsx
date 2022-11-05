@@ -1,63 +1,73 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { useGlobalState } from "../../../globalStates/globalStates"; 
+import axios from "axios";
 
-const EditarCentroCosto = () => {
-    const { id } = useParams();
-    const { type } = useParams();
-    console.log(id);
-    console.log(type);
-  
-    //Configurar los hooks
-    const [formularioEnviado, setFormularioEnviado] = useState(false);
+const URLEditar = "http://190.53.243.69:3001/centro_costo/actualizar-insertar/";
 
-    if (type === "new") {
-        console.log("Crear Nuevo registro");
-    } else if (type === "edit") {
-        console.log("Editar un registro");
-    }
+
+ const FormularioEditar = () => {
+  const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [edit] = useGlobalState('registroEdit')
+
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id_centro_costo: "",
-          descripcion: "",
-          activo:"",
+          cod_centro_costo: edit.cod_centro_costo,
+          descripcion: edit.descripcion,
+          activo: edit.activo,
+          modificado_por: "autorPrueba",
+          fecha_modificacion: "2022/10/27"
         }}
+
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un código";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El código solo puede contener números";
+          // Validacion de código
+          if (!valores.cod_centro_costo) {
+            errores.cod_centro_costo = "Por favor ingresar un código";
           }
 
-          // Validacion descripcion
+          // Validacion descripción
           if (!valores.descripcion) {
-            errores.tipo = "Por favor ingresa una descripcion";
+            errores.descripcion = "Por favor ingresa una descripción";
           }
 
-        
           // Validacion estado
-          if (!valores.estado) {
-            errores.estado = "Por favor ingresa un estado";
+          if (!valores.activo) {
+            errores.activo = "Por favor ingresa un estado";
           }
-         
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
+        onSubmit={async (valores) => {
           //Enviar los datos (petición Post)
+          //procedimineto para guardar el nuevo registro
+          try {
+            const res = await axios.put(`${URLEditar}${valores.cod_centro_costo}`, valores);
+            console.log(valores);
+            console.log("Insertando....");
+               if (res.status === 200) {
+                alert("Guardado!");
+              } else {
+                alert("ERROR al Guardar :(");
+              }
+            
+          } catch (error) {
+            console.log(error);
+            alert("ERROR - No se ha podido insertar :(");
+          }
+  
           console.log("Formulario enviado");
-
-          resetForm();
           setFormularioEnviado(true);
+          navigate("/MostrarCentroCosto");
         }}
       >
         {({ errors }) => (
@@ -66,44 +76,50 @@ const EditarCentroCosto = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idcentrocosto" className="form-label">
-                    Id:
+                  <label htmlFor="codCentroCosto" className="form-label">
+                    Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idcentrocosto"
-                    name="id"
-                    placeholder="id del Centro de Costo..."
+                    id="codCentroCosto"
+                    name="cod_centro_costo"
+                    placeholder="Código..."
+                    
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="cod_centro_costo"
+                    component={() => (
+                      <div className="error">{errors.cod_centro_costo}</div>
+                    )}
                   />
                 </div>
               </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="descripcioncentrocosto" className="form-label">
-                    Descripcion:
+                  <label htmlFor="descripcionCentroCosto" className="form-label">
+                    Descripción:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionpos"
-                    name="Tipo"
-                    placeholder="Descripcion Centro de Costo..."
+                    id="descripcionCentroCosto"
+                    name="descripcion"
+                    placeholder="Descripción..."
                   />
 
                   <ErrorMessage
                     name="descripcion"
-                    component={() => <div className="error">{errors.descripcion}</div>}
+                    component={() => (
+                      <div className="error">{errors.descripcion}</div>
+                    )}
                   />
                 </div>
               </div>
             </div>
+
             <div className="row g-3">
               <div className="col-md-4 mb-3">
                 <label htmlFor="estadoCentroCosto" className="form-label">
@@ -113,22 +129,19 @@ const EditarCentroCosto = () => {
                   as="select"
                   className="form-select"
                   id="estadoCentroCosto"
-                  name="estado"
-                > 
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
+                  name="activo"
+                >
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </Field>
 
                 <ErrorMessage
-                  name="estado"
-                  component={() => (
-                    <div className="error">{errors.activo}</div>
-                  )}
+                  name="activo"
+                  component={() => <div className="error">{errors.activo}</div>}
                 />
               </div>
               <hr />
             </div>
-            
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
@@ -152,4 +165,4 @@ const EditarCentroCosto = () => {
   );
 };
 
-export default EditarCentroCosto;
+export default FormularioEditar;
