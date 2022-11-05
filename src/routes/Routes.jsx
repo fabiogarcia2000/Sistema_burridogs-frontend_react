@@ -154,7 +154,7 @@ function Rutas() {
             <Route path="/mostrarcentrocosto" element={<MostrarCentroCosto />} />
             <Route path="/crearcentrocosto" element={<CrearCentroCosto />} />
             <Route
-              path="/editarcentrocosto/:id/:type"
+              path="/editarcentrocosto"
               element={<EditarCentroCosto />}
             />
 
