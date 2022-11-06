@@ -85,18 +85,6 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //Corroborar que el registro crear no exista
-          try {
-            const res = await axios.get(`${URLMostrarUno}${valores.cod_descuento}`);
-            console.log(res);
-            console.log("One")
-            if (res.data){
-
-            }
-          } catch (error) {
-
-          }
-
          //procedimineto para guardar el nuevo registro
          try {
           const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
@@ -108,7 +96,7 @@ const Formulario = () => {
 
         } catch (error) {
           console.log(error);
-          mostrarAlertaError();
+          alert("Se ha producido un error. Inténtelo de nuevo en otro momento");
         }
 
         console.log("Formulario enviado");
