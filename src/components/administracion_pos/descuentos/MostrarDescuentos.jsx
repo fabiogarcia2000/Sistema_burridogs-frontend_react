@@ -4,7 +4,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates"; 
-import Swal from "sweetalert2";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";

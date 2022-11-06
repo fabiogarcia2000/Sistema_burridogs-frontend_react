@@ -32,14 +32,18 @@ const Formulario = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
+          // Validacion codigo
           if (!valores.cod_metodo_pago) {
             errores.cod_metodo_pago = "Por favor ingrese un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_metodo_pago)) {
+            errores.cod_metodo_pago = "Escribir solo números";
           } 
 
           // Validacion descripción
           if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresar una descripción";
+            errores.descripcion = "Por favor ingresa una descripción";
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*% ]+$/.test(valores.descripcion)) {
+            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           } 
 
           // Validacion tipo

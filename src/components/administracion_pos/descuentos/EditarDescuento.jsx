@@ -54,26 +54,33 @@ const Formulario = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.cod_descuento) {
+           // Validacion código
+           if (!valores.cod_descuento) {
             errores.cod_descuento = "Por favor ingresa un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_descuento)) {
+            errores.cod_descuento = "Escribir solo números";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*% ]+$/.test(valores.descripcion)) {
+            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           } 
 
           // Validacion porcentaje
           if (!valores.porcentaje) {
             errores.porcentaje = "Por favor ingresa un porcentaje";
-          }
+          } else if (!/^^\d*\.\d+$/.test(valores.porcentaje)) {
+            errores.porcentaje = "Escribir el porcentaje en decimal. Ejemplo: 0.10";
+          } else if (!/^^[0-9-.]+$/.test(valores.porcentaje)) {
+            errores.porcentaje = "Solo números";
+          } 
 
           // Validacion estado
           if (!valores.activo) {
             errores.activo = "Por favor ingresar un estado";
           } 
-
 
           return errores;
         }}
@@ -113,8 +120,7 @@ const Formulario = () => {
                     className="form-control"
                     id="idDescuento"
                     name="cod_descuento"
-                    placeholder="ID de Descuento..."
-                    disabled readonly
+                    placeholder="Código..."
                   />
 
                   <ErrorMessage
@@ -154,11 +160,11 @@ const Formulario = () => {
                     Porcentaje:
                   </label>
                   <Field
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="poorcentajeDescuento"
                     name="porcentaje"
-                    placeholder="Dirección..."
+                    placeholder="Porcentaje..."
                   />
 
                   <ErrorMessage

@@ -28,20 +28,24 @@ const Formulario = () => {
         validate={(valores) => {
             let errores = {};
 
-            // Validacion de código no vacio
+            // Validacion de código
             if (!valores.cod_categoria) {
               errores.cod_categoria = "Por favor ingresa un código";
+            } else if (!/^[0-9]+$/.test(valores.cod_categoria)) {
+              errores.cod_categoria = "Escribir solo números";
             }
 
   
             // Validacion descripción
             if (!valores.descripcion) {
               errores.descripcion = "Por favor ingresa una descripción";
+            } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
+              errores.descripcion = "Escribir solo en MAYÚSCULAS";
             }
   
             // Validacion estado
             if (!valores.activo) {
-              errores.activo = "Por favor ingresa un estado";
+              errores.activo = "Por favor selecciona un estado";
             }
   
             return errores;

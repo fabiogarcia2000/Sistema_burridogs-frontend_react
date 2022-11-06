@@ -33,38 +33,44 @@ const EditarSucursal = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
+          // Validacion codigo
           if (!valores.cod_sucursal) {
             errores.cod_sucursal = "Por favor ingresa un código";
+          } else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,12}$/.test(valores.cod_sucursal)) {
+            errores.cod_sucursal = "Escribir números y letras sin espacios. Ejemplo: S001";
           }
-
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
+            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion dirección
           if (!valores.direccion) {
             errores.direccion = "Por favor ingresa una dirección";
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*,.\s]+$/.test(valores.direccion)) {
+            errores.direccion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion teléfono
           if (!valores.telefono) {
             errores.telefono = "Por favor ingresa un teléfono";
+          } else if (!/^^\+504[2389][0-9]{7}$/.test(valores.telefono)) {
+            errores.telefono = "Ingrese un teléfono válido. Ejemplo: +50499999999";
           }
 
           // Validacion rtn
           if (!valores.rtn) {
-            errores.rtn = "Por favor ingresa un rtn";
-          } else if (!/^^[0-9]+$/.test(valores.rtn)) {
-            errores.rtn = "El rtn solo puede contener números";
+            errores.rtn = "Por favor ingresa un R.T.N";
+          } else if (!/^^(?=[0]+[0-9])[0-9]{14}$/.test(valores.rtn)) {
+            errores.rtn = "Ingresa un R.T.N válido";
           }
 
           // Validacion de Centro de Costo
           if (!valores.id_centro_costo) {
-            errores.id_centro_costo = "Por favor seleccione un Centro de Costos";
+            errores.id_centro_costo = "Por favor selecciona un Centro de Costos";
           }
-
            // Validacion de mapa
            //if (!valores.id_mapa) {
             //errores.id_mapa = "Por favor seleccione un mapa";
@@ -114,8 +120,8 @@ const EditarSucursal = () => {
                   className="form-control"
                   id="idSucursal"
                   name="cod_sucursal"
-                  placeholder="ID de Sucursal..."
-                  disabled readonly
+                  placeholder="Código..."
+                  disabled
                 />
 
                 <ErrorMessage

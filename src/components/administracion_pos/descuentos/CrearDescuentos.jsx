@@ -6,6 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const URLCrear = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/descuento/getone/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
@@ -52,20 +53,28 @@ const Formulario = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
+          // Validacion código
           if (!valores.cod_descuento) {
             errores.cod_descuento = "Por favor ingresa un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_descuento)) {
+            errores.cod_descuento = "Escribir solo números";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*% ]+$/.test(valores.descripcion)) {
+            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           } 
 
           // Validacion porcentaje
           if (!valores.porcentaje) {
             errores.porcentaje = "Por favor ingresa un porcentaje";
-          }
+          } else if (!/^^\d*\.\d+$/.test(valores.porcentaje)) {
+            errores.porcentaje = "Escribir el porcentaje en decimal. Ejemplo: 0.10";
+          } else if (!/^^[0-9-.]+$/.test(valores.porcentaje)) {
+            errores.porcentaje = "Solo números";
+          } 
 
           // Validacion estado
           if (!valores.activo) {
@@ -76,6 +85,18 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
+          //Corroborar que el registro crear no exista
+          try {
+            const res = await axios.get(`${URLMostrarUno}${valores.cod_descuento}`);
+            console.log(res);
+            console.log("One")
+            if (res.data){
+
+            }
+          } catch (error) {
+
+          }
+
          //procedimineto para guardar el nuevo registro
          try {
           const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
@@ -149,11 +170,11 @@ const Formulario = () => {
                     Porcentaje:
                   </label>
                   <Field
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="poorcentajeDescuento"
                     name="porcentaje"
-                    placeholder="Dirección..."
+                    placeholder="Porcentaje..."
                   />
 
                   <ErrorMessage

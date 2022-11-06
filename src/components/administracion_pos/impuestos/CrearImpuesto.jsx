@@ -28,20 +28,28 @@ const Formulario = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
+          // Validacion código
           if (!valores.cod_impuesto) {
             errores.cod_impuesto = "Por favor ingrese un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_impuesto)) {
+            errores.cod_impuesto = "Escribir solo números";
           }
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          }
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*% ]+$/.test(valores.descripcion)) {
+            errores.descripcion = "Escribir solo en MAYÚSCULAS";
+          } 
 
           // Validacion porcentaje
           if (!valores.porcentaje) {
-            errores.porcentaje = "Por favor ingresar un porcentaje";
-          }
+            errores.porcentaje = "Por favor ingresa un porcentaje";
+          } else if (!/^^\d*\.\d+$/.test(valores.porcentaje)) {
+            errores.porcentaje = "Escribir el porcentaje en decimal. Ejemplo: 0.10";
+          } else if (!/^^[0-9-.]+$/.test(valores.porcentaje)) {
+            errores.porcentaje = "Solo números";
+          } 
 
           // Validacion tipo
           if (!valores.tipo) {
@@ -128,7 +136,7 @@ const Formulario = () => {
                     Porcentaje:
                   </label>
                   <Field
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="porcentajeImpuesto"
                     name="porcentaje"

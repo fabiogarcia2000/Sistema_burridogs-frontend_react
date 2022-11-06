@@ -33,12 +33,17 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
           // Validacion de código
           if (!valores.cod_categoria) {
-            errores.cod_categoria = "Por favor ingresar un código";
+            errores.cod_categoria = "Por favor ingresa un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_categoria)) {
+            errores.cod_categoria = "Escribir solo números";
           }
+
 
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
+          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
+            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion estado
@@ -79,12 +84,12 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
                     Código:
                   </label>
                   <Field
-                    type="text"
+                    type="number"
                     className="form-control"
                     id="codCategoria"
                     name="cod_categoria"
                     placeholder="Código..."
-                    disabled readonly
+                    disabled
                   />
 
                   <ErrorMessage
