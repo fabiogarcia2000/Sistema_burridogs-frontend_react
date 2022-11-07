@@ -83,7 +83,7 @@ const EditarSucursal = () => {
         }}
       >
         {({ errors }) => (
-          <Form className="formulario">
+          <Form >
             <h3 className="mb-3">Editar Material</h3>
             <div className="row g-3">
               <div className="col-sm-6">

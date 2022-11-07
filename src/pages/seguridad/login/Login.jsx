@@ -68,7 +68,8 @@ class Login extends React.Component {
                 <div className="background">
                     <img
                         src={burridogs}
-                        alt="burridogs" />
+                        alt="burridogs"
+                        className='imglogo' />
 
                     <div className="formulario">
 
@@ -103,7 +104,7 @@ class Login extends React.Component {
 
                                 <button
                                     onClick={this.manejadorBoton}
-                                    className="btn">Ingresar
+                                    className="btns">Ingresar
 
                                 </button>
 
@@ -111,7 +112,7 @@ class Login extends React.Component {
                                 <Link
                                     to="/recuperacion_contrasena"
                                     type="btn"
-                                    className="btn btn-danger mb-3 me-2"
+                                    className="btns btn-danger mb-3 me-2"
                                 >
                                     ¿Olvidó su contraseña?
                                 </Link>
@@ -120,7 +121,7 @@ class Login extends React.Component {
                                 <Link
                                     to="/registro"
                                     type="btn"
-                                    className="btn btn-danger mb-3 me-2"
+                                    className="btns btn-danger mb-3 me-2"
                                 >
                                     Registrarse
                                 </Link>

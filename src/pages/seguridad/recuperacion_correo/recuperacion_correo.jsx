@@ -34,7 +34,8 @@ export default function RecuperacionCorreo(props) {
         <div className="background">
             <img
                 src={burridogs}
-                alt="burridogs" />
+                alt="burridogs"
+                className='imglogo' />
 
             <div className="formulario">
 
@@ -55,7 +56,7 @@ export default function RecuperacionCorreo(props) {
 
                     <button
                         //onClick={handleLogin}
-                        className='btn'>Reiniciar contraseña</button>
+                        className='btns'>Reiniciar contraseña</button>
                 </div>
             </div>
         </div>

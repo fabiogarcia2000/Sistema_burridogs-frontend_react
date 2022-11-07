@@ -72,7 +72,8 @@ class Pregunta extends React.Component {
         return (< div className="background" >
             <img
                 src={burridogs}
-                alt="burridogs" />
+                alt="burridogs"
+                className="imglogo" />
 
             <div className="formulario">
 
@@ -101,7 +102,7 @@ class Pregunta extends React.Component {
 
                     <button
                         onClick={this.manejadorBoton}
-                        className='btn'>Siguiente</button>
+                        className='btns'>Siguiente</button>
                 </div>
             </div>
         </div >

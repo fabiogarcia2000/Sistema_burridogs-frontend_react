@@ -71,7 +71,7 @@ const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
         }}
       >
         {({ errors }) => (
-          <Form className="formulario">
+          <Form >
             <h3 className="mb-3">Editar Modo Pedido</h3>
             <div className="row g-3">
               <div className="col-sm-6">

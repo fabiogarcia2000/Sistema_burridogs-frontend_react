@@ -34,7 +34,8 @@ export default function RecuperacionContra(props) {
         <div className="background">
             <img
                 src={burridogs}
-                alt="burridogs" />
+                alt="burridogs" 
+                className='imglogo'/>
 
             <div className="formulario">
 
@@ -55,12 +56,12 @@ export default function RecuperacionContra(props) {
 
                     <button
                         //onClick={handleLogin}
-                        className='btn'>Enviar contraseña por correo</button>
+                        className='btns'>Enviar contraseña por correo</button>
 
 
                     <button
                         //onClick={handleLogin}
-                        className='btn'>Recuperar vía preguntas secretas</button>
+                        className='btns'>Recuperar vía preguntas secretas</button>
                 </div>
             </div>
         </div>

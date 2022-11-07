@@ -34,7 +34,8 @@ export default function CambioContra(props) {
         <div className="background">
             <img
                 src={burridogs}
-                alt="burridogs" />
+                alt="burridogs"
+                className='imglogo' />
 
             <div className="formulario">
 
@@ -69,7 +70,7 @@ export default function CambioContra(props) {
 
                     <button
                         //onClick={handleLogin}
-                        className='btn'>Ingresar</button>
+                        className='btns'>Ingresar</button>
 
                 </div>
 

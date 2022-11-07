@@ -100,7 +100,7 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
         }}
       >
         {({ errors }) => (
-          <Form className="formulario">
+          <Form>
             <h3 className="mb-3">Editar Categoría</h3>
             <div className="row g-3">
               <div className="col-sm-6">

@@ -45,7 +45,8 @@ const Registro = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <img
                 src={burridogs}
-                alt="burridogs" />
+                alt="burridogs"
+                className='imglogo' />
             <div className="formulario">
                 <div className="inputs">
                     <h1>Registro</h1>
@@ -118,7 +119,7 @@ const Registro = () => {
 
                         />
                     </div>
-                    <button className='btn'>Registrarse</button>
+                    <button className='btns'>Registrarse</button>
 
                 </div>
             </div >
