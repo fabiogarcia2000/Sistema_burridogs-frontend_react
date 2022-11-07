@@ -1,17 +1,44 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const URLEditar = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
 
 const FormularioEditar = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+   //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "Los cambios se guardaron con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        })
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudieron guardar los cambios',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+      break;
+
+      default: break;
+    }
+  };
 
   return (
     <div className="container">
@@ -71,19 +98,18 @@ const FormularioEditar = () => {
           console.log(valores)
           try {
               const res = await axios.put(`${URLEditar}${valores.cod_impuesto}`, valores);
-              console.log("Insertando....");
                 if (res.status === 200) {
-                  alert("Guardado!");
+                  mostrarAlertas("guardado");
+                  navigate("/mostrarimpuestos");
                 } else{
-                  alert("Error al guardar");
+                  mostrarAlertas("error");
                 }
           } catch (error) {
             console.log(error);
+            mostrarAlertas("error");
+            navigate("/mostrarimpuestos");
           }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarimpuestos");
+         
         }}
       >
         {({ errors }) => (
@@ -214,11 +240,6 @@ const FormularioEditar = () => {
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

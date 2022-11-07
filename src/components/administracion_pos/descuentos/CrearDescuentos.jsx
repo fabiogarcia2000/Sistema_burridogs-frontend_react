@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -9,32 +8,47 @@ const URLCrear = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/descuento/getone/";
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   const navigate = useNavigate();
 
-  //Alertas de éxito o error
-  //alerta de éxito al insertar un registro
-  const mostrarAlertaExito = () =>{
-    Swal.fire({
-      title: '¡Guardado!',
-      text: "El descuento se creó con éxito",
-      icon: 'success',
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Ok'
-    })
+   //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "El descuento se creó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo crear el nuevo descuento',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+      break;
+
+      case 'duplicado':
+        Swal.fire({
+          text:  'Ya existe un descuento con el código ingresado',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      default: break;
+    }
   };
 
-  //alerta de error al crear un registro 
-  const mostrarAlertaError = () =>{
-    Swal.fire({
-      title: 'Error',
-      text:  'No se pudo crear el nuevo descuento',
-      icon: 'error',
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Ok'
-    })
-  };
  
   return (
     <div className="container">
@@ -85,23 +99,29 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-         //procedimineto para guardar el nuevo registro
-         try {
-          const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
-             if (res.status === 200) {
-              mostrarAlertaExito();
-            } else {
-              mostrarAlertaError();
+          //validar si existe un registro con el codigo ingresado
+          try {
+            const res = await axios.get(`${URLMostrarUno}${valores.cod_descuento}`);
+            console.log(res)
+            if (res.data === ""){
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+                  const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
+                  if (res.status === 200) {
+                    mostrarAlertas("guardado");
+                    navigate("/mostrardescuentos");
+                } else {
+                  mostrarAlertas("error");
+                }
+                
+            }else{ 
+              mostrarAlertas("duplicado");
             }
-
-        } catch (error) {
-          console.log(error);
-          alert("Se ha producido un error. Inténtelo de nuevo en otro momento");
-        }
-
-        console.log("Formulario enviado");
-        setFormularioEnviado(true);
-        navigate("/mostrardescuentos");
+          } catch (error) {
+            console.log(error);
+            mostrarAlertas("error");
+            navigate("/mostrardescuentos");
+          }
+        
         }}
       >
         {({ errors }) => (
@@ -200,11 +220,6 @@ const Formulario = () => {
 
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
             <Link to="/mostrardescuentos" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
-
-           {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

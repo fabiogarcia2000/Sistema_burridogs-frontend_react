@@ -1,15 +1,53 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const URLCrear = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/impuesto/getone/";
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "El impuesto se creó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo crear el nuevo impuesto',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+      break;
+
+      case 'duplicado':
+        Swal.fire({
+          text:  'Ya existe un impuesto con el código ingresado',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      default: break;
+    }
+  };
 
   return (
     <div className="container">
@@ -64,22 +102,28 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //procedimineto para guardar el nuevo registro
-          console.log(valores)
+
+          //validar si existe un registro con el codigo ingresado
           try {
-              const res = await axios.put(`${URLCrear}${valores.cod_impuesto}`, valores);
-                if (res.status === 200) {
-                  alert("Guardado!");
-                } else{
-                  alert("Error al guardar");
+            const res = await axios.get(`${URLMostrarUno}${valores.cod_impuesto}`);
+            console.log(res)
+            if (res.data === ""){
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+                  const res = await axios.put(`${URLCrear}${valores.cod_impuesto}`, valores);
+                  if (res.status === 200) {
+                    mostrarAlertas("guardado");
+                    navigate("/mostrarimpuestos");
+                } else {
+                  mostrarAlertas("error");
                 }
+            }else{ 
+              mostrarAlertas("duplicado");
+            }
           } catch (error) {
             console.log(error);
-          }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarimpuestos");
+            mostrarAlertas("error");
+            navigate("/mostrarimpuestos");
+          };
         }}
       >
         {({ errors }) => (
@@ -209,11 +253,6 @@ const Formulario = () => {
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

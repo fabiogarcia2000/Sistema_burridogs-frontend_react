@@ -34,7 +34,7 @@ function Sidebar() {
             <li>
               <Link to="/">
                 <i className="bi bi-circle"></i>
-                <span>Opción 1</span>
+                <span>Punto de venta</span>
               </Link>
             </li>
             <li>
@@ -125,7 +125,7 @@ function Sidebar() {
             <li>
               <Link to="/mostrarmesas">
                 <i className="bi bi-circle"></i>
-                <span>Mesas</span>
+                <span>...</span>
               </Link>
             </li>
           </ul>

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
@@ -9,32 +8,36 @@ import Swal from "sweetalert2";
 const URLEditar = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
 
   //Alertas de éxito o error
-  //alerta de éxito al editar un registro
-  const mostrarAlertaExito = () =>{
-    Swal.fire({
-      title: '¡Guardado!',
-      text: "Los cambios se guardaron con éxito",
-      icon: 'success',
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Ok'
-    })
-  };
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "Los cambios se guardaron con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        })
 
-  //alerta de error al guardar los cambios 
-  const mostrarAlertaError = () =>{
-    Swal.fire({
-      title: 'Error',
-      text:  'No se pudieron guardar los cambios',
-      icon: 'error',
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Ok'
-    })
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudieron guardar los cambios',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+      break;
+
+      default: break;
+    }
   };
 
   return (
@@ -90,20 +93,18 @@ const Formulario = () => {
           const res = await axios.put(`${URLEditar}${valores.cod_descuento}`, valores);
 
              if (res.status === 200) {
-              mostrarAlertaExito();
+              mostrarAlertas("guardado");
+              navigate("/mostrardescuentos");
             } else {
-              mostrarAlertaError();
+              mostrarAlertas("error");
             }
-
 
         } catch (error) {
           console.log(error);
-          mostrarAlertaError();
+          mostrarAlertas("error");
+          navigate("/mostrardescuentos");
         }
 
-        console.log("Formulario enviado");
-        setFormularioEnviado(true);
-        navigate("/mostrardescuentos");
         }}
       >
         {({ errors }) => (
@@ -202,11 +203,6 @@ const Formulario = () => {
 
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
             <Link to="/mostrardescuentos" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
-
-           {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

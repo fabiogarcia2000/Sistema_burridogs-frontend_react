@@ -1,15 +1,53 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const URLCrear = "http://190.53.243.69:3001/metodo_pago/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/metodo_pago/getone/";
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "El método de pago se creó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo crear el nuevo método de pago',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+      break;
+
+      case 'duplicado':
+        Swal.fire({
+          text:  'Ya existe un método de pago con el código ingresado',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      default: break;
+    }
+  };
 
   return (
     <div className="container">
@@ -62,22 +100,27 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //procedimineto para guardar el nuevo registro
-          console.log(valores)
-          try {
-              const res = await axios.put(`${URLCrear}${valores.cod_metodo_pago}`, valores);
-                if (res.status === 200) {
-                  alert("Guardado!");
-                } else{
-                  alert("Error al guardar");
-                }
-          } catch (error) {
-            console.log(error);
-          }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarmetodospago");
+              //validar si existe un registro con el codigo ingresado
+              try {
+                const res = await axios.get(`${URLMostrarUno}${valores.cod_metodo_pago}`);
+                console.log(res)
+                    if (res.data === ""){
+                      //procedimineto para guardar el nuevo registro en el caso de que no exista
+                          const res = await axios.put(`${URLCrear}${valores.cod_metodo_pago}`, valores);
+                          if (res.status === 200) {
+                            mostrarAlertas("guardado");
+                            navigate("/mostrarmetodospago");
+                        } else {
+                          mostrarAlertas("error");
+                        }
+                    }else{ 
+                      mostrarAlertas("duplicado");
+                    }
+              } catch (error) {
+                console.log(error);
+                mostrarAlertas("error");
+                navigate("/mostrarmetodospago");
+              }
         }}
       >
         {({ errors }) => (
@@ -206,10 +249,6 @@ const Formulario = () => {
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
             <Link to="/mostrarmetodospago" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
 
-           {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

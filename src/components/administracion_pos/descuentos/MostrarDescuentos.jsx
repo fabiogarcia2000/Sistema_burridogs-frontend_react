@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates"; 
+import Swal from "sweetalert2";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";
@@ -24,7 +25,48 @@ const MostrarSucursales = () => {
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
-      alert("Error al mostrar los datos")
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+
+    //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'eliminado':
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: "El descuento se eliminó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text:  'No se pudo eliminar el descuento',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+      
+      case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Mostrar',
+        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+      default: break;
     }
   };
 
@@ -35,13 +77,13 @@ const MostrarSucursales = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!"); 
+        mostrarAlertas("eliminado"); 
       } else {
-        alert("ERROR al Eliminar :(");
+        mostrarAlertas("error");
       }
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido eliminar :(");
+      mostrarAlertas("error");
     }
   };
 
