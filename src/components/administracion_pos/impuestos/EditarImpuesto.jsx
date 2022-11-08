@@ -4,6 +4,7 @@ import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
 
@@ -112,7 +113,7 @@ const FormularioEditar = () => {
          
         }}
       >
-        {({ errors }) => (
+        {({ errors, values }) => (
           <Form>
             <h3 className="mb-3">Editar Impuesto</h3>
             <div className="row g-3">
@@ -148,6 +149,7 @@ const FormularioEditar = () => {
                     id="descripcionImpuesto"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage

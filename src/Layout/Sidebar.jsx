@@ -32,7 +32,7 @@ function Sidebar() {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link to="/">
+              <Link to="/punto-de-ventas">
                 <i className="bi bi-circle"></i>
                 <span>Punto de venta</span>
               </Link>

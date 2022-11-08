@@ -4,6 +4,7 @@ import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
@@ -69,8 +70,6 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
-            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion estado
@@ -99,7 +98,7 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
               }
         }}
       >
-        {({ errors }) => (
+        {({ errors, values }) => (
           <Form>
             <h3 className="mb-3">Editar Categoría</h3>
             <div className="row g-3">
@@ -137,6 +136,7 @@ const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
                     id="descripcionCategoria"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage

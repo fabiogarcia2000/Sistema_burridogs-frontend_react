@@ -4,6 +4,7 @@ import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
 const EditarSucursal = () => {
@@ -69,15 +70,11 @@ const EditarSucursal = () => {
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
-            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion dirección
           if (!valores.direccion) {
             errores.direccion = "Por favor ingresa una dirección";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*,.\s]+$/.test(valores.direccion)) {
-            errores.direccion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion teléfono
@@ -130,7 +127,7 @@ const EditarSucursal = () => {
             }
         }}
       >
-        {({ errors }) => (
+        {({ errors, values }) => (
           <Form >
           <h3 className="mb-3">Editar Sucursal</h3>
           <div className="row g-3">
@@ -166,6 +163,7 @@ const EditarSucursal = () => {
                   id="descripcionSucursal"
                   name="descripcion"
                   placeholder="Descripcion..."
+                  onKeyUp={cambiarAMayusculasDescripcion(values)}
                 />
 
                 <ErrorMessage
@@ -190,6 +188,7 @@ const EditarSucursal = () => {
                   id="direccionSucursal"
                   name="direccion"
                   placeholder="Dirección..."
+                  onKeyUp={cambiarAMayusculasDirección(values)}
                 />
 
                 <ErrorMessage

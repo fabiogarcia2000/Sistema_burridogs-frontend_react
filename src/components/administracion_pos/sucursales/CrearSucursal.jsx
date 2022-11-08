@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/sucursal/getone/";
@@ -80,15 +81,11 @@ const CrearSucursal = () => {
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
-            errores.descripcion = "Escribir solo en MAYÚSCULAS";
-          }
+          } 
 
           // Validacion dirección
           if (!valores.direccion) {
             errores.direccion = "Por favor ingresa una dirección";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*,.\s]+$/.test(valores.direccion)) {
-            errores.direccion = "Escribir solo en MAYÚSCULAS";
           }
 
           // Validacion teléfono
@@ -147,7 +144,7 @@ const CrearSucursal = () => {
 
         }}
       >
-        {({ errors }) => (
+        {({ errors, values }) => (
           <Form >
             <h3 className="mb-3">Crear Sucursal</h3>
             <div className="row g-3">
@@ -182,6 +179,7 @@ const CrearSucursal = () => {
                     id="descripcionSucursal"
                     name="descripcion"
                     placeholder="Descripcion..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -206,6 +204,7 @@ const CrearSucursal = () => {
                     id="direccionSucursal"
                     name="direccion"
                     placeholder="Dirección..."
+                    onKeyUp={cambiarAMayusculasDirección(values)}
                   />
 
                   <ErrorMessage

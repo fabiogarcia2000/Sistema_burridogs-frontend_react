@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/impuesto/getone/";
@@ -76,8 +77,6 @@ const Formulario = () => {
           // Validacion descripción
           if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#*% ]+$/.test(valores.descripcion)) {
-            errores.descripcion = "Escribir solo en MAYÚSCULAS";
           } 
 
           // Validacion porcentaje
@@ -126,7 +125,7 @@ const Formulario = () => {
           };
         }}
       >
-        {({ errors }) => (
+        {({ errors, values }) => (
           <Form>
             <h3 className="mb-3">Nuevo Impuesto</h3>
             <div className="row g-3">
@@ -161,6 +160,7 @@ const Formulario = () => {
                     id="descripcionImpuesto"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
