@@ -35,9 +35,9 @@ import CrearModoPedido from "../components/administracion_pos/modoPedido/CrearMo
 import EditarModoPedido from "../components/administracion_pos/modoPedido/EditarModoPedido"
 import MostrarModoPedido from "../components/administracion_pos/modoPedido/MostrarModoPedido";
 
-import CrearTalonarioSAR from "../components/administracion_pos/talonarioSAR/crearTaSAR";
-import EditarTalonarioSAR from "../components/administracion_pos/talonarioSAR/editarTaSAR"
-import MostrarTalonarioSAR from "../components/administracion_pos/talonarioSAR/mostrarTaSAR";
+import CrearTalonarioSAR from "../components/administracion_pos/Correlativo/crearTaSAR";
+import EditarTalonarioSAR from "../components/administracion_pos/Correlativo/editarTaSAR"
+import MostrarTalonarioSAR from "../components/administracion_pos/Correlativo/mostrarTaSAR";
 
 import CrearPOS from "../components/administracion_pos/POS/CrearPOS";
 import EditarPOS from "../components/administracion_pos/POS/EditarPOS";
