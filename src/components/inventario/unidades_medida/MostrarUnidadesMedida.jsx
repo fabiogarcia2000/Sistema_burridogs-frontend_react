@@ -3,12 +3,14 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { setGlobalState } from "../../../globalStates/globalStates";
 
 const UrlMostrar = "http://190.53.243.69:3001/unidad_medida/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/unidad_medida/eliminar/";
 
 const MostrarUnidadesMedida = () => {
   //Configurar los hooks
+  const [registroDelete, setRegistroDelete] = useState("");
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
@@ -26,25 +28,62 @@ const MostrarUnidadesMedida = () => {
   };
 
   //procedimineto para eliminar un registro
-  const deleteRegistro = async (id) => {
-    await axios.delete(`${UrlEliminar}${id}`);
-    getRegistros();
+  const deleteRegistro = async () => {
+    try {
+      console.log(registroDelete);
+      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      getRegistros();
+      if (res.status === 200) {
+        alert("Eliminado!");
+      } else {
+        alert("ERROR al Eliminar :(");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("ERROR - No se ha podido eliminar :(");
+    }
   };
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [registroVerMas, setRegistroVerMas] = useState({});
+
+  //Barra de busqueda
+  const [busqueda, setBusqueda] = useState("");
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value);
+  };
+
+  //metodo de filtrado
+  let results = [];
+  if (!busqueda) {
+    results = registros;
+  } else {
+    results = registros.filter(
+      (dato) =>
+        dato.cod_unidad_medida
+          .toString()
+          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
+    );
+  }
+
   //Configuramos las columnas de la tabla
   const columns = [
     {
       name: "CÓDIGO",
-      selector: (row) => row.id,
+      selector: (row) => row.cod_unidad_medida,
       sortable: true,
       maxWidth: "200px", //ancho de la columna
     },
     {
       name: "DESCRIPCIÓN",
-      selector: (row) => row.name,
+      selector: (row) => row.descripcion,
       sortable: true,
       maxWidth: "850px",
     },
@@ -53,10 +92,23 @@ const MostrarUnidadesMedida = () => {
       cell: (row) => (
         <>
           <Link
-            to={`/editarunidadmedida/${row.id}/edit`}
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setRegistroVerMas(row);
+            }}
+          >
+            <i className="fa-solid fa-eye"></i>
+          </Link>
+          &nbsp;
+          <Link
+            to="/editarunidadmedida"
             type="button"
             className="btn btn-light"
             title="Editar"
+            onClick={() => setGlobalState("registroEdit", row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
@@ -64,7 +116,10 @@ const MostrarUnidadesMedida = () => {
           <button
             className="btn btn-light"
             title="Eliminar"
-            onClick={abrirModalEliminar}
+            onClick={() => {
+              setRegistroDelete(row.cod_unidad_medida);
+              abrirModalEliminar();
+            }}
           >
             <i className="fa-solid fa-trash"></i>
           </button>
@@ -152,8 +207,10 @@ const MostrarUnidadesMedida = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por código o descripción..."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>
@@ -164,7 +221,7 @@ const MostrarUnidadesMedida = () => {
       <div className="row">
         <DataTable
           columns={columns}
-          data={registros}
+          data={results}
           pagination
           paginationComponentOptions={paginationComponentOptions}
           highlightOnHover
@@ -173,6 +230,62 @@ const MostrarUnidadesMedida = () => {
         />
       </div>
 
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CÓDIGO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.cod_unidad_medida} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CREADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.creado_por} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.fecha_creacion} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MODIFICADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.modificado_por} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.fecha_modificacion} </p>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
         <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
@@ -180,7 +293,13 @@ const MostrarUnidadesMedida = () => {
           <p>¿Está seguro de Eliminar este Registro?</p>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onClick={abrirModalEliminar}>
+          <Button
+            color="danger"
+            onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+          >
             Eliminar
           </Button>
           <Button color="secondary" onClick={abrirModalEliminar}>

@@ -1,35 +1,36 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useGlobalState } from "../../../globalStates/globalStates";
+import axios from "axios";
 
-const EditarUnidadMedida = () => {
-  const { id } = useParams();
+const URLEditar =
+  "http://190.53.243.69:3001/unidad_medida/actualizar-insertar/";
 
-
-  //Configurar los hooks
+const FormularioEditar = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const [edit] = useGlobalState("registroEdit");
 
-
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
-
         initialValues={{
-          id: id,
-          descripcion: "",
+          cod_unidad_medida: edit.cod_unidad_medida,
+          descripcion: edit.descripcion,
+          modificado_por: "autorPrueba",
+          fecha_modificacion: "2022/10/27",
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un código";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El código solo puede contener números";
+          // Validacion código
+          if (!valores.cod_unidad_medida) {
+            errores.cod_unidad_medida = "Por favor ingresa un código";
           }
 
           // Validacion descripción
@@ -39,47 +40,64 @@ const EditarUnidadMedida = () => {
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
-          console.log("Formulario enviado");
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el los cambios
+          try {
+            const res = await axios.put(
+              `${URLEditar}${valores.cod_unidad_medida}`,
+              valores
+            );
+            console.log("Insertando....");
+            if (res.status === 200) {
+              alert("Guardado!");
+            } else {
+              alert("ERROR al Guardar :(");
+            }
+          } catch (error) {
+            console.log(error);
+            alert("ERROR - No se ha podido insertar :(");
+          }
 
-          resetForm();
+          console.log("Formulario enviado");
           setFormularioEnviado(true);
+          navigate("/mostrarunidadesmedida");
         }}
       >
         {({ errors }) => (
-          <Form >
+          <Form className="formulario">
             <h3 className="mb-3">Editar Unidad de Medida</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idSucursal" className="form-label">
+                  <label htmlFor="codMedida" className="form-label">
                     Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idSucursal"
-                    name="id"
+                    id="codMedida"
+                    name="cod_unidad_medida"
                     placeholder="Código de la medida..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="cod_unidad_medida"
+                    component={() => (
+                      <div className="error">{errors.cod_unidad_medida}</div>
+                    )}
                   />
                 </div>
               </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="descripcionSucursal" className="form-label">
+                  <label htmlFor="descripcionMedida" className="form-label">
                     Descripción:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionSucursal"
+                    id="descripcionMedida"
                     name="descripcion"
                     placeholder="Descripcion de la unidad de medida..."
                   />
@@ -116,4 +134,4 @@ const EditarUnidadMedida = () => {
   );
 };
 
-export default EditarUnidadMedida;
+export default FormularioEditar;

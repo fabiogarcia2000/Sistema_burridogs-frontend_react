@@ -1,27 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const URLCrear = "http://190.53.243.69:3001/unidad_medida/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id: "",
+          cod_unidad_medida: "",
           descripcion: "",
+          creado_por: "autorPrueba",
+          fecha_creacion: "2022/10/27",
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
           // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un código";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El código solo puede contener números";
+          if (!valores.cod_unidad_medida) {
+            errores.cod_unidad_medida = "Por favor ingresa un código";
           }
 
           // Validacion descripción
@@ -31,47 +36,64 @@ const Formulario = () => {
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
-          console.log("Formulario enviado");
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el nuevo registro
+          console.log(valores);
+          try {
+            const res = await axios.put(
+              `${URLCrear}${valores.cod_unidad_medida}`,
+              valores
+            );
 
-          resetForm();
+            if (res.status === 200) {
+              alert("Guardado!");
+            } else {
+              alert("Error al guardar");
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
+          console.log("Formulario enviado");
           setFormularioEnviado(true);
+          navigate("/mostrarunidadesmedida");
         }}
       >
         {({ errors }) => (
-          <Form >
+          <Form className="formulario">
             <h3 className="mb-3">Nueva Unidad de Medida</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idSucursal" className="form-label">
+                  <label htmlFor="codMedida" className="form-label">
                     Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idSucursal"
-                    name="id"
+                    id="codMedida"
+                    name="cod_unidad_medida"
                     placeholder="Código de la medida..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="cod_unidad_medida"
+                    component={() => (
+                      <div className="error">{errors.cod_unidad_medida}</div>
+                    )}
                   />
                 </div>
               </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="descripcionSucursal" className="form-label">
+                  <label htmlFor="descripcionMedida" className="form-label">
                     Descripción:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionSucursal"
+                    id="descripcionMedida"
                     name="descripcion"
                     placeholder="Descripcion de la unidad de medida..."
                   />

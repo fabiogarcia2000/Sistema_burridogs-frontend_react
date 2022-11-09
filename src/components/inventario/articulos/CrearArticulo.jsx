@@ -1,33 +1,43 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id: "",
+          cod_articulo: "",
           tipo: "",
           descripcion: "",
           descripcion_corta: "",
-          impuesto: "",
-          categoria: "",
-          unidadventa: "",
-          codigobarra: "",
+          id_impuesto: "",
+          id_categoria: "",
+          precio: "",
+          id_unidad_venta: null,
+          id_socio_negocio: "",
+          id_unidad_compra: null,
+          codigo_barra: "",
+          id_unidad_medida: null,
+          activo: "1",
+          creado_por: "autorPrueba",
+          fecha_creacion: "2022/11/05",
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un código";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El código solo puede contener números";
+          // Validacion codigo
+          if (!valores.cod_articulo) {
+            errores.cod_articulo = "Por favor ingresa un código";
           }
 
           // Validacion tipo
@@ -47,94 +57,138 @@ const Formulario = () => {
           }
 
           // Validacion impuesto
-          if (!valores.impuesto) {
-            errores.impuesto = "Por favor ingrese un impuesto";
+          if (!valores.id_impuesto) {
+            errores.id_impuesto = "Por favor ingrese un impuesto";
           }
 
           // Validacion categoría
-          if (!valores.categoria) {
-            errores.categoria = "Por favor ingresa la categoría";
+          if (!valores.id_categoria) {
+            errores.id_categoria = "Por favor ingresa la categoría";
+          }
+
+          // Validacion precio
+          if (!valores.precio) {
+            errores.precio = "Por favor ingrese el precio";
+          } else if (!/^^[0-9]+$/.test(valores.precio)) {
+            errores.precio = "El precio solo puede contener números";
           }
 
           // Validacion unidad de venta
-          if (!valores.unidadventa) {
-            errores.unidadventa = "Por favor ingrese unidades";
-          } else if (!/^^[0-9]+$/.test(valores.unidadventa)) {
-            errores.id = "Las unidades de venta solo puede contener números";
+          if (!valores.id_unidad_venta) {
+            errores.id_unidad_venta = "Por favor ingrese id unidad venta";
+          } else if (!/^^[0-9]+$/.test(valores.id_unidad_venta)) {
+            errores.id_unidad_venta =
+              "Las unidades de venta solo puede contener números";
+          }
+
+          // Validacion socio negocio
+          if (!valores.id_socio_negocio) {
+            errores.id_socio_negocio = "Por favor ingrese el id socio negocio";
+          }
+
+          // Validacion unidad de compra
+          if (!valores.id_unidad_compra) {
+            errores.id_unidad_compra = "Por favor ingrese el id unidad compra";
           }
 
           // Validacion código de barra
-          if (!valores.codigobarra) {
-            errores.codigobarra = "Por favor ingresa el código de barra";
-          } else if (!/^^[0-9]+$/.test(valores.codigobarra)) {
-            errores.id = "El código de barra solo puede contener números";
+          if (!valores.codigo_barra) {
+            errores.codigo_barra = "Por favor ingresa el código de barra";
+          } else if (!/^^[0-9]+$/.test(valores.codigo_barra)) {
+            errores.codigo_barra =
+              "El código de barra solo puede contener números";
+          }
+
+          // Validacion unidad medida
+          if (!valores.id_unidad_medida) {
+            errores.id_unidad_medida = "Por favor ingrese el id unidad medida";
+          }
+
+          // Validacion estado
+          if (!valores.activo) {
+            errores.activo = "Por favor ingresa un estado";
           }
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
-          console.log("Formulario enviado");
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el nuevo registro
+          console.log(valores);
+          try {
+            const res = await axios.put(
+              `${URLCrear}${valores.cod_articulo}`,
+              valores
+            );
 
-          resetForm();
+            if (res.status === 200) {
+              alert("Guardado!");
+            } else {
+              alert("Error al guardar");
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
+          console.log("Formulario enviado");
           setFormularioEnviado(true);
+          navigate("/mostrararticulos");
         }}
       >
         {({ errors }) => (
-          <Form >
+          <Form className="formulario">
             <h3 className="mb-3">Nuevo Artículo</h3>
             <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="idSucursal" className="form-label">
+                  <label htmlFor="codArticulo" className="form-label">
                     Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idSucursal"
-                    name="id"
+                    id="codArticulo"
+                    name="cod_articulo"
                     placeholder="Código del Artículo..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="cod_articulo"
+                    component={() => (
+                      <div className="error">{errors.cod_articulo}</div>
+                    )}
                   />
                 </div>
               </div>
 
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="descripcionSucursal" className="form-label">
+                  <label htmlFor="tipoArticulo" className="form-label">
                     Tipo:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionSucursal"
-                    name="Tipo"
+                    id="tipoArticulo"
+                    name="tipo"
                     placeholder="Tipo de artículo..."
                   />
 
                   <ErrorMessage
-                    name="descripcion"
+                    name="tipo"
                     component={() => <div className="error">{errors.tipo}</div>}
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="direccionSucursal" className="form-label">
+                  <label htmlFor="descripcionArticulo" className="form-label">
                     Descripción:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="direccionSucursal"
+                    id="descripcionArticulo"
                     name="descripcion"
                     placeholder="Descripción..."
                   />
@@ -147,16 +201,18 @@ const Formulario = () => {
                   />
                 </div>
               </div>
+            </div>
 
-              <div className="col-sm-6">
+            <div className="row g-3">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="telefonoSucursal" className="form-label">
+                  <label htmlFor="descripcortaArticulo" className="form-label">
                     Descripción corta:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="telefonoSucursal"
+                    id="descripcortaArticulo"
                     name="descripcion_corta"
                     placeholder="Descripción corta..."
                   />
@@ -169,48 +225,46 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="rtnSucursal" className="form-label">
-                    Impuesto:
+                  <label htmlFor="impuestoArticulo" className="form-label">
+                    ID Impuesto:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="rtnSucursal"
-                    name="impuesto"
+                    id="impuestoArticulo"
+                    name="id_impuesto"
                     placeholder="Impuesto..."
                   />
 
                   <ErrorMessage
-                    name="impuesto"
+                    name="id_impuesto"
                     component={() => (
-                      <div className="error">{errors.impuesto}</div>
+                      <div className="error">{errors.id_impuesto}</div>
                     )}
                   />
                 </div>
               </div>
 
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="centroCostoSucursal" className="form-label">
-                    Categoría:
+                  <label htmlFor="categoriaArticulo" className="form-label">
+                    ID Categoría:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="centroCostoSucursal"
-                    name="categoria"
+                    id="categoriaArticulo"
+                    name="id_categoria"
                     placeholder="Categoría del artículo..."
                   />
 
                   <ErrorMessage
-                    name="categoria"
+                    name="id_categoria"
                     component={() => (
-                      <div className="error">{errors.categoria}</div>
+                      <div className="error">{errors.id_categoria}</div>
                     )}
                   />
                 </div>
@@ -218,45 +272,161 @@ const Formulario = () => {
             </div>
 
             <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="rtnSucursal" className="form-label">
-                    Unidad de Venta:
+                  <label htmlFor="precioArticulo" className="form-label">
+                    Precio:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="rtnSucursal"
-                    name="unidadventa"
-                    placeholder="Unidad de Venta..."
+                    id="precioArticulo"
+                    name="precio"
+                    placeholder="Precio de venta..."
                   />
 
                   <ErrorMessage
-                    name="unidadventa"
+                    name="precio"
                     component={() => (
-                      <div className="error">{errors.unidadventa}</div>
+                      <div className="error">{errors.precio}</div>
                     )}
                   />
                 </div>
               </div>
 
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="centroCostoSucursal" className="form-label">
+                  <label htmlFor="unidadventaArticulo" className="form-label">
+                    ID Unidad Venta:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="unidadventaArticulo"
+                    name="id_unidad_venta"
+                    placeholder="ID Unidad Venta.."
+                  />
+
+                  <ErrorMessage
+                    name="id_unidad_venta"
+                    component={() => (
+                      <div className="error">{errors.id_unidad_venta}</div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="socionegocioArticulo" className="form-label">
+                    ID Socio Negocio:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="socionegocioArticulo"
+                    name="id_socio_negocio"
+                    placeholder="ID Socio de Negocio..."
+                  />
+
+                  <ErrorMessage
+                    name="id_socio_negocio"
+                    component={() => (
+                      <div className="error">{errors.id_socio_negocio}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="unidadcompraArticulo" className="form-label">
+                    ID Unidad Compra:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="unidadcompraArticulo"
+                    name="id_unidad_compra"
+                    placeholder="ID Unidad Compra..."
+                  />
+
+                  <ErrorMessage
+                    name="id_unidad_compra"
+                    component={() => (
+                      <div className="error">{errors.id_unidad_compra}</div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="codigobarraArticulo" className="form-label">
                     Código de Barra:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="centroCostoSucursal"
-                    name="codigobarra"
-                    placeholder="Código de barra del artículo..."
+                    id="codigobarraArticulo"
+                    name="codigo_barra"
+                    placeholder="Código de Barra..."
                   />
 
                   <ErrorMessage
-                    name="codigobarra"
+                    name="codigo_barra"
                     component={() => (
-                      <div className="error">{errors.codigobarra}</div>
+                      <div className="error">{errors.codigo_barra}</div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="unidadmedidaArticulo" className="form-label">
+                    ID Unidad Medida:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="unidadmedidaArticulo"
+                    name="id_unidad_medida"
+                    placeholder="ID Unidad Medida..."
+                  />
+
+                  <ErrorMessage
+                    name="id_unidad_medida"
+                    component={() => (
+                      <div className="error">{errors.id_unidad_medida}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="estadoArticulo" className="form-label">
+                    Estado:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="estadoArticulo"
+                    name="activo"
+                  >
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                  </Field>
+
+                  <ErrorMessage
+                    name="activo"
+                    component={() => (
+                      <div className="error">{errors.activo}</div>
                     )}
                   />
                 </div>

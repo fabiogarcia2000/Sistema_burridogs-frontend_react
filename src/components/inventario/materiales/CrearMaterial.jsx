@@ -1,114 +1,120 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const URLCrear =
+  "http://190.53.243.69:3001/lista_materiales/actualizar-insertar/";
 
 const Formulario = () => {
   const [formularioEnviado, setFormularioEnviado] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id: "",
-          impuesto: "",
-          categoria: "",
-          unidadmedida: "",
-          socionegocio: "",
+          id_articulo_padre: "",
+          id_articulo_hijo: "",
           cantidad: "",
+          comentario: "",
+          creado_por: "autorPrueba",
+          fecha_creacion: "2022/10/27",
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un código";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El código solo puede contener números";
+          // Validacion id padre
+          if (!valores.id_articulo_padre) {
+            errores.id_articulo_padre = "Por favor ingresa un id";
           }
 
-          // Validacion impuesto
-          if (!valores.impuesto) {
-            errores.impuesto = "Por favor ingresa un impuesto";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.impuesto = "El impuesto solo puede contener números";
-          }
-
-          // Validacion categoria
-          if (!valores.categoria) {
-            errores.categoria = "Por favor ingresa una categoria";
-          }
-
-          // Validacion unidad medida
-          if (!valores.unidadmedida) {
-            errores.unidadmedida = "Por favor ingresa una unidad de medida";
-          }
-
-          // Validacion socio de negocio
-          if (!valores.socionegocio) {
-            errores.socionegocio =
-              "Por favor ingresa el nombre del socio de negocio";
+          // Validacion id hijo
+          if (!valores.id_articulo_hijo) {
+            errores.id_articulo_hijo = "Por favor ingresa un id";
           }
 
           // Validacion cantidad
           if (!valores.cantidad) {
-            errores.cantidad = "Por favor ingresa la cantidad";
-          } else if (!/^^[0-9]+$/.test(valores.cantidad)) {
-            errores.cantidad = "La cantidad solo puede contener números";
+            errores.cantidad = "Por favor ingresa una cantidad";
+          }
+
+          // Validacion comentario
+          if (!valores.comentario) {
+            errores.comentario = "Por favor ingresa una comentario";
           }
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
-          console.log("Formulario enviado");
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el nuevo registro
+          console.log(valores);
+          try {
+            const res = await axios.put(
+              `${URLCrear}${valores.id_articulo_padre}`,
+              valores
+            );
 
-          resetForm();
+            if (res.status === 200) {
+              alert("Guardado!");
+            } else {
+              alert("Error al guardar");
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
+          console.log("Formulario enviado");
           setFormularioEnviado(true);
+          navigate("/mostrarmateriales");
         }}
       >
         {({ errors }) => (
-          <Form >
+          <Form className="formulario">
             <h3 className="mb-3">Nuevo Material</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idSucursal" className="form-label">
-                    Código:
+                  <label htmlFor="codPdMaterial" className="form-label">
+                    Código Padre:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idSucursal"
-                    name="id"
+                    id="codPdMaterial"
+                    name="id_articulo_padre"
                     placeholder="Código del Material..."
                   />
 
                   <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
+                    name="id_articulo_padre"
+                    component={() => (
+                      <div className="error">{errors.id_articulo_padre}</div>
+                    )}
                   />
                 </div>
               </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="descripcionSucursal" className="form-label">
-                    Impuesto:
+                  <label htmlFor="codHjArticulo" className="form-label">
+                    Código Hijo:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionSucursal"
-                    name="impuesto"
-                    placeholder="Impuesto..."
+                    id="codHjArticulo"
+                    name="id_articulo_hijo"
+                    placeholder="Código Hijo..."
                   />
 
                   <ErrorMessage
-                    name="impuesto"
+                    name="id_articulo_hijo"
                     component={() => (
-                      <div className="error">{errors.impuesto}</div>
+                      <div className="error">{errors.id_articulo_hijo}</div>
                     )}
                   />
                 </div>
@@ -118,89 +124,43 @@ const Formulario = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="direccionSucursal" className="form-label">
-                    Categoría:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="direccionSucursal"
-                    name="categoria"
-                    placeholder="Categoría del material..."
-                  />
-
-                  <ErrorMessage
-                    name="categoria"
-                    component={() => (
-                      <div className="error">{errors.categoria}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="telefonoSucursal" className="form-label">
-                    Unidad de Medida:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="telefonoSucursal"
-                    name="unidadmedida"
-                    placeholder="Medida de la Unidad"
-                  />
-
-                  <ErrorMessage
-                    name="unidadmedida"
-                    component={() => (
-                      <div className="error">{errors.unidadmedida}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="rtnSucursal" className="form-label">
-                    Socio de Negocio:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="rtnSucursal"
-                    name="socionegocio"
-                    placeholder="Nombre del Socio de Negocio..."
-                  />
-
-                  <ErrorMessage
-                    name="socionegocio"
-                    component={() => (
-                      <div className="error">{errors.socionegocio}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="centroCostoSucursal" className="form-label">
+                  <label htmlFor="cantidadArticulo" className="form-label">
                     Cantidad:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="centroCostoSucursal"
+                    id="cantidadArticulo"
                     name="cantidad"
-                    placeholder="Cantidad del material..."
+                    placeholder="Cantidad..."
                   />
 
                   <ErrorMessage
                     name="cantidad"
                     component={() => (
                       <div className="error">{errors.cantidad}</div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="comentarioArticulo" className="form-label">
+                    Comentario:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="comentarioArticulo"
+                    name="comentario"
+                    placeholder="Comentario..."
+                  />
+
+                  <ErrorMessage
+                    name="comentario"
+                    component={() => (
+                      <div className="error">{errors.comentario}</div>
                     )}
                   />
                 </div>
