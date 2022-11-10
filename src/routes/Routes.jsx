@@ -90,6 +90,55 @@ import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperac
 import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/recuperacion_preguntas"
 import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios"
 
+//---------------------------------------------------- MÓDULO DE CONTABILIDAD -----------------------------------------------------------------
+//CATEGORIA CONTABLE
+import CrearCategoriaCont from "../components/contabilidad/categoriaContable/CrearCategoriaCont";
+import MostrarCategoriasCont from "../components/contabilidad/categoriaContable/MostrarCategoriasCont";
+import EditarCategoriaCont from "../components/contabilidad/categoriaContable/EditarCategoriaCont";
+
+//CATALOGO DE CUENTAS
+import CrearCuenta from "../components/contabilidad/catalogoCuentas/CrearCuenta";
+import MostrarCuentas from "../components/contabilidad/catalogoCuentas/MostrarCuentas";
+import EditarCuenta from "../components/contabilidad/catalogoCuentas/EditarCuenta";
+
+//DESTINO DE CUENTAS
+import CrearDestino from "../components/contabilidad/destinoCuenta/CrearDestino";
+import MostrarDestino from "../components/contabilidad/destinoCuenta/MostrarDestino";
+import EditarDestino from "../components/contabilidad/destinoCuenta/EditarDestino";
+
+//INFORME FINANCIERO
+import CrearInformeFinanciero from "../components/contabilidad/informeFinanciero/CrearInformeFinanciero";
+import MostrarInformeFinanciero from "../components/contabilidad/informeFinanciero/MostrarInformeFinanciero";
+import EditarInformeFinanciero from "../components/contabilidad/informeFinanciero/EditarInformeFinanciero";
+
+//LIBRO MAYOR
+import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibroMayor";
+
+//SUBCUENTA
+import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
+import CrearSubCuenta from "../components/contabilidad/subcuenta/CrearSubcuenta";
+import EditarSubCuenta from "../components/contabilidad/subcuenta/EditarSubcuenta";
+
+//ESTADO
+import MostrarEstado from "../components/contabilidad/estado/MostrarEstado";
+import CrearEstado from "../components/contabilidad/estado/CrearEstado";
+import EditarEstado from "../components/contabilidad/estado/EditarEstado";
+
+//DETALLE LIBRO DIARIO
+import MostrarLibroDetalle from "../components/contabilidad/librodiariodetalle/MostrarLibroDetalle";
+import CrearLibroDetalle from "../components/contabilidad/";
+import EditarLibroDetalle from "../components/contabilidad/";
+
+//ENCABEZADO LIBRO DIARIO
+import MostrarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/MostrarLibroEncabezado";
+import CrearLibroEncabezado from "../components/contabilidad/";
+import EditarLibroEncabezado from "../components/contabilidad/";
+
+//PERIODO CONTABLE
+import MostrarPeriodoContable from "../components/contabilidad/periodocontable/MostrarPeriodoContable";
+import CrearPeriodoContable from "../components/contabilidad/periodocontable/CrearPeriodoContable";
+import EditarPeriodoContable from "../components/contabilidad/periodocontable/EditarPeriodoContable";
+
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
 
@@ -199,6 +248,50 @@ function Rutas() {
               element={<EditarSalidaMds />}
             />
             {/*Rutas contabilidad*/}
+            {/*-----------------------------------RUTAS CONTABILIDAD-----------------------------------------------*/}
+            <Route path="crearcategoriacont" element={<CrearCategoriaCont />} />
+            <Route path="mostrarcategoriacont" element={<MostrarCategoriasCont />} />
+            <Route path="editarcategoriacont" element={<EditarCategoriaCont />} />
+
+            <Route path="crearcatalogo" element={<CrearCuenta />} />
+            <Route path="mostrarcatalogo" element={<MostrarCuentas />} />
+            <Route path="editarcatalogo" element={<EditarCuenta />} />
+
+            <Route path="creardestino" element={<CrearDestino />} />
+            <Route path="mostrardestino" element={<MostrarDestino />} />
+            <Route path="editardestino" element={<EditarDestino />} />
+
+            <Route path="crearinformefinanciero" element={<CrearInformeFinanciero />} />
+            <Route path="mostrarinformefinanciero" element={<MostrarInformeFinanciero />} />
+            <Route path="editarinformefinanciero" element={<EditarInformeFinanciero />} />
+
+            <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
+
+            {/*SUBCUENTA*/}
+            <Route path="/mostrarsubcuenta" element={<MostrarSubCuentas/>} />
+            <Route path="/editarsubcuenta" element={<EditarSubCuenta />} />
+            <Route path="/crearsubcuenta" element={<CrearSubCuenta />} />
+
+             {/*ESTADO*/}
+            <Route path="/mostrarestado" element={<MostrarEstado/>} />
+            <Route path="/editarestado" element={<EditarEstado />} />
+            <Route path="/crearestado" element={<CrearEstado />} />
+
+             {/*DETALLE LIBRO DIARIO*/}
+             <Route path="/mostrarlibrodetalle" element={<MostrarLibroDetalle/>} />
+            <Route path="/" element={<EditarLibroDetalle />} />
+            <Route path="/" element={<CrearLibroDetalle />} />
+
+            {/*ENCABEZADO LIBRO DIARIO*/}
+            <Route path="/mostrarlibroencabezado" element={<MostrarLibroEncabezado/>} />
+            <Route path="/" element={<EditarLibroEncabezado/>} />
+            <Route path="/" element={<CrearLibroEncabezado/>} />
+
+            {/*PERIODO CONTABLE*/}
+            <Route path="/mostrarperiodo" element={<MostrarPeriodoContable/>} />
+            <Route path="/editarperiodo" element={<EditarPeriodoContable/>} />
+            <Route path="/crearperiodo" element={<CrearPeriodoContable/>} />
+
 
             {/*Rutas seguridad*/}
             <Route path="/login" element={<Login />} />

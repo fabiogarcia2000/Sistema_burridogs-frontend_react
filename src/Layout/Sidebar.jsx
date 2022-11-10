@@ -205,39 +205,63 @@ function Sidebar() {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link to="/">
+              <Link to="/mostrarcatalogo">
                 <i className="bi bi-circle"></i>
-                <span>Opción 1</span>
+                <span>Catalogo de cuentas</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarcategoriacont">
                 <i className="bi bi-circle"></i>
-                <span>Opción 2</span>
+                <span>Categoria contable</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrardestino">
                 <i className="bi bi-circle"></i>
-                <span>Opción 3</span>
+                <span>Destino de cuenta</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarinformefinanciero">
                 <i className="bi bi-circle"></i>
-                <span>Opción 4</span>
+                <span>Informe Financiero</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarlibromayor">
                 <i className="bi bi-circle"></i>
-                <span>Opción 5</span>
+                <span>Libro Mayor</span>
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/mostrarsubcuenta">
                 <i className="bi bi-circle"></i>
-                <span>Opción 6</span>
+                <span>SubCuentas</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarestado">
+                <i className="bi bi-circle"></i>
+                <span>Estado Libro Diario</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarlibrodetalle">
+                <i className="bi bi-circle"></i>
+                <span>Libro Diario Detalle</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarlibroencabezado">
+                <i className="bi bi-circle"></i>
+                <span>Libro Diario Encabezado</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/mostrarperiodo">
+                <i className="bi bi-circle"></i>
+                <span>Periodo Contable</span>
               </Link>
             </li>
           </ul>
