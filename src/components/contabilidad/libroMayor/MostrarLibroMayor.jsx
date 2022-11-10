@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 
-const UrlMostrar = "https://jsonplaceholder.typicode.com/comments";
+const UrlMostrar = "http://190.53.243.69:3001/mc_libromayor/getall/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const MostrarLibroMayor= () => {
