@@ -18,6 +18,16 @@ export function cambiarAMayusculasDescripCorta(valores) {
   }
 }
 
+//función convertir a mayuscula descripción articulo
+export function cambiarAMayusculasDescripArticulo(valores) {
+  try {
+    let texto = valores.descripcion_articulo;
+    valores.descripcion_articulo = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function cambiarAMayusculasDirección(valores) {
   try {
     let texto = valores.direccion;
