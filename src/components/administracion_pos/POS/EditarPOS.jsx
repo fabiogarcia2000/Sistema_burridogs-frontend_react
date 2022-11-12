@@ -1,18 +1,46 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
+import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcionPOS } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
 
 
  const FormularioEditar = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "Los cambios se guardaron con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        })
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudieron guardar los cambios',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+      break;
+
+      default: break;
+    }
+  };
 
   return (
     <div className="container">
@@ -20,7 +48,7 @@ const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
         //valores iniciales
         initialValues={{
           cod_pos: edit.cod_pos,
-          descripcion: edit.descripcion,
+          descripcion_pos: edit.descripcion_pos,
           id_sucursal: edit.id_sucursal,
           activo: edit.activo,
           modificado_por: "autorPrueba",
@@ -33,12 +61,22 @@ const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
 
           // Validacion de código
           if (!valores.cod_pos) {
-            errores.cod_pos = "Por favor ingresar un código";
+            errores.cod_pos = "Por favor ingresa un código";
+          } else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,12}$/.test(valores.cod_pos)) {
+            errores.cod_pos = "Escribir números y letras sin espacios. Ejemplo: S001";
           }
 
+
           // Validacion descripción
-          if (!valores.descripcion) {
+          if (!valores.descripcion_pos) {
             errores.descripcion = "Por favor ingresa una descripción";
+          }
+
+          // Validacion de código
+          if (!valores.id_sucursal) {
+            errores.id_sucursal = "Por favor ingresa un código";
+          } else if (!/^[0-9]+$/.test(valores.id_sucursal)) {
+            errores.id_sucursal = "Escribir solo números";
           }
 
           // Validacion estado
@@ -49,48 +87,45 @@ const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
           return errores;
         }}
         onSubmit={async (valores) => {
-          //Enviar los datos (petición Post)
-          //procedimineto para guardar el nuevo registro
-          try {
-            const res = await axios.put(`${URLEditar}${valores.cod_pos}`, valores);
-            console.log(valores);
-            console.log("Insertando....");
-               if (res.status === 200) {
-                alert("Guardado!");
-              } else {
-                alert("ERROR al Guardar :(");
+              //procedimineto para guardar el los cambios
+              
+              try {
+                const res = await axios.put(`${URLEditar}${valores.cod_pos}`, valores);
+
+                  if (res.status === 200) {
+                    mostrarAlertas("guardado");
+                    navigate("/mostrarPOS");
+                  } else {
+                    mostrarAlertas("error");
+                  }
+                
+              } catch (error) {
+                console.log(error);
+                mostrarAlertas("error");
+                navigate("/mostrarPOS");
               }
-            
-          } catch (error) {
-            console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
-          }
-  
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarPOS");
         }}
       >
-        {({ errors }) => (
-          <Form className="formulario">
+        {({ errors, values }) => (
+          <Form>
             <h3 className="mb-3">Editar POS</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="codPOS" className="form-label">
+                  <label htmlFor="codpos" className="form-label">
                     Código:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="codPOS"
-                    name="cod_POS"
+                    id="codPos"
+                    name="cod_pos"
                     placeholder="Código..."
-                    
+                    disabled
                   />
 
                   <ErrorMessage
-                    name="cod_centro_costo"
+                    name="cod_pos"
                     component={() => (
                       <div className="error">{errors.cod_pos}</div>
                     )}
@@ -107,34 +142,35 @@ const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
                     type="text"
                     className="form-control"
                     id="descripcionPOS"
-                    name="descripcion"
+                    name="descripcion_pos"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcionPOS(values)}
                   />
 
                   <ErrorMessage
-                    name="descripcion"
+                    name="descripcion_pos"
                     component={() => (
-                      <div className="error">{errors.descripcion}</div>
+                      <div className="error">{errors.descripcion_pos}</div>
                     )}
                   />
                 </div>
               </div>
-        
+
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="IDsucursal" className="form-label">
-                   Sucursal:
+                  <label htmlFor="SucursalPOS" className="form-label">
+                    Sucursal:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="IDsucursal"
-                    name="IDsucursal"
-                    placeholder="Sucursal..."
+                    id="SucursalPOS"
+                    name="id_sucursal"
+                    placeholder="Surcursal..."
                   />
 
                   <ErrorMessage
-                    name="descripcion"
+                    name="id_sucursal"
                     component={() => (
                       <div className="error">{errors.id_sucursal}</div>
                     )}
@@ -176,11 +212,6 @@ const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>
