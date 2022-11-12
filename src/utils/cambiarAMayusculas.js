@@ -8,6 +8,24 @@ export function cambiarAMayusculasDescripcion(valores) {
   }
 }
 
+export function cambiarAMayusculasCAI(valores) {
+  try {
+    let texto = valores.cai;
+    valores.cai = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function cambiarAMayusculasDescripcionPOS(valores) {
+  try {
+    let texto = valores.descripcion_pos;
+    valores.descripcion_pos = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //función convertir a mayuscula descripción corta
 export function cambiarAMayusculasDescripCorta(valores) {
   try {
