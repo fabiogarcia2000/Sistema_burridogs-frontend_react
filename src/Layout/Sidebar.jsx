@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { useGlobalState } from "../globalStates/globalStates";
 
 function Sidebar() {
-  const [classSidebar] = useGlobalState('sidebar_class');
-  console.log(classSidebar)
+  const [classSidebar] = useGlobalState("sidebar_class");
+  console.log(classSidebar);
 
   return (
     <aside id="sidebar" className={classSidebar}>
@@ -104,7 +104,7 @@ function Sidebar() {
                 <span>Métodos de Pago</span>
               </Link>
             </li>
-           <li>
+            <li>
               <Link to="/mostrarmodopedido">
                 <i className="bi bi-circle"></i>
                 <span>Modo Pedido</span>
@@ -120,12 +120,6 @@ function Sidebar() {
               <Link to="/mostrarPOS">
                 <i className="bi bi-circle"></i>
                 <span>POS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/mostrarmesas">
-                <i className="bi bi-circle"></i>
-                <span>...</span>
               </Link>
             </li>
           </ul>
@@ -158,7 +152,7 @@ function Sidebar() {
               <Link to="/MostrarCentroCosto">
                 <i className="bi bi-circle"></i>
                 <span>Centro de costo</span>
-              </Link> 
+              </Link>
             </li>
 
             <li>
@@ -326,80 +320,6 @@ function Sidebar() {
               </Link>
             </li>
           </ul>
-        </li>
-
-        <li className="nav-item">
-          <Link
-            className="nav-link collapsed"
-            data-bs-target="#icons-nav"
-            data-bs-toggle="collapse"
-            to="/"
-          >
-            <i className="bi bi-gem"></i>
-            <span>Otros</span>
-            <i className="bi bi-chevron-down ms-auto"></i>
-          </Link>
-          <ul
-            id="icons-nav"
-            className="nav-content collapse "
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <Link to="/">
-                <i className="bi bi-circle"></i>
-                <span>Opción 1</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/">
-                <i className="bi bi-circle"></i>
-                <span>Opción 2</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/">
-                <i className="bi bi-circle"></i>
-                <span>Opción 3</span>
-              </Link>
-            </li>
-          </ul>
-        </li>
-
-        <li className="nav-heading">Más</li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-person"></i> <span>Opción 1</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-question-circle"></i> <span>Opción 2</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-envelope"></i> <span>Opción 3</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-card-list"></i> <span>Opción 4</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-box-arrow-in-right"></i> <span>Opción 5</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-dash-circle"></i> <span>Opción 6</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="/">
-            <i className="bi bi-file-earmark"></i> <span>Opción 7</span>
-          </Link>
         </li>
       </ul>
     </aside>
