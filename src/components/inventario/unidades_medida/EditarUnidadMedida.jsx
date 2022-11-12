@@ -1,18 +1,47 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar =
   "http://190.53.243.69:3001/unidad_medida/actualizar-insertar/";
 
 const FormularioEditar = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const [edit] = useGlobalState("registroEdit");
 
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "guardado":
+        Swal.fire({
+          title: "¡Guardado!",
+          text: "Los cambios se guardaron con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudieron guardar los cambios",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="container">
@@ -47,24 +76,22 @@ const FormularioEditar = () => {
               `${URLEditar}${valores.cod_unidad_medida}`,
               valores
             );
-            console.log("Insertando....");
+
             if (res.status === 200) {
-              alert("Guardado!");
+              mostrarAlertas("guardado");
+              navigate("/mostrarunidadesmedida");
             } else {
-              alert("ERROR al Guardar :(");
+              mostrarAlertas("error");
             }
           } catch (error) {
             console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
+            mostrarAlertas("error");
+            navigate("/mostrarunidadesmedida");
           }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarunidadesmedida");
         }}
       >
-        {({ errors }) => (
-          <Form className="formulario">
+        {({ errors, values }) => (
+          <Form>
             <h3 className="mb-3">Editar Unidad de Medida</h3>
             <div className="row g-3">
               <div className="col-sm-6">
@@ -78,6 +105,7 @@ const FormularioEditar = () => {
                     id="codMedida"
                     name="cod_unidad_medida"
                     placeholder="Código de la medida..."
+                    disabled
                   />
 
                   <ErrorMessage
@@ -100,6 +128,7 @@ const FormularioEditar = () => {
                     id="descripcionMedida"
                     name="descripcion"
                     placeholder="Descripcion de la unidad de medida..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -122,11 +151,6 @@ const FormularioEditar = () => {
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

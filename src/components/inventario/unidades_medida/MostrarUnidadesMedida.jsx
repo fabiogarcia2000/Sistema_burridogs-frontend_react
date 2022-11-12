@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2";
 
 const UrlMostrar = "http://190.53.243.69:3001/unidad_medida/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/unidad_medida/eliminar/";
@@ -16,14 +17,55 @@ const MostrarUnidadesMedida = () => {
     getRegistros();
   }, []);
 
-  //procedimineto para mostrar todos los registros
+  //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
       const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido conectar con el servidor :(");
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "eliminado":
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El registro se eliminó con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo eliminar la categoría",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "errormostrar":
+        Swal.fire({
+          title: "Error al Mostrar",
+          text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -34,13 +76,13 @@ const MostrarUnidadesMedida = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!");
+        mostrarAlertas("eliminado");
       } else {
-        alert("ERROR al Eliminar :(");
+        mostrarAlertas("error");
       }
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido eliminar :(");
+      mostrarAlertas("error");
     }
   };
   //Ventana modal de confirmación de eliminar
@@ -85,7 +127,7 @@ const MostrarUnidadesMedida = () => {
       name: "DESCRIPCIÓN",
       selector: (row) => row.descripcion,
       sortable: true,
-      maxWidth: "850px",
+      maxWidth: "1000px",
     },
     {
       name: "ACCIONES",
@@ -185,14 +227,6 @@ const MostrarUnidadesMedida = () => {
                 title="Exportar a PDF"
               >
                 <i className="fa-solid fa-file-pdf"></i>
-              </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
               </Link>
             </div>
           </div>

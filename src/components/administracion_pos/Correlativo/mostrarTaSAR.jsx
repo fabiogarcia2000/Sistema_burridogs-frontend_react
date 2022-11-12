@@ -3,20 +3,18 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates"; 
+import { setGlobalState } from "../../../globalStates/globalStates";
 
-
-const UrlMostrar =  "http://190.53.243.69:3001/correlativo/getall";
+const UrlMostrar = "http://190.53.243.69:3001/correlativo/getall";
 const UrlEliminar = "http://190.53.243.69:3001/correlativo/eliminar/";
 
 const MostrarTalonarioSAR = () => {
   //Configurar los hooks
-  const [registroDelete, setRegistroDelete] = useState('');
+  const [registroDelete, setRegistroDelete] = useState("");
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);
-
 
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
@@ -32,11 +30,11 @@ const MostrarTalonarioSAR = () => {
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
     try {
-      console.log(registroDelete)
+      console.log(registroDelete);
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!"); 
+        alert("Eliminado!");
       } else {
         alert("ERROR al Eliminar :(");
       }
@@ -47,23 +45,23 @@ const MostrarTalonarioSAR = () => {
   };
 
   //Barra de busqueda
-    const [ busqueda, setBusqueda ] = useState("")
-    //capturar valor a buscar
-    const valorBuscar = (e) => {
-      setBusqueda(e.target.value)   
+  const [busqueda, setBusqueda] = useState("");
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value);
+  };
+  //metodo de filtrado
+  let results = [];
+  if (!busqueda) {
+    results = registros;
+  } else {
+    results = registros.filter(
+      (dato) =>
+        dato.id_pos.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cai.toLowerCase().includes(busqueda.toLocaleLowerCase())
+    );
   }
-  //metodo de filtrado 
-  let results = []
-   if(!busqueda){
-       results = registros
-   }else{
-        results = registros.filter( (dato) =>
-        dato.id_pos.toString().includes(busqueda.toLocaleLowerCase()) || 
-        dato.cai.toLowerCase().includes(busqueda.toLocaleLowerCase())        
-        )
-   };
 
-    
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
@@ -127,7 +125,7 @@ const MostrarTalonarioSAR = () => {
     },
     {
       name: "ESTADO",
-      selector: (row) => row.activo === "1"? 'Activo' : 'Inactivo',
+      selector: (row) => (row.activo === "1" ? "Activo" : "Inactivo"),
       sortable: true,
     },
     {
@@ -151,7 +149,7 @@ const MostrarTalonarioSAR = () => {
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
+            onClick={() => setGlobalState("registroEdit", row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
@@ -182,7 +180,7 @@ const MostrarTalonarioSAR = () => {
     selectAllRowsItemText: "Todos",
   };
 
-  return (    
+  return (
     <div className="container">
       <h3>Correlativo</h3>
       <br />
@@ -229,14 +227,6 @@ const MostrarTalonarioSAR = () => {
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
-              </Link>
             </div>
           </div>
         </div>
@@ -273,58 +263,54 @@ const MostrarTalonarioSAR = () => {
         />
       </div>
 
-
-
-{/* Ventana Modal de ver más*/}
-<Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
         <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CAI: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.cai} </p>
+            </div>
+          </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">CAI: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CREADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.creado_por} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.cai} </p>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">CREADO POR: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.fecha_creacion} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.creado_por} </p>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">FECHA DE CREACIÓN: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MODIFICADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.modificado_por} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.fecha_creacion} </p>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">MODIFICADO POR: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.fecha_modificacion} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.modificado_por} </p>
-          </div>
-        </div>
-
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">FECHA DE MODIFICACIÓN: </p>
-          </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.fecha_modificacion} </p>
-          </div>
-        </div>         
-          
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={abrirModalVerMas}>
@@ -332,7 +318,6 @@ const MostrarTalonarioSAR = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
@@ -355,7 +340,6 @@ const MostrarTalonarioSAR = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
     </div>
   );
 };

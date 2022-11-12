@@ -3,21 +3,19 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates"; 
+import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
-
 
 const UrlMostrar = "http://190.53.243.69:3001/sucursal/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/sucursal/eliminar/";
 
 const MostrarSucursales = () => {
   //Configurar los hooks
-  const [registroDelete, setRegistroDelete] = useState('');
+  const [registroDelete, setRegistroDelete] = useState("");
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);
-
 
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
@@ -31,55 +29,54 @@ const MostrarSucursales = () => {
   };
 
   //Alertas de éxito o error al eliminar
-  const mostrarAlertas = (alerta) =>{
-    switch (alerta){
-      case 'eliminado':
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "eliminado":
         Swal.fire({
-          title: '¡Eliminado!',
+          title: "¡Eliminado!",
           text: "La sucursal se eliminó con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
-      break;
+        break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text:  'No se pudo eliminar la sucursal',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          title: "Error",
+          text: "No se pudo eliminar la sucursal",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
-      break;
+        break;
 
-      case 'errormostrar':
-      Swal.fire({
-        title: 'Error al Mostrar',
-        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
+      case "errormostrar":
+        Swal.fire({
+          title: "Error al Mostrar",
+          text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
-    break;
+        break;
 
-
-      default: break;
+      default:
+        break;
     }
   };
-
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
     try {
-      console.log(registroDelete)
+      console.log(registroDelete);
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        mostrarAlertas("eliminado"); 
+        mostrarAlertas("eliminado");
       } else {
         mostrarAlertas("error");
       }
@@ -90,23 +87,27 @@ const MostrarSucursales = () => {
   };
 
   //Barra de busqueda
-    const [ busqueda, setBusqueda ] = useState("")
-      //capturar valor a buscar
-    const valorBuscar = (e) => {
-      setBusqueda(e.target.value)   
+  const [busqueda, setBusqueda] = useState("");
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value);
+  };
+  //metodo de filtrado
+  let results = [];
+  if (!busqueda) {
+    results = registros;
+  } else {
+    results = registros.filter(
+      (dato) =>
+        dato.cod_sucursal
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.descripcion_sucursal
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase())
+    );
   }
-      //metodo de filtrado 
-  let results = []
-   if(!busqueda){
-       results = registros
-   }else{
-        results = registros.filter( (dato) =>
-        dato.cod_sucursal.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
-        dato.descripcion_sucursal.toLowerCase().includes(busqueda.toLocaleLowerCase())        
-        )
-   };
 
-    
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
@@ -155,7 +156,7 @@ const MostrarSucursales = () => {
     },
     {
       name: "ESTADO",
-      selector: (row) => row.activo === "1"? 'Activo' : 'Inactivo',
+      selector: (row) => (row.activo === "1" ? "Activo" : "Inactivo"),
       sortable: true,
     },
     {
@@ -179,7 +180,7 @@ const MostrarSucursales = () => {
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
+            onClick={() => setGlobalState("registroEdit", row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
@@ -210,7 +211,7 @@ const MostrarSucursales = () => {
     selectAllRowsItemText: "Todos",
   };
 
-  return (    
+  return (
     <div className="container">
       <h3>Sucursales</h3>
       <br />
@@ -257,14 +258,6 @@ const MostrarSucursales = () => {
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
-              </Link>
             </div>
           </div>
         </div>
@@ -301,58 +294,54 @@ const MostrarSucursales = () => {
         />
       </div>
 
-
-
-{/* Ventana Modal de ver más*/}
-<Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
         <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CÓDIGO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.cod_sucursal} </p>
+            </div>
+          </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">CÓDIGO: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CREADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.creado_por} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.cod_sucursal} </p>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">CREADO POR: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.fecha_creacion} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.creado_por} </p>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">FECHA DE CREACIÓN: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MODIFICADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.modificado_por} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.fecha_creacion} </p>
-          </div>
-        </div>
 
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">MODIFICADO POR: </p>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.fecha_modificacion} </p>
+            </div>
           </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.modificado_por} </p>
-          </div>
-        </div>
-
-        <div className="row g-3">
-          <div className="col-sm-6">
-          <p className="colorText">FECHA DE MODIFICACIÓN: </p>
-          </div>
-          <div className="col-sm-6">
-          <p> {registroVerMas.fecha_modificacion} </p>
-          </div>
-        </div>         
-          
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={abrirModalVerMas}>
@@ -360,7 +349,6 @@ const MostrarSucursales = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
@@ -383,7 +371,6 @@ const MostrarSucursales = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
     </div>
   );
 };

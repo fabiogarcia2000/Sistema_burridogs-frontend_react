@@ -100,7 +100,7 @@ const MostrarMateriales = () => {
       name: "COMENTARIO",
       selector: (row) => row.comentario,
       sortable: true,
-      maxWidth: "570px",
+      maxWidth: "700px",
     },
 
     {
@@ -201,14 +201,6 @@ const MostrarMateriales = () => {
                 title="Exportar a PDF"
               >
                 <i className="fa-solid fa-file-pdf"></i>
-              </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
               </Link>
             </div>
           </div>

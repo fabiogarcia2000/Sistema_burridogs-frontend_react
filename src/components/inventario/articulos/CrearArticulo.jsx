@@ -1,14 +1,58 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
+import {
+  cambiarAMayusculasDescripCorta,
+  cambiarAMayusculasDescripArticulo,
+  cambiarAMayusculasDescripcion,
+} from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/articulo/getone/";
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "guardado":
+        Swal.fire({
+          title: "¡Guardado!",
+          text: "El artículo se creó con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo crear el nuevo artículo",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      case "duplicado":
+        Swal.fire({
+          text: "Ya existe un artículo con el código ingresado",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="container">
@@ -22,11 +66,11 @@ const Formulario = () => {
           id_impuesto: "",
           id_categoria: "",
           precio: "",
-          id_unidad_venta: null,
+          id_unidad_venta: "",
           id_socio_negocio: "",
-          id_unidad_compra: null,
+          id_unidad_compra: "",
           codigo_barra: "",
-          id_unidad_medida: null,
+          id_unidad_medida: "",
           activo: "1",
           creado_por: "autorPrueba",
           fecha_creacion: "2022/11/05",
@@ -47,7 +91,7 @@ const Formulario = () => {
 
           // Validacion descripción
           if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresa una descripción";
+            errores.descripcion = "Ingrese una descripción para el artículo";
           }
 
           // Validacion descripción corta
@@ -112,30 +156,36 @@ const Formulario = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //procedimineto para guardar el nuevo registro
-          console.log(valores);
+          //validar si existe un registro con el codigo ingresado
           try {
-            const res = await axios.put(
-              `${URLCrear}${valores.cod_articulo}`,
-              valores
+            const res = await axios.get(
+              `${URLMostrarUno}${valores.cod_articulo}`
             );
-
-            if (res.status === 200) {
-              alert("Guardado!");
+            console.log(res);
+            if (res.data === "") {
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(
+                `${URLCrear}${valores.cod_articulo}`,
+                valores
+              );
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
+                navigate("/mostrararticulos");
+              } else {
+                mostrarAlertas("error");
+              }
             } else {
-              alert("Error al guardar");
+              mostrarAlertas("duplicado");
             }
           } catch (error) {
             console.log(error);
+            mostrarAlertas("error");
+            navigate("/mostrararticulos");
           }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrararticulos");
         }}
       >
-        {({ errors }) => (
-          <Form className="formulario">
+        {({ errors, values }) => (
+          <Form>
             <h3 className="mb-3">Nuevo Artículo</h3>
             <div className="row g-3">
               <div className="col-sm-4">
@@ -183,7 +233,7 @@ const Formulario = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="descripcionArticulo" className="form-label">
-                    Descripción:
+                    Descripción del Articulo:
                   </label>
                   <Field
                     type="text"
@@ -191,6 +241,7 @@ const Formulario = () => {
                     id="descripcionArticulo"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -215,6 +266,7 @@ const Formulario = () => {
                     id="descripcortaArticulo"
                     name="descripcion_corta"
                     placeholder="Descripción corta..."
+                    onKeyUp={cambiarAMayusculasDescripCorta(values)}
                   />
 
                   <ErrorMessage
@@ -408,7 +460,7 @@ const Formulario = () => {
             </div>
 
             <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="estadoArticulo" className="form-label">
                     Estado:
@@ -443,11 +495,6 @@ const Formulario = () => {
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>
