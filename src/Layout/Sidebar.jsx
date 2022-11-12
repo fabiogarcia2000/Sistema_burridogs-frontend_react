@@ -113,7 +113,7 @@ function Sidebar() {
             <li>
               <Link to="/mostrartalonarioSAR">
                 <i className="bi bi-circle"></i>
-                <span>Talonario SAR</span>
+                <span>Correlativo</span>
               </Link>
             </li>
             <li>
