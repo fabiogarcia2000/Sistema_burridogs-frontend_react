@@ -1,16 +1,57 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/centro_costo/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/centro_costo/getone/";
 
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   const navigate = useNavigate();
+
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "El centro de costo se creó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo crear el centro de costo',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+      break;
+
+      case 'duplicado':
+        Swal.fire({
+          text:  'Ya existe un centro de costo con el código ingresado',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      default: break;
+    }
+  };
+
 
   return (
     <div className="container">
@@ -27,56 +68,58 @@ const Formulario = () => {
         validate={(valores) => {
             let errores = {};
 
-            // Validacion de código no vacio
-            if (!valores.cod_centro_costo) {
-              errores.cod_centro_costo = "Por favor ingresa un código";
-            }
+            // Validacion de código
+             // Validacion de código
+          if (!valores.cod_centro_costo) {
+            errores.cod_centro_costo = "Por favor ingresa un código";
+          } else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,12}$/.test(valores.cod_centro_costo)) {
+            errores.cod_centro_costo = "Escribir números y letras sin espacios. Ejemplo: S001";
+          }
 
   
             // Validacion descripción
             if (!valores.descripcion) {
               errores.descripcion = "Por favor ingresa una descripción";
-            }
+            } //else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
+              //errores.descripcion = "Escribir solo en MAYÚSCULAS";
+            //}
   
             // Validacion estado
             if (!valores.activo) {
-              errores.activo = "Por favor ingresa un estado";
+              errores.activo = "Por favor selecciona un estado";
             }
   
             return errores;
           
         }}
         onSubmit={async (valores) => {
-          //procedimineto para guardar el nuevo registro
-          try {
-              const res = await axios.put(`${URLCrear}${valores.cod_centro_costo}`, valores);
-              console.log(res.data);
-
-              console.log("Guardando....");
-                if (res.status === 200) {
-                  alert("Guardado!");
-                } else {
-                  alert("ERROR al Guardar :(");
+          //validar si existe un registro con el codigo ingresado
+              try {
+                const res = await axios.get(`${URLMostrarUno}${valores.cod_centro_costo}`);
+                console.log(res)
+                if (res.data === ""){
+                  //procedimineto para guardar el nuevo registro en el caso de que no exista
+                      const res = await axios.put(`${URLCrear}${valores.cod_centro_costo}`, valores);
+                      if (res.status === 200) {
+                        mostrarAlertas("guardado");
+                        navigate("/mostrarcentrocosto");
+                    } else {
+                      mostrarAlertas("error");
+                    }
+                    
+                }else{ 
+                  mostrarAlertas("duplicado");
                 }
-
-              if (res.status === 200) {
-                alert("Guardado!");
-              } else {
-                alert("ERROR al Guardar :(");
+              } catch (error) {
+                console.log(error);
+                mostrarAlertas("error");
+                navigate("/mostrarcentrocosto");
               }
-          } catch (error) {
-            console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
-          }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarcategorias");
         }}
       >
-        {({ errors }) => (
-          <Form >
-            <h3 className="mb-3">Nuevo Centro de Costo</h3>
+        {({ errors, values }) => (
+          <Form>
+            <h3 className="mb-3">Nueva Bodega</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -108,9 +151,10 @@ const Formulario = () => {
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionCategoria"
+                    id="descripcionCentroCosto"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -125,13 +169,13 @@ const Formulario = () => {
 
             <div className="row g-3">
               <div className="col-md-4 mb-3">
-                <label htmlFor="estadoCategoria" className="form-label">
+                <label htmlFor="estadoCentroCosto" className="form-label">
                   Estado:
                 </label>
                 <Field
                   as="select"
                   className="form-select"
-                  id="estadoCategoria"
+                  id="estadoCentroCosto"
                   name="activo"
                 >
                   <option value="1">Activo</option>
@@ -150,17 +194,13 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/MostrarCentroCosto"
+              to="/mostrarcentrocosto"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >
               Cancelar
             </Link>
 
-            {/*Mostrar mensaje de éxito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con éxito!</p>
-            )}
           </Form>
         )}
       </Formik>
