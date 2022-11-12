@@ -151,7 +151,7 @@ function Sidebar() {
             <li>
               <Link to="/MostrarCentroCosto">
                 <i className="bi bi-circle"></i>
-                <span>Centro de costo</span>
+                <span>Bodega</span>
               </Link>
             </li>
 
