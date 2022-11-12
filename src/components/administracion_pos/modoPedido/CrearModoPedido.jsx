@@ -1,16 +1,57 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/modo_pedido/getone/";
 
 
 const Formulario = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
 
   const navigate = useNavigate();
+
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "El modo pedido se creó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo crear el modo pedido',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+      break;
+
+      case 'duplicado':
+        Swal.fire({
+          text:  'Ya existe un modo pedido con el código ingresado',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+      break;
+
+      default: break;
+    }
+  };
+
 
   return (
     <div className="container">
@@ -27,55 +68,56 @@ const Formulario = () => {
         validate={(valores) => {
             let errores = {};
 
-            // Validacion de código no vacio
+            // Validacion de código
             if (!valores.cod_modo_pedido) {
               errores.cod_modo_pedido = "Por favor ingresa un código";
+            } else if (!/^[0-9]+$/.test(valores.cod_modo_pedido)) {
+              errores.cod_modo_pedido = "Escribir solo números";
             }
 
   
             // Validacion descripción
             if (!valores.descripcion) {
               errores.descripcion = "Por favor ingresa una descripción";
-            }
+            } //else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
+              //errores.descripcion = "Escribir solo en MAYÚSCULAS";
+            //}
   
             // Validacion estado
             if (!valores.activo) {
-              errores.activo = "Por favor ingresa un estado";
+              errores.activo = "Por favor selecciona un estado";
             }
   
             return errores;
           
         }}
         onSubmit={async (valores) => {
-          //procedimineto para guardar el nuevo registro
-          try {
-              const res = await axios.put(`${URLCrear}${valores.cod_modo_pedido}`, valores);
-              console.log(res.data);
-
-              console.log("Guardando....");
-                if (res.status === 200) {
-                  alert("Guardado!");
-                } else {
-                  alert("ERROR al Guardar :(");
+          //validar si existe un registro con el codigo ingresado
+              try {
+                const res = await axios.get(`${URLMostrarUno}${valores.cod_modo_pedido}`);
+                console.log(res)
+                if (res.data === ""){
+                  //procedimineto para guardar el nuevo registro en el caso de que no exista
+                      const res = await axios.put(`${URLCrear}${valores.cod_modo_pedido}`, valores);
+                      if (res.status === 200) {
+                        mostrarAlertas("guardado");
+                        navigate("/mostrarmodopedido");
+                    } else {
+                      mostrarAlertas("error");
+                    }
+                    
+                }else{ 
+                  mostrarAlertas("duplicado");
                 }
-
-              if (res.status === 200) {
-                alert("Guardado!");
-              } else {
-                alert("ERROR al Guardar :(");
+              } catch (error) {
+                console.log(error);
+                mostrarAlertas("error");
+                navigate("/mostrarmodopedido");
               }
-          } catch (error) {
-            console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
-          }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarmodopedido");
         }}
       >
-        {({ errors }) => (
-          <Form >
+        {({ errors, values }) => (
+          <Form>
             <h3 className="mb-3">Nuevo Modo de Pedido</h3>
             <div className="row g-3">
               <div className="col-sm-6">
@@ -111,6 +153,7 @@ const Formulario = () => {
                     id="descripcionModoPedido"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -157,10 +200,6 @@ const Formulario = () => {
               Cancelar
             </Link>
 
-            {/*Mostrar mensaje de éxito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con éxito!</p>
-            )}
           </Form>
         )}
       </Formik>
