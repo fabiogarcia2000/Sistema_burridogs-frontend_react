@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
 
-const MostrarSucursales = () => {
+const MostrarCategorias = () => {
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -364,4 +364,4 @@ const mostrarAlertas = (alerta) =>{
   );
 };
 
-export default MostrarSucursales;
+export default MostrarCategorias;
