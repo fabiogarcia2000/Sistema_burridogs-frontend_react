@@ -129,7 +129,7 @@ const MostrarRegistros = () => {
     },
     {
       name: "TIPO",
-      selector: (row) => (row.tipo === "E" ? "E" : "E"),
+      selector: (row) => (row.tipo === "E" ? "EFECTIVO":"" || row.tipo ==="T"? "TARJETA DE CRÉDITO": "" || row.tipo ==="C"? "CLIENTES": ""),
       sortable: true,
     },
     {
@@ -139,7 +139,7 @@ const MostrarRegistros = () => {
     },
     {
       name: "ESTADO",
-      selector: (row) => (row.activo === "1" ? "Activo" : "Inactivo"),
+      selector: (row) => (row.activo === "1" ? "ACTIVO" : "INACTIVO"),
       sortable: true,
     },
     {

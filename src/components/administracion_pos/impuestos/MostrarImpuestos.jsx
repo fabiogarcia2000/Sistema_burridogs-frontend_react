@@ -132,12 +132,12 @@ const MostrarRegistros = () => {
     },
     {
       name: "TIPO",
-      selector: (row) => (row.tipo === "I" ? "I" : "E"),
+      selector: (row) => (row.tipo === "I" ? "INCLUSIVO" : "EXCLUSIVO"),
       sortable: true,
     },
     {
       name: "ESTADO",
-      selector: (row) => (row.activo === "1" ? "Activo" : "Inactivo"),
+      selector: (row) => (row.activo === "1" ? "ACTIVO" : "INACTIVO"),
       sortable: true,
     },
     {

@@ -132,7 +132,7 @@ const MostrarSucursales = () => {
     },
     {
       name: "ESTADO",
-      selector: (row) => (row.activo === "1" ? "Activo" : "Inactivo"),
+      selector: (row) => (row.activo === "1" ? "ACTIVO" : "INACTIVO"),
       sortable: true,
     },
     {

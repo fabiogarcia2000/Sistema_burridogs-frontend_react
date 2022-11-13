@@ -183,7 +183,9 @@ const Formulario = () => {
                   name="tipo"
                 > 
                   <option value="">Seleccionar...</option>
-                  <option value="E">E</option>
+                  <option value="E">Efectivo</option>
+                  <option value="T">Tarjeta de crédito</option>
+                  <option value="C">Clientes</option>
                 </Field>
 
                   <ErrorMessage
@@ -207,7 +209,8 @@ const Formulario = () => {
                   name="cuenta_contable"
                 > 
                   <option value="">Seleccionar...</option>
-                  <option value="100012425">Efectivo</option>
+                  <option value="1">Cuenta 1</option>
+                  <option value="2">Cuenta 2</option>
                 </Field>
 
                   <ErrorMessage

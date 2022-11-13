@@ -50,8 +50,8 @@ const Formulario = () => {
           descripcion: edit.descripcion,
           porcentaje: edit.porcentaje,
           activo: edit.activo,
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",
+          modificado_por: "autorPrueba",
+          fecha_modificacion: "2022/10/27",
         }}
 
         //Funcion para validar

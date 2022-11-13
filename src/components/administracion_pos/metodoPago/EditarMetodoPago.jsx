@@ -168,8 +168,9 @@ const Formulario = () => {
                   id="tipo"
                   name="tipo"
                 > 
-                  <option value="">Seleccionar...</option>
-                  <option value="E">E</option>
+                  <option value="E">Efectivo</option>
+                  <option value="T">Tarjeta de crédito</option>
+                  <option value="C">Clientes</option>
                 </Field>
 
                   <ErrorMessage

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
@@ -8,9 +9,29 @@ import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../
 const URLCrear = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/sucursal/getone/";
 
+const UrlMostrarBodegas = "http://190.53.243.69:3001/centro_costo/getall";
+
 const CrearSucursal = () => {
 
   const navigate = useNavigate();
+
+  //procedimineto para obtener todos las bodegas y mostrarlas en select
+  const [bodegas, setBodegas] = useState([]);
+  useEffect(() => {
+    getBodegas();
+  }, []);
+
+    //petición a api
+    const getBodegas = async () => {
+      try {
+        const res = await axios.get(UrlMostrarBodegas);
+        setBodegas(res.data);
+      } catch (error) {
+        console.log(error);
+        mostrarAlertas("errormostrar");
+      }
+    };
+  
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
@@ -46,6 +67,17 @@ const CrearSucursal = () => {
 
       break;
 
+      case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Cargar',
+        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
       default: break;
     }
   };
@@ -61,7 +93,7 @@ const CrearSucursal = () => {
           direccion: "",
           telefono:"",
           rtn:"",
-          id_centro_costo:"1",
+          id_centro_costo:"",
           id_mapa: undefined,
           activo:"1",
           creado_por:"autorPrueba",
@@ -104,7 +136,7 @@ const CrearSucursal = () => {
 
           // Validacion de Centro de Costo
           if (!valores.id_centro_costo) {
-            errores.id_centro_costo = "Por favor selecciona un Centro de Costos";
+            errores.id_centro_costo = "Por favor selecciona una bodega.";
           }
 
            // Validacion de mapa
@@ -263,7 +295,7 @@ const CrearSucursal = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="centroCosto" className="form-label">
-                    Centro de Costo:
+                    Bodega:
                   </label>
                   <Field
                   as="select"
@@ -272,8 +304,9 @@ const CrearSucursal = () => {
                   name="id_centro_costo"
                 >
                   <option value="">Seleccionar...</option>
-                  <option value="1">Centro 1</option>
-                  <option value="2">Centro 2</option>
+                  {bodegas.map((item, i) =>(
+                    <option key={i} value={item.id_centro_costo}>{item.descripcion}</option>
+                  ))}
                 </Field>
 
                   <ErrorMessage
@@ -285,7 +318,7 @@ const CrearSucursal = () => {
                 </div>
               </div>
             </div>
-
+{/** 
             <div className="row g-3">
               <div className="col-md-4 mb-3">
                 <label htmlFor="mapa" className="form-label">
@@ -309,6 +342,7 @@ const CrearSucursal = () => {
               </div>
               <hr />
             </div>
+*/}
 
             <div className="row g-3">
               <div className="col-md-4 mb-3">

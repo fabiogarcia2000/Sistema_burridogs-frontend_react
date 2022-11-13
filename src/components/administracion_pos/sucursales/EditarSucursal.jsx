@@ -2,15 +2,36 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
+
+const UrlMostrarBodegas = "http://190.53.243.69:3001/centro_costo/getall";
+
 const EditarSucursal = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+  //procedimineto para obtener todos las bodegas y mostrarlas en select
+  const [bodegas, setBodegas] = useState([]);
+  useEffect(() => {
+    getBodegas();
+  }, []);
+
+    //petición a api
+    const getBodegas = async () => {
+      try {
+        const res = await axios.get(UrlMostrarBodegas);
+        setBodegas(res.data);
+      } catch (error) {
+        console.log(error);
+        mostrarAlertas("errormostrar");
+      }
+    };
 
     //Alertas de éxito o error
     const mostrarAlertas = (alerta) =>{
@@ -93,7 +114,7 @@ const EditarSucursal = () => {
 
           // Validacion de Centro de Costo
           if (!valores.id_centro_costo) {
-            errores.id_centro_costo = "Por favor selecciona un Centro de Costos";
+            errores.id_centro_costo = "Por favor selecciona una bodega";
           }
            // Validacion de mapa
            //if (!valores.id_mapa) {
@@ -247,7 +268,7 @@ const EditarSucursal = () => {
             <div className="col-sm-6">
               <div className="mb-3">
                 <label htmlFor="centroCosto" className="form-label">
-                  Centro de Costo:
+                  Bodega:
                 </label>
                 <Field
                 as="select"
@@ -255,9 +276,9 @@ const EditarSucursal = () => {
                 id="centroCosto"
                 name="id_centro_costo"
               >
-                <option value="">Seleccionar...</option>
-                <option value="1">Centro 1</option>
-                <option value="2">Centro 2</option>
+                  {bodegas.map((item, i) =>(
+                    <option key={i} value={item.id_centro_costo}>{item.descripcion}</option>
+                  ))}
               </Field>
 
                 <ErrorMessage
@@ -270,6 +291,7 @@ const EditarSucursal = () => {
             </div>
           </div>
 
+{/** 
           <div className="row g-3">
             <div className="col-md-4 mb-3">
               <label htmlFor="mapa" className="form-label">
@@ -293,7 +315,7 @@ const EditarSucursal = () => {
             </div>
             <hr />
           </div>
-
+*/}
           <div className="row g-3">
             <div className="col-md-4 mb-3">
               <label htmlFor="estadoSucursal" className="form-label">

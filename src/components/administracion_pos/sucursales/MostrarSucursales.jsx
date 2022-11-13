@@ -150,13 +150,8 @@ const MostrarSucursales = () => {
       sortable: true,
     },
     {
-      name: "DESCRIPCIÓN EN MAPA",
-      selector: (row) => row.descripcion_mapa,
-      sortable: true,
-    },
-    {
       name: "ESTADO",
-      selector: (row) => (row.activo === "1" ? "Activo" : "Inactivo"),
+      selector: (row) => (row.activo === "1" ? "ACTIVO" : "INACTIVO"),
       sortable: true,
     },
     {
