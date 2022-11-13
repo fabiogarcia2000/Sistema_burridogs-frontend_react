@@ -58,13 +58,14 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
-            id_pos: null,
+            id_correlativo: 0,
+            id_pos: "",
             cai:"",
             sucursal_sar:"",
             terminal_sar: "",
             tipo_documento_sar: "",
             correlativo_inicial:"",
-            Correlativo_final:"",
+            correlativo_final:"",
             correlativo_actual:"",
             fecha_vencimiento:"",
             activo: "1",
@@ -148,27 +149,22 @@ const Formulario = () => {
         }}
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado
-              try {
-                const res = await axios.get(`${URLMostrarUno}${valores.id_pos}`);
-                console.log(res)
-                if (res.data === ""){
-                  //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.id_pos}`, valores);
-                      if (res.status === 200) {
-                        mostrarAlertas("guardado");
-                        navigate("/mostrartalonarioSAR");
-                    } else {
-                      mostrarAlertas("error");
-                    }
-                    
-                }else{ 
-                  mostrarAlertas("duplicado");
-                }
-              } catch (error) {
-                console.log(error);
-                mostrarAlertas("error");
-                navigate("/mostrartalonarioSAR");
-              }
+          try {
+            //procedimineto para guardar el nuevo registro en el caso de que no exista
+            console.log(valores)
+            const res = await axios.put(`${URLCrear}${valores.id_correlativo}`, valores);
+            if (res.status === 200) {
+              mostrarAlertas("guardado");
+              navigate("/mostrartalonarioSAR");
+          } else {
+            mostrarAlertas("error");
+          }
+                            
+          } catch (error) {
+            console.log(error);
+            mostrarAlertas("error");
+            navigate("/mostrartalonarioSAR");
+          }
         }}
       >
         {({ errors, values }) => (
@@ -358,15 +354,15 @@ const Formulario = () => {
                    Fecha Vencimiento:
                   </label>
                   <Field
-                    type="text"
+                    type="date"
                     className="form-control"
                     id="Fecha_Vencimiento"
-                    name="Fecha_Vencimiento"
+                    name="fecha_vencimiento"
                     placeholder="Fecha Vencimiento..."
                   />
 
                   <ErrorMessage
-                    name="Fecha_Vencimiento"
+                    name="fecha_vencimiento"
                     component={() => (
                       <div className="error">{errors.fecha_vencimiento}</div>
                     )}

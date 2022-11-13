@@ -47,6 +47,7 @@ const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
       <Formik
         //valores iniciales
         initialValues={{
+          id_correlativo: edit.id_correlativo,
           id_pos: edit.id_pos,
           cai: edit.cai,
           sucursal_sar: edit.sucursal_sar,
@@ -139,21 +140,16 @@ const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
           //validar si existe un registro con el codigo ingresado
             
               try {
-                const res = await axios.get(`${URLEditar}${valores.id_pos}`);
-                console.log(res)
-                if (res.data === ""){
-                  //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLEditar}${valores.id_pos}`, valores);
-                      if (res.status === 200) {
-                        mostrarAlertas("guardado");
-                        navigate("/mostrartalonarioSAR");
-                    } else {
-                      mostrarAlertas("error");
-                    }
-                    
-                }else{ 
-                  mostrarAlertas("duplicado");
-                }
+                //procedimineto para guardar el nuevo registro en el caso de que no exista
+                console.log(valores)
+                const res = await axios.put(`${URLEditar}${valores.id_correlativo}`, valores);
+                if (res.status === 200) {
+                  mostrarAlertas("guardado");
+                  navigate("/mostrartalonarioSAR");
+              } else {
+                mostrarAlertas("error");
+              }
+                                
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
@@ -287,6 +283,7 @@ const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
                     id="correlativo_inicial"
                     name="correlativo_inicial"
                     placeholder="Correlativo Inicial..."
+                    disabled
                   />
 
                   <ErrorMessage
@@ -309,6 +306,7 @@ const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
                     id="correlativo_final"
                     name="correlativo_final"
                     placeholder="Correlativo Final..."
+                    disabled
                   />
 
                   <ErrorMessage
@@ -331,6 +329,7 @@ const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
                     id="correlativo_actual"
                     name="correlativo_actual"
                     placeholder="Correlativo Actual..."
+                    disabled
                   />
 
                   <ErrorMessage
