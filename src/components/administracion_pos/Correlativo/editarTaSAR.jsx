@@ -186,7 +186,7 @@ const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="cai" className="form-label">
-                    CAi:
+                    CAI:
                   </label>
                   <Field
                     type="text"

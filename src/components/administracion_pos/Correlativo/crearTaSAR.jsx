@@ -196,7 +196,7 @@ const Formulario = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="cai" className="form-label">
-                    CAi:
+                    CAI:
                   </label>
                   <Field
                     type="text"
