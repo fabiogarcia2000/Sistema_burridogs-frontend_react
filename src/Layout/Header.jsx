@@ -9,30 +9,31 @@ function Header() {
   //(LineLink 9-24) Asignar valores de manerLink global, al dar click al boton de menu, estos valores seran usados en el Sidebar.jsx, Footer.jsx
   const [isMenuClicked, setIsMenuClicked] = useState(true);
 
-  const updateClassMenu = () => { 
-
+  const updateClassMenu = () => {
     if (isMenuClicked) {
-      setGlobalState('sidebar_class', "colapse sidebar");
-      setGlobalState('main_class', "colapse_main");
-      setGlobalState('footer_class', "colapse_footer");
+      setGlobalState("sidebar_class", "colapse sidebar");
+      setGlobalState("main_class", "colapse_main");
+      setGlobalState("footer_class", "colapse_footer");
     } else {
-      setGlobalState('sidebar_class', "sidebar");
-      setGlobalState('main_class', "main");
-      setGlobalState('footer_class', "footer");
+      setGlobalState("sidebar_class", "sidebar");
+      setGlobalState("main_class", "main");
+      setGlobalState("footer_class", "footer");
     }
     setIsMenuClicked(!isMenuClicked);
   };
 
   return (
-    <header id="headerGeneral" className="headerGeneral fixed-top d-flex align-items-center">
+    <header
+      id="headerGeneral"
+      className="headerGeneral fixed-top d-flex align-items-center"
+    >
       <div className="d-flex align-items-center justify-content-between">
-        <Link to="/" className="logoGeneral d-flex align-items-center">
-          <img src={logoEmpresa} alt="Logo Empresa" />
-        </Link>
-
         <div className="burger-menu" onClick={updateClassMenu}>
           <i className="bi bi-list toggle-sidebar-btn"></i>
         </div>
+        <Link to="/" className="logoGeneral d-flex align-items-center">
+          <img src={logoEmpresa} alt="Logo Empresa" />
+        </Link>
       </div>
 
       <nav className="header-nav ms-auto">
@@ -47,11 +48,11 @@ function Header() {
               <span className="badge bg-primary badge-number">4</span>
             </Link>
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-              <li className="dropdown-header">                
+              <li className="dropdown-header">
                 Tienes 4 notificaciones nuevas
                 <Link to="/">
                   <span className="badge rounded-pill bg-primary p-2 ms-2">
-                  Ver todo
+                    Ver todo
                   </span>
                 </Link>
               </li>
@@ -103,7 +104,6 @@ function Header() {
                 <hr className="dropdown-divider" />
               </li>
               <li className="dropdown-footer">
-                
                 <Link to="/">Mostrar todas las notificaciones</Link>
               </li>
             </ul>
@@ -115,11 +115,7 @@ function Header() {
               to="/"
               data-bs-toggle="dropdown"
             >
-              <img
-                src={imgPerfil}
-                alt="Profile"
-                className="rounded-circle"
-              />
+              <img src={imgPerfil} alt="Profile" className="rounded-circle" />
               <span className="d-none d-md-block dropdown-toggle ps-2">
                 Nombre Usuario
               </span>
@@ -135,7 +131,8 @@ function Header() {
               <li>
                 <Link
                   className="dropdown-item d-flex align-items-center"
-                  to="/">
+                  to="/"
+                >
                   <i className="bi bi-person"></i> <span>Mi Perfil</span>
                 </Link>
               </li>
@@ -143,12 +140,10 @@ function Header() {
                 <hr className="dropdown-divider" />
               </li>
               <li>
-                
                 <Link
                   className="dropdown-item d-flex align-items-center"
                   to="/"
                 >
-                  
                   <i className="bi bi-gear"></i> <span>Configuración</span>
                 </Link>
               </li>
@@ -156,11 +151,10 @@ function Header() {
                 <hr className="dropdown-divider" />
               </li>
               <li>
-                
                 <Link
                   className="dropdown-item d-flex align-items-center"
                   to="/"
-                >            
+                >
                   <i className="bi bi-question-circle"></i>
                   <span>Ayuda</span>
                 </Link>
@@ -169,12 +163,10 @@ function Header() {
                 <hr className="dropdown-divider" />
               </li>
               <li>
-                
                 <Link
                   className="dropdown-item d-flex align-items-center"
                   to="/"
                 >
-                  
                   <i className="bi bi-box-arrow-right"></i>
                   <span>Cerrar Sesión</span>
                 </Link>

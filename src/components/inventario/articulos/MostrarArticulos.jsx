@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2";
 
 const UrlMostrar = "http://190.53.243.69:3001/articulo/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/articulo/eliminar/";
@@ -27,6 +28,47 @@ const MostrarArticulos = () => {
     }
   };
 
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "eliminado":
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El artículo se eliminó con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo eliminar el artículo",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "errormostrar":
+        Swal.fire({
+          title: "Error al Mostrar",
+          text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default:
+        break;
+    }
+  };
+
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
     try {
@@ -34,13 +76,13 @@ const MostrarArticulos = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!");
+        mostrarAlertas("eliminado");
       } else {
-        alert("ERROR al Eliminar :(");
+        mostrarAlertas("error");
       }
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido eliminar :(");
+      mostrarAlertas("error");
     }
   };
   //Ventana modal de confirmación de eliminar
@@ -89,7 +131,7 @@ const MostrarArticulos = () => {
     },
     {
       name: "DESCRIPCIÓN",
-      selector: (row) => row.descripcion,
+      selector: (row) => row.descripcion_articulo,
       sortable: true,
       maxWidth: "350px",
     },
@@ -262,14 +304,6 @@ const MostrarArticulos = () => {
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
-              </Link>
             </div>
           </div>
         </div>
@@ -316,6 +350,33 @@ const MostrarArticulos = () => {
             </div>
             <div className="col-sm-6">
               <p> {registroVerMas.cod_articulo} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">DESCRIPCIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.descripcion_corta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">PRECIO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.precio} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CÓDIGO DE BARRA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.codigo_barra} </p>
             </div>
           </div>
 

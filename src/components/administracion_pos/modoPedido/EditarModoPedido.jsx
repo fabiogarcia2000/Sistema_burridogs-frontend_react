@@ -1,18 +1,46 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
+import Swal from "sweetalert2";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
 
 
  const FormularioEditar = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'guardado':
+        Swal.fire({
+          title: '¡Guardado!',
+          text: "Los cambios se guardaron con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        })
+
+      break;
+
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudieron guardar los cambios',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+      break;
+
+      default: break;
+    }
+  };
 
   return (
     <div className="container">
@@ -32,8 +60,11 @@ const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
 
           // Validacion de código
           if (!valores.cod_modo_pedido) {
-            errores.cod_centro_costo = "Por favor ingresar un código";
+            errores.cod_modo_pedido = "Por favor ingresa un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_modo_pedido)) {
+            errores.cod_modo_pedido = "Escribir solo números";
           }
+
 
           // Validacion descripción
           if (!valores.descripcion) {
@@ -48,30 +79,26 @@ const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
           return errores;
         }}
         onSubmit={async (valores) => {
-          //Enviar los datos (petición Post)
-          //procedimineto para guardar el nuevo registro
-          try {
-            const res = await axios.put(`${URLEditar}${valores.cod_modo_pedido}`, valores);
-            console.log(valores);
-            console.log("Insertando....");
-               if (res.status === 200) {
-                alert("Guardado!");
-              } else {
-                alert("ERROR al Guardar :(");
+              //procedimineto para guardar el los cambios
+              try {
+                const res = await axios.put(`${URLEditar}${valores.cod_modo_pedido}`, valores);
+
+                  if (res.status === 200) {
+                    mostrarAlertas("guardado");
+                    navigate("/mostrarmodopedido");
+                  } else {
+                    mostrarAlertas("error");
+                  }
+                
+              } catch (error) {
+                console.log(error);
+                mostrarAlertas("error");
+                navigate("/mostrarmodopedido");
               }
-            
-          } catch (error) {
-            console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
-          }
-  
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrarmodopedido");
         }}
       >
-        {({ errors }) => (
-          <Form >
+        {({ errors, values }) => (
+          <Form>
             <h3 className="mb-3">Editar Modo Pedido</h3>
             <div className="row g-3">
               <div className="col-sm-6">
@@ -80,16 +107,16 @@ const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
                     Código:
                   </label>
                   <Field
-                    type="text"
+                    type="number"
                     className="form-control"
                     id="codModoPedido"
                     name="cod_modo_pedido"
                     placeholder="Código..."
-                    
+                    disabled
                   />
 
                   <ErrorMessage
-                    name="cod_centro_costo"
+                    name="cod_modo_pedido"
                     component={() => (
                       <div className="error">{errors.cod_modo_pedido}</div>
                     )}
@@ -108,6 +135,7 @@ const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
                     id="descripcionModoPedido"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -153,11 +181,6 @@ const URLEditar = "http://190.53.243.69:3001/modo_pedido/actualizar-insertar/";
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

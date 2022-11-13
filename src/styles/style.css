@@ -21,6 +21,14 @@ a:hover {
   text-decoration: none;
 }
 
+h1#Bienvenido {
+  margin-top: 50px;
+  margin-left: 200px;
+}
+
+img#LogoEmpresa {
+  margin-left: 200px;
+}
 h1,
 h2,
 h3,
@@ -339,8 +347,7 @@ h6 {
 }
 .logoGeneral img {
   max-height: 65px !important;
-  margin-right: 6px !important;
-  margin: 0px auto !important;
+  margin-left: 40px !important;
 }
 .logoGeneral span {
   font-size: 26px;
@@ -349,12 +356,12 @@ h6 {
   font-family: "Nunito", sans-serif;
 }
 
-.headerGeneral{
+.headerGeneral {
   transition: all 0.5s;
   z-index: 997;
   height: 60px;
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  background-color: #c3d1ff;
   padding-left: 20px;
   /* Toggle Sidebar Button */
   /* Search Bar */

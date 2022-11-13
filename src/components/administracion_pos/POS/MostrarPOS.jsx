@@ -3,10 +3,11 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates"; 
+import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2"; 
 
 
-const UrlMostrar =  "http://190.53.243.69:3001/pos/getall ";
+const UrlMostrar = "http://190.53.243.69:3001/pos/getall";
 const UrlEliminar = "http://190.53.243.69:3001/pos/eliminar/";
 
 const MostrarPOS = () => {
@@ -15,9 +16,9 @@ const MostrarPOS = () => {
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
-  }, []);
+  }, [] );
 
-
+  
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -25,9 +26,52 @@ const MostrarPOS = () => {
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido conectar con el servidor :(");
+      mostrarAlertas("errormostrar");
     }
   };
+
+
+//Alertas de éxito o error al eliminar
+const mostrarAlertas = (alerta) =>{
+  switch (alerta){
+    case 'eliminado':
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: "El POS se eliminó con éxito",
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+    case 'error':
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo eliminar el POS',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+    case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Mostrar',
+        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+
+    default: break;
+  }
+};
+
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -36,30 +80,30 @@ const MostrarPOS = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!"); 
+         mostrarAlertas("eliminado"); 
       } else {
-        alert("ERROR al Eliminar :(");
+        mostrarAlertas("error");
       }
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido eliminar :(");
+      mostrarAlertas("error");
     }
   };
 
   //Barra de busqueda
     const [ busqueda, setBusqueda ] = useState("")
-    //capturar valor a buscar
+      //capturar valor a buscar
     const valorBuscar = (e) => {
       setBusqueda(e.target.value)   
   }
-  //metodo de filtrado 
+      //metodo de filtrado 
   let results = []
    if(!busqueda){
        results = registros
    }else{
         results = registros.filter( (dato) =>
         dato.cod_pos.toString().includes(busqueda.toLocaleLowerCase()) || 
-        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())        
+        dato.descripcion_pos.toLowerCase().includes(busqueda.toLocaleLowerCase())        
         )
    };
 
@@ -82,7 +126,7 @@ const MostrarPOS = () => {
     },
     {
       name: "DESCRIPCIÓN",
-      selector: (row) => row.descripcion,
+      selector: (row) => row.descripcion_pos,
       sortable: true,
     },
     {

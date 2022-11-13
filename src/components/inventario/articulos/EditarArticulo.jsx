@@ -1,17 +1,50 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
+import Swal from "sweetalert2";
+import {
+  cambiarAMayusculasDescripCorta,
+  cambiarAMayusculasDescripArticulo,
+  cambiarAMayusculasDescripcion,
+} from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
 const FormularioEditar = () => {
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
   const [edit] = useGlobalState("registroEdit");
 
   const navigate = useNavigate();
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "guardado":
+        Swal.fire({
+          title: "¡Guardado!",
+          text: "Los cambios se guardaron con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudieron guardar los cambios",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="container">
@@ -50,7 +83,7 @@ const FormularioEditar = () => {
 
           // Validacion descripción
           if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresa una descripción";
+            errores.descripcion = "Ingrese una descripción para el artículo";
           }
 
           // Validacion descripción corta
@@ -112,30 +145,28 @@ const FormularioEditar = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
-          //procedimineto para guardar los cambios
+          //procedimineto para guardar el los cambios
           try {
             const res = await axios.put(
               `${URLEditar}${valores.cod_articulo}`,
               valores
             );
-            console.log("Insertando....");
+
             if (res.status === 200) {
-              alert("Guardado!");
+              mostrarAlertas("guardado");
+              navigate("/mostrararticulos");
             } else {
-              alert("ERROR al Guardar :(");
+              mostrarAlertas("error");
             }
           } catch (error) {
             console.log(error);
-            alert("ERROR - No se ha podido insertar :(");
+            mostrarAlertas("error");
+            navigate("/mostrararticulos");
           }
-
-          console.log("Formulario enviado");
-          setFormularioEnviado(true);
-          navigate("/mostrararticulos");
         }}
       >
-        {({ errors }) => (
-          <Form className="formulario">
+        {({ errors, values }) => (
+          <Form>
             <h3 className="mb-3">Editar Artículo</h3>
             <div className="row g-3">
               <div className="col-sm-4">
@@ -149,6 +180,7 @@ const FormularioEditar = () => {
                     id="codArticulo"
                     name="cod_articulo"
                     placeholder="Código del Artículo..."
+                    disabled
                   />
 
                   <ErrorMessage
@@ -191,6 +223,7 @@ const FormularioEditar = () => {
                     id="descripcionArticulo"
                     name="descripcion"
                     placeholder="Descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -215,6 +248,7 @@ const FormularioEditar = () => {
                     id="descripcortaArticulo"
                     name="descripcion_corta"
                     placeholder="Descripción corta..."
+                    onKeyUp={cambiarAMayusculasDescripCorta(values)}
                   />
 
                   <ErrorMessage
@@ -443,11 +477,6 @@ const FormularioEditar = () => {
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>

@@ -3,10 +3,11 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates"; 
+import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2"; 
 
 
-const UrlMostrar =  "http://190.53.243.69:3001/centro_costo/getall";
+const UrlMostrar = "http://190.53.243.69:3001/centro_costo/getall";
 const UrlEliminar = "http://190.53.243.69:3001/centro_costo/eliminar/";
 
 const MostrarCentroCosto = () => {
@@ -17,7 +18,7 @@ const MostrarCentroCosto = () => {
     getRegistros();
   }, []);
 
-
+  
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -25,9 +26,52 @@ const MostrarCentroCosto = () => {
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido conectar con el servidor :(");
+      mostrarAlertas("errormostrar");
     }
   };
+
+
+//Alertas de éxito o error al eliminar
+const mostrarAlertas = (alerta) =>{
+  switch (alerta){
+    case 'eliminado':
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: "El centro de costo se eliminó con éxito",
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+    case 'error':
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo eliminar el centro de costo',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+    case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Mostrar',
+        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
+
+    default: break;
+  }
+};
+
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -36,23 +80,23 @@ const MostrarCentroCosto = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!"); 
+         mostrarAlertas("eliminado"); 
       } else {
-        alert("ERROR al Eliminar :(");
+        mostrarAlertas("error");
       }
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido eliminar :(");
+      mostrarAlertas("error");
     }
   };
 
   //Barra de busqueda
     const [ busqueda, setBusqueda ] = useState("")
-    //capturar valor a buscar
+      //capturar valor a buscar
     const valorBuscar = (e) => {
       setBusqueda(e.target.value)   
   }
-  //metodo de filtrado 
+      //metodo de filtrado 
   let results = []
    if(!busqueda){
        results = registros
@@ -75,11 +119,6 @@ const MostrarCentroCosto = () => {
 
   //Configuramos las columnas de la tabla
   const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id_centro_costo,
-      sortable: true,
-    },
     {
       name: "CÓDIGO",
       selector: (row) => row.cod_centro_costo,
@@ -149,7 +188,7 @@ const MostrarCentroCosto = () => {
 
   return (    
     <div className="container">
-      <h3>Centro de costo</h3>
+      <h3>Bodega</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">

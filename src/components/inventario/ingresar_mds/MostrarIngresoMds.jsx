@@ -156,14 +156,6 @@ const MostrarIngresoMds = () => {
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
-              </Link>
             </div>
           </div>
         </div>

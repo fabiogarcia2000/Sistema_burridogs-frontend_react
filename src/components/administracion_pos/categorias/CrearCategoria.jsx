@@ -8,50 +8,47 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 const URLCrear = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/categoria/getone/";
 
-
 const Formulario = () => {
-
   const navigate = useNavigate();
 
-
   //Alertas de éxito o error
-  const mostrarAlertas = (alerta) =>{
-    switch (alerta){
-      case 'guardado':
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "La categoría se creó con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
-      break;
+        break;
 
-      case 'error': 
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudo crear la nueva categoría',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-      break;
-
-      case 'duplicado':
+      case "error":
         Swal.fire({
-          text:  'Ya existe una categoría con el código ingresado',
-          icon: 'warning',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          title: "Error",
+          text: "No se pudo crear la nueva categoría",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      case "duplicado":
+        Swal.fire({
+          text: "Ya existe una categoría con el código ingresado",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
-      break;
+        break;
 
-      default: break;
+      default:
+        break;
     }
   };
-
 
   return (
     <div className="container">
@@ -63,58 +60,60 @@ const Formulario = () => {
           descripcion: "",
           activo: "1",
           creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",         
+          fecha_creacion: "2022/10/27",
         }}
         //Funcion para validar
         validate={(valores) => {
-            let errores = {};
+          let errores = {};
 
-            // Validacion de código
-            if (!valores.cod_categoria) {
-              errores.cod_categoria = "Por favor ingresa un código";
-            } else if (!/^[0-9]+$/.test(valores.cod_categoria)) {
-              errores.cod_categoria = "Escribir solo números";
-            }
+          // Validacion de código
+          if (!valores.cod_categoria) {
+            errores.cod_categoria = "Por favor ingresa un código";
+          } else if (!/^[0-9]+$/.test(valores.cod_categoria)) {
+            errores.cod_categoria = "Escribir solo números";
+          }
 
-  
-            // Validacion descripción
-            if (!valores.descripcion) {
-              errores.descripcion = "Por favor ingresa una descripción";
-            } //else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
-              //errores.descripcion = "Escribir solo en MAYÚSCULAS";
-            //}
-  
-            // Validacion estado
-            if (!valores.activo) {
-              errores.activo = "Por favor selecciona un estado";
-            }
-  
-            return errores;
-          
+          // Validacion descripción
+          if (!valores.descripcion) {
+            errores.descripcion = "Por favor ingresa una descripción";
+          } //else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
+          //errores.descripcion = "Escribir solo en MAYÚSCULAS";
+          //}
+
+          // Validacion estado
+          if (!valores.activo) {
+            errores.activo = "Por favor selecciona un estado";
+          }
+
+          return errores;
         }}
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado
-              try {
-                const res = await axios.get(`${URLMostrarUno}${valores.cod_categoria}`);
-                console.log(res)
-                if (res.data === ""){
-                  //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.cod_categoria}`, valores);
-                      if (res.status === 200) {
-                        mostrarAlertas("guardado");
-                        navigate("/mostrarcategorias");
-                    } else {
-                      mostrarAlertas("error");
-                    }
-                    
-                }else{ 
-                  mostrarAlertas("duplicado");
-                }
-              } catch (error) {
-                console.log(error);
-                mostrarAlertas("error");
+          try {
+            const res = await axios.get(
+              `${URLMostrarUno}${valores.cod_categoria}`
+            );
+            console.log(res);
+            if (res.data === "") {
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(
+                `${URLCrear}${valores.cod_categoria}`,
+                valores
+              );
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
                 navigate("/mostrarcategorias");
+              } else {
+                mostrarAlertas("error");
               }
+            } else {
+              mostrarAlertas("duplicado");
+            }
+          } catch (error) {
+            console.log(error);
+            mostrarAlertas("error");
+            navigate("/mostrarcategorias");
+          }
         }}
       >
         {({ errors, values }) => (
@@ -200,7 +199,6 @@ const Formulario = () => {
             >
               Cancelar
             </Link>
-
           </Form>
         )}
       </Formik>

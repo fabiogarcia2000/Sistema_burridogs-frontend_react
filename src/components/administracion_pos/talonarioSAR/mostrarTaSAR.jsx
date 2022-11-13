@@ -109,11 +109,11 @@ const MostrarTalonarioSAR = () => {
       maxWidth: "180px",
     },
     {
-        name: "ESTADO",
-        selector: (row) => row.activo,
-        sortable: true,
-        maxWidth: "300px",
-      },
+      name: "ESTADO",
+      selector: (row) => row.activo,
+      sortable: true,
+      maxWidth: "300px",
+    },
     {
       name: "ACCIONES",
       cell: (row) => (
@@ -196,14 +196,6 @@ const MostrarTalonarioSAR = () => {
                 title="Exportar a PDF"
               >
                 <i className="fa-solid fa-file-pdf"></i>
-              </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-secondary"
-                title="?"
-              >
-                <i className="fa-solid fa-question"></i>
               </Link>
             </div>
           </div>
