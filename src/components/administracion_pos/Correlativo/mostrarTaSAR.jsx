@@ -121,7 +121,7 @@ const mostrarAlertas = (alerta) =>{
   const columns = [
     {
       name: "POS",
-      selector: (row) => row.id_pos,
+      selector: (row) => row.descripcion_pos,
       sortable: true,
     },
     {

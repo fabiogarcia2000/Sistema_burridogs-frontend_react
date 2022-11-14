@@ -1,18 +1,36 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcionPOS } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
+const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall"
 
-
- const FormularioEditar = () => {
+const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+  //procedimineto para obtener todos las sucursales y mostrarlas en select
+  const [sucursal, setsucursal] = useState([]);
+  useEffect(() => {
+    getsucursal();
+  }, []);
+
+    //petición a api
+    const getsucursal = async () => {
+      try {
+        const res = await axios.get(UrlMostrarSucursal);
+        setsucursal(res.data);
+      } catch (error) {
+        console.log(error);
+        mostrarAlertas("errormostrar");
+      }
+    };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
@@ -158,16 +176,20 @@ const URLEditar = "http://190.53.243.69:3001/pos/actualizar-insertar/";
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="SucursalPOS" className="form-label">
+                  <label htmlFor="sucursal" className="form-label">
                     Sucursal:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="SucursalPOS"
-                    name="id_sucursal"
-                    placeholder="Surcursal..."
-                  />
+                  as="select"
+                  className="form-select"
+                  id="pos"
+                  name="id_sucursal"
+                >
+                  <option value="">Seleccionar...</option>
+                  {sucursal.map((item, i) =>(
+                    <option key={i} value={item.id_sucursal}>{item.descripcion_sucursal}</option>
+                  ))}
+                </Field>
 
                   <ErrorMessage
                     name="id_sucursal"

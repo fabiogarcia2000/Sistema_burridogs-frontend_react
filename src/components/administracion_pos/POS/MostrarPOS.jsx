@@ -131,7 +131,7 @@ const mostrarAlertas = (alerta) =>{
     },
     {
       name: "SUCURSAL",
-      selector: (row) => row.id_sucursal,
+      selector: (row) => row.descripcion_sucursal,
       sortable: true,
     },
     {

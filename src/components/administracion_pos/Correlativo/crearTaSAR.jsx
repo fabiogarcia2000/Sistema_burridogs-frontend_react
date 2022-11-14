@@ -1,18 +1,35 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCAI } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
-const URLMostrarUno = "http://190.53.243.69:3001/correlativo/getone/";
+const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
 
 
 const Formulario = () => {
 
   const navigate = useNavigate();
 
+  //procedimineto para obtener todos los pos y mostrarlas en select
+  const [pos, setpos] = useState([]);
+  useEffect(() => {
+    getpos();
+  }, []);
+
+    //petición a api
+    const getpos = async () => {
+      try {
+        const res = await axios.get(UrlMostrarPOS);
+        setpos(res.data);
+      } catch (error) {
+        console.log(error);
+        mostrarAlertas("errormostrar");
+      }
+    };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
@@ -173,16 +190,20 @@ const Formulario = () => {
             <div className="row g-3">
             <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="id_Pos" className="form-label">
-                    ID POS:
+                  <label htmlFor="POS" className="form-label">
+                    POS:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="id_Pos"
-                    name="id_pos"
-                    placeholder="id Pos..."
-                  />
+                  as="select"
+                  className="form-select"
+                  id="pos"
+                  name="id_pos"
+                >
+                  <option value="">Seleccionar...</option>
+                  {pos.map((item, i) =>(
+                    <option key={i} value={item.id_pos}>{item.descripcion_pos}</option>
+                  ))}
+                </Field>
 
                   <ErrorMessage
                     name="id_pos"
