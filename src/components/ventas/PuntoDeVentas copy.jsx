@@ -4,22 +4,15 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import "./style.css";
 import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import {quitarTildes} from "./utils/textoSinTildes";
 
-const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
+const UrlCategorias = "http://190.53.243.69:3001/categoria/getall/";
 const UrlArticulos = "http://190.53.243.69:3001/articulo/getall/";
-const UrlArticulosCategoria = "http://190.53.243.69:3001/articulo/getallbycategoria/";
-const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
-const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
-const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
 const isv = 0.15;
 
 const PuntoDeVentas = () => {
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
   const [articulosMostrar, setArticulosMostrar] = useState([]);
-
- // const [pagoCompartido, setPagoCompartido] = useState(true);
 
   const [cantidad, setCantidad] = useState(1);
   const [articuloClick, setArticuloClick] = useState({});
@@ -32,14 +25,6 @@ const PuntoDeVentas = () => {
   const [Impuesto, setImpuesto] = useState(0.0);
   const [total, setTotal] = useState(0.0);
 
-
-  useEffect(() => {
-    getCategorias();
-    getArticulos();
-    getMetodosPago();
-    getDescuentos();
-    getPedidos();
-  }, []);
 
   //procedimineto para obtener las categorias
   const getCategorias = async () => {
@@ -62,63 +47,15 @@ const PuntoDeVentas = () => {
     }
   };
 
-  //procedimineto para obtener los articulos por categoria
-  const getArticulosCategoria = async (categoria) => {
-    try {
-      const res = await axios.get(UrlArticulosCategoria+categoria);
-      setArticulos(res.data);
-      setArticulosMostrar(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
-  //procedimineto para obtener todos los metodos de pago y mostrarlas en select
-  const [metodosPago, setMetodosPago] = useState([]);
-
-    //petición a api
-    const getMetodosPago = async () => {
-      try {
-        const res = await axios.get(UrlMostrarMetodosPago);
-        setMetodosPago(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    //procedimineto para obtener todos los descuentos y mostrarlas en select
-  const [descuentos, setDescuentos] = useState([]);
-
-    //petición a api
-    const getDescuentos = async () => {
-      try {
-        const res = await axios.get(UrlDescuentos);
-        setDescuentos(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    //procedimineto para obtener todos los modos de pedido y mostrarlas en select
-  const [pedidos, setPedidos] = useState([]);
-
-    //petición a api
-    const getPedidos = async () => {
-      try {
-        const res = await axios.get(UrlPedidos);
-        setPedidos(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  useEffect(() => {
+    getCategorias();
+    getArticulos();
+  }, []);
 
   useEffect(() => {
     listaCompras.map((list) => 
-      setSubTotal(prevValores => prevValores + list.total)
-      );
+      setSubTotal(prevValores => prevValores + list.total));
   }, [listaCompras]);
-
 
   useEffect(() => {
     setImpuesto(subTotal*isv)
@@ -128,31 +65,35 @@ const PuntoDeVentas = () => {
     setTotal(subTotal + Impuesto)
   }, [Impuesto, subTotal]);
 
+  //mostrar articulos por categoria
+  const filtrarArticulos = (tipoCategoria) => {
+    const filtrarArticulos = articulos.filter(
+      (item) => item.descripcion_categoria === tipoCategoria
+    );
+    setArticulosMostrar(filtrarArticulos);
+  };
 
-  //Buscador --con expresiones regulares js
-  const handleBuscador = (e) => {
-    const buscar = quitarTildes(e.target.value.toLowerCase());  
-      let tmpArray = [];
-      const limite = articulos.length;
-
-      for (let index = 0; index < limite; index++) {
-        const buscarEn = quitarTildes(articulos[index].descripcion.toLowerCase());
-        const patt = new RegExp(buscar);
-        const res = patt.test(buscarEn);
-
-        if (res){
-          tmpArray.push(articulos[index])
-        };
-        
-      };
-      setArticulosMostrar(tmpArray);
-    };
-
+  //Barra de busqueda
+  const [ busqueda, setBusqueda ] = useState("")
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value)   
+  }
+  //metodo de filtrado 
+  let results = []
+  if(!busqueda){
+  }else{
+      results = articulos.filter( (dato) =>
+      dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
+      dato.descripcion_corta.toLowerCase().includes(busqueda.toLocaleLowerCase()),     
+      );
+  
+  };
 
   //agregar articulos a la lista
   const agregarArticulos = () => {
     if(!listaCompras.find(list => list.cod === articuloClick.cod_articulo)){
-      setListaCompras([...listaCompras, {cod: articuloClick.cod_articulo, desc: articuloClick.descripcion_corta, cant:cantidad, prec:articuloClick.precio, total:cantidad*articuloClick.precio,  isv:articuloClick.precio * articuloClick.porcentaje }]);
+      setListaCompras([...listaCompras, {cod: articuloClick.cod_articulo, desc: articuloClick.descripcion_corta, cant:cantidad, prec:articuloClick.precio, total:cantidad*articuloClick.precio }]);
       resetSubTotal();
      setCantidad(1)
     }else{
@@ -259,7 +200,7 @@ const PuntoDeVentas = () => {
     {
       name: "Cant.",
       selector: (row) => row.cant,
-      maxWidth: "1px", //ancho de la columna
+      maxWidth: "-5px", //ancho de la columna
     },
     {
       name: "Precio",
@@ -399,7 +340,8 @@ const PuntoDeVentas = () => {
                   type="text"
                   placeholder="Buscar por código o descripción..."
                   aria-label="Search"
-                  onChange={handleBuscador}
+                  value={busqueda}
+                  onChange={valorBuscar}
                 />
               </div>
             </div>
@@ -410,18 +352,18 @@ const PuntoDeVentas = () => {
                 <button
                   className="btn btn-secondary m-1"
                   onClick={() => {
-                    getArticulos();
+                    setArticulosMostrar(articulos);
                   }}
                 >
                   TODOS
                 </button>
               </div>
-              {categorias && categorias.map((categ, i) => (
+              {categorias.map((categ, i) => (
                 <div key={i} className="col d-grid gap-2 col-3 mx-auto">
                   <button
                     className="btn btn-secondary m-1"
                     onClick={() => {
-                      getArticulosCategoria(categ.id_categoria);
+                      filtrarArticulos(categ.descripcion);
                     }}
                   >
                     {categ.descripcion}
@@ -435,23 +377,23 @@ const PuntoDeVentas = () => {
             {/*Mostrar productos*/}
             <div className="row divCards">
               <br />
-              {articulosMostrar && articulosMostrar.map((artic, i) => (
-                <div className="col-sm-4 mb-2" key={i}>
-                    <div
-                    className="card colorCards"
-                    type="button"
-                    onClick={() => {
-                      abrirModalCantidad();
-                      setArticuloClick(artic)
-                    }}
-                  >
-                    <div className="card-body">
-                      <h5 className="card-title">{artic.descripcion_corta}</h5>
-                      <h6 className="card-subtitle mb-2 text-muted">
-                        {"Código: " + artic.cod_articulo}
-                      </h6>
-                      <p className="card-text"><span className="badge bg-primary rounded-pill">{"Precio: " + artic.precio}</span></p>
-                    </div>
+              {articulosMostrar.map((artic, i) => (
+                <div
+                  key={i}
+                  className="card m-1 mb-1 colorCards"
+                  type="button"
+                  style={{ width: "13rem", height: "8rem" }}
+                  onClick={() => {
+                    abrirModalCantidad();
+                    setArticuloClick(artic)
+                  }}
+                >
+                  <div className="card-body">
+                    <h5 className="card-title">{artic.descripcion_corta}</h5>
+                    <h6 className="card-subtitle mb-2 text-muted">
+                      {"Código: " + artic.cod_articulo}
+                    </h6>
+                    <p className="card-text"><span className="badge bg-primary rounded-pill">{"Precio: " + artic.precio}</span></p>
                   </div>
                 </div>
               ))}
@@ -479,9 +421,8 @@ const PuntoDeVentas = () => {
                     aria-label="Floating label select example"
                   >
                     <option value="">Ninguno</option>
-                    {descuentos.map((item, i) =>(
-                    <option key={i} value={item.id_descuento}>{item.descripcion}</option>
-                  ))}
+                    <option value="1">Tercera edad</option>
+                    <option value="2">Cliente</option>
                   </select>
                   <label htmlFor="floatingSelectGrid">Descuento:</label>
                 </div>
@@ -495,9 +436,9 @@ const PuntoDeVentas = () => {
                     aria-label="Floating label select example"
                   >
                     <option defaultValue>Seleccionar...</option>
-                    {pedidos.map((item, i) =>(
-                    <option key={i} value={item.id_modo_pedido}>{item.descripcion}</option>
-                  ))}
+                    <option value="1">Comer Aquí</option>
+                    <option value="2">Para Llevar</option>
+                    <option value="2">Delivery</option>
                   </select>
                   <label htmlFor="floatingSelectGrid">Tipo de Pedido:</label>
                 </div>
@@ -609,67 +550,11 @@ const PuntoDeVentas = () => {
             </div>
             <div className="row">
               <select className="form-select" id="country" required>
-              <option value="">Seleccionar...</option>
-                  {metodosPago.map((item, i) =>(
-                    <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
-                  ))}
-                  <option value="">COMPARTIDO</option>
+                <option value="">Efectivo</option>
+                <option value="">Otro..</option>
               </select>
             </div>
             <hr />
-
-            <div className="row">
-              <div className="col">
-                <div className="form-floating">
-                  <select
-                    className="form-select"
-                    id="floatingSelectGrid"
-                    aria-label="Floating label select example"
-                  >
-                    <option value="">Seleccionar...</option>
-                     {metodosPago.map((item, i) =>(
-                    <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
-                  ))}
-                  </select>
-                  <label htmlFor="floatingSelectGrid">Tipo de Pago 1:</label>
-                </div>
-                <div className="col">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="monto"
-                      name="montoRecibido1"
-                      placeholder="L. 00.00"
-                    />
-                  </div>
-              </div>
-
-              <div className="col">
-                <div className="form-floating">
-                  <select
-                    className="form-select"
-                    id="floatingSelectGrid"
-                    aria-label="Floating label select example"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {metodosPago.map((item, i) =>(
-                    <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
-                  ))}
-                  </select>
-                  <label htmlFor="floatingSelectGrid">Tipo de Pago 2:</label>
-                </div>
-                <div className="col">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="monto"
-                      name="montoRecibido1"
-                      placeholder="L. 00.00"
-                    />
-                  </div>
-              </div>
-            </div>
-          <hr />
 
             <div className="row">
               <div className="col">
