@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { cambiarAMayusculasDescripcion, cambiarAMayusculasDescripcionPOS } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/pos/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/pos/getone/";
@@ -178,7 +178,7 @@ const Formulario = () => {
                     id="descripcionCategoria"
                     name="descripcion_pos"
                     placeholder="Descripción..."
-                    onKeyUp={cambiarAMayusculasDescripcion(values)}
+                    onKeyUp={cambiarAMayusculasDescripcionPOS(values)}
                   />
 
                   <ErrorMessage
