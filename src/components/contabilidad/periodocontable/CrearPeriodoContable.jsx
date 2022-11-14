@@ -6,8 +6,8 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreUsuario } from "../../../utils/cambiarAMayusculas";
 
-const URLCrear = "https://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
-const URLMostrarUno = "https://190.53.243.69:3001/mc_periodo/getone/";
+const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 const current = new Date();
 const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
 

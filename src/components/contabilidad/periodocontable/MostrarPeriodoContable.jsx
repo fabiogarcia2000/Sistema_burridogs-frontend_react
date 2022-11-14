@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall/";
-const UrlEliminar = "https://190.53.243.69:3001/mc_periodo/eliminar/";
+const UrlEliminar = "http://190.53.243.69:3001/mc_periodo/eliminar/";
 
 const MostrarPeriodo= () => {
   //Configurar los hooks

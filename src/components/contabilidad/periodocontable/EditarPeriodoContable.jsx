@@ -8,7 +8,7 @@ import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMay
 import { cambiarAMayusculasNombreUsuario } from "../../../utils/cambiarAMayusculas";
 
 
-const URLEditar = "https://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
 
 const PeriodoEditar = () => {
   const [edit] = useGlobalState('registroEdit')
