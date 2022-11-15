@@ -185,7 +185,7 @@ const VentaResumen = () => {
               </div>
 
               <div className="col-2 bottom-aligned">
-                <button className="btn btn-success me-2" type="button">
+                <button className="btn btn-primary me-2" type="button">
                     Consultar
                 </button>
 
@@ -247,7 +247,7 @@ const VentaResumen = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por código o descripción..."
+              placeholder="Buscar..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -258,6 +258,7 @@ const VentaResumen = () => {
       <br />
 
       {/*Mostramos la tabla con los datos*/}
+  {/*
       <div className="row">
         <DataTable
           columns={columns}
@@ -268,6 +269,97 @@ const VentaResumen = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+      </div>
+*/}
+      <div className="row">
+        <table className="table table-bordered">
+          <thead>
+                      <tr>
+                        <th>TRANSACCION	</th>
+                        <th>PEDIDO</th>
+                        <th>PRODUCTO</th>
+                        <th>CANTIDAD</th>
+                        <th>PRECIO</th>
+                        <th>SUBTOTAL</th>
+                        <th>IMPUESTO</th>
+                        <th>TOTAL</th>
+                        <th>PAGO</th>
+                      </tr>
+          </thead>
+
+          <tbody>
+                      <tr>
+                        <td align="center">1</td>
+                        <td>LLEVAR</td>
+                        <td>PRODUCTO1</td>
+                        <td align="right">1.00</td>
+                        <td align="right">60.00</td>
+                        <td align="right">60.00</td>
+                        <td align="right">9.00</td>
+                        <td align="right">69.00</td>
+                        <td>EFECTIVO</td>
+                      </tr>
+
+                      <tr>
+                        <td align="center">1</td>
+                        <td>LLEVAR</td>
+                        <td>PRODUCTO2</td>
+                        <td align="right">1.00</td>
+                        <td align="right">70.00</td>
+                        <td align="right">70.00</td>
+                        <td align="right">10.50</td>
+                        <td align="right">80.50</td>
+                        <td>EFECTIVO</td>
+                      </tr>
+
+                      <tr>
+                        <td align="center">1</td>
+                        <td>LLEVAR</td>
+                        <td>PRODUCTO3</td>
+                        <td align="right">1.00</td>
+                        <td align="right">50.00</td>
+                        <td align="right">50.00</td>
+                        <td align="right">7.50</td>
+                        <td align="right">57.50</td>
+                        <td>EFECTIVO</td>
+                      </tr>
+
+                      <tr>
+                        <td align="center">1</td>
+                        <td>LLEVAR</td>
+                        <td>PRODUCTO4</td>
+                        <td align="right">1.00</td>
+                        <td align="right">70.00</td>
+                        <td align="right">70.00</td>
+                        <td align="right">10.50</td>
+                        <td align="right">80.50</td>
+                        <td>EFECTIVO</td>
+                      </tr>
+
+                      <tr>
+                        <td align="center">1</td>
+                        <td>LLEVAR</td>
+                        <td>PRODUCTO5</td>
+                        <td align="right">2.00</td>
+                        <td align="right">60.00</td>
+                        <td align="right">120.00</td>
+                        <td align="right">18.00</td>
+                        <td align="right">138.00</td>
+                        <td>EFECTIVO</td>
+                      </tr>
+
+                      <tr align="right">
+                        <th>TOTALES</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>370.00</th>
+                        <th>55.50</th>
+                        <th>425.50</th>
+                      </tr>
+                    </tbody>  
+        </table>
       </div>
 
     </div>

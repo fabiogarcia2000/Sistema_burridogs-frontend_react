@@ -7,7 +7,7 @@ import DataTable from "react-data-table-component";
 import {quitarTildes} from "./utils/textoSinTildes";
 
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
-const UrlArticulos = "http://190.53.243.69:3001/articulo/getall/";
+const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactive/";
 const UrlArticulosCategoria = "http://190.53.243.69:3001/articulo/getallbycategoria/";
 const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
 const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
@@ -397,7 +397,7 @@ const PuntoDeVentas = () => {
                 <input
                   className="form-control me-2"
                   type="text"
-                  placeholder="Buscar por código o descripción..."
+                  placeholder="Buscar por descripción..."
                   aria-label="Search"
                   onChange={handleBuscador}
                 />
@@ -446,7 +446,7 @@ const PuntoDeVentas = () => {
                     }}
                   >
                     <div className="card-body">
-                      <h5 className="card-title">{artic.descripcion_corta}</h5>
+                      <h5 className="card-title">{artic.descripcion}</h5>
                       <h6 className="card-subtitle mb-2 text-muted">
                         {"Código: " + artic.cod_articulo}
                       </h6>
@@ -613,11 +613,11 @@ const PuntoDeVentas = () => {
                   {metodosPago.map((item, i) =>(
                     <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
                   ))}
-                  <option value="">COMPARTIDO</option>
+                 {/** <option value="">COMPARTIDO</option> */}
               </select>
             </div>
             <hr />
-
+{/**
             <div className="row">
               <div className="col">
                 <div className="form-floating">
@@ -669,6 +669,7 @@ const PuntoDeVentas = () => {
                   </div>
               </div>
             </div>
+          */}
           <hr />
 
             <div className="row">
