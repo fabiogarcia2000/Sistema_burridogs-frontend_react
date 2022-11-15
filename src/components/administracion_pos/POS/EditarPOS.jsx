@@ -66,7 +66,7 @@ const FormularioEditar = () => {
         //valores iniciales
         initialValues={{
           cod_pos: edit.cod_pos,
-          descripcion_pos: edit.descripcion_pos,
+          descripcion: edit.descripcion_pos,
           id_sucursal: edit.id_sucursal,
           activo: edit.activo,
           modificado_por: "autorPrueba",
@@ -86,7 +86,7 @@ const FormularioEditar = () => {
 
 
           // Validacion descripción
-          if (!valores.descripcion_pos) {
+          if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa una descripción";
           }
 
@@ -160,15 +160,15 @@ const FormularioEditar = () => {
                     type="text"
                     className="form-control"
                     id="descripcionPOS"
-                    name="descripcion_pos"
+                    name="descripcion"
                     placeholder="Descripción..."
                     onKeyUp={cambiarAMayusculasDescripcionPOS(values)}
                   />
 
                   <ErrorMessage
-                    name="descripcion_pos"
+                    name="descripcion"
                     component={() => (
-                      <div className="error">{errors.descripcion_pos}</div>
+                      <div className="error">{errors.descripcion}</div>
                     )}
                   />
                 </div>

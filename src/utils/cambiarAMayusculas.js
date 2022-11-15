@@ -19,8 +19,8 @@ export function cambiarAMayusculasCAI(valores) {
 
 export function cambiarAMayusculasDescripcionPOS(valores) {
   try {
-    let texto = valores.descripcion_pos;
-    valores.descripcion_pos = texto.toUpperCase();
+    let texto = valores.descripcion;
+    valores.descripcion = texto.toUpperCase();
   } catch (error) {
     console.log(error);
   }

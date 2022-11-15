@@ -8,7 +8,7 @@ import { cambiarAMayusculasDescripcion, cambiarAMayusculasDescripcionPOS } from 
 
 const URLCrear = "http://190.53.243.69:3001/pos/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/pos/getone/";
-const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall"
+const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall/"
 
 const Formulario = () => {
 
@@ -57,7 +57,7 @@ const Formulario = () => {
 
       case 'duplicado':
         Swal.fire({
-          text:  'Ya existe una categoría con el código ingresado',
+          text:  'Ya existe un POS con el código ingresado',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -76,7 +76,7 @@ const Formulario = () => {
         //valores iniciales
         initialValues={{
           cod_pos: "",
-          descripcion_pos: "",
+          descripcion: "",
           id_sucursal: "",
           activo: "1",
           creado_por: "autorPrueba",
@@ -95,18 +95,16 @@ const Formulario = () => {
 
   
             // Validacion descripción
-            if (!valores.descripcion_pos) {
-              errores.descripcion_pos = "Por favor ingresa una descripción";
+            if (!valores.descripcion) {
+              errores.descripcion = "Por favor ingresa una descripción";
             } //else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion)) {
               //errores.descripcion = "Escribir solo en MAYÚSCULAS";
             //}
 
             // Validacion de código
           if (!valores.id_sucursal) {
-            errores.id_sucursal = "Por favor ingresa un código";
-          } else if (!/^[0-9]+$/.test(valores.id_sucursal)) {
-            errores.id_sucursal = "Escribir solo números";
-          }
+            errores.id_sucursal = "Por favor selecciona una sucursal";
+          } 
   
             // Validacion estado
             if (!valores.activo) {
@@ -176,15 +174,15 @@ const Formulario = () => {
                     type="text"
                     className="form-control"
                     id="descripcionCategoria"
-                    name="descripcion_pos"
+                    name="descripcion"
                     placeholder="Descripción..."
                     onKeyUp={cambiarAMayusculasDescripcionPOS(values)}
                   />
 
                   <ErrorMessage
-                    name="descripcion_pos"
+                    name="descripcion"
                     component={() => (
-                      <div className="error">{errors.descripcion_pos}</div>
+                      <div className="error">{errors.descripcion}</div>
                     )}
                   />
                 </div>
