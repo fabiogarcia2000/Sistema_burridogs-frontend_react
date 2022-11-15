@@ -125,7 +125,7 @@ const MostrarSocios = () => {
 
     {
       name: "TIPO",
-      selector: (row) => row.tipo,
+      selector: (row) => (row.tipo === "C" ? "CLIENTE" : "PROVEEDOR"),
       sortable: true,
     },
     {

@@ -75,6 +75,8 @@ const FormularioEditar = () => {
           // Validacion de código
           if (!valores.cod_socio_negocio) {
             errores.cod_socio_negocio = "Por favor ingresa un código";
+          }else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,12}$/.test(valores.cod_socio_negocio)) {
+            errores.cod_socio_negocio = "Escribir números y letras sin espacios. Ejemplo: C001";
           }
 
           // Validacion tipo
@@ -109,13 +111,15 @@ const FormularioEditar = () => {
           // Validacion correo
           if (!valores.correo) {
             errores.correo = "Por favor ingrese un correo";
+          }else if (! /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(valores.correo)) {
+            errores.correo = "Ingrese un correo válido";
           }
 
           // Validacion rtn
           if (!valores.rtn) {
             errores.rtn = "Por favor ingrese un rtn";
           } else if (!/^[0-9]+$/.test(valores.rtn)) {
-            errores.rtn = " Porfavor solo escriba números";
+            errores.rtn = "Ingrese un R.T.N válido";
           }
 
           // Validacion balance

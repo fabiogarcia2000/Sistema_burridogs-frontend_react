@@ -130,7 +130,7 @@ const CrearSucursal = () => {
           // Validacion rtn
           if (!valores.rtn) {
             errores.rtn = "Por favor ingresa un R.T.N";
-          } else if (!/^^(?=[0]+[0-9])[0-9]{14}$/.test(valores.rtn)) {
+          } else if (!/^[0-9]+$/.test(valores.rtn)) {
             errores.rtn = "Ingresa un R.T.N válido";
           }
 
