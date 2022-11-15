@@ -336,7 +336,7 @@ const Formulario = () => {
                     id="correoSocio"
                     name="correo"
                     placeholder="Correo del Socio..."
-                    onKeyUp={cambiarAMayusculasCorreo(values)}
+                    
                   />
 
                   <ErrorMessage
