@@ -112,6 +112,10 @@ const mostrarAlertas = (alerta) =>{
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [cuentaVerMas, setCuentaVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -120,11 +124,11 @@ const mostrarAlertas = (alerta) =>{
       selector: (row) => row.id_cuenta,
       sortable: true,
     },
-    {
-      name: "USUARIO",
-      selector: (row) => row.id_usuario,
-      sortable: true,
-    },
+    //{
+    //  name: "USUARIO",
+    //  selector: (row) => row.id_usuario,
+    //  sortable: true,
+    //},
     {
         name: "CODIGO CUENTA",
         selector: (row) => row.codigo_cuenta,
@@ -150,7 +154,18 @@ const mostrarAlertas = (alerta) =>{
       name: "ACCIONES",
       cell: (row) => (
         <>
-          
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setCuentaVerMas(row);
+            }}
+          >
+            <i className="fa-solid fa-eye"></i>
+          </Link>
+          &nbsp;
           <Link
             to="/editarcatalogo"
             type="button"
@@ -277,6 +292,80 @@ const mostrarAlertas = (alerta) =>{
           fixedHeaderScrollHeight="550px"
         />
       </div>
+
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">ID: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.id_cuenta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">USUARIO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.id_usuario} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CÓDIGO DE CUENTA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.codigo_cuenta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">NOMBRE DE CUENTA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.nombre_cuenta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CATEGORIA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.id_categoria} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">DESTINO DE CUENTA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.id_destino_cuenta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">SALDO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {cuentaVerMas.saldo} </p>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
