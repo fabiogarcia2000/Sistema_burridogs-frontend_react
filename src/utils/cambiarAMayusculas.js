@@ -8,6 +8,25 @@ export function cambiarAMayusculasDescripcion(valores) {
   }
 }
 
+//función comvertir a mayuscula código unidad medida
+export function cambiarAMayusculasCodigoUND(valores) {
+  try {
+    let texto = valores.cod_unidad_medida;
+    valores.cod_unidad_medida = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+//función comvertir a mayuscula código socio
+export function cambiarAMayusculasCodigoSocio(valores) {
+  try {
+    let texto = valores.cod_socio_negocio;
+    valores.cod_socio_negocio = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function cambiarAMayusculasCAI(valores) {
   try {
     let texto = valores.cai;
@@ -50,6 +69,26 @@ export function cambiarAMayusculasDirección(valores) {
   try {
     let texto = valores.direccion;
     valores.direccion = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//función convertir a mayuscula descripción correo
+export function cambiarAMayusculasCorreo(valores) {
+  try {
+    let texto = valores.correo;
+    valores.correo = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//función convertir a mayuscula
+export function cambiarAmayusculasContacto(valores) {
+  try {
+    let texto = valores.contacto;
+    valores.contacto = texto.toUpperCase();
   } catch (error) {
     console.log(error);
   }
