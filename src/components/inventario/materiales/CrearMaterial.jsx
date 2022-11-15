@@ -112,22 +112,13 @@ const Formulario = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado
           try {
-            const res = await axios.get(
-              `${URLMostrarUno}${valores.id_articulo_padre}/${valores.id_articulo_hijo}`
-            );
+            const res = await axios.put(`${URLCrear}`, valores);
             console.log(res);
-            if (res.data === "") {
-              //procedimineto para guardar el nuevo registro en el caso de que no exista
-              const res = await axios.put(
-                `${URLCrear}${valores.id_articulo_padre}$","${valores.id_articulo_hijo}`,
-                valores
-              );
-              if (res.status === 200) {
-                mostrarAlertas("guardado");
-                navigate("/mostrarmateriales");
-              } else {
-                mostrarAlertas("error");
-              }
+            if (res.status === 200) {
+              mostrarAlertas("guardado");
+              navigate("/mostrarmateriales");
+            } else {
+              mostrarAlertas("error");
             }
           } catch (error) {
             console.log(error);
@@ -143,7 +134,7 @@ const Formulario = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="codPdMaterial" className="form-label">
-                    Código Padre:
+                    Artículo:
                   </label>
                   <Field
                     as="select"
@@ -171,7 +162,7 @@ const Formulario = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="codHjArticulo" className="form-label">
-                    Código Hijo:
+                    Material:
                   </label>
                   <Field
                     as="select"

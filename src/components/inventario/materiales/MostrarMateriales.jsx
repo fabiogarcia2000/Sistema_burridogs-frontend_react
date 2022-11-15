@@ -76,14 +76,14 @@ const MostrarMateriales = () => {
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "CÓDIGO PADRE",
+      name: "ARTÍCULO",
       selector: (row) => row.id_articulo_padre,
       sortable: true,
       maxWidth: "180px", //ancho de la columna
     },
 
     {
-      name: "CÓDIGO HIJO",
+      name: "MATERIAL",
       selector: (row) => row.id_articulo_hijo,
       sortable: true,
       maxWidth: "150px", //ancho de la columna

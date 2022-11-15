@@ -105,10 +105,7 @@ const FormularioEditar = () => {
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
           try {
-            const res = await axios.put(
-              `${URLEditar}${valores.cod_articulo}`,
-              valores
-            );
+            const res = await axios.put(`${URLEditar}`, valores);
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
@@ -130,7 +127,7 @@ const FormularioEditar = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="codPdMaterial" className="form-label">
-                    Código Padre:
+                    Artículo:
                   </label>
                   <Field
                     as="select"
@@ -158,7 +155,7 @@ const FormularioEditar = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="codHjArticulo" className="form-label">
-                    Código Hijo:
+                    Material:
                   </label>
                   <Field
                     as="select"
