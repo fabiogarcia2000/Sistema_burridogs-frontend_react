@@ -72,7 +72,6 @@ const mostrarAlertas = (alerta) =>{
   }
 };
 
-
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
     try {
