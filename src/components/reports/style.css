@@ -1,0 +1,4 @@
+.bottom-aligned {
+    display: flex;
+    align-items: flex-end;
+}

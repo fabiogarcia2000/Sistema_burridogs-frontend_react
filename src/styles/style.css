@@ -1142,3 +1142,8 @@ h6 {
 .error {
   color: #e03125;
 }
+
+.bottom-aligned {
+  display: flex;
+  align-items: flex-end;
+}

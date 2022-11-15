@@ -278,9 +278,9 @@ function Sidebar() {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link to="/">
+              <Link to="/reporte-venta-resumen">
                 <i className="bi bi-circle"></i>
-                <span>Reporte 1</span>
+                <span>Resumen de Ventas</span>
               </Link>
             </li>
             <li>
