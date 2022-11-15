@@ -87,6 +87,12 @@ function Sidebar() {
               </Link>
             </li>
             <li>
+              <Link to="/mostrarsocios">
+                <i className="bi bi-circle"></i>
+                <span>Socios de Negocio</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/mostrarimpuestos">
                 <i className="bi bi-circle"></i>
                 <span>Impuestos</span>
