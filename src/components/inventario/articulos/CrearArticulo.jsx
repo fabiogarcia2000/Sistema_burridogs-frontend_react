@@ -1,19 +1,92 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import {
   cambiarAMayusculasDescripCorta,
   cambiarAMayusculasDescripArticulo,
-  cambiarAMayusculasDescripcion,
 } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/articulo/getone/";
 
+const UrlMostrarUnidades = "http://190.53.243.69:3001/unidad_medida/getall/";
+const UrlMostrarCategorias = "http://190.53.243.69:3001/categoria/getall/";
+const UrlMostrarImpuestos = "http://190.53.243.69:3001/impuesto/getall/";
+const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
+
 const Formulario = () => {
   const navigate = useNavigate();
+
+  //procedimineto para obtener las unidades de medida
+  const [unidades, setUnidades] = useState([]);
+  useEffect(() => {
+    getUnidades();
+  }, []);
+
+  //petición a api
+  const getUnidades = async () => {
+    try {
+      const res = await axios.get(UrlMostrarUnidades);
+      setUnidades(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener las categorias
+  const [categorias, setCategorias] = useState([]);
+  useEffect(() => {
+    getCategorias();
+  }, []);
+
+  //petición a api
+  const getCategorias = async () => {
+    try {
+      const res = await axios.get(UrlMostrarCategorias);
+      setCategorias(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener las categorias
+  const [impuestos, setImpuestos] = useState([]);
+  useEffect(() => {
+    getImpuestos();
+  }, []);
+
+  //petición a api
+  const getImpuestos = async () => {
+    try {
+      const res = await axios.get(UrlMostrarImpuestos);
+      setImpuestos(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener los socios de negocio
+  const [socios, setSocios] = useState([]);
+  useEffect(() => {
+    getSocios();
+  }, []);
+
+  //petición a api
+  const getSocios = async () => {
+    try {
+      const res = await axios.get(UrlMostrarSocios);
+      setSocios(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -61,17 +134,23 @@ const Formulario = () => {
         initialValues={{
           cod_articulo: "",
           tipo: "",
-          descripcion: "",
+          descripcion_articulo: "",
           descripcion_corta: "",
           id_impuesto: "",
+          //descripcion_impuesto: "",
           id_categoria: "",
+          //descripcion_categoria: "",
           precio: "",
-          id_unidad_venta: "",
+          //id_unidad_venta: "",
+          //descripcion_unidad_venta: "",
           id_socio_negocio: "",
-          id_unidad_compra: "",
+          //descripcion_socio_negocio: "",
+          //id_unidad_compra: "",
+          //descripcion_unidad_compra: "",
           codigo_barra: "",
           id_unidad_medida: "",
-          activo: "1",
+          //descripcion_unidad_medida: "",
+          activo: "",
           creado_por: "autorPrueba",
           fecha_creacion: "2022/11/05",
         }}
@@ -81,33 +160,34 @@ const Formulario = () => {
 
           // Validacion codigo
           if (!valores.cod_articulo) {
-            errores.cod_articulo = "Por favor ingresa un código";
+            errores.cod_articulo = "Por favor ingrese un código";
           }
 
           // Validacion tipo
           if (!valores.tipo) {
-            errores.tipo = "Por favor ingresa el tipo";
+            errores.tipo = "Por favor seleccione una opción";
           }
 
-          // Validacion descripción
-          if (!valores.descripcion) {
-            errores.descripcion = "Ingrese una descripción para el artículo";
+          // Validacion descripción articulo
+          if (!valores.descripcion_articulo) {
+            errores.descripcion_articulo =
+              "Por favor ingrese una descripción para el artículo";
           }
 
           // Validacion descripción corta
           if (!valores.descripcion_corta) {
             errores.descripcion_corta =
-              "Por favor ingresa una descripción corta";
+              "Por favor ingrese una descripción corta";
           }
 
           // Validacion impuesto
           if (!valores.id_impuesto) {
-            errores.id_impuesto = "Por favor ingrese un impuesto";
+            errores.id_impuesto = "Por favor seleccione una opción";
           }
 
-          // Validacion categoría
+          // Validacion categoria
           if (!valores.id_categoria) {
-            errores.id_categoria = "Por favor ingresa la categoría";
+            errores.id_categoria = "Por favor seleccione una opción";
           }
 
           // Validacion precio
@@ -117,22 +197,9 @@ const Formulario = () => {
             errores.precio = "El precio solo puede contener números";
           }
 
-          // Validacion unidad de venta
-          if (!valores.id_unidad_venta) {
-            errores.id_unidad_venta = "Por favor ingrese id unidad venta";
-          } else if (!/^^[0-9]+$/.test(valores.id_unidad_venta)) {
-            errores.id_unidad_venta =
-              "Las unidades de venta solo puede contener números";
-          }
-
           // Validacion socio negocio
           if (!valores.id_socio_negocio) {
-            errores.id_socio_negocio = "Por favor ingrese el id socio negocio";
-          }
-
-          // Validacion unidad de compra
-          if (!valores.id_unidad_compra) {
-            errores.id_unidad_compra = "Por favor ingrese el id unidad compra";
+            errores.id_socio_negocio = "Por favor seleccione una opción";
           }
 
           // Validacion código de barra
@@ -145,12 +212,12 @@ const Formulario = () => {
 
           // Validacion unidad medida
           if (!valores.id_unidad_medida) {
-            errores.id_unidad_medida = "Por favor ingrese el id unidad medida";
+            errores.id_unidad_medida = "Por favor seleccione una opción";
           }
 
           // Validacion estado
           if (!valores.activo) {
-            errores.activo = "Por favor ingresa un estado";
+            errores.activo = "Por favor seleccione una opción";
           }
 
           return errores;
@@ -216,12 +283,15 @@ const Formulario = () => {
                     Tipo:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="tipoArticulo"
                     name="tipo"
-                    placeholder="Tipo de artículo..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    <option value="V">Venta</option>
+                    <option value="I">Inventario</option>
+                  </Field>
 
                   <ErrorMessage
                     name="tipo"
@@ -239,15 +309,15 @@ const Formulario = () => {
                     type="text"
                     className="form-control"
                     id="descripcionArticulo"
-                    name="descripcion"
+                    name="descripcion_articulo"
                     placeholder="Descripción..."
-                    onKeyUp={cambiarAMayusculasDescripcion(values)}
+                    onKeyUp={cambiarAMayusculasDescripArticulo(values)}
                   />
 
                   <ErrorMessage
-                    name="descripcion"
+                    name="descripcion_articulo"
                     component={() => (
-                      <div className="error">{errors.descripcion}</div>
+                      <div className="error">{errors.descripcion_articulo}</div>
                     )}
                   />
                 </div>
@@ -281,15 +351,21 @@ const Formulario = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="impuestoArticulo" className="form-label">
-                    ID Impuesto:
+                    Impuesto:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="impuestoArticulo"
                     name="id_impuesto"
-                    placeholder="Impuesto..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {impuestos.map((item, i) => (
+                      <option key={i} value={item.id_impuesto}>
+                        {item.descripcion}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_impuesto"
@@ -303,15 +379,21 @@ const Formulario = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="categoriaArticulo" className="form-label">
-                    ID Categoría:
+                    Categoría:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="categoriaArticulo"
                     name="id_categoria"
-                    placeholder="Categoría del artículo..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {categorias.map((item, i) => (
+                      <option key={i} value={item.id_categoria}>
+                        {item.descripcion}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_categoria"
@@ -348,38 +430,22 @@ const Formulario = () => {
 
               <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="unidadventaArticulo" className="form-label">
-                    ID Unidad Venta:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="unidadventaArticulo"
-                    name="id_unidad_venta"
-                    placeholder="ID Unidad Venta.."
-                  />
-
-                  <ErrorMessage
-                    name="id_unidad_venta"
-                    component={() => (
-                      <div className="error">{errors.id_unidad_venta}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="col-sm-4">
-                <div className="mb-3">
                   <label htmlFor="socionegocioArticulo" className="form-label">
-                    ID Socio Negocio:
+                    Socio Negocio:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="socionegocioArticulo"
                     name="id_socio_negocio"
-                    placeholder="ID Socio de Negocio..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {socios.map((item, i) => (
+                      <option key={i} value={item.id_socio_negocio}>
+                        {item.descripcion}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_socio_negocio"
@@ -389,31 +455,6 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row g-3">
-              <div className="col-sm-4">
-                <div className="mb-3">
-                  <label htmlFor="unidadcompraArticulo" className="form-label">
-                    ID Unidad Compra:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="unidadcompraArticulo"
-                    name="id_unidad_compra"
-                    placeholder="ID Unidad Compra..."
-                  />
-
-                  <ErrorMessage
-                    name="id_unidad_compra"
-                    component={() => (
-                      <div className="error">{errors.id_unidad_compra}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="codigobarraArticulo" className="form-label">
@@ -435,19 +476,27 @@ const Formulario = () => {
                   />
                 </div>
               </div>
+            </div>
 
+            <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="unidadmedidaArticulo" className="form-label">
                     ID Unidad Medida:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="unidadmedidaArticulo"
                     name="id_unidad_medida"
-                    placeholder="ID Unidad Medida..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {unidades.map((item, i) => (
+                      <option key={i} value={item.id_unidad_medida}>
+                        {item.descripcion}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_unidad_medida"
@@ -457,9 +506,6 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="estadoArticulo" className="form-label">
@@ -471,6 +517,7 @@ const Formulario = () => {
                     id="estadoArticulo"
                     name="activo"
                   >
+                    <option value="">Seleccionar...</option>
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                   </Field>
@@ -484,7 +531,6 @@ const Formulario = () => {
                 </div>
               </div>
             </div>
-
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
             </button>

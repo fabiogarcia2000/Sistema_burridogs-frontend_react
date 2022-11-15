@@ -3,7 +3,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import {
+  cambiarAMayusculasDescripcion,
+  cambiarAMayusculasCodigoUND,
+} from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/unidad_medida/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/unidad_medida/getone/";
@@ -120,6 +123,7 @@ const Formulario = () => {
                     id="codMedida"
                     name="cod_unidad_medida"
                     placeholder="Código de la medida..."
+                    onKeyUp={cambiarAMayusculasCodigoUND(values)}
                   />
 
                   <ErrorMessage

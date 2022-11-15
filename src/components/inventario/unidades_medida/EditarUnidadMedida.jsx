@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import {
+  cambiarAMayusculasDescripcion,
+  cambiarAMayusculasCodigoUND,
+} from "../../../utils/cambiarAMayusculas";
 
 const URLEditar =
   "http://190.53.243.69:3001/unidad_medida/actualizar-insertar/";
@@ -106,6 +109,7 @@ const FormularioEditar = () => {
                     name="cod_unidad_medida"
                     placeholder="Código de la medida..."
                     disabled
+                    onKeyUp={cambiarAMayusculasCodigoUND(values)}
                   />
 
                   <ErrorMessage

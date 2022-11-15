@@ -183,7 +183,7 @@ const MostrarUnidadesMedida = () => {
 
   return (
     <div className="container">
-      <h3>Lista de Unidades de Medida</h3>
+      <h3>Unidades de Medida</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">

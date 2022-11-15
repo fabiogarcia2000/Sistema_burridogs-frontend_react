@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -9,10 +10,29 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 const URLEditar =
   "http://190.53.243.69:3001/lista_materiales/actualizar-insertar/";
 
+const UrlMostrarArticulos = "http://190.53.243.69:3001/articulo/getall";
+
 const FormularioEditar = () => {
   const [edit] = useGlobalState("registroEdit");
 
   const navigate = useNavigate();
+
+  //procedimineto para obtener las unidades de medida
+  const [articulos, setArticulos] = useState([]);
+  useEffect(() => {
+    getArticulos();
+  }, []);
+
+  //petición a api
+  const getArticulos = async () => {
+    try {
+      const res = await axios.get(UrlMostrarArticulos);
+      setArticulos(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -60,21 +80,24 @@ const FormularioEditar = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
+          // Validacion id padre
           if (!valores.id_articulo_padre) {
-            errores.id_articulo_padre = "Por favor ingresa un id";
-          } else if (!/^^[0-9]+$/.test(valores.id_articulo_padre)) {
-            errores.id_articulo_padre = "El id solo puede contener números";
+            errores.id_articulo_padre = "Por favor seleccione una opción";
+          }
+
+          // Validacion id hijo
+          if (!valores.id_articulo_hijo) {
+            errores.id_articulo_hijo = "Por favor seleccione una opción";
           }
 
           // Validacion cantidad
           if (!valores.cantidad) {
-            errores.cantidad = "Por favor ingresa una cantidad";
+            errores.cantidad = "Por favor ingrese una cantidad";
           }
 
           // Validacion comentario
           if (!valores.comentario) {
-            errores.comentario = "Por favor ingresa una comentario";
+            errores.comentario = "Por favor ingrese una comentario";
           }
 
           return errores;
@@ -110,12 +133,18 @@ const FormularioEditar = () => {
                     Código Padre:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="codPdMaterial"
                     name="id_articulo_padre"
-                    placeholder="Código del Material..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {articulos.map((item, i) => (
+                      <option key={i} value={item.id_articulo}>
+                        {item.descripcion_corta}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_articulo_padre"
@@ -132,12 +161,18 @@ const FormularioEditar = () => {
                     Código Hijo:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
+                    as="select"
+                    className="form-select"
                     id="codHjArticulo"
                     name="id_articulo_hijo"
-                    placeholder="Código Hijo..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {articulos.map((item, i) => (
+                      <option key={i} value={item.id_articulo}>
+                        {item.descripcion_corta}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_articulo_hijo"

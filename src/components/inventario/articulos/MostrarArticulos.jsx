@@ -139,19 +139,19 @@ const MostrarArticulos = () => {
       name: "DESCRIPCIÓN CORTA",
       selector: (row) => row.descripcion_corta,
       sortable: true,
-      maxWidth: "200px",
+      maxWidth: "350px",
     },
 
     {
       name: "IMPUESTO",
-      selector: (row) => row.id_impuesto,
+      selector: (row) => row.descripcion_impuesto,
       sortable: true,
       maxWidth: "130px",
     },
 
     {
       name: "CATEGORIA",
-      selector: (row) => row.id_categoria,
+      selector: (row) => row.descripcion_categoria,
       sortable: true,
       maxWidth: "150px",
     },
@@ -164,22 +164,8 @@ const MostrarArticulos = () => {
     },
 
     {
-      name: "UNIDAD DE VENTA",
-      selector: (row) => row.id_unidad_venta,
-      sortable: true,
-      maxWidth: "160px",
-    },
-
-    {
       name: "SOCIO DE NEGOCIO",
-      selector: (row) => row.id_socio_negocio,
-      sortable: true,
-      maxWidth: "160px",
-    },
-
-    {
-      name: "UNIDAD DE COMPRA",
-      selector: (row) => row.id_unidad_compra,
+      selector: (row) => row.descripcion_socio_negocio,
       sortable: true,
       maxWidth: "160px",
     },
@@ -193,16 +179,15 @@ const MostrarArticulos = () => {
 
     {
       name: "UNIDAD DE MEDIDA",
-      selector: (row) => row.id_unidad_medida,
+      selector: (row) => row.descripcion_unidad_medida,
       sortable: true,
       maxWidth: "180px",
     },
 
     {
-      name: "ACTIVO",
-      selector: (row) => row.activo,
+      name: "ESTADO",
+      selector: (row) => (row.activo === "1" ? "ACTIVO" : "INACTIVO"),
       sortable: true,
-      maxWidth: "180px",
     },
 
     {
@@ -259,7 +244,7 @@ const MostrarArticulos = () => {
 
   return (
     <div className="container">
-      <h3>Mantenimiento de Artículos</h3>
+      <h3>Artículos</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
@@ -364,10 +349,37 @@ const MostrarArticulos = () => {
 
           <div className="row g-3">
             <div className="col-sm-6">
+              <p className="colorText">IMPUESTO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.descripcion_impuesto} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CATEGORIA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.descripcion_categoria} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
               <p className="colorText">PRECIO: </p>
             </div>
             <div className="col-sm-6">
               <p> {registroVerMas.precio} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">UNIDAD DE MEDIDA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.descripcion_unidad_medida} </p>
             </div>
           </div>
 

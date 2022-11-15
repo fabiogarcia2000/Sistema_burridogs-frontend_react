@@ -157,7 +157,7 @@ const MostrarMateriales = () => {
 
   return (
     <div className="container">
-      <h3>Lista de Materiales</h3>
+      <h3>Materiales</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
