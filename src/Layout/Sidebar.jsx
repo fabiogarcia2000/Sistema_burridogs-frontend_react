@@ -164,7 +164,7 @@ function Sidebar() {
             <li>
               <Link to="/mostrarmateriales">
                 <i className="bi bi-circle"></i>
-                <span>Lista de Materiales</span>
+                <span>Materiales</span>
               </Link>
             </li>
             <li>
