@@ -125,7 +125,7 @@ const mostrarAlertas = (alerta) =>{
     },
     //{
     //  name: "USUARIO",
-    //  selector: (row) => row.id_usuario,
+    //  selector: (row) => row.nombre_usuario,
     //  sortable: true,
     //},
     {
@@ -140,12 +140,12 @@ const mostrarAlertas = (alerta) =>{
     },
     {
         name: "CATEGORIA",
-        selector: (row) => row.id_categoria,
+        selector: (row) => row.nombre_categoria,
         sortable: true,
     },
     {
         name: "DESTINO CUENTA",
-        selector: (row) => row.id_destino_cuenta,
+        selector: (row) => row.descripcion,
         sortable: true,
     },
 
@@ -310,7 +310,7 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">USUARIO: </p>
             </div>
             <div className="col-sm-6">
-              <p> {cuentaVerMas.id_usuario} </p>
+              <p> {cuentaVerMas.nombre_usuario} </p>
             </div>
           </div>
 
@@ -337,7 +337,7 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">CATEGORIA: </p>
             </div>
             <div className="col-sm-6">
-              <p> {cuentaVerMas.id_categoria} </p>
+              <p> {cuentaVerMas.nombre_categoria} </p>
             </div>
           </div>
 
@@ -346,7 +346,7 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">DESTINO DE CUENTA: </p>
             </div>
             <div className="col-sm-6">
-              <p> {cuentaVerMas.id_destino_cuenta} </p>
+              <p> {cuentaVerMas.descripcion} </p>
             </div>
           </div>
 

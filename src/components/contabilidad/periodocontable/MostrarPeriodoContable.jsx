@@ -113,6 +113,10 @@ const mostrarAlertas = (alerta) =>{
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [periodoVerMas, setPeriodoVerMas] = useState({});  
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -136,7 +140,7 @@ const mostrarAlertas = (alerta) =>{
         selector: (row) => row.fecha_final,
         sortable: true,
     },
-    {
+    /*{
         name: "FECHA DE CREACIÓN",
         selector: (row) => row.fecha_creacion,
         sortable: true,
@@ -145,7 +149,7 @@ const mostrarAlertas = (alerta) =>{
         name: "ID USUARIO",
         selector: (row) => row.id_usuario,
         sortable: true,
-    },
+    },*/
     {
         name: "NOMBRE USUARIO",
         selector: (row) => row.nombre_usuario,
@@ -157,7 +161,18 @@ const mostrarAlertas = (alerta) =>{
       name: "ACCIONES",
       cell: (row) => (
         <>
-          
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setPeriodoVerMas(row);
+            }}
+          >
+            <i className="fa-solid fa-eye"></i>
+          </Link>
+          &nbsp;          
           <Link
             to="/editarperiodo"
             type="button"
@@ -284,6 +299,71 @@ const mostrarAlertas = (alerta) =>{
           fixedHeaderScrollHeight="550px"
         />
       </div>
+
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">ID: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {periodoVerMas.id_periodo_contable} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">DESCRIPCIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {periodoVerMas.descripcion_periodo} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA INICIAL: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {periodoVerMas.fecha_final} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA FINAL: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {periodoVerMas.fecha_final} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {periodoVerMas.fecha_creacion} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">USUARIO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {periodoVerMas.nombre_usuario} </p>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>      
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>

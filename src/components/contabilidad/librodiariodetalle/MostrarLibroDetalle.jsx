@@ -111,6 +111,10 @@ const mostrarAlertas = (alerta) =>{
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [detalleVerMas, setDetalleVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -125,7 +129,7 @@ const mostrarAlertas = (alerta) =>{
       sortable: true,
     },
     {
-        name: "ID SUBCUENTA",
+        name: "SUBCUENTA",
         selector: (row) => row.id_subcuenta,
         sortable: true,
     },
@@ -134,7 +138,7 @@ const mostrarAlertas = (alerta) =>{
         selector: (row) => row.id_estado,
         sortable: true,
     },
-    {
+    /*{
         name: "PARCIAL",
         selector: (row) => row.parcial,
         sortable: true,
@@ -178,14 +182,25 @@ const mostrarAlertas = (alerta) =>{
         name: "CENTRO COSTO",
         selector: (row) => row.centro_costo,
         sortable: true,
-    },
+    }*/,
     
 
     {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setDetalleVerMas(row);
+            }}
+          >
+            <i className="fa-solid fa-eye"></i>
+          </Link>
+          &nbsp;
           <Link
             to="/" //AQUI
             type="button"
@@ -312,6 +327,108 @@ const mostrarAlertas = (alerta) =>{
           fixedHeaderScrollHeight="550px"
         />
       </div>
+
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">ID: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.id_libro_diario_deta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">ENCABEZADO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.id_libro_diario_enca} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">SUBCUENTA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.id_subcuenta} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">ESTADO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.tipo_estado} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">PARCIAL: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.parcial} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MONTO EN DEBE: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.monto_debe} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MONTO EN HABER: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.monto_haber} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">SINOPSIS: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.sinopsis} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">SUCURSAL: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.sucursal} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CENTRO COSTO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalleVerMas.centro_costo} </p>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
