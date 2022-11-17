@@ -118,30 +118,7 @@ const Formulario = () => {
         {({ errors }) => (
           <Form>
             <h3 className="mb-3">Nuevo Destino de Cuenta</h3>
-            <div className="row g-3">   
-              <div className="col-sm-6">
-                    <div className="mb-3">
-                    <label htmlFor="idDestinoCuenta" className="form-label">
-                        ID Destino de cuenta:
-                    </label>
-                    <Field
-                        type="text"
-                        className="form-control"
-                        id="idDestinoCuenta"
-                        name="id_destino_cuenta"
-                        placeholder="ID del destino de la cuenta..."
-                        disabled
-                    />
-
-                    <ErrorMessage
-                        name="id_destino_cuenta"
-                        component={() => (
-                        <div className="error">{errors.id_destino_cuenta}</div>
-                        )}
-                    />
-                    </div>
-                 </div>
-
+            <div className="row g-3"> 
                  <div className="col-sm-6">
                      <div className="mb-3">
                         <label htmlFor="idCuenta" className="form-label">
@@ -162,11 +139,9 @@ const Formulario = () => {
                         )}
                     />
                  </div>
-                </div>                
-            </div>
+                </div>  
 
-
-            <div className="row g-3">
+               
                 <div className="col-sm-6">
                     <div className="mb-3">
                     <label htmlFor="id_informe_financiero" className="form-label">
@@ -189,6 +164,9 @@ const Formulario = () => {
                     </div>
                 </div>
             </div>
+
+
+
                 
 
             <button className="btn btn-success mb-3 me-2" type="submit">

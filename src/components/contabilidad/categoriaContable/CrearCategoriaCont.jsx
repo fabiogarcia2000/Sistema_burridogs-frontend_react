@@ -103,28 +103,6 @@ const Formulario = () => {
           <Form>
             <h3 className="mb-3">Nueva Categoría Contable</h3>
             <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="idCategoria" className="form-label">
-                    ID de categoría:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="idCategoria"
-                    name="id_categoria"
-                    placeholder="ID de la categoria contable..."
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="id_categoria"
-                    component={() => (
-                      <div className="error">{errors.id_categoria}</div>
-                    )}
-                  />
-                </div>
-              </div>
 
               <div className="col-sm-6">
                 <div className="mb-3">

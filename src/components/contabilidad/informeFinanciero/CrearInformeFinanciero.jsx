@@ -112,29 +112,6 @@ const Formulario = () => {
           <Form>
             <h3 className="mb-3">Nuevo Informe Financiero</h3>
             <div className="row g-3">   
-                <div className="col-sm-6">
-                    <div className="mb-3">
-                    <label htmlFor="id_informe_financiero" className="form-label">
-                        ID informe financiero:
-                    </label>
-                    <Field
-                        type="text"
-                        className="form-control"
-                        id="idInformeFinanciero"
-                        name="id_informe_financiero"
-                        placeholder="ID del informe financiero..."
-                        disabled
-                    />
-
-                    <ErrorMessage
-                        name="id_informe_financiero"
-                        component={() => (
-                        <div className="error">{errors.id_informe_financiero}</div>
-                        )}
-                    />
-                </div>
-
-                </div>
                  <div className="col-sm-6">
                      <div className="mb-3">
                         <label htmlFor="descripcion" className="form-label">

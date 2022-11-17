@@ -47,8 +47,8 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
       <Formik
         //valores iniciales
         initialValues={{
-            id_informe_financiero: "",
-            descripcion: ""   
+            id_informe_financiero: edit.id_informe_financiero,
+            descripcion: edit.descripcion  
         }}
 
         //Funcion para validar

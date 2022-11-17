@@ -141,35 +141,11 @@ const Formulario = () => {
           <Form>
             <h3 className="mb-3">Nueva Cuenta</h3>
             <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="idCuenta" className="form-label">
-                    ID Cuenta:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="idCuenta"
-                    name="id_cuenta"
-                    placeholder="ID de la cuenta..."
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="id_cuenta"
-                    component={() => (
-                      <div className="error">{errors.id_cuenta}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            
-
-            
+           
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idUsuario" className="form-label">
-                    ID Usuario:
+                    Usuario:
                   </label>
                   <Field
                     type="text"
@@ -187,9 +163,7 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="codigoCuenta" className="form-label">
@@ -212,9 +186,9 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            
+            </div>
 
-           
+            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="nombreCuenta" className="form-label">
@@ -237,14 +211,10 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            </div>
-            
-
-            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idCategoria" className="form-label">
-                    ID de categoría:
+                    Categoría:
                   </label>
                   <Field
                     type="text"
@@ -262,9 +232,10 @@ const Formulario = () => {
                   />
                 </div>
               </div>
+            </div>
             
 
-            
+            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idDestinoCuenta" className="form-label">

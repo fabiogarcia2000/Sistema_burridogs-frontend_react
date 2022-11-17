@@ -48,8 +48,8 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
       <Formik
         //valores iniciales
         initialValues={{
-            id_categoria: "", //NO SÉ SI SE DEBE PONER EL ID
-            nombre_categoria: ""    
+            id_categoria: edit.id_categoria,
+            nombre_categoria: edit.nombre_categoria    
         }}
 
         //Funcion para validar

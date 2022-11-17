@@ -48,12 +48,12 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
       <Formik
         //valores iniciales
         initialValues={{
-            id_cuenta: "",
+            id_cuenta: edit.id_cuenta,
             id_usuario: "",
-            codigo_cuenta: "",
-            nombre_cuenta: "",
-            id_categoria: "",
-            id_destino_cuenta: ""   
+            codigo_cuenta: edit.codigo_cuenta,
+            nombre_cuenta: edit.nombre_cuenta,
+            id_categoria: edit.nombre_categoria,
+            id_destino_cuenta: edit.id_descripcion   
         }}
 
         //Funcion para validar
@@ -145,7 +145,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idUsuario" className="form-label">
-                    ID Usuario:
+                    Usuario:
                   </label>
                   <Field
                     type="text"
@@ -220,14 +220,14 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idCategoria" className="form-label">
-                    ID de categoría:
+                    Categoría:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="idCategoria"
                     name="id_categoria"
-                    placeholder="ID de la categoría..."
+                    placeholder="Nombre de la categoría..."
                   />
 
                   <ErrorMessage
