@@ -22,6 +22,38 @@ function Sidebar() {
             data-bs-toggle="collapse"
             to="/"
           >
+            <i className="bi bi-person-fill"></i>
+            <span>Mi Perfil</span>
+            <i className="bi bi-chevron-down ms-auto"></i>
+          </Link>
+          <ul
+            id="components-nav"
+            className="nav-content collapse "
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <Link to="/editarusuario">
+                <i className="bi bi-circle"></i>
+                <span>Editar mi usuario</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/cambiocontrasena">
+                <i className="bi bi-circle"></i>
+                <span>Cambiar mi contraseña</span>
+              </Link>
+            </li>
+          </ul>
+        </li>
+
+
+        <li className="nav-item">
+          <Link
+            className="nav-link collapsed"
+            data-bs-target="#components-nav"
+            data-bs-toggle="collapse"
+            to="/"
+          >
             <i className="bi bi-cart3"></i>
             <span>Ventas</span>
             <i className="bi bi-chevron-down ms-auto"></i>

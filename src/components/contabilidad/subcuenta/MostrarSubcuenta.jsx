@@ -121,11 +121,6 @@ const mostrarAlertas = (alerta) =>{
       sortable: true,
     },
     {
-      name: "ID CUENTA",
-      selector: (row) => row.id_cuenta,
-      sortable: true,
-    },
-    {
         name: "NOMBRE CUENTA",
         selector: (row) => row.nombre_cuenta,
         sortable: true,

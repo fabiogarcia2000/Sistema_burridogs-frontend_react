@@ -133,22 +133,12 @@ const mostrarAlertas = (alerta) =>{
     },
     {
         name: "CUENTA",
-        selector: (row) => row.id_cuenta,
+        selector: (row) => row.nombre_cuenta,
         sortable: true,
     },
     {
         name: "SUBCUENTA",
-        selector: (row) => row.id_subcuenta,
-        sortable: true,
-    },
-    {
-        name: "MONTO DEBE",
-        selector: (row) => row.monto_debe,
-        sortable: true,
-    },
-    {
-        name: "MONTO HABER",
-        selector: (row) => row.id_monto_haber,
+        selector: (row) => row.nombre_subcuenta,
         sortable: true,
     },
     {
@@ -209,20 +199,7 @@ const mostrarAlertas = (alerta) =>{
             role="toolbar"
             aria-label="Toolbar with button groups"
           >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <Link
-                to="/crearcatalogo"
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
-              >
-                <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
-            </div>
+          
             <div
               className="btn-group me-2"
               role="group"

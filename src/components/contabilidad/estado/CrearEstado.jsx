@@ -114,29 +114,6 @@ const EstadoCrear = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                <label htmlFor="IdEstado" className="form-label">
-                    Id Estado:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="IdEstado"
-                    name="id_estado"
-                    placeholder="Id estado..."
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="id_estado"
-                    component={() => (
-                      <div className="error">{errors.id_estado}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="col-sm-6">
-                <div className="mb-3">
                 <label htmlFor="TipoEstado" className="form-label">
                     Tipo Estado:
                   </label>

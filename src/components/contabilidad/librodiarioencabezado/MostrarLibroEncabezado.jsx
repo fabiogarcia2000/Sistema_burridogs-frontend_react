@@ -125,8 +125,8 @@ const mostrarAlertas = (alerta) =>{
       sortable: true,
     },
     {
-        name: "ID ESTADO",
-        selector: (row) => row.id_estado,
+        name: "ESTADO",
+        selector: (row) => row.tipo_estado,
         sortable: true,
     },
     {
@@ -317,7 +317,7 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">ESTADO: </p>
             </div>
             <div className="col-sm-6">
-              <p> {encabezadoVerMas.id_estado} </p>
+              <p> {encabezadoVerMas.tipo_estado} </p>
             </div>
           </div>
 

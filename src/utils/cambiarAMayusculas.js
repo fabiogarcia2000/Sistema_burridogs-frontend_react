@@ -161,3 +161,48 @@ export function cambiarAMayusculasNombreUsuario(valores) {
     console.log(error);
   }
 }
+
+export function cambiarAMayusculasSinopsis(valores) {
+  try {
+    let texto = valores.sinopsis;
+    valores.sinopsis = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function cambiarAMayusculasSucursal(valores) {
+  try {
+    let texto = valores.sucursal;
+    valores.sucursal = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function cambiarAMayusculasCentroCosto(valores) {
+  try {
+    let texto = valores.centro_costo;
+    valores.centro_costo = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function cambiarAMayusculasUsuario(valores) {
+  try {
+    let texto = valores.usuario;
+    valores.usuario = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function cambiarAMayusculasCorreoUsuario(valores) {
+  try {
+    let texto = valores.correo_electronico;
+    valores.correo_electronico = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}

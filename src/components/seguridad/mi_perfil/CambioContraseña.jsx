@@ -4,12 +4,10 @@ import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasTipoEstado } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
-
- const EstadoEditar = () => {
+ const CambioContraseña = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -47,35 +45,44 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
       <Formik
         //valores iniciales
         initialValues={{
-            id_estado: edit.id_estado,
-            tipo_estado: edit.tipo_estado    
+            contrasena_actual: edit.contrasena_actual,
+            contrasena_nueva: edit.contrasena_nueva,
+            contrasena_nueva_conf: edit.contrasena_nueva_conf, 
         }}
 
-        //Funcion para validar
+       /* //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion de id estado
-          if (!valores.id_estado) {
-            errores.id_estado = "Por favor ingresa id estado";
-          } else if (!/^[0-9]+$/.test(valores.id_estado)) {
-            errores.id_estado = "Escribir solo números";
+        // Validacion de id usuario
+          if (!valores.id_usuario) {
+            errores.id_usuario = "Por favor ingresa id usuario";
+          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
+            errores.id_usuario = "Escribir solo números";
           }  
 
-        // Validacion tipo estado
-        if (!valores.tipo_estado) {
-          errores.tipo_estado = "Por favor ingresa un nombre de tipo estado";
-        } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.tipo_estado)) {
-          errores.tipo_estado = "Escribir solo en MAYÚSCULAS";
-        }
+        // Validacion usuario
+        if (!valores.usuario) {
+          errores.usuario = "Por favor ingresa un usuario";
+        } 
 
+         // Validacion nombre usuario
+         if (!valores.nombre_usuario) {
+            errores.nombre_usuario = "Por favor ingresa un nombre de usuario";
+          } 
+
+        // Validacion correo electrónico
+        if (!valores.correo_electronico) {
+            errores.correo_electronico = "Por favor ingresa un correo electrónico";
+          } 
 
           return errores;
-        }}
+        }}*/
+
         onSubmit={async (valores) => {
               //procedimineto para guardar el los cambios
               try {
-                const res = await axios.put(`${URLEditar}${valores.id_estado}`, valores);
+                const res = await axios.put(`${URLEditar}${valores.contrasena_actual}`, valores);
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
@@ -94,26 +101,24 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
        {({ errors, values }) => (
           <Form>
-            <h3 className="mb-3">Editar Estado Libro Diario</h3>
-            <div className="row g-3">
+            <h3 className="mb-3">Cambiar Contraseña</h3>
+            
               <div className="col-sm-6">
                 <div className="mb-3">
-                <label htmlFor="IdEstado" className="form-label">
-                    Id Estado:
+                <label htmlFor="contraActual" className="form-label">
+                    Contraseña actual:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="IdEstado"
-                    name="id_estado"
-                    placeholder="Id estado..."
-                    disabled
+                    id="contraActual"
+                    name="contrasena_actual"
+                    placeholder="Contraseña actual..."
                   />
-
                   <ErrorMessage
-                    name="id_estado"
+                    name="contrasena_actual"
                     component={() => (
-                      <div className="error">{errors.id_estado}</div>
+                      <div className="error">{errors.contrasena_actual}</div>
                     )}
                   />
                 </div>
@@ -121,34 +126,54 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                <label htmlFor="TipoEstado" className="form-label">
-                    Tipo Estado:
+                <label htmlFor="contraNueva" className="form-label">
+                    Contraseña nueva:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="TipoEstado"
-                    name="tipo_estado"
-                    placeholder="Tipo Estado..."
-                    onKeyUp={cambiarAMayusculasTipoEstado(values)}
-
+                    id="contraNueva"
+                    name="contrasena_nueva"
+                    placeholder="Contraseña nueva..."
                   />
-
                   <ErrorMessage
-                    name="tipo_estado"
+                    name="contrasena_nueva"
                     component={() => (
-                      <div className="error">{errors.tipo_estado}</div>
+                      <div className="error">{errors.contrasena_nueva}</div>
                     )}
                   />
                 </div>
               </div>
-            </div>
+           
+              <div className="col-sm-6">
+                <div className="mb-3">
+                <label htmlFor="contraNuevaConf" className="form-label">
+                    Confirmar contraseña nueva:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="contraNuevaConf"
+                    name="contrasena_nueva_conf"
+                    placeholder="Confirmar contraseña nueva..."
+                  />
+                  <ErrorMessage
+                    name="contrasena_nueva_conf"
+                    component={() => (
+                      <div className="error">{errors.contrasena_nueva_conf}</div>
+                    )}
+                  />
+                </div>
+              </div>
+           
 
+
+       
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
             </button>
             <Link
-              to="/mostrarestado"
+              to="/"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >
@@ -161,4 +186,4 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
   );
 };
 
-export default EstadoEditar;
+export default CambioContraseña;

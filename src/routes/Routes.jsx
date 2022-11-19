@@ -119,6 +119,7 @@ import EditarInformeFinanciero from "../components/contabilidad/informeFinancier
 
 //LIBRO MAYOR
 import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibroMayor";
+import EditarLibroMayor from "../components/contabilidad/libroMayor/EditarLibroMayor";
 
 //SUBCUENTA
 import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
@@ -132,8 +133,8 @@ import EditarEstado from "../components/contabilidad/estado/EditarEstado";
 
 //DETALLE LIBRO DIARIO
 import MostrarLibroDetalle from "../components/contabilidad/librodiariodetalle/MostrarLibroDetalle";
-import CrearLibroDetalle from "../components/contabilidad/";
-import EditarLibroDetalle from "../components/contabilidad/";
+import CrearLibroDetalle from "../components/contabilidad/librodiariodetalle/CrearLibroDetalle";
+import EditarLibroDetalle from "../components/contabilidad/librodiariodetalle/EditarLibroDetalle";
 
 //ENCABEZADO LIBRO DIARIO
 import MostrarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/MostrarLibroEncabezado";
@@ -144,6 +145,11 @@ import EditarLibroEncabezado from "../components/contabilidad/";
 import MostrarPeriodoContable from "../components/contabilidad/periodocontable/MostrarPeriodoContable";
 import CrearPeriodoContable from "../components/contabilidad/periodocontable/CrearPeriodoContable";
 import EditarPeriodoContable from "../components/contabilidad/periodocontable/EditarPeriodoContable";
+
+
+//--------------------------------------------MI PERFIL--------------------------------------------------
+import EditarUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
+import CambioContraseña from "../components/seguridad/mi_perfil/CambioContraseña";
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -239,6 +245,7 @@ function Rutas() {
             <Route path="/editarsalidamds" element={<EditarSalidaMds />} />
             {/*Rutas contabilidad*/}
             {/*-----------------------------------RUTAS CONTABILIDAD-----------------------------------------------*/}
+             {/*CATEGORIA CONTABLE*/}
             <Route path="crearcategoriacont" element={<CrearCategoriaCont />} />
             <Route
               path="mostrarcategoriacont"
@@ -249,14 +256,17 @@ function Rutas() {
               element={<EditarCategoriaCont />}
             />
 
+             {/*CATALOGO DE CUENTAS*/}
             <Route path="crearcatalogo" element={<CrearCuenta />} />
             <Route path="mostrarcatalogo" element={<MostrarCuentas />} />
             <Route path="editarcatalogo" element={<EditarCuenta />} />
 
+             {/*DESTINO CUENTA*/}
             <Route path="creardestino" element={<CrearDestino />} />
             <Route path="mostrardestino" element={<MostrarDestino />} />
             <Route path="editardestino" element={<EditarDestino />} />
 
+             {/*INFORME FINANCIERO*/}
             <Route
               path="crearinformefinanciero"
               element={<CrearInformeFinanciero />}
@@ -270,7 +280,9 @@ function Rutas() {
               element={<EditarInformeFinanciero />}
             />
 
+             {/*LIBRO MAYOR*/}
             <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
+            <Route path="/editarlibromayor" element={<EditarLibroMayor />} />
 
             {/*SUBCUENTA*/}
             <Route path="/mostrarsubcuenta" element={<MostrarSubCuentas />} />
@@ -287,8 +299,8 @@ function Rutas() {
               path="/mostrarlibrodetalle"
               element={<MostrarLibroDetalle />}
             />
-            <Route path="/" element={<EditarLibroDetalle />} />
-            <Route path="/" element={<CrearLibroDetalle />} />
+            <Route path="/editarlibrodetalle" element={<EditarLibroDetalle />} />
+            <Route path="/crearlibrodetalle" element={<CrearLibroDetalle />} />
 
             {/*ENCABEZADO LIBRO DIARIO*/}
             <Route
@@ -305,6 +317,13 @@ function Rutas() {
             />
             <Route path="/editarperiodo" element={<EditarPeriodoContable />} />
             <Route path="/crearperiodo" element={<CrearPeriodoContable />} />
+
+
+  {/*-----------------------------------RUTAS MI PERFIL-----------------------------------------------*/}
+
+            <Route path="/editarusuario" element={<EditarUsuario />} />
+            <Route path="/cambiocontrasena" element={<CambioContraseña />} />
+
 
             {/*Rutas seguridad*/}
             <Route path="/login" element={<Login />} />

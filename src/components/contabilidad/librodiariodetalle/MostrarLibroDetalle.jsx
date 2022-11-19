@@ -130,12 +130,12 @@ const mostrarAlertas = (alerta) =>{
     },
     {
         name: "SUBCUENTA",
-        selector: (row) => row.id_subcuenta,
+        selector: (row) => row.nombre_subcuenta,
         sortable: true,
     },
     {
-        name: "ID ESTADO",
-        selector: (row) => row.id_estado,
+        name: "ESTADO",
+        selector: (row) => row.tipo_estado,
         sortable: true,
     },
     /*{
@@ -202,7 +202,7 @@ const mostrarAlertas = (alerta) =>{
           </Link>
           &nbsp;
           <Link
-            to="/" //AQUI
+            to="/editarlibrodetalle" //AQUI
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -255,7 +255,7 @@ const mostrarAlertas = (alerta) =>{
               aria-label="First group"
             >
               <Link
-                to="/"  //AQUI
+                to="/crearlibrodetalle"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
@@ -355,7 +355,7 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">SUBCUENTA: </p>
             </div>
             <div className="col-sm-6">
-              <p> {detalleVerMas.id_subcuenta} </p>
+              <p> {detalleVerMas.nombre_subcuenta} </p>
             </div>
           </div>
 
