@@ -120,6 +120,7 @@ import EditarInformeFinanciero from "../components/contabilidad/informeFinancier
 //LIBRO MAYOR
 import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibroMayor";
 import EditarLibroMayor from "../components/contabilidad/libroMayor/EditarLibroMayor";
+import Mayorizar from "../components/contabilidad/libroMayor/Mayorizar"; //AGREGADO
 
 //SUBCUENTA
 import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
@@ -283,6 +284,8 @@ function Rutas() {
              {/*LIBRO MAYOR*/}
             <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
             <Route path="/editarlibromayor" element={<EditarLibroMayor />} />
+            <Route path="/mayorizar" element={<Mayorizar />} />
+
 
             {/*SUBCUENTA*/}
             <Route path="/mostrarsubcuenta" element={<MostrarSubCuentas />} />

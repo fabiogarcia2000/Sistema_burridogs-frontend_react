@@ -289,7 +289,7 @@ const mostrarAlertas = (alerta) =>{
                 <i className="fa-solid fa-file"></i> Estado de resultados
               </Link>
               </div>
-              <div
+            <div
               className="btn-group me-2"
               >
               <Link
@@ -301,6 +301,19 @@ const mostrarAlertas = (alerta) =>{
                 <i className="fa-solid fa-file"></i> Ingresos y egresos
               </Link>
             </div>
+            <div
+              className="btn-group me-2"
+              >
+              <Link
+                to="/mayorizar"
+                type="button"
+                className="btn btn-info"
+                title="Exportar a PDF"
+              >
+                <i className="fa-solid fa-file"></i> Mayorizar
+              </Link>
+            </div>
+
             </div>
             </div>
         
