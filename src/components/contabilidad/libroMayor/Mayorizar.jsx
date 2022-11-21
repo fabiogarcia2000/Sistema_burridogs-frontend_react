@@ -1,178 +1,141 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasNombreCategoria } from "../../../utils/cambiarAMayusculas";
-import { editableInputTypes } from "@testing-library/user-event/dist/utils";
+import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+
 const current = new Date();
 const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
 
-
 const URLCrear = "http://190.53.243.69:3001/mc_libromayor/mayorizar/";
-const URLMostrarUno = "";
 
+const Mayorizar = () => {
 
- 
-  
-
-const Formulario = () => {
-    
+  const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
-  const [edit] = useGlobalState('registroEdit');
 
-  //Alertas de éxito o error
-  const mostrarAlertas = (alerta) =>{
+   //Alertas de éxito o error
+   const mostrarAlertas = (alerta) =>{
     switch (alerta){
       case 'guardado':
         Swal.fire({
           title: '¡Guardado!',
-          text: "Se mayorizo",
+          text: "Los cambios se guardaron con éxito",
           icon: 'success',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
-        });
+        })
 
       break;
 
       case 'error': 
       Swal.fire({
         title: 'Error',
-        text:  'No se mayorizo',
+        text:  'No se pudieron guardar los cambios',
         icon: 'error',
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
-      });
-      break;
-
-      case 'duplicado':
-        Swal.fire({
-          text:  'Ya existe ese mayor',
-          icon: 'warning',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        });
-
+      })
       break;
 
       default: break;
     }
   };
 
-
   return (
     <div className="container">
       <Formik
         //valores iniciales
-        initialValues={{   
-          id_libro_mayor:edit.id_libro_mayor, 
+        initialValues={{
+          id_libro_mayor: edit.id_libro_mayor,
           id_periodo_contable: "",
           descripcion:"",
-          fecha: date
+          fecha: "",
+          id_cuenta:edit.id_cuenta,
+          id_subcuenta:edit.id_subcuentacuenta,
+          monto_debe: edit.monto_debe,
+          monto_haber: edit.monto_haber  
         }}
 
         //Funcion para validar
         validate={(valores) => {
-            let errores = {};
+          let errores = {};
 
-           
+          // Validacion de usuario
+          if (!valores.id_periodo_contable) {
+            errores.id_periodo_contable = "Por favor ingresa el periodo contable";
+          } else if (!/^[0-9]+$/.test(valores.id_periodo_contable)) {
+            errores.id_periodo_contable = "Escribir solo números";
+          }  
 
-          // Validacion de descripcion
-          if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresa la descripcion";
-          }
+        // Validacion de descripcion
+        if (!valores.descripcion) {
+          errores.descripcion = "Por favor ingresa una descripcion";
+        } 
 
-          
-          
-            return errores;
-          
+          return errores;
         }}
         onSubmit={async (valores) => {
-          //validar si existe un registro con el nombre ingresado
+              //procedimineto para guardar el los cambios
               try {
-              
+                const res = await axios.post(`${URLCrear}${valores.id_periodo_contable}`, valores);
+
+                  if (res.status === 200) {
+                    mostrarAlertas("guardado");
+                    navigate("/mostrarlibromayor");
+                  } else {
+                    mostrarAlertas("error");
+                  }
                 
-                  //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.post(`${URLCrear}${valores.id_libro_mayor}`, valores);
-                      if (res.status === 200) {
-                        mostrarAlertas("guardado");
-                        navigate("/mostrarlibromayor");
-                    } else {
-                      mostrarAlertas("error");
-                    }
-                    
-                } catch (error) {
+              } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
                 navigate("/mostrarlibromayor");
               }
         }}
       >
-        {({ errors , values }) => (
+        {({ errors, values }) => (
           <Form>
-            <h3 className="mb-3">Mayorizar Libro Diario</h3>
+          <h3 className="mb-3">Mayorizar</h3>
             <div className="row g-3">
-
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idperiodo" className="form-label">
-                    Id periodo:
+                  <label htmlFor="IdPeriodo" className="form-label">
+                    Periodo Contable:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idperiodo"
+                    id="IdPeriodo"
                     name="id_periodo_contable"
-                    placeholder=""
-                   
+                    placeholder="Numero del periodo contable..."
                   />
-                  <ErrorMessage
-                    name="id_periodo_contable"
-                    component={() => (
-                      <div className="error">{errors.id_periodo_contable}</div>
-                    )}
-                  />
-                </div>
-              </div>
 
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="idmayor" className="form-label">
-                    Id mayor:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="idmayor"
-                    name="id_libro_mayor"
-                    placeholder=""
-                    disabled
-                  />
                   <ErrorMessage
-                    name="id_libro_mayor"
+                    name="id_periodo_contable"
                     component={() => (
                       <div className="error">{errors.id_libro_mayor}</div>
                     )}
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row g-3">
-            <div className="col-sm-6">
+            
+              <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="descripcion" className="form-label">
-                    Descripción de libro mayor:
+                  Descripcion:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="descripcion"
                     name="descripcion"
-                    placeholder="Descripcion de mayor"
-                    onKeyUp={cambiarAMayusculasNombreCategoria(values)}
+                    placeholder="descripcion..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
+
                   <ErrorMessage
                     name="descripcion"
                     component={() => (
@@ -181,32 +144,53 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-
-                <div className="col-sm-6">
-                    <div className="mb-3">
-                        <label htmlFor="fecha" className="form-label">
-                        Fecha de creación:
-                        </label>
-                        <Field
-                        type="text"
-                        className="form-control"
-                        id="fecha"
-                        name="fecha"
-                        placeholder=""
-                        disabled
-                        />
-                        <ErrorMessage
-                        name="fecha"
-                        component={() => (
-                            <div className="error">{errors.fecha}</div>
-                        )}
-                        />
-                    </div>
-                </div>
-
             </div>
-            
-            
+
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="fecha" className="form-label">
+                    Fecha:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="fecha"
+                    name="fecha"
+                  />
+
+                  <ErrorMessage
+                    name="fecha"
+                    component={() => (
+                      <div className="error">{errors.fecha}</div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="idlibro" className="form-label">
+                    Libro:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="idlibro"
+                    name="id_libro_mayor"
+                    diabled
+                  />
+
+                  <ErrorMessage
+                    name="id_libro_mayor"
+                    component={() => (
+                      <div className="error">{errors.id_libro_mayor}</div>
+                    )}
+                  />
+                </div>
+              </div>
+          
+            </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
@@ -218,7 +202,6 @@ const Formulario = () => {
             >
               Cancelar
             </Link>
-
           </Form>
         )}
       </Formik>
@@ -226,5 +209,4 @@ const Formulario = () => {
   );
 };
 
-
-export default Formulario;
+export default Mayorizar;

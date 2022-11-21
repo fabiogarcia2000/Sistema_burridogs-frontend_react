@@ -122,6 +122,12 @@ import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibr
 import EditarLibroMayor from "../components/contabilidad/libroMayor/EditarLibroMayor";
 import Mayorizar from "../components/contabilidad/libroMayor/Mayorizar"; //AGREGADO
 
+//INFORMES
+import MostrarBalance from "../components/contabilidad/informes/MostrarBalance";
+import MostrarResultado from "../components/contabilidad/informes/MostrarResultado";
+import MostrarIngresoGasto from "../components/contabilidad/informes/MostrarIngresoGasto";
+
+
 //SUBCUENTA
 import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
 import CrearSubCuenta from "../components/contabilidad/subcuenta/CrearSubcuenta";
@@ -246,7 +252,7 @@ function Rutas() {
             <Route path="/editarsalidamds" element={<EditarSalidaMds />} />
             {/*Rutas contabilidad*/}
             {/*-----------------------------------RUTAS CONTABILIDAD-----------------------------------------------*/}
-             {/*CATEGORIA CONTABLE*/}
+            {/*CATEGORIA CONTABLE*/}
             <Route path="crearcategoriacont" element={<CrearCategoriaCont />} />
             <Route
               path="mostrarcategoriacont"
@@ -257,17 +263,17 @@ function Rutas() {
               element={<EditarCategoriaCont />}
             />
 
-             {/*CATALOGO DE CUENTAS*/}
+            {/*CATALOGO DE CUENTAS*/}
             <Route path="crearcatalogo" element={<CrearCuenta />} />
             <Route path="mostrarcatalogo" element={<MostrarCuentas />} />
             <Route path="editarcatalogo" element={<EditarCuenta />} />
 
-             {/*DESTINO CUENTA*/}
+            {/*DESTINO CUENTA*/}
             <Route path="creardestino" element={<CrearDestino />} />
             <Route path="mostrardestino" element={<MostrarDestino />} />
             <Route path="editardestino" element={<EditarDestino />} />
 
-             {/*INFORME FINANCIERO*/}
+            {/*INFORME FINANCIERO*/}
             <Route
               path="crearinformefinanciero"
               element={<CrearInformeFinanciero />}
@@ -281,10 +287,15 @@ function Rutas() {
               element={<EditarInformeFinanciero />}
             />
 
-             {/*LIBRO MAYOR*/}
+            {/*LIBRO MAYOR*/}
             <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
             <Route path="/editarlibromayor" element={<EditarLibroMayor />} />
             <Route path="/mayorizar" element={<Mayorizar />} />
+
+            {/*INFORMES*/}
+            <Route path="/mostrarbalance" element={<MostrarBalance />} />
+            <Route path="/mostrarresultado" element={<MostrarResultado />} />
+            <Route path="/mostraringresosgasto" element={<MostrarIngresoGasto />} />
 
 
             {/*SUBCUENTA*/}
@@ -322,7 +333,7 @@ function Rutas() {
             <Route path="/crearperiodo" element={<CrearPeriodoContable />} />
 
 
-  {/*-----------------------------------RUTAS MI PERFIL-----------------------------------------------*/}
+            {/*-----------------------------------RUTAS MI PERFIL-----------------------------------------------*/}
 
             <Route path="/editarusuario" element={<EditarUsuario />} />
             <Route path="/cambiocontrasena" element={<CambioContraseña />} />

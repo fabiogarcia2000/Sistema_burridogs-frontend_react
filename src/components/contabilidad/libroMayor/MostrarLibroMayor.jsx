@@ -269,7 +269,7 @@ const mostrarAlertas = (alerta) =>{
               className="btn-group me-2"
             >
               <Link
-                to="/crearcatalogo"
+                to="/mostrarbalance"
                 type="button"
                 className="btn btn-danger"
                 title="Agregar Nuevo"
@@ -281,7 +281,7 @@ const mostrarAlertas = (alerta) =>{
               className="btn-group me-2"
             >
               <Link
-                to="/"
+                to="/mostrarresultado"
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a Excel"
@@ -293,7 +293,7 @@ const mostrarAlertas = (alerta) =>{
               className="btn-group me-2"
               >
               <Link
-                to="/"
+                to="/mostraringresosgasto"
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
