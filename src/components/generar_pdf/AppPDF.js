@@ -39,3 +39,18 @@ function AppPDF() {
 }
 
 export default AppPDF;
+
+/*
+//Descargar Tabla a PDF
+import FormatoTablaPDF from "./FormatoTablaPDF";
+
+function AppPDF() {
+  return (
+    <div className="AppPDF">
+        <FormatoTablaPDF />
+    </div>
+  );
+};
+
+export default AppPDF;
+*/
