@@ -98,7 +98,7 @@ const MostrarBalance = () => {
     },
     {
       name: "NOMBRE CUENTA",
-      selector: (row) => row.id_nombre_cuenta,
+      selector: (row) => row.nombre_cuenta,
       sortable: true,
     },
     {

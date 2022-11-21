@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 const current = new Date();
-const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
 const URLCrear = "http://190.53.243.69:3001/mc_libromayor/mayorizar/";
 
@@ -49,14 +49,11 @@ const Mayorizar = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_libro_mayor: edit.id_libro_mayor,
+          id_libro_mayor:edit.id_libro_mayor,
           id_periodo_contable: "",
           descripcion:"",
-          fecha: "",
-          id_cuenta:edit.id_cuenta,
-          id_subcuenta:edit.id_subcuentacuenta,
-          monto_debe: edit.monto_debe,
-          monto_haber: edit.monto_haber  
+          fecha: date,
+       
         }}
 
         //Funcion para validar
@@ -80,8 +77,8 @@ const Mayorizar = () => {
         onSubmit={async (valores) => {
               //procedimineto para guardar el los cambios
               try {
-                const res = await axios.post(`${URLCrear}${valores.id_periodo_contable}`, valores);
-
+                const res = await axios.post(`${URLCrear}`, valores);
+                console.log(valores)
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
                     navigate("/mostrarlibromayor");
@@ -157,6 +154,7 @@ const Mayorizar = () => {
                     className="form-control"
                     id="fecha"
                     name="fecha"
+                    disabled
                   />
 
                   <ErrorMessage
@@ -168,27 +166,8 @@ const Mayorizar = () => {
                 </div>
               </div>
 
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="idlibro" className="form-label">
-                    Libro:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="idlibro"
-                    name="id_libro_mayor"
-                    diabled
-                  />
-
-                  <ErrorMessage
-                    name="id_libro_mayor"
-                    component={() => (
-                      <div className="error">{errors.id_libro_mayor}</div>
-                    )}
-                  />
-                </div>
-              </div>
+             
+       
           
             </div>
 
