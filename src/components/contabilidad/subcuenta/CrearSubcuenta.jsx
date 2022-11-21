@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
-const URLCrear = "https://jsonplaceholder.typicode.com/comments";
+const URLCrear = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/0";
 const URLMostrarUno = "https://jsonplaceholder.typicode.com/comments";
 
 
@@ -52,7 +52,6 @@ const SubCuentaCrear = () => {
       default: break;
     }
   };
-
 
   return (
     <div className="container">
@@ -111,11 +110,11 @@ const SubCuentaCrear = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
               try {
-                const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);
-                console.log(res)
+               /* const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);
+                console.log(res)*/
                 if (res.data === ""){
                   //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.nombre_subcuenta}`, valores);
+                      const res = await axios.put(`${URLCrear}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
                         navigate("/mostrarsubcuenta");
@@ -123,8 +122,8 @@ const SubCuentaCrear = () => {
                       mostrarAlertas("error");
                     }
                     
-                }else{ 
-                  mostrarAlertas("duplicado");
+                //}else{ 
+               //   mostrarAlertas("duplicado");
                 }
               } catch (error) {
                 console.log(error);
