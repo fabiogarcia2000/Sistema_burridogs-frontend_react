@@ -1,4 +1,3 @@
-import React from "react";
 import { downloadExcel } from "react-export-table-to-excel";
 
 export function Export_Excel(data) {
