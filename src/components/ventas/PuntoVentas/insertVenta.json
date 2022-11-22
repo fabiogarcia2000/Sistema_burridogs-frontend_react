@@ -1,0 +1,70 @@
+ {
+    "secuencia_enc": 14,
+    "id_sucursal": 1,
+    "cod_sucursal": "BD01",
+    "fecha": "2022-11-01",
+    "numero_cuenta": 10002,
+    "venta_grabada_15": 100,
+    "venta_grabada_18": 0,
+    "venta_exenta": 0,
+    "impuesto_15": 15,
+    "impuesto_18": 0,
+    "venta_total": 115,
+    "cai": "ABCDF-GHIJK-LMNOP-QRST",
+    "correlativo": 1,
+    "rtn": "0801-1900-1234",
+    "nombre_cliente": "Fabio",
+    "id_usuario":157,
+    "id_pos":1,
+    "detalle": [
+        {
+            "secuencia_det": 20,
+            "secuencia_enc": 14,
+            "id_articulo": 1,
+            "id_modo_pedido": 4,
+            "precio": 50,
+            "cantidad": 1,
+            "id_impuesto": 1,
+            "total_impuesto": 7.5,
+            "total": 57.5
+        },
+        {
+            "secuencia_det": 21,
+            "secuencia_enc": 14,
+            "id_articulo": 3,
+            "id_modo_pedido": 2,
+            "precio": 50,
+            "cantidad": 1,
+            "id_impuesto": 1,
+            "total_impuesto": 7.5,
+            "total": 57.5
+        }
+    ],
+    "detalle_pago": [
+        {
+            "secuencia_enc": 14,
+            "id_metodo_pago": 1,
+            "monto": 85
+        },
+        {
+            "secuencia_enc": 14,
+            "id_metodo_pago": 7,
+            "monto": 30
+        }
+    ],
+    "detalle_promo": [
+        {
+            "secuencia_det": 20,
+            "id_articulo": 1,
+            "id_promo": 1
+        }
+    ],
+    "detalle_desc": [
+        {
+            "secuencia_det": 20,
+            "id_articulo": 1,
+            "id_descuento": 1,
+            "monto": 3
+        }
+    ]
+}

@@ -15,9 +15,13 @@ const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
 const isv = 0.15;
 
 const PuntoDeVentas = () => {
+
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
   const [articulosMostrar, setArticulosMostrar] = useState([]);
+
+  const [det, setDet] = useState();
+  const [enc, setEnc] = useState();
 
  // const [pagoCompartido, setPagoCompartido] = useState(true);
 
@@ -27,11 +31,56 @@ const PuntoDeVentas = () => {
   const [cantidadEdit, setCantidadEdit] = useState(1);
   const [articuloDelete, setArticuloDelete] = useState(0);
   const [listaCompras, setListaCompras] = useState([]);
+  const [hay, setHay] = useState(false);
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
   const [total, setTotal] = useState(0.0);
 
+  const [tipoPago, setTipoPago] = useState(1);
+
+
+
+  //***************Data de venta para insertar y factura*****************/
+  const [detalles, setDetalles] = useState([]);
+
+  const [detallesPago, setDetallesPago] = useState([]);
+
+  const [detallesPromo, setDetallesPromo] = useState([]);
+
+  const [detallesDesc, setDetallesDesc] = useState([
+    {
+      secuencia_det: undefined,
+      id_articulo: undefined,
+      id_descuento: undefined,
+      monto: undefined
+    }
+  ]);
+
+  const [encabezado, setEncabezado] = useState({
+    secuencia_enc: undefined,
+    id_sucursal: 1,
+    cod_sucursal: "BD01",
+    fecha: "2022-11-01",
+    numero_cuenta: 10002,
+    venta_grabada_15: 100,
+    venta_grabada_18: 0,
+    venta_exenta: 0,
+    impuesto_15: 15,
+    impuesto_18: 0,
+    venta_total: total,
+    cai: "ABCDF-GHIJK-LMNOP-QRST",
+    correlativo: 1,
+    rtn: "0801-1900-1234",
+    nombre_cliente: "Fabio",
+    id_usuario:157,
+    id_pos:1,
+    
+  });
+
+  const [factura, setFactura] = useState()
+
+//*************************************************/
 
   useEffect(() => {
     getCategorias();
@@ -39,6 +88,8 @@ const PuntoDeVentas = () => {
     getMetodosPago();
     getDescuentos();
     getPedidos();
+    setHay(false)
+    Enc()
   }, []);
 
   //procedimineto para obtener las categorias
@@ -117,6 +168,17 @@ const PuntoDeVentas = () => {
     listaCompras.map((list) => 
       setSubTotal(prevValores => prevValores + list.total)
       );
+
+      
+
+
+      hay()
+    function hay () {
+      if (listaCompras === "")
+        setHay(false)
+      else 
+        setHay(true)
+    }; 
   }, [listaCompras]);
 
 
@@ -148,21 +210,52 @@ const PuntoDeVentas = () => {
       setArticulosMostrar(tmpArray);
     };
 
+    //procedimineto para obtener la secuencia det y enc
+const urlDet = "http://190.53.243.69:3001/venta/secuencia_det_getone";
+const urlEnc = "http://190.53.243.69:3001/venta/secuencia_enc_getone";
+const Det = async () => {
+    try {
+      const res = await axios.get(urlDet);
+      setDet(res.data.ft_secuencia_det_getone);
+
+    } catch (error) {
+      console.log(error);
+      alert("error de red")
+    } 
+  };
+
+  const Enc = async () => {
+    try {
+      const res = await axios.get(urlEnc);
+      setEnc(res.data.ft_secuencia_enc_getone);
+      //console.log("dentro de ENC" ,enc);
+    } catch (error) {
+      console.log(error);
+      alert("error de red")
+    }
+    
+  };
 
   //agregar articulos a la lista
   const agregarArticulos = () => {
     if(!listaCompras.find(list => list.cod === articuloClick.cod_articulo)){
-      setListaCompras([...listaCompras, {cod: articuloClick.cod_articulo, desc: articuloClick.descripcion_corta, cant:cantidad, prec:articuloClick.precio, total:cantidad*articuloClick.precio,  isv:articuloClick.precio * articuloClick.porcentaje }]);
+      setListaCompras([...listaCompras, {id:articuloClick.id_articulo, porc:articuloClick.porcentaje, cod: articuloClick.cod_articulo, desc: articuloClick.descripcion_corta, cant:cantidad, prec:articuloClick.precio, total:cantidad*articuloClick.precio,  isv:articuloClick.precio * articuloClick.porcentaje }]);
+
+      setDetalles([...detalles, {secuencia_det: det, secuencia_enc: enc, id_articulo: articuloClick.id_articulo, precio:parseFloat(articuloClick.precio), cantidad:cantidad, id_impuesto:articuloClick.id_impuesto, total_impuesto:((parseFloat(articuloClick.precio)* parseFloat(cantidad))*parseFloat(articuloClick.porcentaje)), total:(((parseFloat(articuloClick.precio))*cantidad)*parseFloat(articuloClick.porcentaje)+(parseFloat(articuloClick.precio)*parseFloat(cantidad)))}]);
+
+      setDetallesPromo([...detallesPromo, {secuencia_det:det, id_articulo:articuloClick.id_articulo, id_promo:1}])
+
       resetSubTotal();
      setCantidad(1)
     }else{
       actualizarArticulo(articuloClick.cod_articulo, articuloClick.precio);
-      console.log(articuloClick.cod_articulo, articuloClick.precio)
+      actualizarData(articuloClick.id_articulo)
       setArticuloClick({});
       resetSubTotal();
     }
   };
 
+  
    //cuando se agrega un articulos repetido a la lista
    const actualizarArticulo = (cod, newPrec) =>{
     const newListaCompras = listaCompras.map((art) =>{
@@ -176,8 +269,27 @@ const PuntoDeVentas = () => {
       return art
     });
     setListaCompras(newListaCompras)
-    setCantidad(1)
+    
     resetSubTotal();
+   }
+
+   //cuando se agrega un articulos repetido a la lista --ACTUALIZAR DATA VENTA
+   const actualizarData = (id) =>{
+    const newDetalles = detalles.map((item) =>{
+      if(item.id_articulo === id){
+        return{
+          ...item,
+          cantidad: item.cantidad + cantidad,
+
+          total_impuesto:item.total_impuesto + ((parseFloat(articuloClick.precio)* parseFloat(cantidad) )*parseFloat(articuloClick.porcentaje)),
+
+          total:item.total + (((parseFloat(articuloClick.precio))*cantidad)*parseFloat(articuloClick.porcentaje)+(parseFloat(articuloClick.precio)*parseFloat(cantidad)))
+        };
+      }
+      return item
+    });
+    setDetalles(newDetalles)
+    setCantidad(1)
    }
 
    //editar la cantidad de un articulo
@@ -193,16 +305,46 @@ const PuntoDeVentas = () => {
       return art
     }) 
     setListaCompras(newListaCompras)
-    setCantidad(1)
-    resetSubTotal();
-    
+    actualizarDataCantidad();
+    resetSubTotal();    
+   }
+
+   //editar la cantidad de un articulo --ACTUALIZAR DATA VENTA
+   const actualizarDataCantidad = () =>{
+    const newDetalles = detalles.map((item) =>{
+      if(item.id_articulo === articuloEdit.id){
+        return{
+          ...item,
+          cantidad: cantidadEdit,
+
+          total_impuesto:((parseFloat(articuloEdit.prec)* parseFloat(cantidadEdit))*parseFloat(articuloEdit.porc)),
+
+          total:(((parseFloat(articuloEdit.prec))*cantidadEdit)*parseFloat(articuloEdit.porc)+(parseFloat(articuloEdit.prec)*parseFloat(cantidadEdit)))
+          
+        };
+      }
+      return item
+    }) 
+    setDetalles(newDetalles)
+    setCantidad(1)   
    }
 
    //Eliminar un articulo de la lista
    const eliminarArticulo = () =>{
-    const newLista = listaCompras.filter((art) => art.cod !== articuloDelete);
+    const newLista = listaCompras.filter((art) => art.id !== articuloDelete);
     setListaCompras(newLista);
+    eliminarDataArticulo();
     resetSubTotal();
+   };
+
+   //Eliminar un articulo de la lista --ACTUALIZAR DATA VENTA
+   const eliminarDataArticulo = () =>{
+    const newLista = detalles.filter((item) => item.id_articulo !== articuloDelete);
+    setDetalles(newLista);
+
+    const newData = detallesPromo.filter((item) => item.id_articulo !== articuloDelete);
+    setDetallesPromo(newData);
+
    };
 
     //resetea el valores de subtotal
@@ -210,14 +352,31 @@ const PuntoDeVentas = () => {
       setSubTotal(0)      
     }; 
 
-     //resetea el valores de subtotal
+     //resetea el valores 
      const resetValores = () => {
       setSubTotal(0)
       setImpuesto(0)
       setTotal(0)
       setListaCompras([])
       setCantidad(1)
+      Enc()
+      setDetalles([])
+      setDetallesPromo([])
     }; 
+
+    //detalles de pago
+  const detalles_Pago = () =>{
+    setDetallesPago([...detallesPago, {secuencia_enc:enc, id_metodo_pago: tipoPago, monto:total}]);
+  };
+
+  //preparar data de la venta
+  const PrepararData = () =>{
+    detalles_Pago()
+    
+    setEncabezado({...encabezado, detalle:detalles})
+
+    console.log(encabezado);
+  };
 
 
 
@@ -291,7 +450,7 @@ const PuntoDeVentas = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setArticuloDelete(row.cod);
+              setArticuloDelete(row.id);
               abrirModalEliminarArticulo();
             }}
           >
@@ -304,6 +463,7 @@ const PuntoDeVentas = () => {
       button: true,
     },
   ];
+
 
   return (
     <div>
@@ -443,6 +603,7 @@ const PuntoDeVentas = () => {
                     onClick={() => {
                       abrirModalCantidad();
                       setArticuloClick(artic)
+                      Det();
                     }}
                   >
                     <div className="card-body">
@@ -450,7 +611,7 @@ const PuntoDeVentas = () => {
                       <h6 className="card-subtitle mb-2 text-muted">
                         {"Código: " + artic.cod_articulo}
                       </h6>
-                      <p className="card-text"><span className="badge bg-primary rounded-pill">{"Precio: " + artic.precio}</span></p>
+                      <p className="card-text"><span className="badge bg-primary rounded-pill">{"Precio: " + parseFloat(artic.precio)}</span></p>
                     </div>
                   </div>
                 </div>
@@ -460,13 +621,18 @@ const PuntoDeVentas = () => {
           <div className="col-4">
             
             <div className="row divDetalles">
-            <DataTable
-              columns={columns}
-              data={listaCompras}
-              highlightOnHover
-              fixedHeader
-              fixedHeaderScrollHeight="200px"
-           />
+              {
+                hay
+                ? <DataTable
+                columns={columns}
+                data={listaCompras}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="200px"
+             />
+                : <p className="text-center">Ningún Producto</p>
+              }
+            
             </div>
 
             <hr />
@@ -522,7 +688,7 @@ const PuntoDeVentas = () => {
                 <li className="list-group-item d-flex justify-content-between align-items-center">
                   <h4>Total</h4>
                   <span className="">
-                    <h4>{"L. "+(total)}</h4>
+                    <h4>{"L. "+parseFloat(total)}</h4>
                   </span>
                 </li>
               </ul>
@@ -600,7 +766,7 @@ const PuntoDeVentas = () => {
           <div className="container">
             <div className="row text-center">
               <h5>Total a Pagar:</h5>
-              <h1>{"L. "+(total)}</h1>
+              <h1>{"L. "+parseFloat(total)}</h1>
               <p>(VEINTE Y CUATRO LEMPIRAS 00/100)</p>
             </div>
             <hr />
@@ -709,6 +875,7 @@ const PuntoDeVentas = () => {
             onClick={() => {
               abrirModalVenta();
               abrirModalFactura();
+              PrepararData()
             }}
           >
             Aceptar

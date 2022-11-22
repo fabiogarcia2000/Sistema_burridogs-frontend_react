@@ -1,18 +1,31 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import "./style.css";
 import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import {quitarTildes} from "./utils/textoSinTildes";
+import {InsertVenta} from "./insertVenta"
 
-const UrlCategorias = "http://190.53.243.69:3001/categoria/getall/";
-const UrlArticulos = "http://190.53.243.69:3001/articulo/getall/";
+const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
+const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactive/";
+const UrlArticulosCategoria = "http://190.53.243.69:3001/articulo/getallbycategoria/";
+const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
+const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
+const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
 const isv = 0.15;
 
 const PuntoDeVentas = () => {
+
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
   const [articulosMostrar, setArticulosMostrar] = useState([]);
+
+  const [det, setDet] = useState();
+  const [enc, setEnc] = useState();
+
+ // const [pagoCompartido, setPagoCompartido] = useState(true);
 
   const [cantidad, setCantidad] = useState(1);
   const [articuloClick, setArticuloClick] = useState({});
@@ -20,11 +33,66 @@ const PuntoDeVentas = () => {
   const [cantidadEdit, setCantidadEdit] = useState(1);
   const [articuloDelete, setArticuloDelete] = useState(0);
   const [listaCompras, setListaCompras] = useState([]);
+  const [hay, setHay] = useState(false);
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
   const [total, setTotal] = useState(0.0);
 
+  const [tipoPago, setTipoPago] = useState(1);
+  const [tipoPedido, setTipoPedido] = useState(4);
+
+
+
+  //***************Data de venta para insertar y factura*****************/
+  const [detalles, setDetalles] = useState([]);
+
+  const [detallesPago, setDetallesPago] = useState([]);
+
+  const [detallesPromo, setDetallesPromo] = useState([]);
+
+  const [detallesDesc, setDetallesDesc] = useState([]);
+
+
+  const valuesInicial = {
+    secuencia_enc: undefined,
+    id_sucursal: 1,
+    cod_sucursal: "BD01",
+    fecha: "2022-11-01",
+    numero_cuenta: 10002,
+    venta_grabada_15: 100,
+    venta_grabada_18: 0,
+    venta_exenta: 0,
+    impuesto_15: 15,
+    impuesto_18: 0,
+    venta_total: 115,
+    cai: "ABCDF-GHIJK-LMNOP-QRST",
+    correlativo: 1,
+    rtn: "0801-1900-1234",
+    nombre_cliente: "Fabio",
+    id_usuario:157,
+    id_pos:1,
+    detalle:[],
+    detalle_pago:[],
+    detalle_promo:[],
+    detalle_desc:[]
+  }
+
+  const [venta, setVenta] = useState(valuesInicial);
+
+
+
+//*************************************************/
+
+  useEffect(() => {
+    getCategorias();
+    getArticulos();
+    getMetodosPago();
+    getDescuentos();
+    getPedidos();
+    setHay(false)
+    Enc()
+  }, []);
 
   //procedimineto para obtener las categorias
   const getCategorias = async () => {
@@ -47,15 +115,74 @@ const PuntoDeVentas = () => {
     }
   };
 
-  useEffect(() => {
-    getCategorias();
-    getArticulos();
-  }, []);
+  //procedimineto para obtener los articulos por categoria
+  const getArticulosCategoria = async (categoria) => {
+    try {
+      const res = await axios.get(UrlArticulosCategoria+categoria);
+      setArticulos(res.data);
+      setArticulosMostrar(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  //procedimineto para obtener todos los metodos de pago y mostrarlas en select
+  const [metodosPago, setMetodosPago] = useState([]);
+
+    //petición a api
+    const getMetodosPago = async () => {
+      try {
+        const res = await axios.get(UrlMostrarMetodosPago);
+        setMetodosPago(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    //procedimineto para obtener todos los descuentos y mostrarlas en select
+  const [descuentos, setDescuentos] = useState([]);
+
+    //petición a api
+    const getDescuentos = async () => {
+      try {
+        const res = await axios.get(UrlDescuentos);
+        setDescuentos(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    //procedimineto para obtener todos los modos de pedido y mostrarlas en select
+  const [pedidos, setPedidos] = useState([]);
+
+    //petición a api
+    const getPedidos = async () => {
+      try {
+        const res = await axios.get(UrlPedidos);
+        setPedidos(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   useEffect(() => {
     listaCompras.map((list) => 
-      setSubTotal(prevValores => prevValores + list.total));
+      setSubTotal(prevValores => prevValores + list.total)
+      );
+
+      
+
+
+      hay()
+    function hay () {
+      if (listaCompras === "")
+        setHay(false)
+      else 
+        setHay(true)
+    }; 
   }, [listaCompras]);
+
 
   useEffect(() => {
     setImpuesto(subTotal*isv)
@@ -65,45 +192,72 @@ const PuntoDeVentas = () => {
     setTotal(subTotal + Impuesto)
   }, [Impuesto, subTotal]);
 
-  //mostrar articulos por categoria
-  const filtrarArticulos = (tipoCategoria) => {
-    const filtrarArticulos = articulos.filter(
-      (item) => item.descripcion_categoria === tipoCategoria
-    );
-    setArticulosMostrar(filtrarArticulos);
+
+  //Buscador --con expresiones regulares js
+  const handleBuscador = (e) => {
+    const buscar = quitarTildes(e.target.value.toLowerCase());  
+      let tmpArray = [];
+      const limite = articulos.length;
+
+      for (let index = 0; index < limite; index++) {
+        const buscarEn = quitarTildes(articulos[index].descripcion.toLowerCase());
+        const patt = new RegExp(buscar);
+        const res = patt.test(buscarEn);
+
+        if (res){
+          tmpArray.push(articulos[index])
+        };
+        
+      };
+      setArticulosMostrar(tmpArray);
+    };
+
+    //procedimineto para obtener la secuencia det y enc
+const urlDet = "http://190.53.243.69:3001/venta/secuencia_det_getone";
+const urlEnc = "http://190.53.243.69:3001/venta/secuencia_enc_getone";
+const Det = async () => {
+    try {
+      const res = await axios.get(urlDet);
+      setDet(res.data.ft_secuencia_det_getone);
+
+    } catch (error) {
+      console.log(error);
+      alert("error de red")
+    } 
   };
 
-  //Barra de busqueda
-  const [ busqueda, setBusqueda ] = useState("")
-  //capturar valor a buscar
-  const valorBuscar = (e) => {
-    setBusqueda(e.target.value)   
-  }
-  //metodo de filtrado 
-  let results = []
-  if(!busqueda){
-  }else{
-      results = articulos.filter( (dato) =>
-      dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
-      dato.descripcion_corta.toLowerCase().includes(busqueda.toLocaleLowerCase()),     
-      );
-  
+  const Enc = async () => {
+    try {
+      const res = await axios.get(urlEnc);
+      setEnc(res.data.ft_secuencia_enc_getone);
+      //console.log("dentro de ENC" ,enc);
+    } catch (error) {
+      console.log(error);
+      alert("error de red")
+    }
+    
   };
 
   //agregar articulos a la lista
   const agregarArticulos = () => {
     if(!listaCompras.find(list => list.cod === articuloClick.cod_articulo)){
-      setListaCompras([...listaCompras, {cod: articuloClick.cod_articulo, desc: articuloClick.descripcion_corta, cant:cantidad, prec:articuloClick.precio, total:cantidad*articuloClick.precio }]);
+      setListaCompras([...listaCompras, {id:articuloClick.id_articulo, porc:articuloClick.porcentaje, cod: articuloClick.cod_articulo, desc: articuloClick.descripcion_corta, cant:cantidad, prec:articuloClick.precio, total:cantidad*articuloClick.precio,  isv:articuloClick.precio * articuloClick.porcentaje }]);
+
+      setDetalles([...detalles, {id_modo_pedido: tipoPedido, secuencia_det: parseInt(det), secuencia_enc: parseInt(enc), id_articulo: articuloClick.id_articulo, precio:parseFloat(articuloClick.precio), cantidad:cantidad, id_impuesto:articuloClick.id_impuesto, total_impuesto:((parseFloat(articuloClick.precio)* parseFloat(cantidad))*parseFloat(articuloClick.porcentaje)), total:(((parseFloat(articuloClick.precio))*cantidad)*parseFloat(articuloClick.porcentaje)+(parseFloat(articuloClick.precio)*parseFloat(cantidad)))}]);
+
+      setDetallesPromo([...detallesPromo, {secuencia_det:parseInt(det), id_articulo:articuloClick.id_articulo, id_promo:1}])
+
       resetSubTotal();
      setCantidad(1)
     }else{
       actualizarArticulo(articuloClick.cod_articulo, articuloClick.precio);
-      console.log(articuloClick.cod_articulo, articuloClick.precio)
+      actualizarData(articuloClick.id_articulo)
       setArticuloClick({});
       resetSubTotal();
     }
   };
 
+  
    //cuando se agrega un articulos repetido a la lista
    const actualizarArticulo = (cod, newPrec) =>{
     const newListaCompras = listaCompras.map((art) =>{
@@ -117,8 +271,27 @@ const PuntoDeVentas = () => {
       return art
     });
     setListaCompras(newListaCompras)
-    setCantidad(1)
+    
     resetSubTotal();
+   }
+
+   //cuando se agrega un articulos repetido a la lista --ACTUALIZAR DATA VENTA
+   const actualizarData = (id) =>{
+    const newDetalles = detalles.map((item) =>{
+      if(item.id_articulo === id){
+        return{
+          ...item,
+          cantidad: item.cantidad + cantidad,
+
+          total_impuesto:item.total_impuesto + ((parseFloat(articuloClick.precio)* parseFloat(cantidad) )*parseFloat(articuloClick.porcentaje)),
+
+          total:item.total + (((parseFloat(articuloClick.precio))*cantidad)*parseFloat(articuloClick.porcentaje)+(parseFloat(articuloClick.precio)*parseFloat(cantidad)))
+        };
+      }
+      return item
+    });
+    setDetalles(newDetalles)
+    setCantidad(1)
    }
 
    //editar la cantidad de un articulo
@@ -134,16 +307,46 @@ const PuntoDeVentas = () => {
       return art
     }) 
     setListaCompras(newListaCompras)
-    setCantidad(1)
-    resetSubTotal();
-    
+    actualizarDataCantidad();
+    resetSubTotal();    
+   }
+
+   //editar la cantidad de un articulo --ACTUALIZAR DATA VENTA
+   const actualizarDataCantidad = () =>{
+    const newDetalles = detalles.map((item) =>{
+      if(item.id_articulo === articuloEdit.id){
+        return{
+          ...item,
+          cantidad: cantidadEdit,
+
+          total_impuesto:((parseFloat(articuloEdit.prec)* parseFloat(cantidadEdit))*parseFloat(articuloEdit.porc)),
+
+          total:(((parseFloat(articuloEdit.prec))*cantidadEdit)*parseFloat(articuloEdit.porc)+(parseFloat(articuloEdit.prec)*parseFloat(cantidadEdit)))
+          
+        };
+      }
+      return item
+    }) 
+    setDetalles(newDetalles)
+    setCantidad(1)   
    }
 
    //Eliminar un articulo de la lista
    const eliminarArticulo = () =>{
-    const newLista = listaCompras.filter((art) => art.cod !== articuloDelete);
+    const newLista = listaCompras.filter((art) => art.id !== articuloDelete);
     setListaCompras(newLista);
+    eliminarDataArticulo();
     resetSubTotal();
+   };
+
+   //Eliminar un articulo de la lista --ACTUALIZAR DATA VENTA
+   const eliminarDataArticulo = () =>{
+    const newLista = detalles.filter((item) => item.id_articulo !== articuloDelete);
+    setDetalles(newLista);
+
+    const newData = detallesPromo.filter((item) => item.id_articulo !== articuloDelete);
+    setDetallesPromo(newData);
+
    };
 
     //resetea el valores de subtotal
@@ -151,14 +354,42 @@ const PuntoDeVentas = () => {
       setSubTotal(0)      
     }; 
 
-     //resetea el valores de subtotal
+     //resetea el valores 
      const resetValores = () => {
       setSubTotal(0)
       setImpuesto(0)
       setTotal(0)
       setListaCompras([])
       setCantidad(1)
+      Enc()
+      setDetalles([])
+      setDetallesPromo([])
     }; 
+
+    //detalles de pago
+  const Detalles_Pago = () =>{
+    setDetallesPago([...detallesPago, {secuencia_enc:parseInt(enc), id_metodo_pago: tipoPago, monto:total}]);
+  };
+
+  //detalles de desc
+  const detalles_Desc = () =>{
+    setDetallesDesc([...detallesDesc, {secuencia_det:parseInt(det), id_articulo: 31, id_descuento:1, monto:3}]);
+  };
+
+  //preparar data de la venta
+  const PrepararData = () =>{
+      
+    setVenta({
+      ...venta,
+      secuencia_enc: parseInt(enc),
+      detalle:detalles,
+      detalle_pago:detallesPago,
+      detalle_promo:detallesPromo,
+      detalle_desc:detallesDesc
+    })
+
+    console.log(venta);
+  };
 
 
 
@@ -200,7 +431,7 @@ const PuntoDeVentas = () => {
     {
       name: "Cant.",
       selector: (row) => row.cant,
-      maxWidth: "-5px", //ancho de la columna
+      maxWidth: "1px", //ancho de la columna
     },
     {
       name: "Precio",
@@ -232,7 +463,7 @@ const PuntoDeVentas = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setArticuloDelete(row.cod);
+              setArticuloDelete(row.id);
               abrirModalEliminarArticulo();
             }}
           >
@@ -245,6 +476,7 @@ const PuntoDeVentas = () => {
       button: true,
     },
   ];
+
 
   return (
     <div>
@@ -338,10 +570,9 @@ const PuntoDeVentas = () => {
                 <input
                   className="form-control me-2"
                   type="text"
-                  placeholder="Buscar por código o descripción..."
+                  placeholder="Buscar por descripción..."
                   aria-label="Search"
-                  value={busqueda}
-                  onChange={valorBuscar}
+                  onChange={handleBuscador}
                 />
               </div>
             </div>
@@ -352,18 +583,18 @@ const PuntoDeVentas = () => {
                 <button
                   className="btn btn-secondary m-1"
                   onClick={() => {
-                    setArticulosMostrar(articulos);
+                    getArticulos();
                   }}
                 >
                   TODOS
                 </button>
               </div>
-              {categorias.map((categ, i) => (
+              {categorias && categorias.map((categ, i) => (
                 <div key={i} className="col d-grid gap-2 col-3 mx-auto">
                   <button
                     className="btn btn-secondary m-1"
                     onClick={() => {
-                      filtrarArticulos(categ.descripcion);
+                      getArticulosCategoria(categ.id_categoria);
                     }}
                   >
                     {categ.descripcion}
@@ -377,23 +608,24 @@ const PuntoDeVentas = () => {
             {/*Mostrar productos*/}
             <div className="row divCards">
               <br />
-              {articulosMostrar.map((artic, i) => (
-                <div
-                  key={i}
-                  className="card m-1 mb-1 colorCards"
-                  type="button"
-                  style={{ width: "13rem", height: "8rem" }}
-                  onClick={() => {
-                    abrirModalCantidad();
-                    setArticuloClick(artic)
-                  }}
-                >
-                  <div className="card-body">
-                    <h5 className="card-title">{artic.descripcion_corta}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">
-                      {"Código: " + artic.cod_articulo}
-                    </h6>
-                    <p className="card-text"><span className="badge bg-primary rounded-pill">{"Precio: " + artic.precio}</span></p>
+              {articulosMostrar && articulosMostrar.map((artic, i) => (
+                <div className="col-sm-4 mb-2" key={i}>
+                    <div
+                    className="card colorCards"
+                    type="button"
+                    onClick={() => {
+                      abrirModalCantidad();
+                      setArticuloClick(artic)
+                      Det();
+                    }}
+                  >
+                    <div className="card-body">
+                      <h5 className="card-title">{artic.descripcion}</h5>
+                      <h6 className="card-subtitle mb-2 text-muted">
+                        {"Código: " + artic.cod_articulo}
+                      </h6>
+                      <p className="card-text"><span className="badge bg-primary rounded-pill">{"Precio: " + parseFloat(artic.precio)}</span></p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -402,45 +634,96 @@ const PuntoDeVentas = () => {
           <div className="col-4">
             
             <div className="row divDetalles">
-            <DataTable
-              columns={columns}
-              data={listaCompras}
-              highlightOnHover
-              fixedHeader
-              fixedHeaderScrollHeight="200px"
-           />
+              {
+                hay
+                ? <DataTable
+                columns={columns}
+                data={listaCompras}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="200px"
+             />
+                : <p className="text-center">Ningún Producto</p>
+              }
+            
             </div>
 
             <hr />
-            <div className="row">
+          <Formik 
+            //valores iniciales
+            initialValues={{
+              id_descuento: "",
+              id_modo_pedido: "",
+            }}
+
+            //Funcion para validar
+        validate={(valores) => {
+          let errores = {};
+
+          // Validacion de modo pedido
+          if (!valores.id_modo_pedido) {
+            errores.id_modo_pedido = "Requerido";
+          } 
+
+          return errores;
+        }}
+
+        onSubmit={async (valores) => {
+               // Validacion de modo pedido
+               if (!listaCompras.length > 0) {
+                alert("Agregar artículos a la lista");
+              } else{
+                //procedimineto para guardar el los cambios
+                abrirModalVenta();
+                detalles_Desc();
+                Detalles_Pago();
+                setTipoPedido(valores.id_modo_pedido)
+              }
+
+         }}          
+          >
+             {({ errors, values }) => (
+              <Form>
+              <div className="container">
+              <div className="row">
               <div className="col">
                 <div className="form-floating">
-                  <select
+                  <Field
+                   as="select"
                     className="form-select"
                     id="floatingSelectGrid"
                     aria-label="Floating label select example"
+                    name="id_descuento"
                   >
                     <option value="">Ninguno</option>
-                    <option value="1">Tercera edad</option>
-                    <option value="2">Cliente</option>
-                  </select>
+                    {descuentos.map((item, i) =>(
+                    <option key={i} value={item.id_descuento}>{item.descripcion}</option>
+                  ))}
+                  </Field>
                   <label htmlFor="floatingSelectGrid">Descuento:</label>
                 </div>
               </div>
 
               <div className="col">
                 <div className="form-floating">
-                  <select
+                  <Field
+                    as="select"
                     className="form-select"
                     id="floatingSelectGrid"
                     aria-label="Floating label select example"
+                    name="id_modo_pedido"
                   >
-                    <option defaultValue>Seleccionar...</option>
-                    <option value="1">Comer Aquí</option>
-                    <option value="2">Para Llevar</option>
-                    <option value="2">Delivery</option>
-                  </select>
+                    <option value="">Seleccionar...</option>
+                    {pedidos.map((item, i) =>(
+                    <option key={i} value={item.id_modo_pedido}>{item.descripcion}</option>
+                  ))}
+                  </Field>
                   <label htmlFor="floatingSelectGrid">Tipo de Pedido:</label>
+
+                  <ErrorMessage
+                  name="id_modo_pedido"
+                  component={() => <div className="error">{errors.id_modo_pedido}</div>}
+                />
                 </div>
               </div>
             </div>
@@ -463,7 +746,7 @@ const PuntoDeVentas = () => {
                 <li className="list-group-item d-flex justify-content-between align-items-center">
                   <h4>Total</h4>
                   <span className="">
-                    <h4>{"L. "+(total)}</h4>
+                    <h4>{"L. "+parseFloat(total)}</h4>
                   </span>
                 </li>
               </ul>
@@ -473,8 +756,8 @@ const PuntoDeVentas = () => {
               <div className="d-grid gap-2 col-12 mx-auto">
                 <button
                   className="btn btn-success"
-                  type="button"
-                  onClick={abrirModalVenta}
+                  type="submit"
+
                 >
                   Procesar Venta
                 </button>
@@ -487,6 +770,11 @@ const PuntoDeVentas = () => {
                 </button>
               </div>
             </div>
+            </div>
+              </Form>
+             )}
+            
+          </Formik>
           </div>
         </div>
       </div>
@@ -536,71 +824,183 @@ const PuntoDeVentas = () => {
 
       {/* Ventana Modal de Procesar ventas*/}
       <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
-        <ModalHeader toggle={abrirModalVenta}>Caja</ModalHeader>
-        <ModalBody>
-          <div className="container">
-            <div className="row text-center">
-              <h5>Total a Pagar:</h5>
-              <h1>{"L. "+(total)}</h1>
-              <p>(VEINTE Y CUATRO LEMPIRAS 00/100)</p>
-            </div>
-            <hr />
-            <div className="row">
-              <h5>Método de Pago:</h5>
-            </div>
-            <div className="row">
-              <select className="form-select" id="country" required>
-                <option value="">Efectivo</option>
-                <option value="">Otro..</option>
-              </select>
-            </div>
-            <hr />
+        <Formik
+          //valores iniciales
+          initialValues={{
+            metodo_pago: "",
+            monto_recibido:""
+            
+          }}
 
-            <div className="row">
-              <div className="col">
+          //Funcion para validar
+      validate={(valores) => {
+        let errores = {};
+
+        // Validacion tipo de pago
+        if (!valores.metodo_pago) {
+          errores.metodo_pago = "Requerido";
+        } 
+
+        // Validacion de monto
+        if (!valores.monto_recibido) {
+          errores.monto_recibido = "Requerido";
+        }else if(valores.monto_recibido < total){
+          errores.monto_recibido = "El monto recibido debe ser mayor o igual al total";
+        }
+
+        return errores;
+      }}
+
+      onSubmit={async (valores) => {
+        abrirModalVenta();
+        abrirModalFactura();    
+        PrepararData();
+
+      }}   
+        >
+          {({ errors, values }) => (
+            <Form>
+              <ModalHeader toggle={abrirModalVenta}>Caja</ModalHeader>
+            <ModalBody>
+            
+              <div className="container">
+                <div className="row text-center">
+                  <h5>Total a Pagar:</h5>
+                  <h1>{"L. "+parseFloat(total)}</h1>
+                  <p>(VEINTE Y CUATRO LEMPIRAS 00/100)</p>
+                </div>
+                <hr />
                 <div className="row">
-                  <h5>Monto Recibido:</h5>
+                  <h5>Método de Pago:</h5>
                 </div>
                 <div className="row">
-                  <div className="col-sm-8">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="monto"
-                      name="montoRecibido"
-                      placeholder="L. 00.00"
-                    />
+                  <Field className="form-select" id="country" as="select" name="metodo_pago">
+                  <option value="">Seleccionar...</option>
+                      {metodosPago.map((item, i) =>(
+                        <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
+                      ))}
+                    {/** <option value="">COMPARTIDO</option> */}
+                  </Field>
+
+                  <ErrorMessage
+                  name="metodo_pago"
+                  component={() => <div className="error">{errors.metodo_pago}</div>}
+                />
+                </div>
+                <hr />
+    {/**
+                <div className="row">
+                  <div className="col">
+                    <div className="form-floating">
+                      <select
+                        className="form-select"
+                        id="floatingSelectGrid"
+                        aria-label="Floating label select example"
+                      >
+                        <option value="">Seleccionar...</option>
+                        {metodosPago.map((item, i) =>(
+                        <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
+                      ))}
+                      </select>
+                      <label htmlFor="floatingSelectGrid">Tipo de Pago 1:</label>
+                    </div>
+                    <div className="col">
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="monto"
+                          name="montoRecibido1"
+                          placeholder="L. 00.00"
+                        />
+                      </div>
+                  </div>
+
+                  <div className="col">
+                    <div className="form-floating">
+                      <select
+                        className="form-select"
+                        id="floatingSelectGrid"
+                        aria-label="Floating label select example"
+                      >
+                        <option value="">Seleccionar...</option>
+                        {metodosPago.map((item, i) =>(
+                        <option key={i} value={item.id_metodo_pago}>{item.descripcion}</option>
+                      ))}
+                      </select>
+                      <label htmlFor="floatingSelectGrid">Tipo de Pago 2:</label>
+                    </div>
+                    <div className="col">
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="monto"
+                          name="montoRecibido1"
+                          placeholder="L. 00.00"
+                        />
+                      </div>
                   </div>
                 </div>
-              </div>
+              */}
+              <hr />
 
-              <div className="col">
                 <div className="row">
-                  <h5>Cambio:</h5>
-                </div>
-                <div className="row">
-                  <h2>L. 5.00</h2>
-                </div>
-              </div>
-            </div>
+                  <div className="col">
+                    <div className="row">
+                      <h5>Monto Recibido:</h5>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <Field
+                          type="text"
+                          className="form-control"
+                          id="monto"
+                          name="monto_recibido"
+                          placeholder="L. 00.00"
+                        />
+                        <ErrorMessage
+                          name="monto_recibido"
+                          component={() => (
+                            <div className="error">{errors.monto_recibido}</div>
+                        )}
+                  />
+                      </div>
+                    </div>
+                  </div>
 
-            <hr />
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="primary"
-            onClick={() => {
-              abrirModalVenta();
-              abrirModalFactura();
-            }}
-          >
-            Aceptar
-          </Button>
-          <Button color="secondary" onClick={abrirModalVenta}>
-            Cancelar
-          </Button>
-        </ModalFooter>
+                  <div className="col">
+                    <div className="row">
+                      <h5>Cambio:</h5>
+                    </div>
+                    <div className="row">
+                      <h2>L. 5.00</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <hr />
+              </div>
+              
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                color="primary"
+                type="submit"
+                onClick={() => {
+                  
+                  
+                }}
+              >
+                Aceptar
+              </Button>
+              <Button color="secondary" onClick={abrirModalVenta}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+            </Form>
+          )}
+
+            
+          </Formik>
       </Modal>
 
       {/* Ventana Modal de cancelar la venta*/}
@@ -636,7 +1036,8 @@ const PuntoDeVentas = () => {
             color="primary"
             onClick={() => {
               abrirModalFactura();
-              abrirModalCliente()
+              abrirModalCliente();
+              InsertVenta(venta)
             }}
           >
             Imprimir
@@ -644,6 +1045,7 @@ const PuntoDeVentas = () => {
           <Button color="secondary" 
             onClick={() => {
               abrirModalFactura();
+              InsertVenta(venta)
               resetValores();
             }}>
             No

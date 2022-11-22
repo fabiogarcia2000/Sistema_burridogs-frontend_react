@@ -9,7 +9,7 @@ import Home from "../pages/Home";
 
 import Productos from "../pages/inventario/Productos";
 
-import PuntoDeVentas from "../components/ventas/PuntoDeVentas";
+import PuntoDeVentas from "../components/ventas/PuntoVentas/PuntoDeVentas";
 
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
 import CrearSucursal from "../components/administracion_pos/sucursales/CrearSucursal";
