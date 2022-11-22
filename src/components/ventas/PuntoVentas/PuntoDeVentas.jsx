@@ -1,3 +1,4 @@
+/* eslint-disable use-isnan */
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
@@ -6,7 +7,10 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import {quitarTildes} from "./utils/textoSinTildes";
-import {InsertVenta} from "./insertVenta"
+import { MostrarAlertas } from "./utils/Alertas";
+import {InsertVenta} from "./insertVenta";
+import { numeroALetras } from "./utils/num_a_letras";
+
 
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
 const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactive/";
@@ -33,7 +37,6 @@ const PuntoDeVentas = () => {
   const [cantidadEdit, setCantidadEdit] = useState(1);
   const [articuloDelete, setArticuloDelete] = useState(0);
   const [listaCompras, setListaCompras] = useState([]);
-  const [hay, setHay] = useState(false);
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
@@ -42,7 +45,8 @@ const PuntoDeVentas = () => {
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoPedido, setTipoPedido] = useState(4);
 
-
+  const [totalEnLetras, setTotalEnLetras] = useState("");
+  const [cambio, setCambio] = useState(0);
 
   //***************Data de venta para insertar y factura*****************/
   const [detalles, setDetalles] = useState([]);
@@ -90,7 +94,6 @@ const PuntoDeVentas = () => {
     getMetodosPago();
     getDescuentos();
     getPedidos();
-    setHay(false)
     Enc()
   }, []);
 
@@ -112,6 +115,7 @@ const PuntoDeVentas = () => {
       setArticulosMostrar(res.data);
     } catch (error) {
       console.log(error);
+      MostrarAlertas("errorcargar");
     }
   };
 
@@ -170,17 +174,6 @@ const PuntoDeVentas = () => {
     listaCompras.map((list) => 
       setSubTotal(prevValores => prevValores + list.total)
       );
-
-      
-
-
-      hay()
-    function hay () {
-      if (listaCompras === "")
-        setHay(false)
-      else 
-        setHay(true)
-    }; 
   }, [listaCompras]);
 
 
@@ -222,7 +215,6 @@ const Det = async () => {
 
     } catch (error) {
       console.log(error);
-      alert("error de red")
     } 
   };
 
@@ -233,7 +225,6 @@ const Det = async () => {
       //console.log("dentro de ENC" ,enc);
     } catch (error) {
       console.log(error);
-      alert("error de red")
     }
     
   };
@@ -365,6 +356,19 @@ const Det = async () => {
       setDetalles([])
       setDetallesPromo([])
     }; 
+
+    //calcular el cambio a entregar
+    const Calcular_Cambio = (monto) =>{
+      let cambio = monto-total;
+
+      if (cambio<0){
+        setCambio(0);
+      }else if(isNaN(cambio)){
+        setCambio(0);
+      }else{
+        setCambio(parseFloat(cambio));
+      }
+    };
 
     //detalles de pago
   const Detalles_Pago = () =>{
@@ -635,7 +639,7 @@ const Det = async () => {
             
             <div className="row divDetalles">
               {
-                hay
+                listaCompras.length > 0
                 ? <DataTable
                 columns={columns}
                 data={listaCompras}
@@ -643,7 +647,7 @@ const Det = async () => {
                 fixedHeader
                 fixedHeaderScrollHeight="200px"
              />
-                : <p className="text-center">Ningún Producto</p>
+                : <p className="text-center">Ningún Artículo en Lista</p>
               }
             
             </div>
@@ -671,13 +675,14 @@ const Det = async () => {
         onSubmit={async (valores) => {
                // Validacion de modo pedido
                if (!listaCompras.length > 0) {
-                alert("Agregar artículos a la lista");
+                MostrarAlertas("agregar");
               } else{
                 //procedimineto para guardar el los cambios
                 abrirModalVenta();
                 detalles_Desc();
                 Detalles_Pago();
-                setTipoPedido(valores.id_modo_pedido)
+                setTipoPedido(valores.id_modo_pedido);
+                setTotalEnLetras(numeroALetras(parseFloat(total)));
               }
 
          }}          
@@ -783,28 +788,34 @@ const Det = async () => {
       <Modal isOpen={modalCliente} toggle={abrirModalCliente} centered>
         <ModalHeader toggle={abrirModalCliente}>Datos del Cliente</ModalHeader>
         <ModalBody>
-          <div className="input-group mb-3">
-            <span className="input-group-text" id="inputGroup-sizing-default">
-              Nombre:
-            </span>
-            <input
-              type="text"
-              className="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default"
-            />
+
+        <form>
+          <div className="row">
+            <div className="input-group mb-2">
+              <span class="input-group-text">ID</span>
+              <input type="number" className="form-control" placeholder="escriba el ID o RTN..." aria-label="Recipient's username" aria-describedby="button-addon2"/>
+              <button className="btn btn-success" type="button" id="button-addon2">Buscar</button>
+            </div>
           </div>
-          <div className="input-group mb-3">
-            <span className="input-group-text" id="inputGroup-sizing-default">
-              R.T.N:
-            </span>
-            <input
-              type="text"
-              className="form-control"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default"
-            />
+        </form>
+<hr />
+        <form action="">
+          <div className="row">
+            <div className="input-group mb-2">
+              <span className="input-group-text" id="inputGroup-sizing-default">
+                Nombre:
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default"
+                disabled
+              />
+            </div>
           </div>
+        </form>
+          
         </ModalBody>
         <ModalFooter>
           <Button
@@ -846,6 +857,8 @@ const Det = async () => {
           errores.monto_recibido = "Requerido";
         }else if(valores.monto_recibido < total){
           errores.monto_recibido = "El monto recibido debe ser mayor o igual al total";
+        } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_recibido)) {
+          errores.monto_recibido = "Monto Incorrecto";
         }
 
         return errores;
@@ -867,7 +880,7 @@ const Det = async () => {
                 <div className="row text-center">
                   <h5>Total a Pagar:</h5>
                   <h1>{"L. "+parseFloat(total)}</h1>
-                  <p>(VEINTE Y CUATRO LEMPIRAS 00/100)</p>
+                  <p>{"("+totalEnLetras+")"}</p>
                 </div>
                 <hr />
                 <div className="row">
@@ -955,7 +968,8 @@ const Det = async () => {
                           className="form-control"
                           id="monto"
                           name="monto_recibido"
-                          placeholder="L. 00.00"
+                          placeholder="L.0.0"
+                          onKeyUp={Calcular_Cambio(values.monto_recibido)}
                         />
                         <ErrorMessage
                           name="monto_recibido"
@@ -972,7 +986,7 @@ const Det = async () => {
                       <h5>Cambio:</h5>
                     </div>
                     <div className="row">
-                      <h2>L. 5.00</h2>
+                      <h2>{"L."+cambio}</h2>
                     </div>
                   </div>
                 </div>
