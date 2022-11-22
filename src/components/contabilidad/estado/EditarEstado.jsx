@@ -6,10 +6,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasTipoEstado } from "../../../utils/cambiarAMayusculas";
 
-const URLEditar = "https://jsonplaceholder.typicode.com/comments";
+const URLEditar = "http://190.53.243.69:3001/mc_estado/actualizar-insertar/";
 
 
- const EstadoEditar = () => {
+ const EditarEstado = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -161,4 +161,4 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
   );
 };
 
-export default EstadoEditar;
+export default EditarEstado;

@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
+
+
 import React from 'react';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import './App.css';
-import logo from './logo.svg';
 
 class FormatoTablaPDF extends React.Component {
 
@@ -144,13 +145,20 @@ class FormatoTablaPDF extends React.Component {
     //doc.text("Fecha: 21 de noviembre de 2022", marginLeft, 40);
     //doc.img(logo, marginLeft, marginRight)
     doc.autoTable(content);
-    doc.save("report.pdf")
+    doc.save("Documento.pdf")
   }
 
   render() {
     return (
       <div>
-        <button onClick={() => this.exportPDF()}>Exportar PDF</button>
+        <Link
+          type="button"
+          className="btn btn-danger"
+          title="Exportar a PDF"
+          onClick={() => this.exportPDF()}
+        >
+          <i className="fa-solid fa-file-pdf"></i>
+        </Link>
       </div>
     );
   }

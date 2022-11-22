@@ -7,10 +7,10 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_periodo/eliminar/";
 
-const MostrarPeriodo= () => {
+const MostrarPeriodoContable= () => {
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -187,7 +187,7 @@ const mostrarAlertas = (alerta) =>{
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_subcuenta);
+              setRegistroDelete(row.id_periodo_contable);
               abrirModalEliminar();
             }}
           >
@@ -391,4 +391,4 @@ const mostrarAlertas = (alerta) =>{
   );
 };
 
-export default MostrarPeriodo;
+export default MostrarPeriodoContable;

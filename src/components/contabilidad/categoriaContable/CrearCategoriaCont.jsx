@@ -5,11 +5,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreCategoria } from "../../../utils/cambiarAMayusculas";
 
-const URLCrear = "";
-const URLMostrarUno = "";
+const URLCrear = "http://190.53.243.69:3001/mc_categoriacont/actualizar-insertar/0";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_categoriacont/getone/";
 
 
-const Formulario = () => {
+const CrearCategoriaCont = () => {
 
   const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ const Formulario = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_categoria: "", //NO SÉ SI SE DEBE PONER EL ID
+          id_categoria: "", 
           nombre_categoria: ""        
         }}
         //Funcion para validar
@@ -77,11 +77,11 @@ const Formulario = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el nombre ingresado
               try {
-                const res = await axios.get(`${URLMostrarUno}${valores.nombre_categoria}`);
+                /*const res = await axios.get(`${URLMostrarUno}${valores.nombre_categoria}`);
                 console.log(res)
-                if (res.data === ""){
+                if (res.data === ""){*/
                   //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.nombre_categoria}`, valores);
+                      const res = await axios.put(`${URLCrear}${valores.id_categoria}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
                         navigate("/mostrarcategoriacont");
@@ -89,10 +89,10 @@ const Formulario = () => {
                       mostrarAlertas("error");
                     }
                     
-                }else{ 
+                }/*else{ 
                   mostrarAlertas("duplicado");
                 }
-              } catch (error) {
+              } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
                 navigate("/mostrarcategoriacont");
@@ -147,4 +147,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default CrearCategoriaCont;

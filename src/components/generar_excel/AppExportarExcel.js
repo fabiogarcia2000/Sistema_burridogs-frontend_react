@@ -1,3 +1,5 @@
+
+
 //Usando componentes
 import FormatoExcelComponente from "./FormatoExcelComponente";
 //<FormatoExcelComponente />
@@ -8,12 +10,13 @@ import FormatoExcelHook from "./FormatoExcelHook";
 
 //Usando metodos
 import FormatoExcelMetodo from "./FormatoExcelMetodo";
+<FormatoExcelMetodo />
 
 
 function AppExportarExcel() {
   return (
-    <div className="App">
-      <FormatoExcelHook />
+    <div>
+        <FormatoExcelMetodo />
     </div>
   );
 }

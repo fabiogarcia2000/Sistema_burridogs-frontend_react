@@ -12,7 +12,7 @@ const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
-const PeriodoCrear = () => {
+const CrearPeriodoContable = () => {
 
   const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
@@ -103,23 +103,24 @@ const PeriodoCrear = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
           try {
-            // const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
-            // console.log(res)
-            // if (res.data === "") {
-            //procedimineto para guardar el nuevo registro en el caso de que no exista
-            const res = await axios.put(`${URLCrear}`, valores);
-            if (res.status === 200) {
-              console.log(res)
-              mostrarAlertas("guardado");
-              navigate("/mostrarperiodo");
-            } else {
-              mostrarAlertas("error");
-            }
 
-            // } else {
-            //    mostrarAlertas("duplicado");
-            //  }
-          } catch (error) {
+            /*const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
+            console.log(res)
+            if (res.data === "") {*/
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(`${URLCrear}${valores.id_periodo_contable}`, valores);
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
+                navigate("/mostrarperiodo");
+              } else {
+                mostrarAlertas("error");
+              }
+
+            }/*else {
+              mostrarAlertas("duplicado");
+            }
+          } */catch (error) {
+
             console.log(error);
             mostrarAlertas("error");
             navigate("/mostrarperiodo");
@@ -222,16 +223,19 @@ const PeriodoCrear = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
+
                   <label htmlFor="idUsuario" className="form-label">
                     Nombre usuario:
+
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="idUsuario"
+
+                    id="nombreUsuario"
                     name="id_usuario"
                     placeholder="Nombre usuario..."
-                    disabled
+                    
                   />
                   <ErrorMessage
                     name="id_usuario"
@@ -258,7 +262,6 @@ const PeriodoCrear = () => {
                     <option value="0">Trimestral</option>
                     <option value="0">Anual</option>
                   </Field>
-
                   <ErrorMessage
                     name="tipo_periodo"
                     component={() => (
@@ -269,32 +272,34 @@ const PeriodoCrear = () => {
               </div>
             </div>
 
-            <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="estadoPeriodo" className="form-label">
-                    Estado periodo:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="estadoPeriodo"
-                    name="abierto"
-                  >
-                    <option value="1">Abierto</option>
-                    <option value="0">Cerrado</option>
-                  </Field>
 
-                  <ErrorMessage
-                    name="abierto"
-                    component={() => (
-                      <div className="error">{errors.abierto}</div>
-                    )}
-                  />
+            
+            <div className="row g-3">
+                <div className="col-sm-6">
+                  <div className="mb-3">
+                    <label htmlFor="estadoPeriodo" className="form-label">
+                      Estado periodo:
+                    </label>
+                    <Field
+                      as="select"
+                      className="form-select"
+                      id="estadoPeriodo"
+                      name="abierto"
+                      >
+                      <option value="1">Abierto</option>
+                      <option value="0">Cerrado</option>
+                    </Field>
+
+                    <ErrorMessage
+                      name="abierto"
+                      component={() => (
+                        <div className="error">{errors.abierto}</div>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
 
-            </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
@@ -314,4 +319,4 @@ const PeriodoCrear = () => {
   );
 };
 
-export default PeriodoCrear;
+export default CrearPeriodoContable;

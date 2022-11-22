@@ -5,10 +5,10 @@ import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const URLEditar = "https://jsonplaceholder.typicode.com/comments";
+const URLEditar = "http://190.53.243.69:3001/mc_destino/actualizar-insertar/";
 
 
- const FormularioEditar = () => {
+ const EditarDestino = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -189,4 +189,4 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
   );
 };
 
-export default FormularioEditar;
+export default EditarDestino;

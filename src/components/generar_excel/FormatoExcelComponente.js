@@ -7,7 +7,7 @@ const FormatoExcelComponente = () =>  {
         return (
             <div>
                 <DownloadTableExcel
-                    filename="FormatoExcel"
+                    filename="ArchivoExcel"
                     sheet="users"
                     currentTableRef={tableRef.current}
                 >

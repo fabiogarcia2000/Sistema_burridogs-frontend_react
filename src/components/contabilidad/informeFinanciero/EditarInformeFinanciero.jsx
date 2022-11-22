@@ -6,10 +6,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
-const URLEditar = "https://jsonplaceholder.typicode.com/comments";
+const URLEditar = "http://190.53.243.69:3001/mc_informefinanciero/actualizar-insertar/";
 
 
- const FormularioEditar = () => {
+ const EditarInformeFinanciero = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -156,4 +156,4 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
   );
 };
 
-export default FormularioEditar;
+export default EditarInformeFinanciero;

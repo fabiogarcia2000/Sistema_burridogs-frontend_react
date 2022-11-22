@@ -7,10 +7,10 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreCategoria } from "../../../utils/cambiarAMayusculas";
 
 
-const URLEditar = "https://jsonplaceholder.typicode.com/comments";
+const URLEditar = "http://190.53.243.69:3001/mc_categoriacont/actualizar-insertar/";
 
 
- const FormularioEditar = () => {
+ const EditarCategoriaCont = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
         onSubmit={async (valores) => {
               //procedimineto para guardar el los cambios
               try {
-                const res = await axios.put(`${URLEditar}${valores.nombre_categoria}`, valores);
+                const res = await axios.put(`${URLEditar}${valores.id_categoria}`, valores);
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
@@ -151,4 +151,4 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
   );
 };
 
-export default FormularioEditar;
+export default EditarCategoriaCont;

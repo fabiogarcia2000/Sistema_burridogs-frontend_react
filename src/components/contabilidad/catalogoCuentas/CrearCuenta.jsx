@@ -5,15 +5,16 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCodigo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { useState } from "react";
 
-const URLCrear = "https://jsonplaceholder.typicode.com/comments";
-const URLMostrarUno = "https://jsonplaceholder.typicode.com/comments";
+const URLCrear = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/0";
+const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 
-const Formulario = () => {
+const CrearCuenta = () => {
 
   const navigate = useNavigate();
-
+  const [cuenta, setCuenta ] = useState();
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
@@ -64,18 +65,18 @@ const Formulario = () => {
             codigo_cuenta: "",
             nombre_cuenta: "",
             id_categoria: "",
-            id_destino_cuenta: ""         
+            id_destino_cuenta: "",       
         }}
         //Funcion para validar
         validate={(valores) => {
             let errores = {};
 
            // Validacion de id cuenta
-           if (!valores.id_cuenta) {
+         /* if (!valores.id_cuenta) {
             errores.id_cuenta = "Por favor ingresa un id de cuenta";
           } else if (!/^[0-9]+$/.test(valores.id_cuenta)) {
             errores.id_cuenta = "Escribir solo números";
-          }  
+          }  */ 
           
             // Validacion de usuario
             if (!valores.id_usuario) {
@@ -108,28 +109,39 @@ const Formulario = () => {
               } else if (!/^[0-9]+$/.test(valores.id_destino_cuenta)) {
                 errores.id_destino_cuenta = "Escribir solo números";
               }    
+
+            // Validacion de saldo
+           /*  if (!valores.saldo) {
+              errores.saldo = "Por favor ingresa un saldo";
+            } /*else if (!/^[0-9]+$/.test(valores.saldo)) {
+              errores.saldo = "Escribir solo números";
+            }  */
   
             return errores;
           
         }}
         onSubmit={async (valores) => {
-          //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
+          //validar si existe un registro con el codigo ingresado  
               try {
-                const res = await axios.get(`${URLMostrarUno}${valores.codigo_cuenta}`);
-                console.log(res)
-                if (res.data === ""){
-                  //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.codigo_cuenta}`, valores);
-                      if (res.status === 200) {
-                        mostrarAlertas("guardado");
-                        navigate("/mostrarcatalogo");
-                    } else {
-                      mostrarAlertas("error");
-                    }
-                    
-                }else{ 
-                  mostrarAlertas("duplicado");
-                }
+                /*const res = await axios.get(`${UrlMostrar}`);
+                setCuenta(res.data)
+                console.log(cuenta) 
+                cuenta &&
+                cuenta.map(async (item) =>{
+                  if(item.nombre_cuenta === valores.nombre_cuenta){
+                    mostrarAlertas("duplicado");
+                  }else{
+                  }
+            });*/
+            //procedimineto para guardar el nuevo registro en el caso de que no exista
+           await axios.put(`${URLCrear}`, valores);
+            //if (res.status === 200) {
+              mostrarAlertas("guardado");
+              navigate("/mostrarcatalogo");
+          /*} else {
+            mostrarAlertas("error");
+          }       */
+
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
@@ -158,7 +170,7 @@ const Formulario = () => {
                   <ErrorMessage
                     name="id_usuario"
                     component={() => (
-                      <div className="error">{errors.id_usuario}</div>
+                      <div className="error">{errors.nombre_usuario}</div>
                     )}
                   />
                 </div>
@@ -277,4 +289,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default CrearCuenta;

@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
-const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
+const UrlEliminar = "http://190.53.243.69:3001/mc_catalogo/eliminar/";
 
 const MostrarCuentas= () => {
   //Configurar los hooks

@@ -10,7 +10,7 @@ import { cambiarAMayusculasNombreUsuario } from "../../../utils/cambiarAMayuscul
 
 const URLEditar = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
 
-const PeriodoEditar = () => {
+const EditarPeriodoContable = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -48,14 +48,14 @@ const PeriodoEditar = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_periodo_contable: "",
-          descripcion_periodo: "",
-          fecha_inicial: "",
-          fecha_final: "",
+          id_periodo_contable: edit.id_periodo_contable,
+          descripcion_periodo: edit.descripcion_periodo,
+          fecha_inicial: edit.fecha_inicial,
+          fecha_final: edit.fecha_final,
           fecha_creacion: edit.fecha_creacion,
           nombre_usuario: edit.nombre_usuario,
-          tipo_periodo: "",
-          estado_periodo: "",
+          tipo_periodo: edit.tipo_periodo,
+          estado_periodo: edit.estado_periodo,
         }}
 
         //Funcion para validar
@@ -94,9 +94,7 @@ const PeriodoEditar = () => {
           // Validacion de id usuario
           if (!valores.id_usuario) {
             errores.id_usuario = "Por favor ingresa id usuario";
-          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
-            errores.id_usuario = "Escribir solo números";
-          }
+          } 
 
           // Validacion nombre usuario
           if (!valores.nombre_usuario) {
@@ -129,30 +127,8 @@ const PeriodoEditar = () => {
         {({ errors, values }) => (
           <Form>
             <h3 className="mb-3">Editar Periodo Contable</h3>
+
             <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="IdPeriodo" className="form-label">
-                    Id Periodo Contable:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="IdPeriodo"
-                    name="id_periodo_contable"
-                    placeholder="Id Periodo Contable..."
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="id_periodo_contable"
-                    component={() => (
-                      <div className="error">{errors.id_periodo_contable}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="DescripcionPeriodo" className="form-label">
@@ -176,9 +152,7 @@ const PeriodoEditar = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="fechainicial" className="form-label">
@@ -200,7 +174,9 @@ const PeriodoEditar = () => {
                   />
                 </div>
               </div>
+            </div>
 
+            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="fechafinal" className="form-label">
@@ -221,11 +197,9 @@ const PeriodoEditar = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row g-3">
+            
               <div className="col-sm-6">
-                <div className="mb-3">
+                <div className="mb-3" >
                   <label htmlFor="fechacreacion" className="form-label">
                     Fecha Creación:
                   </label>
@@ -235,8 +209,6 @@ const PeriodoEditar = () => {
                     name="fecha_creacion"
                     disabled
                   />
-
-
                   <ErrorMessage
                     name="fecha_creacion"
                     component={() => (
@@ -245,36 +217,32 @@ const PeriodoEditar = () => {
                   />
                 </div>
               </div>
-
-          
-                <div className="col-sm-6">
-                  <div className="mb-3">
-                    <label htmlFor="NombreUsuario" className="form-label">
-                      Nombre Usuario:
-                    </label>
-                    <Field
-                      type="text"
-                      className="form-control"
-                      id="NombreUsuario"
-                      name="nombre_usuario"
-                      placeholder="Nombre usuario..."
-                      disabled
-                      onKeyUp={cambiarAMayusculasNombreUsuario(values)}
-
-                    />
-
-                    <ErrorMessage
-                      name="nombre_usuario"
-                      component={() => (
-                        <div className="error">{errors.nombre_usuario}</div>
-                      )}
-                    />
-                  </div>
-                </div>
-              
-              </div>
+            </div>
 
             <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="nombreUsuario" className="form-label">
+                    Id usuario:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="nombreUsuario"
+                    name="nombre_usuario"
+                    placeholder="Nombre usuario..."
+                    
+                  />
+
+                  <ErrorMessage
+                    name="nombre_usuario"
+                    component={() => (
+                      <div className="error">{errors.nombre_usuario}</div>
+                    )}
+                  />
+                </div>
+              </div>
+
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="tipoPeriodo" className="form-label">
@@ -286,13 +254,11 @@ const PeriodoEditar = () => {
                     id="tipoPeriodo"
                     name="tipo_periodo"
                     placeholder="Tipo Periodo..."
-                  >
+                    >
                     <option value="1">Mensual</option>
                     <option value="0">Trimestral</option>
                     <option value="0">Anual</option>
                   </Field>
-
-
                   <ErrorMessage
                     name="tipo_periodo"
                     component={() => (
@@ -301,33 +267,35 @@ const PeriodoEditar = () => {
                   />
                 </div>
               </div>
-
-
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="estadoPeriodo" className="form-label">
-                    Estado periodo:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="estadoPeriodo"
-                    name="abierto"
-                  >
-                    <option value="1">Abierto</option>
-                    <option value="0">Cerrado</option>
-                  </Field>
-
-                  <ErrorMessage
-                    name="abierto"
-                    component={() => (
-                      <div className="error">{errors.abierto}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
             </div>
+
+            
+            <div className="row g-3">
+                <div className="col-sm-6">
+                  <div className="mb-3">
+                    <label htmlFor="estadoPeriodo" className="form-label">
+                      Estado periodo:
+                    </label>
+                    <Field
+                      as="select"
+                      className="form-select"
+                      id="estadoPeriodo"
+                      name="abierto"
+                      >
+                      <option value="1">Abierto</option>
+                      <option value="0">Cerrado</option>
+                    </Field>
+
+                    <ErrorMessage
+                      name="abierto"
+                      component={() => (
+                        <div className="error">{errors.abierto}</div>
+                      )}
+                    />
+                  </div>
+                </div>
+              
+              </div>
 
 
             <button className="btn btn-success mb-3 me-2" type="submit">
@@ -347,4 +315,4 @@ const PeriodoEditar = () => {
   );
 };
 
-export default PeriodoEditar;
+export default EditarPeriodoContable;

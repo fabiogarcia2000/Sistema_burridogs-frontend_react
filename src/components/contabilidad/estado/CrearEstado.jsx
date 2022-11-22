@@ -5,11 +5,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasTipoEstado } from "../../../utils/cambiarAMayusculas";
 
-const URLCrear = "https://jsonplaceholder.typicode.com/comments";
-const URLMostrarUno = "https://jsonplaceholder.typicode.com/comments";
+const URLCrear = "http://190.53.243.69:3001/mc_estado/actualizar-insertar/0";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_estado/getone/";
 
 
-const EstadoCrear = () => {
+const CrearEstado = () => {
 
   const navigate = useNavigate();
 
@@ -65,12 +65,7 @@ const EstadoCrear = () => {
         validate={(valores) => {
             let errores = {};
 
-        // Validacion de id estado
-          if (!valores.id_estado) {
-            errores.id_estado = "Por favor ingresa id estado";
-          } else if (!/^[0-9]+$/.test(valores.id_estado)) {
-            errores.id_estado = "Escribir solo números";
-          }  
+       
 
         // Validacion tipo estado
         if (!valores.tipo_estado) {
@@ -86,11 +81,11 @@ const EstadoCrear = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
               try {
-                const res = await axios.get(`${URLMostrarUno}${valores.tipo_estado}`);
+                /*const res = await axios.get(`${URLMostrarUno}${valores.tipo_estado}`);
                 console.log(res)
-                if (res.data === ""){
+                if (res.data === ""){*/
                   //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.tipo_estado}`, valores);
+                      const res = await axios.put(`${URLCrear}${valores.id_estado}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
                         navigate("/mostrarestado");
@@ -98,10 +93,10 @@ const EstadoCrear = () => {
                       mostrarAlertas("error");
                     }
                     
-                }else{ 
+                }/*else{ 
                   mostrarAlertas("duplicado");
                 }
-              } catch (error) {
+              } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
                 navigate("/mostrarestado");
@@ -155,4 +150,4 @@ const EstadoCrear = () => {
   );
 };
 
-export default EstadoCrear;
+export default CrearEstado;

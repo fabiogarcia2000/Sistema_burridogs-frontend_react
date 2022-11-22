@@ -7,9 +7,9 @@ import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusc
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/0";
-const URLMostrarUno = "https://jsonplaceholder.typicode.com/comments";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_subcuenta/getone/";
 
-const SubCuentaCrear = () => {
+const CrearSubCuenta = () => {
 
   const navigate = useNavigate();
 
@@ -179,4 +179,4 @@ const SubCuentaCrear = () => {
   );
 };
 
-export default SubCuentaCrear;
+export default CrearSubCuenta;
