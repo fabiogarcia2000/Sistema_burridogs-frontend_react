@@ -7,8 +7,8 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_categoriacont/getall/";
-const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
+const UrlMostrar = "http://190.53.243.69:3001/mc_categoriacont/getall";
+const UrlEliminar = "http://190.53.243.69:3001/mc_categoriacont/eliminar/";
 
 const MostrarCategoriasCont = () => {
   //Configurar los hooks
@@ -146,7 +146,7 @@ const mostrarAlertas = (alerta) =>{
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.nombre_categoria);
+              setRegistroDelete(row.id_categoria);
               abrirModalEliminar();
             }}
           >

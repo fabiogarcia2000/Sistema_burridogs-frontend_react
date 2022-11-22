@@ -8,7 +8,6 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 
 const URLCrear =
   "http://190.53.243.69:3001/lista_materiales/actualizar-insertar/";
-const URLMostrarUno = "http://190.53.243.69:3001/lista_materiales/getone/";
 
 const UrlMostrarArticulos = "http://190.53.243.69:3001/articulo/getall";
 

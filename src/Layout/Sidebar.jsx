@@ -46,7 +46,6 @@ function Sidebar() {
           </ul>
         </li>
 
-
         <li className="nav-item">
           <Link
             className="nav-link collapsed"
@@ -206,9 +205,9 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/mostraringresomds">
+              <Link to="/crearcompra">
                 <i className="bi bi-circle"></i>
-                <span>Ingreso de Mercadería</span>
+                <span>Compras</span>
               </Link>
             </li>
             <li>
