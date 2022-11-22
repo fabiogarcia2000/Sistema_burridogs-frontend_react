@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 /*
 //Descargar PDF
-import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import FormatoDescargarPDF from './FormatoDescargarPDF';
 
 
@@ -10,23 +12,26 @@ const MiDocumento = () => (
 
 
 
-const App = () => (
+const AppPDF = () => (
   <div>
-    <button>
-    <PDFDownloadLink document={<MiDocumento />} fileName="Documneto.pdf">
-      {({ blob, url, loading, error }) =>
-        loading ? 'Cargando PDF...' : 'Descargar PDF'
-      }
-    </PDFDownloadLink>
-    </button>
+      <PDFDownloadLink 
+        to="/"
+        type="button"
+        className="btn btn-danger"
+        title="Exportar a PDF"
+        document={<MiDocumento />} fileName="Documento.pdf">
+          <i className="fa-solid fa-file-pdf"></i>
+      </PDFDownloadLink>
   </div>
 );
 
-export default App;
+
+export default AppPDF;
 */
 
 
 
+/*
 //Ver PDF
 import FormatoVerPDF from "./FormatoVerPDF";
 
@@ -39,8 +44,12 @@ function AppPDF() {
 }
 
 export default AppPDF;
+*/
 
-/*
+
+
+
+
 //Descargar Tabla a PDF
 import FormatoTablaPDF from "./FormatoTablaPDF";
 
@@ -53,4 +62,3 @@ function AppPDF() {
 };
 
 export default AppPDF;
-*/

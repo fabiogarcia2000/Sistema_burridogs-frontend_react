@@ -1,3 +1,5 @@
+
+import { Link } from "react-router-dom";
 import React from "react";
 import { downloadExcel } from "react-export-table-to-excel";
 
@@ -21,37 +23,26 @@ const FormatoExcelMetodo = () => {
 
   function handleDownloadExcel() {
     downloadExcel({
-      fileName: "FormatoExcel",
+      fileName: "ArchivoExcel",
       sheet: "react-export-table-to-excel",
       tablePayload: {
         header,
         // accept two different data structures
-        body: body || body2,
+        body: body2,
       },
     });
   }
 
   return (
     <div>
-      <button onClick={handleDownloadExcel}>download excel</button>
-
-      <table>
-        <tbody>
-          <tr>
-            {header.map((head) => (
-              <th key={head}> {head} </th>
-            ))}
-          </tr>
-
-          {body.map((item, i) => (
-            <tr key={i}>
-              {item.map((it) => (
-                <td key={it}>{it}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Link
+        type="button"
+        className="btn btn-success"
+        title="Exportar a Excel"
+        onClick={handleDownloadExcel}
+      >
+        <i className="fa-solid fa-file-excel"></i>
+      </Link>
     </div>
   );
 };
