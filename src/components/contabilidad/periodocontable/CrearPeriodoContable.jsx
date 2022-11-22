@@ -3,16 +3,18 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useGlobalState } from "../../../globalStates/globalStates"; 
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
-import { cambiarAMayusculasNombreUsuario } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
+
 const current = new Date();
-const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
 const CrearPeriodoContable = () => {
 
+  const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
 
   //Alertas de éxito o error
@@ -59,12 +61,11 @@ const CrearPeriodoContable = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_periodo_contable: "",
           descripcion_periodo: "",
           fecha_inicial: "",
           fecha_final: "",
           fecha_creacion: date,
-          nombre_usuario: "",
+          id_usuario: edit.id_usuario,
           tipo_periodo: "",
           abierto: "1",
 
@@ -89,24 +90,11 @@ const CrearPeriodoContable = () => {
           if (!valores.fecha_final) {
             errores.fecha_final = "Por favor seleccione fecha final";
           }
-
-          // Validacion fecha creación
-          if (!valores.fecha_creacion) {
-            errores.fecha_creacion = "Por favor seleccione fecha creación";
+          if (!valores.tipo_periodo) {
+            errores.tipo_periodo = "Por favor seleccione el tipo de periodo";
           }
-
-          // Validacion de id usuario
-          if (!valores.id_usuario) {
-            errores.id_usuario = "Por favor ingresa id usuario";
-          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
-            errores.id_usuario = "Escribir solo números";
-          }
-
-          // Validacion nombre usuario
-          if (!valores.nombre_usuario) {
-            errores.nombre_usuario = "Por favor ingresa nombre usuario";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_usuario)) {
-            errores.nombre_usuario = "Escribir solo en MAYÚSCULAS";
+          if (!valores.abierto) {
+            errores.abierto = "Por favor seleccione una opcion";
           }
 
           return errores;
@@ -115,6 +103,7 @@ const CrearPeriodoContable = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
           try {
+
             /*const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
             console.log(res)
             if (res.data === "") {*/
@@ -131,6 +120,7 @@ const CrearPeriodoContable = () => {
               mostrarAlertas("duplicado");
             }
           } */catch (error) {
+
             console.log(error);
             mostrarAlertas("error");
             navigate("/mostrarperiodo");
@@ -200,7 +190,6 @@ const CrearPeriodoContable = () => {
                     id="fechafinal"
                     name="fecha_final"
                   />
-
                   <ErrorMessage
                     name="fecha_final"
                     component={() => (
@@ -209,7 +198,7 @@ const CrearPeriodoContable = () => {
                   />
                 </div>
               </div>
-            
+
               <div className="col-sm-6">
                 <div className="mb-3" >
                   <label htmlFor="fechacreacion" className="form-label">
@@ -234,18 +223,20 @@ const CrearPeriodoContable = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="nombreUsuario" className="form-label">
-                    Id usuario:
+
+                  <label htmlFor="idUsuario" className="form-label">
+                    Nombre usuario:
+
                   </label>
                   <Field
                     type="text"
                     className="form-control"
+
                     id="nombreUsuario"
                     name="id_usuario"
                     placeholder="Nombre usuario..."
                     
                   />
-
                   <ErrorMessage
                     name="id_usuario"
                     component={() => (
@@ -266,7 +257,7 @@ const CrearPeriodoContable = () => {
                     id="tipoPeriodo"
                     name="tipo_periodo"
                     placeholder="Tipo Periodo..."
-                    >
+                  >
                     <option value="1">Mensual</option>
                     <option value="0">Trimestral</option>
                     <option value="0">Anual</option>
@@ -280,6 +271,7 @@ const CrearPeriodoContable = () => {
                 </div>
               </div>
             </div>
+
 
             
             <div className="row g-3">
@@ -306,8 +298,8 @@ const CrearPeriodoContable = () => {
                     />
                   </div>
                 </div>
-              
               </div>
+
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
