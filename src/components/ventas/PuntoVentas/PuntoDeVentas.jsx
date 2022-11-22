@@ -395,8 +395,6 @@ const Det = async () => {
     console.log(venta);
   };
 
-
-
   //Ventana modal de datos del cliente
   const [modalCliente, setModalCliente] = useState(false);
   const abrirModalCliente = () => setModalCliente(!modalCliente);
@@ -481,7 +479,6 @@ const Det = async () => {
     },
   ];
 
-
   return (
     <div>
       <div className="row">
@@ -521,7 +518,7 @@ const Det = async () => {
               <li className="d-flex justify-content-between align-items-start">
                 <div className="ms-2 me-auto">
                   <div className="fw-bold">11:18 p.m</div>
-                  10/11/2022
+                  22/11/2022
                 </div>
               </li>
             </div>
