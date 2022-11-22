@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const URLCrear = "https://jsonplaceholder.typicode.com/comments";
-const URLMostrarUno = "https://jsonplaceholder.typicode.com/comments";
+const URLCrear = "http://190.53.243.69:3001/mc_destino/actualizar-insertar/0";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_destino/getone/";
 
 
-const Formulario = () => {
+const CrearDestino = () => {
 
   const navigate = useNavigate();
 
@@ -66,12 +66,6 @@ const Formulario = () => {
         validate={(valores) => {
             let errores = {};
 
-            // Validacion de id destino cuenta
-           if (!valores.id_destino_cuenta) {
-            errores.id_destino_cuenta = "Por favor ingresa un id de destino cuenta";
-          } else if (!/^[0-9]+$/.test(valores.id_destino_cuenta)) {
-            errores.id_cuenta = "Escribir solo números";
-          } 
 
            // Validacion de id cuenta
            if (!valores.id_cuenta) {
@@ -93,9 +87,9 @@ const Formulario = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
               try {
-                const res = await axios.get(`${URLMostrarUno}${valores.id_destino_cuenta}`);
+                /*const res = await axios.get(`${URLMostrarUno}${valores.id_destino_cuenta}`);
                 console.log(res)
-                if (res.data === ""){
+                if (res.data === ""){*/
                   //procedimineto para guardar el nuevo registro en el caso de que no exista
                       const res = await axios.put(`${URLCrear}${valores.id_destino_cuenta}`, valores);
                       if (res.status === 200) {
@@ -105,10 +99,10 @@ const Formulario = () => {
                       mostrarAlertas("error");
                     }
                     
-                }else{ 
+                }/*else{ 
                   mostrarAlertas("duplicado");
                 }
-              } catch (error) {
+              } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
                 navigate("/mostrardestino");
@@ -187,4 +181,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default CrearDestino;

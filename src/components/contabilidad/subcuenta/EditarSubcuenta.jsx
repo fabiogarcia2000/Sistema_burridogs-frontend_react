@@ -10,7 +10,7 @@ import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayuscula
 const URLEditar = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/";
 
 
-const SubCuentaEditar = () => {
+const EditarSubCuenta = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const SubCuentaEditar = () => {
         //valores iniciales
         initialValues={{
           id_subcuenta: edit.id_subcuenta,
-          nombre_cuenta: edit.nombre_cuenta,
+          id_cuenta: edit.id_cuenta,
           nombre_subcuenta: edit.nombre_subcuenta,
 
         }}
@@ -60,11 +60,9 @@ const SubCuentaEditar = () => {
 
 
           // Validacion nombre cuenta
-          if (!valores.nombre_cuenta) {
-            errores.nombre_cuenta = "Por favor ingresa un nombre de cuenta";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_cuenta)) {
-            errores.nombre_cuenta = "Escribir solo en MAYÚSCULAS";
-          }
+          if (!valores.id_cuenta) {
+            errores.id_cuenta = "Por favor ingresa un id de cuenta";
+          } 
 
           // Validacion nombre subcuenta
           if (!valores.nombre_subcuenta) {
@@ -129,16 +127,16 @@ const SubCuentaEditar = () => {
                     type="text"
                     className="form-control"
                     id="nombreCuenta"
-                    name="nombre_cuenta"
+                    name="id_cuenta"
                     placeholder="Nombre cuenta..."
 
                     onKeyUp={cambiarAMayusculasNombreCuenta(values)}
                   />
 
                   <ErrorMessage
-                    name="nombre_cuenta"
+                    name="id_cuenta"
                     component={() => (
-                      <div className="error">{errors.nombre_cuenta}</div>
+                      <div className="error">{errors.id_cuenta}</div>
                     )}
                   />
                 </div>
@@ -185,4 +183,4 @@ const SubCuentaEditar = () => {
   );
 };
 
-export default SubCuentaEditar;
+export default EditarSubCuenta;

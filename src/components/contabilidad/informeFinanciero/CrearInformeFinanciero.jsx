@@ -6,11 +6,11 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 
-const URLCrear = "https://jsonplaceholder.typicode.com/comments";
-const URLMostrarUno = "https://jsonplaceholder.typicode.com/comments";
+const URLCrear = "http://190.53.243.69:3001/mc_informefinanciero/actualizar-insertar/0";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_informefinanciero/getone/";
 
 
-const Formulario = () => {
+const CrearInformeFinanciero = () => {
 
   const navigate = useNavigate();
 
@@ -67,13 +67,6 @@ const Formulario = () => {
         validate={(valores) => {
             let errores = {};
 
-             // Validacion de id informe financiero
-             if (!valores.id_informe_financiero) {
-                errores.id_informe_financiero = "Por favor ingresa un id de informe financiero";
-              } else if (!/^[0-9]+$/.test(valores.id_informe_financiero)) {
-                errores.id_informe_financiero = "Escribir solo números";
-              }  
-
            // Validacion de descripcion
            if (!valores.descripcion) {
             errores.descripcion = "Por favor ingresa la descripcion";
@@ -86,11 +79,11 @@ const Formulario = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
               try {
-                const res = await axios.get(`${URLMostrarUno}${valores.descripcion}`);
+                /*const res = await axios.get(`${URLMostrarUno}${valores.descripcion}`);
                 console.log(res)
-                if (res.data === ""){
+                if (res.data === ""){*/
                   //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.descripcion}`, valores);
+                      const res = await axios.put(`${URLCrear}${valores.id_informe_financiero}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
                         navigate("/mostrarinformefinanciero");
@@ -98,10 +91,10 @@ const Formulario = () => {
                       mostrarAlertas("error");
                     }
                     
-                }else{ 
+                }/*else{ 
                   mostrarAlertas("duplicado");
                 }
-              } catch (error) {
+              } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
                 navigate("/mostrarinformefinanciero");
@@ -155,4 +148,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default CrearInformeFinanciero;

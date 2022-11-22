@@ -6,12 +6,12 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreUsuario } from "../../../utils/cambiarAMayusculas";
 
-const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
+const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 const current = new Date();
 const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
 
-const PeriodoCrear = () => {
+const CrearPeriodoContable = () => {
 
   const navigate = useNavigate();
 
@@ -73,13 +73,6 @@ const PeriodoCrear = () => {
         validate={(valores) => {
           let errores = {};
 
-          // Validacion de id periodo contable
-          if (!valores.id_periodo_contable) {
-            errores.id_periodo_contable = "Por favor ingresa id periodo contable";
-          } else if (!/^[0-9]+$/.test(valores.id_periodo_contable)) {
-            errores.id_periodo_contable = "Escribir solo números";
-          }
-
           // Validacion descripción periodo
           if (!valores.descripcion_periodo) {
             errores.descripcion_periodo = "Por favor ingresa la descripción del periodo";
@@ -122,11 +115,11 @@ const PeriodoCrear = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
           try {
-            const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
+            /*const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
             console.log(res)
-            if (res.data === "") {
+            if (res.data === "") {*/
               //procedimineto para guardar el nuevo registro en el caso de que no exista
-              const res = await axios.put(`${URLCrear}${valores.nombre_subcuenta}`, valores);
+              const res = await axios.put(`${URLCrear}${valores.id_periodo_contable}`, valores);
               if (res.status === 200) {
                 mostrarAlertas("guardado");
                 navigate("/mostrarperiodo");
@@ -134,10 +127,10 @@ const PeriodoCrear = () => {
                 mostrarAlertas("error");
               }
 
-            } else {
+            }/*else {
               mostrarAlertas("duplicado");
             }
-          } catch (error) {
+          } */catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/mostrarperiodo");
@@ -148,29 +141,6 @@ const PeriodoCrear = () => {
           <Form>
             <h3 className="mb-3">Nuevo Periodo Contable</h3>
             <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="IdPeriodo" className="form-label">
-                    Id Periodo Contable:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="IdPeriodo"
-                    name="id_periodo_contable"
-                    placeholder="Id Periodo Contable..."
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="id_periodo_contable"
-                    component={() => (
-                      <div className="error">{errors.id_periodo_contable}</div>
-                    )}
-                  />
-                </div>
-              </div>
-
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="DescripcionPeriodo" className="form-label">
@@ -194,9 +164,7 @@ const PeriodoCrear = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="fechainicial" className="form-label">
@@ -218,7 +186,9 @@ const PeriodoCrear = () => {
                   />
                 </div>
               </div>
+            </div>
 
+            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="fechafinal" className="form-label">
@@ -239,16 +209,13 @@ const PeriodoCrear = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row g-3">
+            
               <div className="col-sm-6">
                 <div className="mb-3" >
                   <label htmlFor="fechacreacion" className="form-label">
                     Fecha Creación:
                   </label>
                   <Field
-
                     className="form-control"
                     id="fechacreacion"
                     name="fecha_creacion"
@@ -262,33 +229,32 @@ const PeriodoCrear = () => {
                   />
                 </div>
               </div>
+            </div>
 
+            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="nombreUsuario" className="form-label">
-                    Nombre usuario:
+                    Id usuario:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="nombreUsuario"
-                    name="nombre_usuario"
+                    name="id_usuario"
                     placeholder="Nombre usuario..."
-                    disabled
+                    
                   />
 
                   <ErrorMessage
-                    name="Nombre_usuario"
+                    name="id_usuario"
                     component={() => (
-                      <div className="error">{errors.nombre_usuario}</div>
+                      <div className="error">{errors.id_usuario}</div>
                     )}
                   />
                 </div>
               </div>
-            </div>
 
-            
-            <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="tipoPeriodo" className="form-label">
@@ -305,8 +271,6 @@ const PeriodoCrear = () => {
                     <option value="0">Trimestral</option>
                     <option value="0">Anual</option>
                   </Field>
-  
-
                   <ErrorMessage
                     name="tipo_periodo"
                     component={() => (
@@ -315,8 +279,10 @@ const PeriodoCrear = () => {
                   />
                 </div>
               </div>
+            </div>
 
-
+            
+            <div className="row g-3">
                 <div className="col-sm-6">
                   <div className="mb-3">
                     <label htmlFor="estadoPeriodo" className="form-label">
@@ -361,4 +327,4 @@ const PeriodoCrear = () => {
   );
 };
 
-export default PeriodoCrear;
+export default CrearPeriodoContable;
