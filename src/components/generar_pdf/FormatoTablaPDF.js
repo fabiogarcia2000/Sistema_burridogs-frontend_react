@@ -1,151 +1,43 @@
 import { Link } from "react-router-dom";
-
-
 import React from 'react';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import {encabezado, contenido} from "../generar_excel/Datos"; //Encabezado y contenido de la tabla
+import logo from './imagen/logo1.png' //Logo de la empresa
 
 class FormatoTablaPDF extends React.Component {
-
-  constructor() {
-    super();
-    this.state = {
-      people: [
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-        { name: "Keanu Reeves", profession: "Actor" },
-        { name: "Lionel Messi", profession: "Football Player" },
-        { name: "Cristiano Ronaldo", profession: "Football Player" },
-        { name: "Jack Nicklaus", profession: "Golf Player" },
-      ]
-    }
-  }
 
   exportPDF = () => {
     const unit = "pt";
     const size = "letter"; // Use A1, A2, A3 or A4
-    const orientation = "landscape"; // portrait or landscape
+    const orientation = "portrait"; // portrait or landscape
 
-    const marginLeft = 40;
-    const marginRight = 40;
+    //const marginLeft = 40;
+    //const marginRight = 40;
     const doc = new jsPDF(orientation, unit, size);
 
 
-    doc.setFontSize(12);
+    const headers = [encabezado];
+    const data = contenido.map(elt=> [elt.cod_categoria, elt.depscripcion, elt.activo]);
 
-    const title = "My Awesome Report";
-    const headers = [["NAME", "PROFESSION"]];
-
-    const data = this.state.people.map(elt=> [elt.name, elt.profession]);
-
-    let content = {
+    //Datos
+    let tabla = {
       startY: 100,
       head: headers,
       body: data
     };
 
+    var sucursal = "Principal";
+    var usuario = "jperez"
 
-    /*
-    // Example with an image drawn in each cell in the first column
-    autoTable(doc, ({
-        didDrawCell: (data) => {
-        if (data.section === 'body' && data.column.index === 0) {
-            var base64Img = 'data:image/jpeg;base64,iVBORw0KGgoAAAANS...'
-            doc.addImage(base64Img, 'JPEG', data.cell.x + 2, data.cell.y + 2, 10, 10)
-        }
-        },
-    }))
-    */
+    var width = doc.internal.pageSize.getWidth() //Para centrar el texto
 
-
-    /*
-    autoTable(doc, {
-        body: [
-          [{ content: 'Text', colSpan: 2, rowSpan: 2, styles: { halign: 'center' } }],
-        ],
-      })
-    */
-
-
-
-    //doc.text(title, marginLeft, 40);
-    doc.text(["Reporte de Categorias", "Del 1 al 31 de nobiembre de 2022", "Sucursal: Principal", "Fecha: 21 de noviembre de 2022"], marginLeft, marginRight);
-    //doc.text("Del 1 al 31 de nobiembre de 2022", marginLeft, 40);
-    //doc.text("Sucursal: Principal", marginLeft, 40);
-    //doc.text("Fecha: 21 de noviembre de 2022", marginLeft, 40);
-    //doc.img(logo, marginLeft, marginRight)
-    doc.autoTable(content);
+    doc.setFontSize(12);
+    doc.addImage(logo, 500, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.text(["Reporte de Categorias", "Del 1 al 31 de nobiembre de 2022", `Sucursal: ${sucursal}`, "Fecha: 21 de noviembre de 2022", `Usuario: ${usuario}`], width/2, 20, { align: 'center' });
+    doc.autoTable(tabla);
     doc.save("Documento.pdf")
+
   }
 
   render() {

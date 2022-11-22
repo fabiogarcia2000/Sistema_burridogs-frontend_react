@@ -10,7 +10,7 @@ import FormatoExcelHook from "./FormatoExcelHook";
 
 //Usando metodos
 import FormatoExcelMetodo from "./FormatoExcelMetodo";
-<FormatoExcelMetodo />
+//<FormatoExcelMetodo />
 
 
 function AppExportarExcel() {
