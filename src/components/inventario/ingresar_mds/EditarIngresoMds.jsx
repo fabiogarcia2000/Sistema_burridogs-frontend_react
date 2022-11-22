@@ -1,57 +1,119 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import {
+  cambiarAMayusculasDescripCorta,
+  cambiarAMayusculasDescripArticulo,
+} from "../../../utils/cambiarAMayusculas";
 
-const EditarIngresoMds = () => {
-  const { id } = useParams();
-  const { type } = useParams();
-  console.log(id);
-  console.log(type);
+const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
-  //Configurar los hooks
-  const [formularioEnviado, setFormularioEnviado] = useState(false);
+const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
 
-  if (type === "new") {
-    console.log("Crear Nuevo registro");
-  } else if (type === "edit") {
-    console.log("Editar un registro");
-  }
+const Formulario = () => {
+  const navigate = useNavigate();
+
+  //procedimineto para obtener los socios de negocio
+  const [socios, setSocios] = useState([]);
+  useEffect(() => {
+    getSocios();
+  }, []);
+
+  //petición a api
+  const getSocios = async () => {
+    try {
+      const res = await axios.get(UrlMostrarSocios);
+      setSocios(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "guardado":
+        Swal.fire({
+          title: "¡Guardado!",
+          text: "El artículo se creó con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo crear el nuevo artículo",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      case "duplicado":
+        Swal.fire({
+          text: "Ya existe un artículo con el código ingresado",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
-
         initialValues={{
-          id: id,
-          descripcion: "",
-          unidad: "",
-          cantidad: "",
-          preciou: "",
-          total: "",
+          secuencia_enc: "",
+          id_socio_negocio: "",
+          fecha: "",
+          referencia: "",
+          monto_total: "",
+          monto_impuesto_total: "",
+          creado_por: "eaplicano",
+          fecha_creacion: "2022-11-21",
+          modificado_por: "eaplicano",
+          fecha_modificacion: "2022-11-21",
+          id_usuario: "",
+          id_centro_costo: "",
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion id
-          if (!valores.id) {
-            errores.id = "Por favor ingresa un id";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.id = "El id solo puede contener números";
+          // Validacion socio
+          if (!valores.id_socio_negocio) {
+            errores.id_socio_negocio = "Por favor seleccione una opción";
           }
 
-          // Validacion descripción
-          if (!valores.descripcion) {
-            errores.descripcion = "Por favor ingresa una descripción";
+          // Validacion referencia
+          if (!valores.referencia) {
+            errores.referencia = "Por favor ingrese una referencia";
+          }
+
+          // Validacion monto
+          if (!valores.monto_total) {
+            errores.monto_total = "Por favor ingrese un monto";
+          } else if (!/^^[0-9]+$/.test(valores.monto_total)) {
+            errores.monto_total = "El monto solo pueden contener números";
           }
 
           // Validacion unidad
           if (!valores.unidad) {
             errores.unidad = "Por favor ingrese una unidad";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.unidad = "La unidad solo pueden contener números";
           }
           // Validacion cantidad
           if (!valores.cantidad) {
@@ -73,30 +135,47 @@ const EditarIngresoMds = () => {
 
           return errores;
         }}
-        onSubmit={(valores, { resetForm }) => {
-          //Enviar los datos (petición Post)
-          console.log("Formulario enviado");
-
-          resetForm();
-          setFormularioEnviado(true);
+        onSubmit={async (valores) => {
+          //validar si existe un registro con el codigo ingresado
+          try {
+            const res = await axios.put(`${URLCrear}`, valores);
+            console.log(res);
+            if (res.status === 200) {
+              mostrarAlertas("guardado");
+              navigate("/mostrarmateriales");
+            } else {
+              mostrarAlertas("error");
+            }
+          } catch (error) {
+            console.log(error);
+            mostrarAlertas("error");
+            navigate("/mostrarmateriales");
+          }
         }}
       >
         {({ errors }) => (
-          <Form >
-            <h3 className="mb-3">Editar Ingreso de Mercadería</h3>
+          <Form>
+            <h3 className="mb-3">Nueva orden de compra</h3>
+            <hr />
             <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-3">
                 <div className="mb-3">
-                  <label htmlFor="idSucursal" className="form-label">
-                    ID Artículo:
+                  <label htmlFor="socioCompra" className="form-label">
+                    Socio de Negocio:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="idSucursal"
-                    name="id"
-                    placeholder="ID del Artículo..."
-                  />
+                    as="select"
+                    className="form-select"
+                    id="socioCompra"
+                    name="id_socio_negocio"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {socios.map((item, i) => (
+                      <option key={i} value={item.id_socio_negocio}>
+                        {item.descripcion}
+                      </option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id"
@@ -105,23 +184,44 @@ const EditarIngresoMds = () => {
                 </div>
               </div>
 
-              <div className="col-sm-6">
+              <div className="col-sm-3">
                 <div className="mb-3">
-                  <label htmlFor="descripcionSucursal" className="form-label">
-                    Descripción:
+                  <label htmlFor="fechaCompra" className="form-label">
+                    Fecha:
+                  </label>
+                  <Field
+                    type="date"
+                    className="form-control"
+                    id="fechaCompra"
+                    name="fecha"
+                    placeholder="Descripcion del Artículo..."
+                  />
+
+                  <ErrorMessage
+                    name="fecha"
+                    component={() => (
+                      <div className="error">{errors.fecha}</div>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="col-sm-3">
+                <div className="mb-3">
+                  <label htmlFor="RefCompra" className="form-label">
+                    Referencia:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="descripcionSucursal"
-                    name="descripcion"
-                    placeholder="Descripcion..."
+                    id="RefCompra"
+                    name="referencia"
+                    placeholder="Referencia..."
                   />
 
                   <ErrorMessage
-                    name="descripcion"
+                    name="referencia"
                     component={() => (
-                      <div className="error">{errors.descripcion}</div>
+                      <div className="error">{errors.referencia}</div>
                     )}
                   />
                 </div>
@@ -129,56 +229,31 @@ const EditarIngresoMds = () => {
             </div>
 
             <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-3">
                 <div className="mb-3">
-                  <label htmlFor="direccionSucursal" className="form-label">
-                    Unidad:
+                  <label htmlFor="montoCompra" className="form-label">
+                    Monto Total:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="direccionSucursal"
-                    name="unidad"
-                    placeholder="Unidad..."
+                    id="montoCompra"
+                    name="monto_total"
+                    placeholder="Monto a ingresar..."
                   />
 
                   <ErrorMessage
-                    name="unidad"
+                    name="monto_total"
                     component={() => (
-                      <div className="error">{errors.unidad}</div>
+                      <div className="error">{errors.monto_total}</div>
                     )}
                   />
                 </div>
               </div>
-
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="telefonoSucursal" className="form-label">
-                    Cantidad:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="telefonoSucursal"
-                    name="cantidad"
-                    placeholder="Cantidad a ingresar..."
-                  />
-
-                  <ErrorMessage
-                    name="cantidad"
-                    component={() => (
-                      <div className="error">{errors.cantidad}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="row g-3">
-              <div className="col-sm-6">
+              <div className="col-sm-3">
                 <div className="mb-3">
                   <label htmlFor="rtnSucursal" className="form-label">
-                    Precio Unitario:
+                    Impuesto Total:
                   </label>
                   <Field
                     type="text"
@@ -191,16 +266,15 @@ const EditarIngresoMds = () => {
                   <ErrorMessage
                     name="preciou"
                     component={() => (
-                      <div className="error">{errors.preciou}</div>
+                      <div className="error">{errors.precio}</div>
                     )}
                   />
                 </div>
               </div>
-
-              <div className="col-sm-6">
+              <div className="col-sm-3">
                 <div className="mb-3">
                   <label htmlFor="centroCostoSucursal" className="form-label">
-                    Total:
+                    Id Usuario:
                   </label>
                   <Field
                     type="text"
@@ -220,6 +294,32 @@ const EditarIngresoMds = () => {
               </div>
             </div>
 
+            <div className="row g-3">
+              <div className="col-sm-3">
+                <div className="mb-3">
+                  <label htmlFor="centroCostoSucursal" className="form-label">
+                    Centro de Costo:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="centroCostoSucursal"
+                    name="total"
+                    placeholder="Centro de Costo..."
+                  />
+
+                  <ErrorMessage
+                    name="total"
+                    component={() => (
+                      <div className="error">{errors.total}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <hr />
+
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
             </button>
@@ -230,11 +330,6 @@ const EditarIngresoMds = () => {
             >
               Cancelar
             </Link>
-
-            {/*Mostrar mensaje de exito al enviar formulario */}
-            {formularioEnviado && (
-              <p className="exito">Formulario enviado con exito!</p>
-            )}
           </Form>
         )}
       </Formik>
@@ -242,4 +337,4 @@ const EditarIngresoMds = () => {
   );
 };
 
-export default EditarIngresoMds;
+export default Formulario;
