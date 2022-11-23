@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
-import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+//import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_subcuenta/getone/";
@@ -57,7 +57,7 @@ const CrearSubCuenta = () => {
       <Formik
         //valores iniciales
         initialValues={{
-            nombre_cuenta: "",
+            id_cuenta: "",
             nombre_subcuenta: "",
                  
         }}
@@ -66,11 +66,9 @@ const CrearSubCuenta = () => {
             let errores = {};
 
         // Validacion nombre cuenta
-        if (!valores.nombre_cuenta) {
-          errores.nombre_cuenta = "Por favor ingresa un nombre de cuenta";
-        } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_cuenta)) {
-          errores.nombre_cuenta = "Escribir solo en MAYÚSCULAS";
-        }
+        if (!valores.id_cuenta) {
+          errores.id_cuenta = "Por favor ingresa un nombre de cuenta";
+        } 
 
          // Validacion nombre subcuenta
          if (!valores.nombre_subcuenta) {
@@ -120,15 +118,15 @@ const CrearSubCuenta = () => {
                     type="text"
                     className="form-control"
                     id="nombreCuenta"
-                    name="nombre_cuenta"
-                    placeholder="Nombre cuenta..."
-                    onKeyUp={cambiarAMayusculasNombreCuenta(values)}
+                    name="id_cuenta"
+                    placeholder="Id cuenta..."
+                    
                   />
 
                   <ErrorMessage
-                    name="nombre_cuenta"
+                    name="id_cuenta"
                     component={() => (
-                      <div className="error">{errors.nombre_cuenta}</div>
+                      <div className="error">{errors.id_cuenta}</div>
                     )}
                   />
                 </div>

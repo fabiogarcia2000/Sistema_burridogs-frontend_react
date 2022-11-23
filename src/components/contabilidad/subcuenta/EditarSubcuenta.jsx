@@ -49,7 +49,7 @@ const EditarSubCuenta = () => {
         //valores iniciales
         initialValues={{
           id_subcuenta: edit.id_subcuenta,
-          id_cuenta: edit.id_cuenta,
+          id_cuenta: edit.nombre_cuenta,
           nombre_subcuenta: edit.nombre_subcuenta,
 
         }}
@@ -120,17 +120,15 @@ const EditarSubCuenta = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="nombreCuenta" className="form-label">
+                  <label htmlFor="idCuenta" className="form-label">
                     Nombre Cuenta:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="nombreCuenta"
+                    id="idCuenta"
                     name="id_cuenta"
-                    placeholder="Nombre cuenta..."
-
-                    onKeyUp={cambiarAMayusculasNombreCuenta(values)}
+                    placeholder="Id cuenta..."
                   />
 
                   <ErrorMessage

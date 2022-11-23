@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_subcuenta/getall";
-
 const UrlEliminar = "http://190.53.243.69:3001/mc_subcuenta/eliminar/";
 
 const MostrarSubCuentas= () => {
@@ -68,9 +67,11 @@ const mostrarAlertas = (alerta) =>{
 
     break;
 
+
     default: break;
   }
 };
+
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -125,10 +126,18 @@ const mostrarAlertas = (alerta) =>{
         sortable: true,
     },
     {
+        name: "NOMBRE SEUBCUENTA",
         name: "NOMBRE SUBCUENTA",
         selector: (row) => row.nombre_subcuenta,
         sortable: true,
     },
+    {
+        name: "SALDO",
+        selector: (row) => row.saldo,
+        sortable: true,
+    },
+    
+
     {
       name: "ACCIONES",
       cell: (row) => (

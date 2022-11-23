@@ -53,7 +53,7 @@ const EditarPeriodoContable = () => {
           fecha_inicial: edit.fecha_inicial,
           fecha_final: edit.fecha_final,
           fecha_creacion: edit.fecha_creacion,
-          nombre_usuario: edit.nombre_usuario,
+          id_usuario: edit.nombre_usuario,
           tipo_periodo: edit.tipo_periodo,
           estado_periodo: edit.estado_periodo,
         }}
@@ -61,13 +61,6 @@ const EditarPeriodoContable = () => {
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
-
-          // Validacion de id periodo contable
-          if (!valores.id_periodo_contable) {
-            errores.id_periodo_contable = "Por favor ingresa id periodo contable";
-          } else if (!/^[0-9]+$/.test(valores.id_periodo_contable)) {
-            errores.id_periodo_contable = "Escribir solo números";
-          }
 
           // Validacion descripción periodo
           if (!valores.descripcion_periodo) {
@@ -97,12 +90,9 @@ const EditarPeriodoContable = () => {
           } 
 
           // Validacion nombre usuario
-          if (!valores.nombre_usuario) {
-            errores.nombre_usuario = "Por favor ingresa nombre usuario";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_usuario)) {
-            errores.nombre_usuario = "Escribir solo en MAYÚSCULAS";
-          }
-
+          if (!valores.id_usuario) {
+            errores.id_usuario = "Por favor ingresa id usuario";
+          } 
           return errores;
         }}
         onSubmit={async (valores) => {
@@ -229,15 +219,15 @@ const EditarPeriodoContable = () => {
                     type="text"
                     className="form-control"
                     id="nombreUsuario"
-                    name="nombre_usuario"
+                    name="id_usuario"
                     placeholder="Nombre usuario..."
                     
                   />
 
                   <ErrorMessage
-                    name="nombre_usuario"
+                    name="id_usuario"
                     component={() => (
-                      <div className="error">{errors.nombre_usuario}</div>
+                      <div className="error">{errors.id_usuario}</div>
                     )}
                   />
                 </div>
