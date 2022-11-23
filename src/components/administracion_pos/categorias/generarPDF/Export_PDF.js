@@ -1,4 +1,3 @@
-import React from 'react';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import logo from './logo1.png' //Logo de la empresa
@@ -15,7 +14,7 @@ export function Export_PDF (data) {
     const encabezado = [["CODIGO", "DESCRIPCION", "ESTADO", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.cod_categoria, elt.descripcion, elt.activo, elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+    const datos = data.map(elt=> [elt.cod_categoria, elt.descripcion, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
     
     //Tabla
     const tabla = {

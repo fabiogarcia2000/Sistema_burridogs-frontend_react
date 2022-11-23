@@ -8,10 +8,8 @@ export function Export_Excel(data) {
 
   //Se establecen los campos que se desean exportar
   //const datos = data.map(elt=> [elt.id_categoria, elt.cod_categoria, elt.descripcion, elt.activo]);
-  const datos = data.map(elt=> [elt.cod_categoria, elt.descripcion, elt.activo, elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+  const datos = data.map(elt=> [elt.cod_categoria, elt.descripcion, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
     
-
-
   //Se genera el archivo de Excel
   downloadExcel({
     fileName: "Categoria",

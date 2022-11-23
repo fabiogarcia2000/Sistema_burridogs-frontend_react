@@ -230,7 +230,7 @@ const MostrarCategorias = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF(results)
+                  Export_PDF(results);
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
