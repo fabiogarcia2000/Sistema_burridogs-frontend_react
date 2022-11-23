@@ -97,7 +97,7 @@ function Sidebar() {
             to="#"
           >
             <i className="bi bi-ui-checks"></i>
-            <span>Administración POS</span>
+            <span>Administración PDV</span>
             <i className="bi bi-chevron-down ms-auto"></i>
           </Link>
           <ul

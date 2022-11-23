@@ -145,6 +145,53 @@ const Formulario = () => {
         break;
     }
   };
+  const columns = [
+    {
+      name: "TRANSACCION",
+      selector: (row) => row.cod_categoria,
+      sortable: true,
+    },
+    {
+      name: "PEDIDO",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "PRODUCTO",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "CANTIDAD",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "PRECIO",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "SUBTOTAL",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "IMPUESTO",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "TOTAL",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    {
+      name: "PAGO",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+  ];
 
   return (
     <div className="container">
@@ -305,27 +352,6 @@ const Formulario = () => {
             <div className="row g-3">
               <div className="col-sm-3">
                 <div className="mb-3">
-                  <label htmlFor="montoCompra" className="form-label">
-                    Monto Total:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="montoCompra"
-                    name="monto_total"
-                    placeholder="Monto a ingresar..."
-                  />
-
-                  <ErrorMessage
-                    name="monto_total"
-                    component={() => (
-                      <div className="error">{errors.monto_total}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-3">
-                <div className="mb-3">
                   <label htmlFor="rtnSucursal" className="form-label">
                     Impuesto Total:
                   </label>
@@ -452,6 +478,119 @@ const Formulario = () => {
                 ))}
             </div>
             <hr />
+            <div className="row">
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>TRANSACCION </th>
+                    <th>PEDIDO</th>
+                    <th>PRODUCTO</th>
+                    <th>CANTIDAD</th>
+                    <th>PRECIO</th>
+                    <th>SUBTOTAL</th>
+                    <th>IMPUESTO</th>
+                    <th>TOTAL</th>
+                    <th>PAGO</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td align="center">1</td>
+                    <td>LLEVAR</td>
+                    <td>PRODUCTO1</td>
+                    <td align="right">1.00</td>
+                    <td align="right">60.00</td>
+                    <td align="right">60.00</td>
+                    <td align="right">9.00</td>
+                    <td align="right">69.00</td>
+                    <td>EFECTIVO</td>
+                  </tr>
+
+                  <tr>
+                    <td align="center">1</td>
+                    <td>LLEVAR</td>
+                    <td>PRODUCTO2</td>
+                    <td align="right">1.00</td>
+                    <td align="right">70.00</td>
+                    <td align="right">70.00</td>
+                    <td align="right">10.50</td>
+                    <td align="right">80.50</td>
+                    <td>EFECTIVO</td>
+                  </tr>
+
+                  <tr>
+                    <td align="center">1</td>
+                    <td>LLEVAR</td>
+                    <td>PRODUCTO3</td>
+                    <td align="right">1.00</td>
+                    <td align="right">50.00</td>
+                    <td align="right">50.00</td>
+                    <td align="right">7.50</td>
+                    <td align="right">57.50</td>
+                    <td>EFECTIVO</td>
+                  </tr>
+
+                  <tr>
+                    <td align="center">1</td>
+                    <td>LLEVAR</td>
+                    <td>PRODUCTO4</td>
+                    <td align="right">1.00</td>
+                    <td align="right">70.00</td>
+                    <td align="right">70.00</td>
+                    <td align="right">10.50</td>
+                    <td align="right">80.50</td>
+                    <td>EFECTIVO</td>
+                  </tr>
+
+                  <tr>
+                    <td align="center">1</td>
+                    <td>LLEVAR</td>
+                    <td>PRODUCTO5</td>
+                    <td align="right">2.00</td>
+                    <td align="right">60.00</td>
+                    <td align="right">120.00</td>
+                    <td align="right">18.00</td>
+                    <td align="right">138.00</td>
+                    <td>EFECTIVO</td>
+                  </tr>
+
+                  <tr align="right">
+                    <th>TOTALES</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>370.00</th>
+                    <th>55.50</th>
+                    <th>425.50</th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="mb-3">
+                <label htmlFor="montoCompra" className="form-label">
+                  Monto Total:
+                </label>
+                <Field
+                  type="text"
+                  className="form-control"
+                  id="montoCompra"
+                  name="monto_total"
+                  placeholder="Monto a ingresar..."
+                  disabled
+                />
+
+                <ErrorMessage
+                  name="monto_total"
+                  component={() => (
+                    <div className="error">{errors.monto_total}</div>
+                  )}
+                />
+              </div>
+            </div>
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
             </button>
