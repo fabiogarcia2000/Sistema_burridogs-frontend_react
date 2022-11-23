@@ -48,7 +48,7 @@ const PuntoDeVentas = () => {
   const [total, setTotal] = useState(0.0);
 
   const [tipoPago, setTipoPago] = useState(1);
-  const [tipoPedido, setTipoPedido] = useState(0);
+  const [tipoPedido, setTipoPedido] = useState(2);
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
   const [cambio, setCambio] = useState(0);
@@ -188,17 +188,46 @@ const PuntoDeVentas = () => {
 
   //procedimineto para obtener un clientes
   const [cliente, setCliente] = useState([]);
+  const [guardarcliente, setGuardarCliente] = useState(false);
   //petición a api
-  const urlCliente = "http://190.53.243.69:3001/socio_negocio/getone/";
+  const urlCliente = "http://190.53.243.69:3001/socio_negocio/getonertn/";
 
   const getCliente = async (id) => {
     try {
       const res = await axios.get(urlCliente + id);
-      setCliente(res.data);
+      if (res.data.descripcion === undefined){
+        setCliente({...cliente, rtn: id, descripcion:"", creado_por: "Fabio", fecha_creacion:"2022-11-23", modificado_por:"", fecha_modificacion:""});
+        setGuardarCliente(true);
+        abrirModalCliente2();
+        abrirModalCliente();
+      }else{
+        setCliente({...cliente, descripcion:res.data.descripcion, rtn: id});
+        setGuardarCliente(false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+    //guardar el cliente si no existe
+//petición a api
+const urlGuardarCliente = "http://190.53.243.69:3001/socio_negocio/actualizar-insertar_por_rtn/";
+const getGuardarCliente = async () => {
+  if (guardarcliente === true && cliente.descripcion !== ""){
+      //procedimineto para guardar el los cambios
+    try {
+      await axios.put(urlGuardarCliente, cliente);
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+};
+
+useEffect(() => {
+  getGuardarCliente();
+}, [cliente]);
+
 
   useEffect(() => {
     listaCompras.map((list) =>
@@ -440,9 +469,15 @@ const PuntoDeVentas = () => {
     Refrescar();
   };
 
+//resetea el valores
+  const dataCliente = (valores) => {
+    setCliente({...cliente, descripcion: valores.nombre});
+    
+  };
+
   //resetea el valores
   const Refrescar = () => {
-    window.location.reload();
+    //window.location.reload();
   };
 
   //calcular el cambio a entregar
@@ -489,9 +524,11 @@ const PuntoDeVentas = () => {
       detalle_promo: detallesPromo,
       detalle_desc: detallesDesc,
     });
-
-    console.log(venta);
   };
+
+  //Ventana modal cliente
+  const [modalCliente2, setModalCliente2] = useState(false);
+  const abrirModalCliente2 = () => setModalCliente2(!modalCliente2);
 
   //Ventana modal de datos del cliente
   const [modalCliente, setModalCliente] = useState(false);
@@ -886,7 +923,7 @@ const PuntoDeVentas = () => {
         </div>
       </div>
 
-      {/* Ventana Modal de Datos cliente*/}
+      {/* Ventana Modal de cliente*/}
       <Modal isOpen={modalCliente} toggle={abrirModalCliente} centered>
       
         <ModalHeader toggle={abrirModalCliente}>Datos del Cliente</ModalHeader>
@@ -912,7 +949,7 @@ const PuntoDeVentas = () => {
         }}
 
         onSubmit={async (valores) => {
-          getCliente();
+          getCliente(valores.id_cliente);
         }}
       >
 
@@ -947,45 +984,133 @@ const PuntoDeVentas = () => {
                   />
                 </div>
               </div>
-              <hr />
-              <div className="row">
-                <div className="input-group mb-2">
-                  <span
-                    className="input-group-text"
-                    id="inputGroup-sizing-default"
-                  >
-                    Nombre:
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-default"
-                    disabled
-                  />
-                </div>
-              </div>
-      </Form>
+              </Form>
     )}
             
           </Formik>
+
+              <hr />
+
+              <div className="row">
+                <div className="alert alert-primary" role="alert">
+                  {cliente.descripcion ? (
+                    <>
+                    <p>{"ID: "+cliente.rtn}</p>
+                    <p>{" Nombre: " +cliente.descripcion}</p>
+                    </>
+                  ):""}
+                </div>
+              </div>
+              <hr />
+
+                 
+
         </ModalBody>
         <ModalFooter>
           <Button
             color="primary"
             onClick={() => {
               abrirModalCliente();
+              InsertVenta(venta);
               resetValores();
             }}
           >
             Aceptar
           </Button>
+
+          
           <Button color="secondary" onClick={abrirModalCliente}>
             Cancelar
           </Button>
         </ModalFooter>
         
       </Modal>
+
+
+      {/* Ventana Modal de Datos cliente*/}
+      <Modal isOpen={modalCliente2} toggle={abrirModalCliente2} centered>
+ 
+        <Formik
+        //valores iniciales
+        initialValues={{
+          nombre: "",
+        }}
+        //Funcion para validar
+        validate={(valores) => {
+          let errores = {};
+
+          // Validacion id
+          if (!valores.nombre) {
+            errores.nombre = "Nombre requerido";
+          } 
+
+          return errores;
+        }}
+
+        onSubmit={ (valores) => {
+          dataCliente(valores)
+          console.log("Nombre: "+valores.nombre)
+          abrirModalCliente2();
+          abrirModalCliente();
+          
+        }}
+      >
+
+    {({ errors, values }) => (
+      <Form>
+             
+             <ModalHeader toggle={abrirModalCliente2}>Nombre del Cliente</ModalHeader>
+              <ModalBody>
+       
+              <div className="row">
+                <div className="alert alert-danger" role="alert">
+                  Cliente no encontrado
+                </div>
+              </div>
+              <hr />
+
+              <div className="row">
+                <div className="input-group mb-2">
+                  <span className="input-group-text">Nombre: </span>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    placeholder="Nombre del Cliente..."
+                    aria-label="Recipient's username"
+                    //aria-describedby="button-addon2"
+                    name="nombre"
+                  />
+                </div>
+                <div className="row">
+                  <ErrorMessage
+                        name="nombre"
+                        component={() => (
+                          <div className="error">{errors.nombre}</div>
+                        )}
+                  />
+                </div>
+              </div>
+ 
+
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="primary"
+            type="submit"
+          >
+            Guardar
+          </Button>
+          <Button color="secondary" onClick={abrirModalCliente2}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Form>
+    )}
+            
+      </Formik>
+      </Modal>
+
+
 
       {/* Ventana Modal de Procesar ventas*/}
       <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
@@ -1206,7 +1331,7 @@ const PuntoDeVentas = () => {
             onClick={() => {
               abrirModalFactura();
               abrirModalCliente();
-              InsertVenta(venta);
+              
             }}
           >
             Imprimir
