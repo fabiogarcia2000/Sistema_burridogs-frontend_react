@@ -1,4 +1,4 @@
-// obtener la fecha
+// obtener la fecha formato largo
 export function getCurrentDate () {
     // crea un nuevo objeto `Date`
    const currentDate = new Date(),
@@ -6,9 +6,17 @@ export function getCurrentDate () {
    var data = currentDate.toLocaleDateString('es', options)
    return data;
  }
+
+ // obtener la fecha formato corto
+export function getCurrentDateShort () {
+  // crea un nuevo objeto `Date`
+  var today = new Date();
+ var data = today.toLocaleDateString();
+ return data;
+}
  
   
- // obtener la hora en la configuración regional
+ // obtener la hora
  export function getCurrentTime () {
    // crea un nuevo objeto `Date`
    var today = new Date();

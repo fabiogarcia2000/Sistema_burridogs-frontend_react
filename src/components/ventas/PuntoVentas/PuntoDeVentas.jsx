@@ -10,7 +10,7 @@ import { quitarTildes } from "./utils/textoSinTildes";
 import { MostrarAlertas } from "./utils/Alertas";
 import { InsertVenta } from "./insertVenta";
 import { numeroALetras } from "./utils/num_a_letras";
-import { getCurrentDate, getCurrentTime } from "../../../utils/fechaYhora";
+import { getCurrentDate, getCurrentTime, getCurrentDateShort } from "../../../utils/fechaYhora";
 
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
 const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactive/";
