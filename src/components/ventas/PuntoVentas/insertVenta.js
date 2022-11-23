@@ -6,7 +6,6 @@ export const InsertVenta = async (valores) => {
   console.log("Data a enviar: ", valores)
   try {
     const res = await axios.post(urlVenta, valores);
-
       if (res.status === 200) {
         alert("guardado");
       } else {

@@ -1,5 +1,4 @@
 export var numeroALetras = (function() {
-    // Código basado en el comentario de @sapienman
     // Código basado en https://gist.github.com/alfchee/e563340276f89b22042a
     function Unidades(num) {
 
@@ -191,8 +190,3 @@ export var numeroALetras = (function() {
     };
 
 })();
-
-
-
-//LLAMAR LA FUNCIÓN
-console.log(numeroALetras(99.99))

@@ -10,6 +10,7 @@ import {quitarTildes} from "./utils/textoSinTildes";
 import { MostrarAlertas } from "./utils/Alertas";
 import {InsertVenta} from "./insertVenta";
 import { numeroALetras } from "./utils/num_a_letras";
+import { getCurrentDate, getCurrentTime } from "../../../utils/fechaYhora";
 
 
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
@@ -28,6 +29,13 @@ const PuntoDeVentas = () => {
 
   const [det, setDet] = useState();
   const [enc, setEnc] = useState();
+
+  /**************Fecha y Hora*************************/
+  const [fecha, setFecha] = useState("--/--/--");
+  const [hora, setHora] = useState("--:--:--");
+  /***************************************************/
+
+
 
  // const [pagoCompartido, setPagoCompartido] = useState(true);
 
@@ -84,9 +92,7 @@ const PuntoDeVentas = () => {
 
   const [venta, setVenta] = useState(valuesInicial);
 
-
-
-//*************************************************/
+//************************************************************************/
 
   useEffect(() => {
     getCategorias();
@@ -94,8 +100,23 @@ const PuntoDeVentas = () => {
     getMetodosPago();
     getDescuentos();
     getPedidos();
-    Enc()
+    Enc();
+    Fecha();
+    Hora();
   }, []);
+
+  //*************************/
+  //obtener fecha
+  const Fecha = () => {
+    setFecha(getCurrentDate());
+  };
+
+  //obtener hora
+  const Hora = () => {
+    setHora(getCurrentTime());
+  };
+  setInterval (Hora, 1000);
+  //*************************/
 
   //procedimineto para obtener las categorias
   const getCategorias = async () => {
@@ -514,11 +535,11 @@ const Det = async () => {
               </div>
             </div>
 
-            <div className="col-2">
+            <div className="col-3">
               <li className="d-flex justify-content-between align-items-start">
                 <div className="ms-2 me-auto">
-                  <div className="fw-bold">11:18 p.m</div>
-                  22/11/2022
+                  <div className="fw-bold">{hora}</div>
+                  <p>{fecha}</p>
                 </div>
               </li>
             </div>
@@ -789,7 +810,7 @@ const Det = async () => {
         <form>
           <div className="row">
             <div className="input-group mb-2">
-              <span class="input-group-text">ID</span>
+              <span className="input-group-text">ID</span>
               <input type="number" className="form-control" placeholder="escriba el ID o RTN..." aria-label="Recipient's username" aria-describedby="button-addon2"/>
               <button className="btn btn-success" type="button" id="button-addon2">Buscar</button>
             </div>
