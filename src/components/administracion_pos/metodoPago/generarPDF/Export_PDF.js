@@ -5,16 +5,16 @@ import logo from './logo1.png' //Logo de la empresa
 
 export function Export_PDF (data) {
     const unit = "pt";
-    const size = "Letter"; // Use A1, A2, A3 or A4
+    const size = "A3"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
 
     const doc = new jsPDF(orientation, unit, size);
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["CODIGO", "DESCRIPCION", "ESTADO", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"]];
+    const encabezado = [["CODIGO", "DESCRIPCION", "TIPO", "CUENTA CONTABLE", "ESTADO", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.cod_metodo_pago, elt.descripcion, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+    const datos = data.map(elt=> [elt.cod_metodo_pago, elt.descripcion, elt.tipo, elt.cuenta_contable, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
     
     //Tabla
     const tabla = {
@@ -31,8 +31,8 @@ export function Export_PDF (data) {
     var width = doc.internal.pageSize.getWidth() //Para centrar el texto
 
     //Preparacion del documento
-    doc.setFontSize(12);
-    doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.setFontSize(14);
+    doc.addImage(logo, 1000, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
     doc.text(["Reporte de Metodos de Pago", "Del 1 al 31 de nobiembre de 2022", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
@@ -42,7 +42,7 @@ export function Export_PDF (data) {
     for(i = 0; i < pageCount; i++) { 
       doc.setPage(i); 
       let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber; //Current Page
-      doc.setFontSize(12);
+      doc.setFontSize(14);
       doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 10, doc.internal.pageSize.height - 10);
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }

@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
+import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlMostrar = "http://190.53.243.69:3001/sucursal/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/sucursal/eliminar/";
@@ -238,18 +240,22 @@ const MostrarSucursales = () => {
               aria-label="Second group"
             >
               <Link
-                to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                }}
               >
                 <i className="fa-solid fa-file-excel"></i>
               </Link>
               <Link
-                to="/"
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
+                onClick={()=>{
+                  Export_PDF(results);
+                }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>

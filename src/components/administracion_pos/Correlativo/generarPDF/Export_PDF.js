@@ -5,7 +5,7 @@ import logo from './logo1.png' //Logo de la empresa
 
 export function Export_PDF (data) {
     const unit = "pt";
-    const size = "A3"; // Use A1, A2, A3 or A4
+    const size = "A2"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
 
     const doc = new jsPDF(orientation, unit, size);
@@ -35,7 +35,7 @@ export function Export_PDF (data) {
 
     //Preparacion del documento
     doc.setFontSize(14);
-    doc.addImage(logo, 1000, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.addImage(logo, 1500, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
     doc.text(["Reporte de Correlativos", "Del 1 al 31 de nobiembre de 2022", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
