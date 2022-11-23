@@ -1,82 +1,53 @@
-import { Link } from "react-router-dom";
-
-import React from 'react';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import {encabezado, contenido} from '../../../generar_excel/Datos' //Encabezado y contenido de la tabla
-import logo from '../../../generar_pdf/imagen/logo1.png'
+import logo from './logo1.png' //Logo de la empresa
 
 
-class Export_PDF extends React.Component {
-
-    exportPDF = () => {
+export function Export_PDF (data) {
     const unit = "pt";
-    const size = "A4"; // Use A1, A2, A3 or A4
-    const orientation = "portrait"; // portrait or landscape
+    const size = "A3"; // Use A1, A2, A3 or A4
+    const orientation = "landscape"; // portrait or landscape
 
-    //const marginLeft = 40;
-    //const marginRight = 40;
     const doc = new jsPDF(orientation, unit, size);
 
-
-    const headers = [encabezado];
-    const data = contenido.map(elt=> [elt.cod_categoria, elt.depscripcion, elt.activo]);
-
-    //Datos
-    let tabla = {
+    //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
+    const encabezado = [["CODIGO", "DESCRIPCION", "TIPO", "CUENTA CONTABLE", "ESTADO", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"]];
+   
+    //Registros de la tabla
+    const datos = data.map(elt=> [elt.cod_metodo_pago, elt.descripcion, elt.tipo, elt.cuenta_contable, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+    
+    //Tabla
+    const tabla = {
       startY: 100,
-      head: headers,
-      body: data
+      head: encabezado,
+      body: datos
     };
 
+    //Parametros que se deben obtener
     var sucursal = "Principal";
     var usuario = "jperez"
     var fecha = "22-11-2022"
 
     var width = doc.internal.pageSize.getWidth() //Para centrar el texto
 
-
-
-
-    doc.setFontSize(12);
-    doc.addImage(logo, 490, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text(["Reporte de Categorias", "Del 1 al 31 de nobiembre de 2022", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
+    //Preparacion del documento
+    doc.setFontSize(14);
+    doc.addImage(logo, 1000, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.text(["Reporte de Metodos de Pago", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
+    //Se recorre el documento para encontrar el numero de paginas
     var pageCount = doc.internal.getNumberOfPages(); //Total Page Number
     var i = 0;
     for(i = 0; i < pageCount; i++) { 
       doc.setPage(i); 
       let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber; //Current Page
-      doc.setFontSize(12);
+      doc.setFontSize(14);
       doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 10, doc.internal.pageSize.height - 10);
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    doc.save("Documento.pdf")
+    //Se guarda el documento
+    doc.save("Metodos de Pago.pdf")
 
-  }
-
-  render() {
-    return (
-      <div>
-       <Link
-          type="button"
-          className="btn btn-danger"
-          title="Exportar a PDF"
-          onClick={() => this.exportPDF()}
-        >
-          <i className="fa-solid fa-file-pdf"></i>
-        </Link>
-      </div>
-    );
-  }
 };
-
-/*
-    <div>
-        <button onClick={() => this.exportPDF()}>Generate Report</button>
-      </div>
-*/
-
-export default Export_PDF;

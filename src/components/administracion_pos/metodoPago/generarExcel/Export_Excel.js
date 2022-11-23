@@ -1,15 +1,22 @@
 import { downloadExcel } from "react-export-table-to-excel";
 
 export function Export_Excel(data) {
-    const header = ["ID", "Código", "Descripción", "Porcentaje", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
+  
+  //Encabezado de las columnas
+  //const header = ["ID", "CODIGO", "DESCRIPCION", "ESTADO"];
+  const encabezado = ["CODIGO", "DESCRIPCION", "TIPO", "CUENTA CONTABLE", "ESTADO", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"];
 
-    downloadExcel({
-        fileName: "Descuentos",
-        sheet: "Descuentos",
-        tablePayload: {
-          header,
-          body: data,
-        },
-      });
-
+  //Se establecen los campos que se desean exportar
+  //const datos = data.map(elt=> [elt.id_categoria, elt.cod_categoria, elt.descripcion, elt.activo]);
+  const datos = data.map(elt=> [elt.cod_metodo_pago, elt.descripcion, elt.tipo, elt.cuenta_contable, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+    
+  //Se genera el archivo de Excel
+  downloadExcel({
+    fileName: "Metodos de Pago",
+    sheet: "Metodos de Pago",
+    tablePayload: {
+      header: encabezado,
+      body: datos,
+    },
+  });
 };
