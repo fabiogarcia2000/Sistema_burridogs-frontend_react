@@ -6,6 +6,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import {Export_Excel} from "./generarExcel/Export_Excel";
+import Export_PDF from "./generarPDF/Export_PDF";
 
 const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/descuento/eliminar/";
@@ -238,6 +239,7 @@ const MostrarSucursales = () => {
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>
+              <Export_PDF />
             </div>
           </div>
         </div>
