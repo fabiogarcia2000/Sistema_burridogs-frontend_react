@@ -18,7 +18,7 @@ function Sidebar() {
         <li className="nav-item">
           <Link
             className="nav-link collapsed"
-            data-bs-target="#components-nav"
+            data-bs-target="#components-nav2"
             data-bs-toggle="collapse"
             to="/"
           >
@@ -27,7 +27,7 @@ function Sidebar() {
             <i className="bi bi-chevron-down ms-auto"></i>
           </Link>
           <ul
-            id="components-nav"
+            id="components-nav2"
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
@@ -69,9 +69,9 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/ventas-realizadas">
                 <i className="bi bi-circle"></i>
-                <span>Opción 2</span>
+                <span>Ventas Realizadas</span>
               </Link>
             </li>
             <li>
