@@ -35,7 +35,7 @@ export function Export_PDF (data) {
     //Preparacion del documento
     doc.setFontSize(14);
     doc.addImage(logo, 1500, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text(["Reporte de Socios de Negocio", "Del 1 al 31 de nobiembre de 2022", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
+    doc.text(["Reporte de Socios de Negocio", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
