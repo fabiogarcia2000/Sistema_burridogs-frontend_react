@@ -237,7 +237,7 @@ const Formulario = () => {
               );
               if (res.status === 200) {
                 mostrarAlertas("guardado");
-                navigate("/mostrararticulos");
+                navigate("/admin/mostrararticulos");
               } else {
                 mostrarAlertas("error");
               }
@@ -247,7 +247,7 @@ const Formulario = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrararticulos");
+            navigate("/admin/mostrararticulos");
           }
         }}
       >
@@ -535,7 +535,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrararticulos"
+              to="/admin/mostrararticulos"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

@@ -7,10 +7,12 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
+const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const MostrarLibroDetalle = () => {
+  const [opcionSelect, setOpcionSelect] = useState('');
+
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -30,6 +32,31 @@ const MostrarLibroDetalle = () => {
     }
   };
 
+//************************************************/
+//petición a api con la opción del select
+const getPediodoSelect = async () => {
+  try {
+    const res = await axios.get(UrlMostrar+opcionSelect);
+    setRegistros(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//opción seleccionada en el select
+const  handlerCargarPerido = function (e) {
+  const opcion = e.target.value;
+  setOpcionSelect(opcion)
+}
+
+useEffect(() => {
+  if(opcionSelect !== ""){
+    getPediodoSelect();
+  }
+}, [opcionSelect]);
+
+//************************************************/
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -66,8 +93,6 @@ const MostrarLibroDetalle = () => {
         });
 
         break;
-
-
       default: break;
     }
   };
@@ -114,7 +139,6 @@ const MostrarLibroDetalle = () => {
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
-
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -171,11 +195,11 @@ const MostrarLibroDetalle = () => {
           </Link>
           &nbsp;
           <Link
-            to="/mostrarlibrodetalle" //AQUI
+            to="/admin/mostrarlibrodetalle" //AQUI
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
+            onClick={() => setGlobalState('registroEdit', row.id_libro_diario_enca)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>

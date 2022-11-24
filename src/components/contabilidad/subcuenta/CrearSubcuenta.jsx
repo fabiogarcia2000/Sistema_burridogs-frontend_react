@@ -90,7 +90,7 @@ const CrearSubCuenta = () => {
                       const res = await axios.put(`${URLCrear}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarsubcuenta");
+                        navigate("/admin/mostrarsubcuenta");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -101,7 +101,7 @@ const CrearSubCuenta = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarsubcuenta");
+                navigate("/admin/mostrarsubcuenta");
               }
         }}
       >
@@ -163,7 +163,7 @@ const CrearSubCuenta = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarsubcuenta"
+              to="/admin/mostrarsubcuenta"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

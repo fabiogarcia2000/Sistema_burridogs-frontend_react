@@ -136,7 +136,7 @@ const EditarSucursal = () => {
 
                 if (res.status === 200) {
                   mostrarAlertas("guardado");
-                  navigate("/mostrarsucursales");
+                  navigate("/admin/mostrarsucursales");
                 } else {
                   mostrarAlertas("error");
                 }
@@ -144,7 +144,7 @@ const EditarSucursal = () => {
             } catch (error) {
               console.log(error);
               mostrarAlertas("error");
-              navigate("/mostrarsucursales");
+              navigate("/admin/mostrarsucursales");
             }
         }}
       >
@@ -343,7 +343,7 @@ const EditarSucursal = () => {
             Guardar
           </button>
           <Link
-            to="/mostrarsucursales"
+            to="/admin/mostrarsucursales"
             type="button"
             className="btn btn-danger mb-3 me-2"
           >

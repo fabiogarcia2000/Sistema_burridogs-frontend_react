@@ -124,7 +124,7 @@ const Formulario = () => {
                       const res = await axios.put(`${URLCrear}${valores.cod_pos}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarPOS");
+                        navigate("/admin/mostrarPOS");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -135,7 +135,7 @@ const Formulario = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarPOS");
+                navigate("/admin/mostrarPOS");
               }
         }}
       >
@@ -242,7 +242,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarPOS"
+              to="/admin/mostrarPOS"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

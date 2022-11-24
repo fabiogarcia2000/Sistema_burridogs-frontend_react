@@ -86,7 +86,7 @@ const URLEditar = "http://190.53.243.69:3001/centro_costo/actualizar-insertar/";
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarcentrocosto");
+                    navigate("/admin/mostrarcentrocosto");
                   } else {
                     mostrarAlertas("error");
                   }
@@ -94,7 +94,7 @@ const URLEditar = "http://190.53.243.69:3001/centro_costo/actualizar-insertar/";
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarcentrocosto");
+                navigate("/admin/mostrarcentrocosto");
               }
         }}
       >
@@ -176,7 +176,7 @@ const URLEditar = "http://190.53.243.69:3001/centro_costo/actualizar-insertar/";
               Guardar
             </button>
             <Link
-              to="/mostrarcentrocosto"
+              to="/admin/mostrarcentrocosto"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

@@ -149,7 +149,7 @@ const MostrarCategorias = () => {
           </Link>
           &nbsp;
           <Link
-            to="/editarcategoria"
+            to="/admin/editarcategoria"
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -202,7 +202,7 @@ const MostrarCategorias = () => {
               aria-label="First group"
             >
               <Link
-                to="/crearcategoria"
+                to="/admin/crearcategoria"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

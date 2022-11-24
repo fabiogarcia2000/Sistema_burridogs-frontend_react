@@ -96,14 +96,14 @@ const Formulario = () => {
                 const res = await axios.put(`${URLEditar}${valores.cod_metodo_pago}`, valores);
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarmetodospago");
+                    navigate("/admin/mostrarmetodospago");
                   } else{
                     mostrarAlertas("error");
                   }
             } catch (error) {
               console.log(error);
               mostrarAlertas("error");
-              navigate("/mostrarmetodospago");
+              navigate("/admin/mostrarmetodospago");
             }
         }}
       >
@@ -234,7 +234,7 @@ const Formulario = () => {
 
 
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrarmetodospago" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
+            <Link to="/admin/mostrarmetodospago" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
 
           </Form>
         )}

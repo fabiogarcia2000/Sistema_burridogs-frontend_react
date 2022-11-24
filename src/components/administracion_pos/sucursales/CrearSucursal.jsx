@@ -161,7 +161,7 @@ const CrearSucursal = () => {
                   const res = await axios.put(`${URLCrear}${valores.cod_sucursal}`, valores);
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarsucursales");
+                    navigate("/admin/mostrarsucursales");
                 } else {
                   mostrarAlertas("error");
                 }
@@ -171,7 +171,7 @@ const CrearSucursal = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrarsucursales");
+            navigate("/admin/mostrarsucursales");
           };
 
         }}
@@ -371,7 +371,7 @@ const CrearSucursal = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarsucursales"
+              to="/admin/mostrarsucursales"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

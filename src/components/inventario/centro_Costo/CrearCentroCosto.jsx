@@ -102,7 +102,7 @@ const Formulario = () => {
                       const res = await axios.put(`${URLCrear}${valores.cod_centro_costo}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarcentrocosto");
+                        navigate("/admin/mostrarcentrocosto");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -113,7 +113,7 @@ const Formulario = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarcentrocosto");
+                navigate("/admin/mostrarcentrocosto");
               }
         }}
       >
@@ -194,7 +194,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarcentrocosto"
+              to="/admin/mostrarcentrocosto"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

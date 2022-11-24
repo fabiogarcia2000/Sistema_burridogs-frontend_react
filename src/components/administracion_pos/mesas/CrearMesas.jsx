@@ -200,7 +200,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/MostrarMesas"
+              to="/admin/MostrarMesas"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

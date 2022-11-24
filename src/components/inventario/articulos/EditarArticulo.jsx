@@ -218,14 +218,14 @@ const FormularioEditar = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              navigate("/mostrararticulos");
+              navigate("/admin/mostrararticulos");
             } else {
               mostrarAlertas("error");
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrararticulos");
+            navigate("/admin/mostrararticulos");
           }
         }}
       >
@@ -513,7 +513,7 @@ const FormularioEditar = () => {
               Guardar
             </button>
             <Link
-              to="/mostrararticulos"
+              to="/admin/mostrararticulos"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

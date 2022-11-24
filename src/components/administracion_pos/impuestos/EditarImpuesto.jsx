@@ -101,14 +101,14 @@ const FormularioEditar = () => {
               const res = await axios.put(`${URLEditar}${valores.cod_impuesto}`, valores);
                 if (res.status === 200) {
                   mostrarAlertas("guardado");
-                  navigate("/mostrarimpuestos");
+                  navigate("/admin/mostrarimpuestos");
                 } else{
                   mostrarAlertas("error");
                 }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrarimpuestos");
+            navigate("/admin/mostrarimpuestos");
           }
          
         }}
@@ -236,7 +236,7 @@ const FormularioEditar = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarimpuestos"
+              to="/admin/mostrarimpuestos"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

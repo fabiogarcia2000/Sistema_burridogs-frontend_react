@@ -172,7 +172,7 @@ const Formulario = () => {
             const res = await axios.put(`${URLCrear}${valores.id_correlativo}`, valores);
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              navigate("/mostrartalonarioSAR");
+              navigate("/admin/mostrartalonarioSAR");
           } else {
             mostrarAlertas("error");
           }
@@ -180,7 +180,7 @@ const Formulario = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrartalonarioSAR");
+            navigate("/admin/mostrartalonarioSAR");
           }
         }}
       >
@@ -443,7 +443,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrartalonarioSAR"
+              to="/admin/mostrartalonarioSAR"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

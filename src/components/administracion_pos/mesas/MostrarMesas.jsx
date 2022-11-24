@@ -98,7 +98,7 @@ const MostrarMesas = () => {
       cell: (row) => (
         <>
           <Link
-            to={`/editarMesas/${row.id}/edit`}
+            to={`/admin/editarMesas/${row.id}/edit`}
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -147,7 +147,7 @@ const MostrarMesas = () => {
               aria-label="First group"
             >
               <Link
-                to="/crearMesas"
+                to="/admin/crearMesas"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

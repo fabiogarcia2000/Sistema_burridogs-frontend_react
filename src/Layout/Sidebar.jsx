@@ -248,12 +248,6 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/mostrardestino">
-                <i className="bi bi-circle"></i>
-                <span>Destino de cuenta</span>
-              </Link>
-            </li>
-            <li>
               <Link to="/admin/mostrarinformefinanciero">
                 <i className="bi bi-circle"></i>
                 <span>Informe Financiero</span>
@@ -277,12 +271,12 @@ function Sidebar() {
                 <span>Estado Libro Diario</span>
               </Link>
             </li>
-            <li>
+            {/*<li>
               <Link to="/admin/mostrarlibrodetalle">
                 <i className="bi bi-circle"></i>
                 <span>Libro Diario Detalle</span>
               </Link>
-            </li>
+  </li>*/}
             <li>
               <Link to="/admin/mostrarlibroencabezado">
                 <i className="bi bi-circle"></i>

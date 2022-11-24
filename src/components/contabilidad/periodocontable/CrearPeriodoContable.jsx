@@ -124,7 +124,7 @@ useEffect(() => {
               const res = await axios.put(`${URLCrear}`);
               if (res.status === 200) {
                 mostrarAlertas("guardado");
-                navigate("/mostrarperiodo");
+                navigate("/admin/mostrarperiodo");
               } else {
                 mostrarAlertas("error");
               }
@@ -134,7 +134,7 @@ useEffect(() => {
           } */catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrarperiodo");
+            navigate("/admin/mostrarperiodo");
           }
         }}
       >
@@ -304,7 +304,7 @@ useEffect(() => {
               Guardar
             </button>
             <Link
-              to="/mostrarperiodo"
+              to="/admin/mostrarperiodo"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

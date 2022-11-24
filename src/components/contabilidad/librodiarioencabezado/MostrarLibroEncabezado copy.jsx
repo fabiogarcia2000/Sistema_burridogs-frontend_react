@@ -4,13 +4,13 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
-const UrlEliminar = "http://190.53.243.69:3001/mc_periodo/eliminar/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
+const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
-const MostrarPeriodoContable= () => {
+const MostrarLibroDetalle = () => {
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -18,7 +18,7 @@ const MostrarPeriodoContable= () => {
     getRegistros();
   }, []);
 
-  
+
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -31,47 +31,46 @@ const MostrarPeriodoContable= () => {
   };
 
 
-//Alertas de éxito o error al eliminar
-const mostrarAlertas = (alerta) =>{
-  switch (alerta){
-    case 'eliminado':
-      Swal.fire({
-        title: '¡Eliminado!',
-        text: "El periodo contable se eliminó con éxito",
-        icon: 'success',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case 'eliminado':
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: "El encabezado de libro diario se eliminó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
 
-    break;
+        break;
 
-    case 'error':
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudo eliminar el periodo contable',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo eliminar el encabezado de libro diario',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
 
-    break;
+        break;
 
-    case 'errormostrar':
-      Swal.fire({
-        title: 'Error al Mostrar',
-        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
+      case 'errormostrar':
+        Swal.fire({
+          title: 'Error al Mostrar',
+          text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
 
-    break;
+        break;
 
 
-    default: break;
-  }
-};
-
+      default: break;
+    }
+  };
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -80,7 +79,7 @@ const mostrarAlertas = (alerta) =>{
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-         mostrarAlertas("eliminado"); 
+        mostrarAlertas("eliminado");
       } else {
         mostrarAlertas("error");
       }
@@ -91,71 +90,69 @@ const mostrarAlertas = (alerta) =>{
   };
 
   //Barra de busqueda
-    const [ busqueda, setBusqueda ] = useState("")
-      //capturar valor a buscar
-    const valorBuscar = (e) => {
-      setBusqueda(e.target.value)   
+  const [busqueda, setBusqueda] = useState("")
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value)
   }
-      //metodo de filtrado 
+  //metodo de filtrado 
   let results = []
-   if(!busqueda){
-       results = registros
-   }else{
-        results = registros.filter( (dato) =>
-        dato.fecha_inicial.toString().includes(busqueda.toLocaleLowerCase()) || 
-        dato.fecha_final.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.fecha_creacion.toString().includes(busqueda.toLocaleLowerCase())
-        )
-   };
+  if (!busqueda) {
+    results = registros
+  } else {
+    results = registros.filter((dato) =>
+      dato.id_libro_diario_enca.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
 
-    
-  //Ventana modal de confirmación de eliminar
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
-  const [periodoVerMas, setPeriodoVerMas] = useState({});  
+  const [encabezadoVerMas, setEncabezadoVerMas] = useState({});
+
+  //Ventana modal de confirmación de eliminar
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
+
 
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID PERIODO CONTABLE",
+      name: "ID LIBRO DIARIO ENCABEZADO",
+      selector: (row) => row.id_libro_diario_enca,
+      sortable: true,
+    },
+    {
+      name: "PERIODO CONTABLE",
       selector: (row) => row.id_periodo_contable,
       sortable: true,
     },
     {
-      name: "DESCRIPCIÓN PERIODO",
-      selector: (row) => row.descripcion_periodo,
+      name: "ESTADO",
+      selector: (row) => row.tipo_estado,
       sortable: true,
     },
     {
-        name: "FECHA INICIAL",
-        selector: (row) => row.fecha_inicial,
-        sortable: true,
+      name: "DESCRIPCION",
+      selector: (row) => row.descripcion,
+      sortable: true,
     },
     {
-        name: "FECHA FINAL",
-        selector: (row) => row.fecha_final,
-        sortable: true,
-    },
-    /*{
-        name: "FECHA DE CREACIÓN",
-        selector: (row) => row.fecha_creacion,
-        sortable: true,
+      name: "FECHA INICIAL",
+      selector: (row) => row.fecha_inicial,
+      sortable: true,
     },
     {
-        name: "ID USUARIO",
-        selector: (row) => row.id_usuario,
-        sortable: true,
-    },*/
-    {
-        name: "NOMBRE USUARIO",
-        selector: (row) => row.nombre_usuario,
-        sortable: true,
+      name: "FECHA FINAL",
+      selector: (row) => row.fecha_final,
+      sortable: true,
     },
-    
+    {
+      name: "DESCRIPCION",
+      selector: (row) => row.descripcion_estado_periodo,
+      sortable: true,
+    },
 
     {
       name: "ACCIONES",
@@ -167,14 +164,14 @@ const mostrarAlertas = (alerta) =>{
             title="Ver Más..."
             onClick={() => {
               abrirModalVerMas();
-              setPeriodoVerMas(row);
+              setEncabezadoVerMas(row);
             }}
           >
             <i className="fa-solid fa-eye"></i>
           </Link>
-          &nbsp;          
+          &nbsp;
           <Link
-            to="/admin/editarperiodo"
+            to="/mostrarlibrodetalle" //AQUI
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -187,7 +184,7 @@ const mostrarAlertas = (alerta) =>{
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_periodo_contable);
+              setRegistroDelete(row.id_subcuenta);
               abrirModalEliminar();
             }}
           >
@@ -209,9 +206,9 @@ const mostrarAlertas = (alerta) =>{
     selectAllRowsItemText: "Todos",
   };
 
-  return (    
+  return (
     <div className="container">
-      <h3>Periodo Contable</h3>
+      <h3>Encabezado Libro Diario</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
@@ -227,7 +224,7 @@ const mostrarAlertas = (alerta) =>{
               aria-label="First group"
             >
               <Link
-                to="/admin/crearperiodo"
+                to="/"  //AQUI
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
@@ -277,7 +274,7 @@ const mostrarAlertas = (alerta) =>{
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por fecha inicial/fecha final/fecha creación..."
+              placeholder="Buscar id de encabezado libro diario..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -309,43 +306,34 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">ID: </p>
             </div>
             <div className="col-sm-6">
-              <p> {periodoVerMas.id_periodo_contable} </p>
+              <p> {encabezadoVerMas.id_libro_diario_enca} </p>
             </div>
           </div>
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">DESCRIPCIÓN: </p>
+              <p className="colorText">FECHA: </p>
             </div>
             <div className="col-sm-6">
-              <p> {periodoVerMas.descripcion_periodo} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">FECHA INICIAL: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {periodoVerMas.fecha_final} </p>
+              <p> {encabezadoVerMas.fecha} </p>
             </div>
           </div>
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">FECHA FINAL: </p>
+              <p className="colorText">MONTO DEBE: </p>
             </div>
             <div className="col-sm-6">
-              <p> {periodoVerMas.fecha_final} </p>
+              <p> {encabezadoVerMas.monto_debe} </p>
             </div>
           </div>
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">FECHA DE CREACIÓN: </p>
+              <p className="colorText">MONTO HABER: </p>
             </div>
             <div className="col-sm-6">
-              <p> {periodoVerMas.fecha_creacion} </p>
+              <p> {encabezadoVerMas.monto_haber} </p>
             </div>
           </div>
 
@@ -354,7 +342,16 @@ const mostrarAlertas = (alerta) =>{
               <p className="colorText">USUARIO: </p>
             </div>
             <div className="col-sm-6">
-              <p> {periodoVerMas.nombre_usuario} </p>
+              <p> {encabezadoVerMas.usuario} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">DESCRIPCION TIPO PERIODO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.descripcion_tipo_periodo} </p>
             </div>
           </div>
         </ModalBody>
@@ -363,7 +360,7 @@ const mostrarAlertas = (alerta) =>{
             Cerrar
           </Button>
         </ModalFooter>
-      </Modal>      
+      </Modal>
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
@@ -391,4 +388,4 @@ const mostrarAlertas = (alerta) =>{
   );
 };
 
-export default MostrarPeriodoContable;
+export default MostrarLibroDetalle;

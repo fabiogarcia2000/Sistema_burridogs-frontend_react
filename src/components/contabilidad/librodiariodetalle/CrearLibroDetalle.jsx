@@ -144,7 +144,7 @@ const Formulario = () => {
                       const res = await axios.put(`${URLCrear}${valores.id_libro_diario_deta}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarlibrodetalle");
+                        navigate("/admin/mostrarlibrodetalle");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -155,7 +155,7 @@ const Formulario = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarlibrodetalle");
+                navigate("/admin/mostrarlibrodetalle");
               }
         }}
       >
@@ -379,7 +379,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarlibrodetalle"
+              to="/admin/mostrarlibrodetalle"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

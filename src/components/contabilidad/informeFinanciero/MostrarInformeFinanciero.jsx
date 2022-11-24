@@ -132,7 +132,7 @@ const mostrarAlertas = (alerta) =>{
         <>
           
           <Link
-            to="/editarinformefinanciero"
+            to="/admin/editarinformefinanciero"
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -185,7 +185,7 @@ const mostrarAlertas = (alerta) =>{
               aria-label="First group"
             >
               <Link
-                to="/crearinformefinanciero"
+                to="/admin/crearinformefinanciero"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

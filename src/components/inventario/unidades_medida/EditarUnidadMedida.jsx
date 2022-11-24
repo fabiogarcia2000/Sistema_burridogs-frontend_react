@@ -82,14 +82,14 @@ const FormularioEditar = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              navigate("/mostrarunidadesmedida");
+              navigate("/admin/mostrarunidadesmedida");
             } else {
               mostrarAlertas("error");
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrarunidadesmedida");
+            navigate("/admin/mostrarunidadesmedida");
           }
         }}
       >
@@ -149,7 +149,7 @@ const FormularioEditar = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarunidadesmedida"
+              to="/admin/mostrarunidadesmedida"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

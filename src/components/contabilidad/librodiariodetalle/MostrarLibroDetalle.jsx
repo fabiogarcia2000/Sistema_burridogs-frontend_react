@@ -7,7 +7,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getDetPorI/44";
+const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getDetPorI/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const MostrarLibroDetalle= () => {
@@ -165,7 +165,7 @@ const mostrarAlertas = (alerta) =>{
           </Link>
           &nbsp;
           <Link
-            to="/editarlibrodetalle" //AQUI
+            to="/admin/editarlibrodetalle" //AQUI
             type="button"
             className="btn btn-light"
             title="Editar"

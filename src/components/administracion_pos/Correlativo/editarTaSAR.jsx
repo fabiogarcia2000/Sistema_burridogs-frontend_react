@@ -163,7 +163,7 @@ const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
                 const res = await axios.put(`${URLEditar}${valores.id_correlativo}`, valores);
                 if (res.status === 200) {
                   mostrarAlertas("guardado");
-                  navigate("/mostrartalonarioSAR");
+                  navigate("/admin/mostrartalonarioSAR");
               } else {
                 mostrarAlertas("error");
               }
@@ -171,7 +171,7 @@ const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrartalonarioSAR");
+                navigate("/admin/mostrartalonarioSAR");
               }
         }}
       >
@@ -437,7 +437,7 @@ const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
               Guardar
             </button>
             <Link
-              to="/mostrartalonarioSAR"
+              to="/admin/mostrartalonarioSAR"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

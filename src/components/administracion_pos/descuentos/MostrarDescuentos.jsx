@@ -154,7 +154,7 @@ const MostrarSucursales = () => {
           </Link>
           &nbsp;
           <Link
-            to="/editardescuento"
+            to="/admin/editardescuento"
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -207,7 +207,7 @@ const MostrarSucursales = () => {
               aria-label="First group"
             >
               <Link
-                to="/creardescuento"
+                to="/admin/creardescuento"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

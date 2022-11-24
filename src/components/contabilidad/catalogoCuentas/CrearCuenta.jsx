@@ -137,7 +137,7 @@ const CrearCuenta = () => {
            await axios.put(`${URLCrear}`, valores);
             //if (res.status === 200) {
               mostrarAlertas("guardado");
-              navigate("/mostrarcatalogo");
+              navigate("/admin/mostrarcatalogo");
           /*} else {
             mostrarAlertas("error");
           }       */
@@ -145,7 +145,7 @@ const CrearCuenta = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarcatalogo");
+                navigate("/admin/mostrarcatalogo");
               }
         }}
       >
@@ -275,7 +275,7 @@ const CrearCuenta = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarcatalogo"
+              to="/admin/mostrarcatalogo"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

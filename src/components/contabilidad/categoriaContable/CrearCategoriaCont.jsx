@@ -84,7 +84,7 @@ const CrearCategoriaCont = () => {
                       const res = await axios.put(`${URLCrear}${valores.id_categoria}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarcategoriacont");
+                        navigate("/admin/mostrarcategoriacont");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -95,7 +95,7 @@ const CrearCategoriaCont = () => {
               } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarcategoriacont");
+                navigate("/admin/mostrarcategoriacont");
               }
         }}
       >
@@ -133,7 +133,7 @@ const CrearCategoriaCont = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarcategoriacont"
+              to="/admin/mostrarcategoriacont"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

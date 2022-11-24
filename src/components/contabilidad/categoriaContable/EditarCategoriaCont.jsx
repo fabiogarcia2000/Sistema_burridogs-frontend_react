@@ -70,7 +70,7 @@ const URLEditar = "http://190.53.243.69:3001/mc_categoriacont/actualizar-inserta
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarcategoriacont");
+                    navigate("/admin/mostrarcategoriacont");
                   } else {
                     mostrarAlertas("error");
                   }
@@ -78,7 +78,7 @@ const URLEditar = "http://190.53.243.69:3001/mc_categoriacont/actualizar-inserta
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarcategoriacont");
+                navigate("/admin/mostrarcategoriacont");
               }
         }}
       >
@@ -138,7 +138,7 @@ const URLEditar = "http://190.53.243.69:3001/mc_categoriacont/actualizar-inserta
               Guardar
             </button>
             <Link
-              to="/mostrarcategoriacont"
+              to="/admin/mostrarcategoriacont"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

@@ -78,7 +78,7 @@ const MostrarSalidaMds = () => {
       cell: (row) => (
         <>
           <Link
-            to={`/editarsalidamds/${row.id}/edit`}
+            to={`/admin/editarsalidamds/${row.id}/edit`}
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -127,7 +127,7 @@ const MostrarSalidaMds = () => {
               aria-label="First group"
             >
               <Link
-                to="/crearsalidamds"
+                to="/admin/crearsalidamds"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

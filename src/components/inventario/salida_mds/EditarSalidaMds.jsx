@@ -224,7 +224,7 @@ const EditarSalidaMds = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarsalidamds"
+              to="/admin/mostrarsalidamds"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

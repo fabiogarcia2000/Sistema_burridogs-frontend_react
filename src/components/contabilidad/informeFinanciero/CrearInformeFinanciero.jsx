@@ -86,7 +86,7 @@ const CrearInformeFinanciero = () => {
                       const res = await axios.put(`${URLCrear}${valores.id_informe_financiero}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarinformefinanciero");
+                        navigate("/admin/mostrarinformefinanciero");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -97,7 +97,7 @@ const CrearInformeFinanciero = () => {
               } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarinformefinanciero");
+                navigate("/admin/mostrarinformefinanciero");
               }
         }}
       >
@@ -134,7 +134,7 @@ const CrearInformeFinanciero = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarinformefinanciero"
+              to="/admin/mostrarinformefinanciero"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

@@ -102,7 +102,7 @@ const EditarPeriodoContable = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              navigate("/mostrarperiodo");
+              navigate("/admin/mostrarperiodo");
             } else {
               mostrarAlertas("error");
             }
@@ -110,7 +110,7 @@ const EditarPeriodoContable = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrarperiodo");
+            navigate("/admin/mostrarperiodo");
           }
         }}
       >
@@ -292,7 +292,7 @@ const EditarPeriodoContable = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarperiodo"
+              to="/admin/mostrarperiodo"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

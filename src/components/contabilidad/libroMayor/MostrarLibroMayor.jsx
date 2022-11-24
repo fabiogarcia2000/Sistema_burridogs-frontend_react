@@ -5,13 +5,9 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
-
-
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
@@ -53,7 +49,6 @@ const MostrarLibroMayor = () => {
     }
   };
 
-
   //************************************************/
 //petición a api con la opción del select
 const getPediodoSelect = async () => {
@@ -79,7 +74,6 @@ useEffect(() => {
 }, [opcionSelect]);
 
 //************************************************/
-
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -315,7 +309,7 @@ useEffect(() => {
               className="btn-group me-2"
             >
               <Link
-                to="/mostrarbalance"
+                to="/admin/mostrarbalance"
                 type="button"
                 className="btn btn-danger"
                 title="Agregar Nuevo"
@@ -327,7 +321,7 @@ useEffect(() => {
               className="btn-group me-2"
             >
               <Link
-                to="/mostrarresultado"
+                to="/admin/mostrarresultado"
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a Excel"
@@ -339,7 +333,7 @@ useEffect(() => {
               className="btn-group me-2"
             >
               <Link
-                to="/mostraringresosgasto"
+                to="/admin/mostraringresosgasto"
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"

@@ -112,7 +112,7 @@ const FormularioEditar = () => {
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarPOS");
+                    navigate("/admin/mostrarPOS");
                   } else {
                     mostrarAlertas("error");
                   }
@@ -120,7 +120,7 @@ const FormularioEditar = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarPOS");
+                navigate("/admin/mostrarPOS");
               }
         }}
       >
@@ -228,7 +228,7 @@ const FormularioEditar = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarPOS"
+              to="/admin/mostrarPOS"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

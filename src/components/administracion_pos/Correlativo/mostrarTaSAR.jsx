@@ -194,7 +194,7 @@ const mostrarAlertas = (alerta) =>{
           </Link>
           &nbsp;
           <Link
-            to="/editarTaSAR"
+            to="/admin/editarTaSAR"
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -247,7 +247,7 @@ const mostrarAlertas = (alerta) =>{
               aria-label="First group"
             >
               <Link
-                to="/creartalonarioSAR"
+                to="/admin/creartalonarioSAR"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

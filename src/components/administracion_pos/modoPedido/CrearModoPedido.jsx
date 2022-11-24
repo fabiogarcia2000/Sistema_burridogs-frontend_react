@@ -101,7 +101,7 @@ const Formulario = () => {
                       const res = await axios.put(`${URLCrear}${valores.cod_modo_pedido}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarmodopedido");
+                        navigate("/admin/mostrarmodopedido");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -112,7 +112,7 @@ const Formulario = () => {
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarmodopedido");
+                navigate("/admin/mostrarmodopedido");
               }
         }}
       >
@@ -193,7 +193,7 @@ const Formulario = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarmodopedido"
+              to="/admin/mostrarmodopedido"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

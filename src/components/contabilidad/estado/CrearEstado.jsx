@@ -88,7 +88,7 @@ const CrearEstado = () => {
                       const res = await axios.put(`${URLCrear}${valores.id_estado}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
-                        navigate("/mostrarestado");
+                        navigate("/admin/mostrarestado");
                     } else {
                       mostrarAlertas("error");
                     }
@@ -99,7 +99,7 @@ const CrearEstado = () => {
               } */catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarestado");
+                navigate("/admin/mostrarestado");
               }
         }}
       >
@@ -136,7 +136,7 @@ const CrearEstado = () => {
               Guardar
             </button>
             <Link
-              to="/mostrarestado"
+              to="/admin/mostrarestado"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

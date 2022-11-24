@@ -209,7 +209,7 @@ const MostrarArticulos = () => {
           </Link>
           &nbsp;
           <Link
-            to="/editararticulo"
+            to="/admin/editararticulo"
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -262,7 +262,7 @@ const MostrarArticulos = () => {
               aria-label="First group"
             >
               <Link
-                to="/creararticulo"
+                to="/admin/creararticulo"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"

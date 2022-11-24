@@ -107,7 +107,7 @@ const Formulario = () => {
                   const res = await axios.put(`${URLCrear}${valores.cod_descuento}`, valores);
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrardescuentos");
+                    navigate("/admin/mostrardescuentos");
                 } else {
                   mostrarAlertas("error");
                 }
@@ -118,7 +118,7 @@ const Formulario = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/mostrardescuentos");
+            navigate("/admin/mostrardescuentos");
           }
         
         }}
@@ -219,7 +219,7 @@ const Formulario = () => {
             </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">Guardar</button>
-            <Link to="/mostrardescuentos" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
+            <Link to="/admin/mostrardescuentos" type="button" className='btn btn-danger mb-3 me-2'>Cancelar</Link>
           </Form>
         )}
       </Formik>
