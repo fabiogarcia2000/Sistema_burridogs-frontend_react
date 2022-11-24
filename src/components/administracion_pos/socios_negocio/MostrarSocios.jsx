@@ -213,7 +213,7 @@ const MostrarSocios = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.cod_categoria);
+              setRegistroDelete(row.cod_socio_negocio);
               abrirModalEliminar();
             }}
           >
@@ -270,7 +270,7 @@ const MostrarSocios = () => {
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
-                onClick={()=>{
+                onClick={() => {
                   Export_Excel(results);
                 }}
               >
@@ -280,7 +280,7 @@ const MostrarSocios = () => {
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
-                onClick={()=>{
+                onClick={() => {
                   Export_PDF(results);
                 }}
               >

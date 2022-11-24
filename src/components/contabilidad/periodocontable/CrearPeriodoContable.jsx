@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -6,15 +5,38 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
+import { useState, useEffect } from "react";
 
-const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
+const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
+
+const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
+
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
 const CrearPeriodoContable = () => {
+
   const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
+
+//procedimineto para obtener todos las sucursales y mostrarlas en select
+const [sucursal, setsucursal] = useState([]);
+useEffect(() => {
+  getsucursal();
+}, []);
+
+  //petición a api
+  const getsucursal = async () => {
+    try {
+      const res = await axios.get(UrlMostrar);
+      setsucursal(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -27,6 +49,7 @@ const CrearPeriodoContable = () => {
           confirmButtonText: 'Ok'
         });
         break;
+
       case 'error':
         Swal.fire({
           title: 'Error',
@@ -36,6 +59,7 @@ const CrearPeriodoContable = () => {
           confirmButtonText: 'Ok'
         });
         break;
+
       case 'duplicado':
         Swal.fire({
           text: 'Ya existe ese periodo contable',
@@ -47,11 +71,13 @@ const CrearPeriodoContable = () => {
       default: break;
     }
   };
+
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
+          id_periodo_contable:edit.id_periodo_contable,
           descripcion_periodo: "",
           fecha_inicial: "",
           fecha_final: "",
@@ -59,6 +85,7 @@ const CrearPeriodoContable = () => {
           id_usuario: edit.id_usuario,
           tipo_periodo: "",
           abierto: "1",
+
         }}
         //Funcion para validar
         validate={(valores) => {
@@ -78,32 +105,33 @@ const CrearPeriodoContable = () => {
             errores.fecha_final = "Por favor seleccione fecha final";
           }
           if (!valores.tipo_periodo) {
-            errores.tipo_periodo = "Por favor seleccione el tipo de periodo";
+           errores.tipo_periodo = "Por favor seleccione el tipo de periodo";
           }
           if (!valores.abierto) {
             errores.abierto = "Por favor seleccione una opcion";
           }
           return errores;
+
         }}
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
           try {
-            // const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
-            // console.log(res)
-            // if (res.data === "") {
-            //procedimineto para guardar el nuevo registro en el caso de que no exista
-            const res = await axios.put(`${URLCrear}`, valores);
-            if (res.status === 200) {
-              console.log(res)
-              mostrarAlertas("guardado");
-              navigate("/mostrarperiodo");
-            } else {
-              mostrarAlertas("error");
+
+            /*const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
+            console.log(res)
+            if (res.data === "") {*/
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(`${URLCrear}`);
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
+                navigate("/mostrarperiodo");
+              } else {
+                mostrarAlertas("error");
+              }
+            }/*else {
+              mostrarAlertas("duplicado");
             }
-            // } else {
-            //    mostrarAlertas("duplicado");
-            //  }
-          } catch (error) {
+          } */catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/mostrarperiodo");
@@ -135,6 +163,7 @@ const CrearPeriodoContable = () => {
                   />
                 </div>
               </div>
+
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="fechainicial" className="form-label">
@@ -156,6 +185,7 @@ const CrearPeriodoContable = () => {
                 </div>
               </div>
             </div>
+
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -176,6 +206,7 @@ const CrearPeriodoContable = () => {
                   />
                 </div>
               </div>
+
               <div className="col-sm-6">
                 <div className="mb-3" >
                   <label htmlFor="fechacreacion" className="form-label">
@@ -196,6 +227,7 @@ const CrearPeriodoContable = () => {
                 </div>
               </div>
             </div>
+
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -205,10 +237,9 @@ const CrearPeriodoContable = () => {
                   <Field
                     type="text"
                     className="form-control"
-                    id="idUsuario"
+                    id="nombreUsuario"
                     name="id_usuario"
                     placeholder="Nombre usuario..."
-                   
                   />
                   <ErrorMessage
                     name="id_usuario"
@@ -228,47 +259,49 @@ const CrearPeriodoContable = () => {
                     className="form-select"
                     id="tipoPeriodo"
                     name="tipo_periodo"
-                    placeholder="Tipo Periodo..."
-                  >
-                    <option value="1">Mensual</option>
-                    <option value="0">Trimestral</option>
-                    <option value="0">Anual</option>
-                  </Field>
-                  <ErrorMessage
-                    name="tipo_periodo"
-                    component={() => (
-                      <div className="error">{errors.tipo_periodo}</div>
-                    )}
+                    >
+                      <option value="">Seleccionar...</option>
+                      {sucursal.map((item, i) =>(
+                        <option key={i} value={item.id_periodo_contable}>{item.tipo_periodo}</option>
+                      ))}
+                    </Field>
+    
+                      <ErrorMessage
+                        name="id_periodo_contable"
+                        component={() => (
+                          <div className="error">{errors.id_periodo_contable}</div>
+                        )}
                   />
                 </div>
               </div>
-            </div>
+            </div> 
             <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="estadoPeriodo" className="form-label">
-                    Estado periodo:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="estadoPeriodo"
-                    name="abierto"
-                  >
-                    <option value="1">Abierto</option>
-                    <option value="0">Cerrado</option>
-                  </Field>
-                  <ErrorMessage
-                    name="abierto"
-                    component={() => (
-                      <div className="error">{errors.abierto}</div>
-                    )}
-                  />
+                <div className="col-sm-6">
+                  <div className="mb-3">
+                    <label htmlFor="estadoPeriodo" className="form-label">
+                      Estado periodo:
+                    </label>
+                    <Field
+                      as="select"
+                      className="form-select"
+                      id="estadoPeriodo"
+                      name="abierto"
+                      >
+                      <option value="1">Abierto</option>
+                      <option value="0">Cerrado</option>
+                    </Field>
+
+                    <ErrorMessage
+                      name="abierto"
+                      component={() => (
+                        <div className="error">{errors.abierto}</div>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
             <button className="btn btn-success mb-3 me-2" type="submit">
-            Guardar
+              Guardar
             </button>
             <Link
               to="/mostrarperiodo"
@@ -283,4 +316,5 @@ const CrearPeriodoContable = () => {
     </div>
   );
 };
+
 export default CrearPeriodoContable;

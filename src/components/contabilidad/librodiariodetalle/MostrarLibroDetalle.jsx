@@ -7,7 +7,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getall/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getDetPorI/44";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const MostrarLibroDetalle= () => {
@@ -17,7 +17,6 @@ const MostrarLibroDetalle= () => {
   useEffect(() => {
     getRegistros();
   }, []);
-
   
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
@@ -124,23 +123,13 @@ const mostrarAlertas = (alerta) =>{
       sortable: true,
     },
     {
-      name: "ID LIBRO DIARIO ENCABEZADO",
+      name: "ID ENCABEZADO",
       selector: (row) => row.id_libro_diario_enca,
       sortable: true,
     },
     {
         name: "SUBCUENTA",
         selector: (row) => row.nombre_subcuenta,
-        sortable: true,
-    },
-    {
-        name: "ESTADO",
-        selector: (row) => row.tipo_estado,
-        sortable: true,
-    },
-    /*{
-        name: "PARCIAL",
-        selector: (row) => row.parcial,
         sortable: true,
     },
     {
@@ -158,32 +147,6 @@ const mostrarAlertas = (alerta) =>{
         selector: (row) => row.sinopsis,
         sortable: true,
     },
-    {
-        name: "TIPO ESTADO",
-        selector: (row) => row.tipo_estado,
-        sortable: true,
-    },
-    {
-        name: "ID USUARIO",
-        selector: (row) => row.id_usuario,
-        sortable: true,
-    },
-    {
-        name: "NOMBRE USUARIO",
-        selector: (row) => row.nombre_usuario,
-        sortable: true,
-    },
-    {
-        name: "SUCURSAL",
-        selector: (row) => row.sucursal,
-        sortable: true,
-    },
-    {
-        name: "CENTRO COSTO",
-        selector: (row) => row.centro_costo,
-        sortable: true,
-    }*/,
-    
 
     {
       name: "ACCIONES",
@@ -338,69 +301,6 @@ const mostrarAlertas = (alerta) =>{
             </div>
             <div className="col-sm-6">
               <p> {detalleVerMas.id_libro_diario_deta} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">ENCABEZADO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.id_libro_diario_enca} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">SUBCUENTA: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.nombre_subcuenta} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">ESTADO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.tipo_estado} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">PARCIAL: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.parcial} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">MONTO EN DEBE: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.monto_debe} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">MONTO EN HABER: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.monto_haber} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">SINOPSIS: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalleVerMas.sinopsis} </p>
             </div>
           </div>
 

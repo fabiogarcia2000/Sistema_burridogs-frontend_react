@@ -4,14 +4,17 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_libromayor/getall/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
-const MostrarLibroMayor= () => {
+const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
+
+const MostrarLibroMayor = () => {
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -19,7 +22,6 @@ const MostrarLibroMayor= () => {
     getRegistros();
   }, []);
 
-  
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -31,48 +33,58 @@ const MostrarLibroMayor= () => {
     }
   };
 
+  const [sucursal, setperiodo] = useState([]);
+  useEffect(() => {
+    getperiodo();
+  }, []);
 
-//Alertas de éxito o error al eliminar
-const mostrarAlertas = (alerta) =>{
-  switch (alerta){
-    case 'eliminado':
-      Swal.fire({
-        title: '¡Eliminado!',
-        text: "El registro se eliminó con éxito",
-        icon: 'success',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
+  //petición a api
+  const getperiodo = async () => {
+    try {
+      const res = await axios.get(UrlPeriodo);
+      setperiodo(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
-    break;
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case 'eliminado':
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: "El registro se eliminó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+        break;
 
-    case 'error':
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudo eliminar el registro',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo eliminar el registro',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+        break;
 
-    break;
+      case 'errormostrar':
+        Swal.fire({
+          title: 'Error al Mostrar',
+          text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
 
-    case 'errormostrar':
-      Swal.fire({
-        title: 'Error al Mostrar',
-        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-
-    default: break;
-  }
-};
-
+        break;
+      default: break;
+    }
+  };
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -81,7 +93,7 @@ const mostrarAlertas = (alerta) =>{
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-         mostrarAlertas("eliminado"); 
+        mostrarAlertas("eliminado");
       } else {
         mostrarAlertas("error");
       }
@@ -92,33 +104,36 @@ const mostrarAlertas = (alerta) =>{
   };
 
   //Barra de busqueda
-    const [ busqueda, setBusqueda ] = useState("")
-      //capturar valor a buscar
-    const valorBuscar = (e) => {
-      setBusqueda(e.target.value)   
+  const [busqueda, setBusqueda] = useState("")
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value)
   }
-      //metodo de filtrado 
+  //metodo de filtrado 
   let results = []
-   if(!busqueda){
-       results = registros
-   }else{
-        results = registros.filter( (dato) =>
-        dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||     
-        dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase()) 
-        )
-   };
+  if (!busqueda) {
+    results = registros
+  } else {
+    results = registros.filter((dato) =>
+      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
 
-    
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [encabezadoVerMas, setEncabezadoVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID",
-      selector: (row) => row.id_libro_mayor,
+      name: "ID LIBRO DIARIO ENCABEZADO",
+      selector: (row) => row.id_libro_diario_enca,
       sortable: true,
     },
     {
@@ -127,30 +142,35 @@ const mostrarAlertas = (alerta) =>{
       sortable: true,
     },
     {
-        name: "FECHA",
-        selector: (row) => row.fecha,
-        sortable: true,
+      name: "ESTADO",
+      selector: (row) => row.tipo_estado,
+      sortable: true,
     },
     {
-        name: "CUENTA",
-        selector: (row) => row.nombre_cuenta,
-        sortable: true,
+      name: "DESCRIPCION",
+      selector: (row) => row.descripcion,
+      sortable: true,
     },
     {
-        name: "SUBCUENTA",
-        selector: (row) => row.nombre_subcuenta,
-        sortable: true,
+      name: "FECHA INICIAL",
+      selector: (row) => row.fecha_inicial,
+      sortable: true,
     },
     {
-        name: "SALDO",
-        selector: (row) => row.saldo,
-        sortable: true,
+      name: "FECHA FINAL",
+      selector: (row) => row.fecha_final,
+      sortable: true,
     },
+    {
+      name: "DESCRIPCION",
+      selector: (row) => row.descripcion_estado_periodo,
+      sortable: true,
+    },
+
     {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          
           <Link
             to="/editarlibromayor"
             type="button"
@@ -187,7 +207,7 @@ const mostrarAlertas = (alerta) =>{
     selectAllRowsItemText: "Todos",
   };
 
-  return (    
+  return (
     <div className="container">
       <h3>Libro Mayor</h3>
       <br />
@@ -199,7 +219,7 @@ const mostrarAlertas = (alerta) =>{
             role="toolbar"
             aria-label="Toolbar with button groups"
           >
-          
+
             <div
               className="btn-group me-2"
               role="group"
@@ -252,12 +272,6 @@ const mostrarAlertas = (alerta) =>{
       </div>
       <br />
 
-    
-          
-             
-              
-
-
       {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
       <div className="row">
         <div className="col">
@@ -288,10 +302,10 @@ const mostrarAlertas = (alerta) =>{
               >
                 <i className="fa-solid fa-file"></i> Estado de resultados
               </Link>
-              </div>
+            </div>
             <div
               className="btn-group me-2"
-              >
+            >
               <Link
                 to="/mostraringresosgasto"
                 type="button"
@@ -303,41 +317,61 @@ const mostrarAlertas = (alerta) =>{
             </div>
             <div
               className="btn-group me-2"
-              >
-              <Link
-                to="/mayorizar"
-                type="button"
-                className="btn btn-info"
-                title="Exportar a PDF"
-              >
-                <i className="fa-solid fa-file"></i> Mayorizar
-              </Link>
+            >
             </div>
 
-            </div>
-            </div>
-        
-        {/*Mostrar imput select con periodos*/}
-        <div className="col-4">
-        <div className="input-group flex-nowrap">
-                <select
-                  as="select"
-                  className="form-select"
-                  id="periodocontable"
-                  name="id_periodo_contable"
-                >
-                  <option value="">Seleccionar periodo contable...</option>
-                  <option value="1">Periodo 1</option>
-                  <option value="2">Periodo 2</option>
-                </select>
-            </div>
           </div>
-          </div>
-        
-      
+        </div>
+
+        <Formik
+          //valores iniciales
+          initialValues={{
+            descripcion_periodo: "",
+            fecha_inicial: "",
+            fecha_final: "",
+
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
+
+          }}
+
+        >
+          {({ errors, values }) => (
+            <Form>
+              <div className="col-4">
+                <div className="mb-3">
+
+                  <label htmlFor="id_periodo_contable" className="form-label">
+                    Periodo contable
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="id_periodo_contable"
+                    name="id_periodo_contable"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {sucursal.map((item, i) => (
+                      <option key={i} value={item.id_periodo_contable}> Periodo:{item.id_periodo_contable} Fecha inicio:{item.fecha_inicial} Fecha final{item.fecha_final}</option>
+                    ))}
+                  </Field>
+
+                  <ErrorMessage
+                    name="id_sucursal"
+                    component={() => (
+                      <div className="error">{errors.id_sucursal}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
       <br />
 
-       
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
         <DataTable
@@ -350,6 +384,71 @@ const mostrarAlertas = (alerta) =>{
           fixedHeaderScrollHeight="550px"
         />
       </div>
+
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">ID: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.id_libro_diario_enca} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.fecha} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MONTO DEBE: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.monto_debe} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MONTO HABER: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.monto_haber} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">USUARIO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.usuario} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">DESCRIPCION TIPO PERIODO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {encabezadoVerMas.descripcion_tipo_periodo} </p>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
@@ -372,7 +471,6 @@ const mostrarAlertas = (alerta) =>{
           </Button>
         </ModalFooter>
       </Modal>
-
     </div>
   );
 };
