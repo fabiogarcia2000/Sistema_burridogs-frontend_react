@@ -9,6 +9,7 @@ import Home from "../pages/Home";
 
 import Productos from "../pages/inventario/Productos";
 
+import LoginPos from "../components/ventas/loginPOS/LoginPos";
 import PuntoDeVentas from "../components/ventas/PuntoVentas/PuntoDeVentas";
 import VentasRealizadas from "../components/ventas/listaVentas/ListaVentas";
 
@@ -169,6 +170,7 @@ function Rutas() {
           <Routes>
             <Route path="/" element={<Home />} />
             {/*Rutas Administración POS*/}
+            <Route path="/login-pos" element={<LoginPos />} />
             <Route path="/punto-de-ventas" element={<PuntoDeVentas />} />
             <Route path="/ventas-realizadas" element={<VentasRealizadas />} />
 
