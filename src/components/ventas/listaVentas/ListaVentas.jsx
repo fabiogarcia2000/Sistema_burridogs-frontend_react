@@ -1,180 +1,67 @@
-import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates";
+import { useState} from "react";
+
 import Swal from "sweetalert2";
-//import { Export_Excel } from "./generarExcel/Export_Excel";
-//import { Export_PDF } from "./generarPDF/Export_PDF";
 
-const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
-const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
+const UrlConsultar = "http://190.53.243.69:3001/venta/venta_por_fecha/";
 
-const MostrarVentas = () => {
-  //Configurar los hooks
-  const [registroDelete, setRegistroDelete] = useState("");
-  const [registros, setRegistros] = useState([]);
-  useEffect(() => {
-    getRegistros();
-  }, []);
 
-  //procedimineto para obtener todos los registros
-  const getRegistros = async () => {
-    try {
-      const res = await axios.get(UrlMostrar);
-      setRegistros(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
+const VentaResumen = () => {
+    const [mostrar, setMostrar] = useState([]);
+    const [mostrar2, setMostrar2] = useState([]);
 
-  //Alertas de éxito o error al eliminar
-  const mostrarAlertas = (alerta) => {
-    switch (alerta) {
-      case "eliminado":
-        Swal.fire({
-          title: "¡Eliminado!",
-          text: "La categoría se eliminó con éxito",
-          icon: "success",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Ok",
-        });
+    //const [prueba, setPrueba] = useState({"fecha":"2022/11/01"});
 
-        break;
 
-      case "error":
-        Swal.fire({
-          title: "Error",
-          text: "No se pudo eliminar la categoría",
-          icon: "error",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Ok",
-        });
 
-        break;
-
-      case "errormostrar":
-        Swal.fire({
-          title: "Error al Mostrar",
-          text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
-          icon: "error",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Ok",
-        });
-
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  //procedimineto para eliminar un registro
-  const deleteRegistro = async () => {
-    try {
-      console.log(registroDelete);
-      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
-      getRegistros();
-      if (res.status === 200) {
-        mostrarAlertas("eliminado");
-      } else {
-        mostrarAlertas("error");
-      }
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("error");
-    }
-  };
-
-  //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("");
-  //capturar valor a buscar
-  const valorBuscar = (e) => {
+    //Barra de busqueda
+    const [busqueda, setBusqueda] = useState("");
+    //capturar valor a buscar
+    const valorBuscar = (e) => {
     setBusqueda(e.target.value);
-  };
-  //metodo de filtrado
-  let results = [];
-  if (!busqueda) {
-    results = registros;
-  } else {
-    results = registros.filter(
-      (dato) =>
-        dato.cod_categoria.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
-    );
-  }
+    };
 
-  //Ventana modal de confirmación de eliminar
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
-
-  //Ventana modal para mostrar mas
-  const [modalVerMas, setVerMas] = useState(false);
-  const abrirModalVerMas = () => setVerMas(!modalVerMas);
-  const [registroVerMas, setRegistroVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "CÓDIGO",
-      selector: (row) => row.cod_categoria,
+      name: "FECHA",
+      selector: (row) => row.fecha,
       sortable: true,
     },
     {
-      name: "DESCRIPCIÓN",
-      selector: (row) => row.descripcion,
+      name: "CLIENTE",
+      selector: (row) => row.nombre_cliente,
       sortable: true,
     },
     {
-      name: "ESTADO",
-      selector: (row) => (row.activo === "1" ? "ACTIVO" : "INACTIVO"),
+        name: "RTN",
+        selector: (row) => row.rtn,
+        sortable: true,
+    },
+    {
+      name: "VENTA TOTAL",
+      selector: (row) => row.venta_total,
       sortable: true,
     },
     {
-      name: "ACCIONES",
-      cell: (row) => (
-        <>
-          <Link
-            type="button"
-            className="btn btn-light"
-            title="Ver Más..."
-            onClick={() => {
-              abrirModalVerMas();
-              setRegistroVerMas(row);
-            }}
-          >
-            <i className="fa-solid fa-eye"></i>
-          </Link>
-          &nbsp;
-          <Link
-            type="button"
-            className="btn btn-light"
-            title="Imprimir..."
-            onClick={() => {
-
-            }}
-          >
-            <i className="fa-solid fa-print"></i>
-          </Link>
-          &nbsp;
-          <Link
-            to="#"
-            type="button"
-            className="btn btn-light"
-            title="Editar"
-            onClick={() => setGlobalState("registroEdit", row)}
-          >
-            <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
-
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+        name: "FACTURA",
+        selector: (row) => row.correlativo,
+        sortable: true,
     },
+    {
+        name: "VENDEDOR",
+        selector: (row) => row.usuario,
+        sortable: true,
+    },
+    {
+        name: "ESTADO",
+        selector: (row) => row.descripcion_estado,
+        sortable: true,
+    }
+    
   ];
 
   //Configurar la paginación de la tabla
@@ -185,54 +72,107 @@ const MostrarVentas = () => {
     selectAllRowsItemText: "Todos",
   };
 
+  //Alertas de éxito o error
+  const mostrarAlertas = (alerta) =>{
+    switch (alerta){
+      case 'error': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se realizo la consulta',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+      break;
+
+      default: break;
+    }
+  };
+
+
+const getRegistros = async (fecha) => {
+  try {
+    console.log(fecha)
+    const res = await axios.get(UrlConsultar, {fecha});
+    setMostrar2(res.data)
+    console.log(res)
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+
   return (
     <div className="container">
-      <h3>Ventas Realizadas</h3>
+      <h3>Consultar Ventas</h3>
       <br />
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
 
+        <div className="row">
+        <Formik
+        //valores iniciales
+        initialValues={{
+          fecha: ""
+        }}
+        //Funcion para validar
+        validate={(valores) => {
+          let errores = {};
+
+          // Validacion de código
+          if (!valores.fecha) {
+            errores.fecha = "Seleccione una fecha";
+          }
+
+          return errores;
+        }}
+        onSubmit={(valores) => {
+          getRegistros(valores)
+        }}
+      >
+        {({ errors }) => (
+          <Form>
+
+            <div className="row g-3">
+              <div className="col-4">
+                <label htmlFor="fechaInicio" className="form-label">
+                  Fecha:
+                </label>
+                <Field
+                  type="date"
+                  className="form-select"
+                  id="fechaInicio"
+                  name="fecha"
+                />
+
+                <ErrorMessage
+                  name="fecha"
+                  component={() => <div className="error">{errors.fecha}</div>}
+                />
+              </div>
+
+              <div className="col-2 bottom-aligned">
+                <button className="btn btn-primary me-2" type="submit">
+                    Consultar
+                </button>
+
+{/** 
+                <button className="btn btn-danger" type="button">
+                    Limpiar
+                </button>
+*/}
+
+              </div>
             </div>
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="Second group"
-            >
-              <Button
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-                onClick={()=>{
-                  //Export_Excel(results);
-                }}
-              >
-                <i className="fa-solid fa-file-excel"></i>
-              </Button>
-              <Button
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-                onClick={() =>{
-                  //Export_PDF(results)
-                }}
-              >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Button>
-            </div>
-          </div>
+
+          </Form>
+        )}
+      </Formik>
         </div>
 
+        <br /> <hr /> <br /> 
+
+      {/*Mostrar los botones: Excel y PDF */}
+      <div className="row">
         {/*Mostrar la barra de busqueda*/}
         <div className="col-4">
           <div className="input-group flex-nowrap">
@@ -242,7 +182,7 @@ const MostrarVentas = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por código o descripción..."
+              placeholder="Buscar..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -253,97 +193,24 @@ const MostrarVentas = () => {
       <br />
 
       {/*Mostramos la tabla con los datos*/}
+ 
       <div className="row">
+      {mostrar.length > 0 ? (
         <DataTable
           columns={columns}
-          data={results}
+          data={mostrar}
           pagination
           paginationComponentOptions={paginationComponentOptions}
           highlightOnHover
           fixedHeader
-          fixedHeaderScrollHeight="550px"
+          fixedHeaderScrollHeight="200px"
         />
+      ) : (
+        <p className="text-center">No hay registros que mostrar</p>
+      )}
       </div>
-
-      {/* Ventana Modal de ver más*/}
-      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
-        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
-        <ModalBody>
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">CÓDIGO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.cod_categoria} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">CREADO POR: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.creado_por} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">FECHA DE CREACIÓN: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.fecha_creacion} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">MODIFICADO POR: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.modificado_por} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.fecha_modificacion} </p>
-            </div>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={abrirModalVerMas}>
-            Cerrar
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      {/* Ventana Modal de Eliminar*/}
-      <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
-        <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
-        <ModalBody>
-          <p>¿Está seguro de Eliminar este Registro?</p>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="danger"
-            onClick={() => {
-              deleteRegistro();
-              abrirModalEliminar();
-            }}
-          >
-            Eliminar
-          </Button>
-          <Button color="secondary" onClick={abrirModalEliminar}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
     </div>
   );
-};
+}
 
-export default MostrarVentas;
+export default VentaResumen

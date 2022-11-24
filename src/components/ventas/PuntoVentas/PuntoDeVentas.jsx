@@ -66,7 +66,7 @@ const PuntoDeVentas = () => {
     secuencia_enc: undefined,
     id_sucursal: 1,
     cod_sucursal: "BD01",
-    fecha: "2022-11-01",
+    fecha: "2022-11-23",
     numero_cuenta: 10002,
     venta_grabada_15: 100,
     venta_grabada_18: 0,
@@ -477,7 +477,7 @@ useEffect(() => {
 
   //resetea el valores
   const Refrescar = () => {
-    //window.location.reload();
+    window.location.reload();
   };
 
   //calcular el cambio a entregar
