@@ -22,7 +22,22 @@
     "reactstrap": "^9.1.4",
     "supervisor": "^0.12.0",
     "sweetalert2": "^11.6.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@material-ui/core": "4.11.0",
+    "@mui/material": "^5.10.13",
+    "eslint": "7.32.0",
+    "final-form": "4.6.1",
+    "material-ui": "0.20.2",
+    "md5": "^2.3.0",
+    "otp-generators": "^1.0.3",
+    "react-final-form": "3.4.2",
+    "react-input-mask": "^1.2.2",
+    "react-password-checklist": "^1.4.2",
+    "styled-components": "^5.3.6",
+    "validator": "^13.7.0",
+    "yup": "0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",

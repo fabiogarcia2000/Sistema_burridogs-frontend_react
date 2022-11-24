@@ -39,14 +39,14 @@
 	margin-bottom:-70px;	
 	}
 	.icon-camera{
-	position: absolute;
-    right: -1px;
-    top: 21px;
-    width: 30px;
-    height: 30px;
-    background-color: #FFF;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	position: absolute !important;
+    right: -1px !important;
+    top: 21px !important;
+    width: 30px !important;
+    height: 30px !important;
+    background-color: #FFF !important;
+    border-radius: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 	}

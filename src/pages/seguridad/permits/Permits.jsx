@@ -2,15 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import { downloadCSV, getOneParam, toUpperCaseField } from '../../../utils/utils';
-import '../preguntas/preguntas.css';
+
 // const urlapi = "http://localhost:3001";
 
-export default function Pregunta(props) {
-
+export default function Permits(props) {
   var dataPar = JSON.parse(localStorage.getItem("params")) || []
   var urlApiParam = getOneParam(dataPar, "URL_API")
   const urlapi = urlApiParam.valor
-
   /** 
      ** Creando bitacora  
      * enviado infromacion de bitacora a la BD
@@ -21,7 +19,7 @@ export default function Pregunta(props) {
       fecha: new Date(),
       id_usuario: userdata.data.id || 0,
       accion: 'LECTURA',
-      descripcion: 'Ingreso a pantalla ROLES',
+      descripcion: 'Ingreso a pantalla PERMISOS',
     }
     fetch(urlapi + "/logs/save"
       , {
@@ -39,9 +37,10 @@ export default function Pregunta(props) {
         // console.log(error)   
       })
   };
+
   const [registros, setRegistros] = useState([]);
   const getRegistros = async () => {
-    fetch(urlapi + "/ms_pregunta/getall"
+    fetch(urlapi + "/ms_permisos/getall"
       , {
         method: 'GET',
         headers: {
@@ -70,16 +69,46 @@ export default function Pregunta(props) {
   const columns = [
     {
       name: "ID",
-      selector: (row) => row.id_pregunta,
-      sortable: false,
+      selector: (row) => row.id_permiso || 'No aplica',
+      sortable: true,
+
     },
     {
-      name: "Pregunta",
-      selector: (row) => toUpperCaseField(row.pregunta),
-      sortable: false,
+      name: "Rol",
+      selector: (row) => toUpperCaseField(row.rol) || 'No aplica',
+      sortable: true,
+
     },
+    {
+      name: "Create",
+      selector: (row) => (row.permiso_insercion) ? 'ACTIVO' : 'INACTIVO',
+      sortable: true,
 
+    },
+    {
+      name: "Read",
+      selector: (row) => (row.permiso_consultar) ? 'ACTIVO' : 'INACTIVO',
+      sortable: true,
 
+    },
+    {
+      name: "Update",
+      selector: (row) => (row.permiso_actualizacion) ? 'ACTIVO' : 'INACTIVO',
+      sortable: true,
+
+    },
+    {
+      name: "Delete",
+      selector: (row) => (row.permiso_eliminacion) ? 'ACTIVO' : 'INACTIVO',
+      sortable: true,
+
+    },
+    {
+      name: "Fecha creación",
+      selector: (row) => row.fecha_creacion || 'No aplica',
+      sortable: true,
+
+    },
 
   ];
 
@@ -90,8 +119,6 @@ export default function Pregunta(props) {
     selectAllRowsItem: true,
     selectAllRowsItemText: "Todos",
   };
-
-
 
 
   //Barra de busqueda
@@ -106,16 +133,17 @@ export default function Pregunta(props) {
     results = registros
   } else {
     results = registros.filter((dato) =>
-      dato.id_pregunta.toString().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.pregunta?.toLowerCase().includes(busqueda.toLocaleLowerCase())
+      dato.id_permiso.toString().includes(busqueda.toLocaleLowerCase()) ||
+      dato.id_rol.toString().includes(busqueda.toLocaleLowerCase()) ||
+      dato.rol.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.fecha_creacion.toLowerCase().includes(busqueda.toLocaleLowerCase())
     )
   };
-  const [pending, setPending] = React.useState(true);
 
+  const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
-      <h5>Preguntas de seguridad</h5>
-
+      <h5>Permisos para roles</h5>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
@@ -150,7 +178,7 @@ export default function Pregunta(props) {
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>EXCEL
+                <i className="fa-solid fa-file-excel"></i> EXCEL
               </Link>
               <Link
                 to="/"
@@ -158,7 +186,7 @@ export default function Pregunta(props) {
                 className="btn btn-danger"
                 title="Exportar a PDF"
               >
-                <i className="fa-solid fa-file-pdf"></i>PDF
+                <i className="fa-solid fa-file-pdf"></i> PDF
               </Link>
             </div>
           </div>

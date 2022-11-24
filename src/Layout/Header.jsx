@@ -4,10 +4,12 @@ import { setGlobalState } from "../globalStates/globalStates.js";
 
 import logoEmpresa from "../assets/img/logo1.png";
 import imgPerfil from "../assets/img/profile-img.jpg";
+import { getOneParam } from "../utils/utils";
 
 function Header() {
   //(LineLink 9-24) Asignar valores de manerLink global, al dar click al boton de menu, estos valores seran usados en el Sidebar.jsx, Footer.jsx
   const [isMenuClicked, setIsMenuClicked] = useState(true);
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   const updateClassMenu = () => {
     if (isMenuClicked) {
@@ -22,6 +24,15 @@ function Header() {
     setIsMenuClicked(!isMenuClicked);
   };
 
+  const logOut = () => {
+    localStorage.removeItem("data")
+  }
+
+
+  var dataPar = JSON.parse(localStorage.getItem("params")) || []
+  var nombreParam = getOneParam(dataPar, "SYS_NOMBRE")
+  var nameCompany = nombreParam.valor
+
   return (
     <header
       id="headerGeneral"
@@ -32,13 +43,14 @@ function Header() {
           <i className="bi bi-list toggle-sidebar-btn"></i>
         </div>
         <Link to="/" className="logoGeneral d-flex align-items-center">
-          <img src={logoEmpresa} alt="Logo Empresa" />
+          <img src={logoEmpresa} alt="Logo Empresa" className="imglogo"/>
         </Link>
       </div>
 
+      <span className="titleCompany">Panel administrativo <strong>{nameCompany}</strong> </span>
       <nav className="header-nav ms-auto">
         <ul className="d-flex align-items-center">
-          <li className="nav-item dropdown">
+          {/*<li className="nav-item dropdown">
             <Link
               className="nav-link nav-icon"
               to="/"
@@ -107,28 +119,32 @@ function Header() {
                 <Link to="/">Mostrar todas las notificaciones</Link>
               </li>
             </ul>
-          </li>
+          </li>*/}
 
           <li className="nav-item dropdown pe-3">
             <Link
               className="nav-link nav-profile d-flex align-items-center pe-0"
-              to="/"
+              to="/admin/home"
               data-bs-toggle="dropdown"
             >
-              <img src={imgPerfil} alt="Profile" className="rounded-circle" />
               <span className="d-none d-md-block dropdown-toggle ps-2">
-                Nombre Usuario
+                Hola {userdata.data.nameUser}
               </span>
+              <img
+                src={imgPerfil}
+                alt="Profile"
+                className="rounded-circle img-profile"
+              />
             </Link>
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
               <li className="dropdown-header">
-                <h6>Nombre Usuario</h6>
-                <span>Tipo Usuario</span>
+                <h6>{userdata.data.nameUser} </h6>
+                <span>{userdata.data.id} </span>
               </li>
               <li>
                 <hr className="dropdown-divider" />
               </li>
-              <li>
+              {/*<li>
                 <Link
                   className="dropdown-item d-flex align-items-center"
                   to="/"
@@ -149,7 +165,7 @@ function Header() {
               </li>
               <li>
                 <hr className="dropdown-divider" />
-              </li>
+              </li>*
               <li>
                 <Link
                   className="dropdown-item d-flex align-items-center"
@@ -158,14 +174,14 @@ function Header() {
                   <i className="bi bi-question-circle"></i>
                   <span>Ayuda</span>
                 </Link>
-              </li>
+              </li>*/}
               <li>
                 <hr className="dropdown-divider" />
               </li>
               <li>
                 <Link
                   className="dropdown-item d-flex align-items-center"
-                  to="/"
+                  to="/login"
                 >
                   <i className="bi bi-box-arrow-right"></i>
                   <span>Cerrar Sesión</span>

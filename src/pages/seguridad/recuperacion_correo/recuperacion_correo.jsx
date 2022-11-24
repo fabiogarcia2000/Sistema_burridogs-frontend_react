@@ -27,15 +27,14 @@ export default function RecuperacionCorreo(props) {
            //  "usuario": refPregunta.current.value,
              "contra": RefRespuesta.current.value
          };
-         console.log(data);
+        //  console.log(data);
          //enviarData (URL_LOGIN, data);*/
 
     return (
         <div className="background">
             <img
                 src={burridogs}
-                alt="burridogs"
-                className='imglogo' />
+                alt="burridogs" />
 
             <div className="formulario">
 
@@ -56,7 +55,7 @@ export default function RecuperacionCorreo(props) {
 
                     <button
                         //onClick={handleLogin}
-                        className='btns'>Reiniciar contraseña</button>
+                        className='btn'>Reiniciar contraseña</button>
                 </div>
             </div>
         </div>

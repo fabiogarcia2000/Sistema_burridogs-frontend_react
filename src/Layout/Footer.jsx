@@ -15,7 +15,7 @@ function Footer() {
       </div>
       <div className="credits">
         Sistema creado por: 
-        <Link to=""> Enigma y ...</Link>
+        <Link to=""> Enigma y The Fifth System</Link>
       </div>
     </footer>
   );

@@ -214,10 +214,10 @@ h6 {
   border-color: #d3d3d4;
 }
 
-/* Card */
+/* Card 
 .card {
 
-}
+}*/
 
 .card-header,
 .card-footer {
@@ -1146,4 +1146,18 @@ h6 {
 .bottom-aligned {
   display: flex;
   align-items: flex-end;
+}
+
+.imglogo{
+  width: 100px !important;
+  filter: blur(0px) !important;
+  position: inherit !important;
+  margin-right: 10px !important;
+}
+
+.img-profile{
+  width: 50px !important;
+  filter: blur(0px) !important;
+  position: inherit !important;
+  margin-right: 10px !important;
 }
