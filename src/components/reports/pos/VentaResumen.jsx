@@ -4,6 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate} from "react-router-dom";
+import React, {useRef} from 'react';
+import { useDownloadExcel } from 'react-export-table-to-excel';
+
 
 import Swal from "sweetalert2";
 
@@ -100,6 +103,14 @@ const VentaResumen = () => {
   };
 
 
+
+  //Para exportar a excel excel, se referencia con la tabla en HTML y se llama a la constante onDownload para exportar el archivo
+  const tableRef = useRef(null);
+  const { onDownload } = useDownloadExcel({
+      currentTableRef: tableRef.current,
+      filename: 'Reporte de Ventas',
+      sheet: 'Reporte de Ventas'
+  })
 
 
   return (
@@ -219,10 +230,10 @@ const VentaResumen = () => {
               aria-label="Second group"
             >
               <Link
-                to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={onDownload}
               >
                 <i className="fa-solid fa-file-excel"></i>
               </Link>
@@ -272,7 +283,7 @@ const VentaResumen = () => {
       </div>
 */}
       <div className="row">
-        <table className="table table-bordered">
+        <table  ref={tableRef} className="table table-bordered">
           <thead>
                       <tr>
                         <th>TRANSACCION	</th>

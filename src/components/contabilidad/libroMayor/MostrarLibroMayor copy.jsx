@@ -9,28 +9,24 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
-
-
+const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
 const MostrarLibroMayor = () => {
-  // Opcion del select
-  const [opcionSelect, setOpcionSelect] = useState('');
-
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
-
   const [registros, setRegistros] = useState([]);
-
+  useEffect(() => {
+    getRegistros();
+  }, []);
 
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
       const res = await axios.get(UrlMostrar);
-      //setRegistros(res.data);
+      setRegistros(res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -52,34 +48,6 @@ const MostrarLibroMayor = () => {
       mostrarAlertas("errormostrar");
     }
   };
-
-
-  //************************************************/
-//petición a api con la opción del select
-const getPediodoSelect = async () => {
-  try {
-    const res = await axios.get(UrlMostrar+opcionSelect);
-    setRegistros(res.data);
-  } catch (error) {
-    console.log(error);
-    mostrarAlertas("errormostrar");
-  }
-};
-
-//opción seleccionada en el select
-const  handlerCargarPerido = function (e) {
-  const opcion = e.target.value;
-  setOpcionSelect(opcion)
-}
-
-useEffect(() => {
-  if(opcionSelect !== ""){
-    getPediodoSelect();
-  }
-}, [opcionSelect]);
-
-//************************************************/
-
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -354,38 +322,58 @@ useEffect(() => {
 
           </div>
         </div>
-<br /><br />
-        <div className="row">
-          <div className="col-4">
-                  <div className="mb-3">
 
-                    <label htmlFor="id_periodo_contable" className="form-label">
-                      Periodo contable
-                    </label>
-                    <select 
-                      className="form-select"
-                      id="id_periodo_contable"
-                      name="id_periodo_contable"
-                      onClick={handlerCargarPerido}
-                    >
-                      <option value="">Seleccionar...</option>
-                      {sucursal.map((item, i) => (
-                        <option key={i} value={item.id_periodo_contable}> Periodo:{item.id_periodo_contable} Fecha inicio:{item.fecha_inicial} Fecha final{item.fecha_final}</option>
-                      ))}
-                    </select >
+        <Formik
+          //valores iniciales
+          initialValues={{
+            descripcion_periodo: "",
+            fecha_inicial: "",
+            fecha_final: "",
 
-                  </div>
-          </div>
-        </div>
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
 
-        
+          }}
+
+        >
+          {({ errors, values }) => (
+            <Form>
+              <div className="col-4">
+                <div className="mb-3">
+
+                  <label htmlFor="id_periodo_contable" className="form-label">
+                    Periodo contable
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="id_periodo_contable"
+                    name="id_periodo_contable"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {sucursal.map((item, i) => (
+                      <option key={i} value={item.id_periodo_contable}> Periodo:{item.id_periodo_contable} Fecha inicio:{item.fecha_inicial} Fecha final{item.fecha_final}</option>
+                    ))}
+                  </Field>
+
+                  <ErrorMessage
+                    name="id_sucursal"
+                    component={() => (
+                      <div className="error">{errors.id_sucursal}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
       <br />
 
       {/*Mostramos la tabla con los datos*/}
-
       <div className="row">
-      {results.length > 0? (
         <DataTable
           columns={columns}
           data={results}
@@ -395,9 +383,6 @@ useEffect(() => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
-      ) : (
-        <p className="text-center">No hay registros que mostrar</p>
-      )}
       </div>
 
       {/* Ventana Modal de ver más*/}

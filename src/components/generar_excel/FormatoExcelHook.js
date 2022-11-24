@@ -7,7 +7,7 @@ const FormatoExcelHook = () =>  {
     const { onDownload } = useDownloadExcel({
         currentTableRef: tableRef.current,
         filename: 'ArchivoExcel',
-        sheet: 'Users'
+        sheet: 'ArchivoExcel'
     })
 
         return (
