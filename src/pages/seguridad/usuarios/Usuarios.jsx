@@ -243,19 +243,19 @@ const Usuarios = () => {
         <>
           <Link
             type="button"
-            className="btn btn-warning"
+            className="btn btn-light"
             title="Ver Más..."
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
             }}
           >
-            <i className="bi bi-eye"></i>
+            <i className="fa-solid fa-eye"></i>
           </Link>
           &nbsp;
           <Link
             to={`/admin/editUser/${row.id_usuario}`}
-            className="btn btn-secondary"
+            className="btn btn-light"
             title="Editar"
           >
             <i className="bi bi-pencil-fill"></i>
@@ -269,7 +269,7 @@ const Usuarios = () => {
           </button> */}
           &nbsp;
           <button
-            className="btn btn-danger"
+            className="btn btn-light"
             title="Eliminar"
             onClick={() => {
               // console.log(row.id_usuario);
@@ -277,7 +277,7 @@ const Usuarios = () => {
               abrirModalEliminar();
             }}
           >
-            <i className="bi bi-trash-fill"></i>
+            <i className="fa-solid fa-trash"></i>
           </button>
         </>
       ),
@@ -324,7 +324,7 @@ const Usuarios = () => {
   const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
-      <h5>Usuarios</h5>
+      <h3>Usuarios</h3>
       {/* <h5>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni
         consectetur odio asperiores, deserunt beatae accusantium omnis iure.
@@ -335,32 +335,7 @@ const Usuarios = () => {
         <Alert isOpen={isValid} color={color}>
           {message}
         </Alert>
-        {/* <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <Link
-                to="/admin/createUser"
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
-              >
-                <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
-            </div>
-
-            
-          </div>
-        </div> */}
-
-<br />
+  <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
 

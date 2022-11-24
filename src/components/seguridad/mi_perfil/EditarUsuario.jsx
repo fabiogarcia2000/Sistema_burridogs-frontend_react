@@ -57,18 +57,6 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
         validate={(valores) => {
           let errores = {};
 
-        // Validacion de id usuario
-          if (!valores.id_usuario) {
-            errores.id_usuario = "Por favor ingresa id usuario";
-          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
-            errores.id_usuario = "Escribir solo números";
-          }  
-
-        // Validacion usuario
-        if (!valores.usuario) {
-          errores.usuario = "Por favor ingresa un usuario";
-        } 
-
          // Validacion nombre usuario
          if (!valores.nombre_usuario) {
             errores.nombre_usuario = "Por favor ingresa un nombre de usuario";
@@ -88,7 +76,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarestado");
+                    navigate("/admin/home");
                   } else {
                     mostrarAlertas("error");
                   }
@@ -96,7 +84,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarestado");
+                navigate("/admin/home");
               }
         }}
       >
@@ -116,6 +104,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                     id="idUsuario"
                     name="id_usuario"
                     placeholder="Id usuario..."
+                    disabled
                   />
                   <ErrorMessage
                     name="id_usuario"
@@ -138,6 +127,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                     name="usuario"
                     placeholder="Usuario..."
                     onKeyUp={cambiarAMayusculasUsuario(values)}
+                    disabled
                   />
                   <ErrorMessage
                     name="usuario"
@@ -198,7 +188,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               Guardar
             </button>
             <Link
-              to="/"
+              to="/admin/home"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >
