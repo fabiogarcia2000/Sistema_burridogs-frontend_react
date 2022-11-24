@@ -154,6 +154,8 @@ import MostrarPeriodoContable from "../components/contabilidad/periodocontable/M
 import CrearPeriodoContable from "../components/contabilidad/periodocontable/CrearPeriodoContable";
 import EditarPeriodoContable from "../components/contabilidad/periodocontable/EditarPeriodoContable";
 
+import ReporteLibroMayor from "../components/reports/LibroMayor";
+
 //--------------------------------------------MI PERFIL--------------------------------------------------
 import EditarUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
 import CambioContraseña from "../components/seguridad/mi_perfil/CambioContraseña";
@@ -370,7 +372,10 @@ function Rutas() {
               path="/reporte-venta-resumen"
               element={<ReporteVentaResumen />}
             />
-
+            <Route
+              path="/reporte-libro-mayor"
+              element={<ReporteLibroMayor />}
+            />
             <Route path="*" element={<h1>404</h1>} />
           </Routes>
         </section>

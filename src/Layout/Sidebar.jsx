@@ -321,9 +321,9 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <Link to="/reporte-libro-mayor">
                 <i className="bi bi-circle"></i>
-                <span>Reporte 2</span>
+                <span>Libro Mayor</span>
               </Link>
             </li>
             <li>

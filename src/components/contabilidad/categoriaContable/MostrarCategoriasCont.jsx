@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
+import { Export_PDF } from "./generarPDF/Export_PDF";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_categoriacont/getall";
@@ -112,9 +113,9 @@ const mostrarAlertas = (alerta) =>{
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
   //Ventana modal para mostrar mas
-  const [modalVerMas, setVerMas] = useState(false);
-  const abrirModalVerMas = () => setVerMas(!modalVerMas);
-  const [registroVerMas, setRegistroVerMas] = useState({});
+  //const [modalVerMas, setVerMas] = useState(false);
+  //const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  //const [registroVerMas, setRegistroVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -207,14 +208,16 @@ const mostrarAlertas = (alerta) =>{
               >
                 <i className="fa-solid fa-file-excel"></i>
               </Link>
-              <Link
-                to="/"
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(results);
+                }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+              </Button>
               <Link
                 to="/"
                 type="button"
