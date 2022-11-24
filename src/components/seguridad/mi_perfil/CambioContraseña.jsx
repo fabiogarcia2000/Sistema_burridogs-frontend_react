@@ -86,7 +86,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
-                    navigate("/mostrarestado");
+                    navigate("/admin/home");
                   } else {
                     mostrarAlertas("error");
                   }
@@ -94,7 +94,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
-                navigate("/mostrarestado");
+                navigate("/admin/home");
               }
         }}
       >
@@ -173,7 +173,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               Guardar
             </button>
             <Link
-              to="/"
+              to="/admin/home"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

@@ -22,9 +22,9 @@ import { downloadCSV, getOneParam, toUpperCaseField } from "../../../utils/utils
 const Usuarios = () => {
 
 
-  var dataPar=JSON.parse(localStorage.getItem("params")) || []
-  var urlApiParam=getOneParam(dataPar,"URL_API")
-  const urlapi =urlApiParam.valor
+  var dataPar = JSON.parse(localStorage.getItem("params")) || []
+  var urlApiParam = getOneParam(dataPar, "URL_API")
+  const urlapi = urlApiParam.valor
 
   let navigate = useNavigate();
   //Configurar los hooks
@@ -143,7 +143,7 @@ const Usuarios = () => {
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID",
+      name: "ID USUARIO",
       selector: (row) => row.id_usuario || "--- ---",
       sortable: false,
     },
@@ -160,49 +160,27 @@ const Usuarios = () => {
     },
     {
       name: "ESTADO",
-      	cell: (row) => (<span 
-          className={`status  
-          ${row.estado_usuario ===1? "new" : ""} 
-          ${row.estado_usuario ===2? "active" : ""}
-          ${row.estado_usuario ===3? "inactive" : ""}
-          ${row.estado_usuario ===4? "lock" : ""}
+      cell: (row) => (<span
+        className={`status  
+          ${row.estado_usuario === 1 ? "new" : ""} 
+          ${row.estado_usuario === 2 ? "active" : ""}
+          ${row.estado_usuario === 3 ? "inactive" : ""}
+          ${row.estado_usuario === 4 ? "lock" : ""}
           `}
-          >{toUpperCaseField(row.descripcion)}</span>),
-      		// ignoreRowClick: true,
-      		allowOverflow: true,
+      >{toUpperCaseField(row.descripcion)}</span>),
+      // ignoreRowClick: true,
+      allowOverflow: true,
     },
-    // {
-    //   name: "ESTADO",
-    //   selector: (row) => toUpperCaseField(row.descripcion) || "--- ---",
-    //   sortable: false,
-    // },
-    // {
-    //   name: "CONTRASEÑA",
-    //   selector: (row) => row.contrasena || "--- ---",
-    //   sortable: false,
-    // },
+    
     {
-      name: "ROLE",
+      name: "ROLES",
       selector: (row) => toUpperCaseField(row.rol) || "--- ---",
       sortable: true,
     },
+ 
+   
     {
-      name: "FECHA ULTIMA CONEXION",
-      selector: (row) => row.fecha_ultima_conexion || "--- ---",
-      sortable: false,
-    },
-    {
-      name: "PREGUNTAS CONTESTADAS",
-      selector: (row) => row.preguntas_contestadas || 0,
-      sortable: false,
-    },
-    {
-      name: "PRIMER INGRESO",
-      selector: (row) => row.primer_ingreso || 0,
-      sortable: false,
-    },
-    {
-      name: "FECHA VEN",
+      name: "FECHA VENCIMIENTO",
       selector: (row) => row.fecha_vencimiento || "--- ---",
       sortable: false,
     },
@@ -211,51 +189,26 @@ const Usuarios = () => {
       selector: (row) => row.correo_electronico || "--- ---",
       sortable: false,
     },
-    {
-      name: "CREADO POR",
-      selector: (row) => toUpperCaseField(row.creado_por) || "--- ---",
-      sortable: false,
-    },
-    {
-      name: "FECHA CREACIÓN",
-      selector: (row) => row.fecha_creacion || "--- ---",
-      sortable: false,
-    },
-    {
-      name: "MODIFICADO POR",
-      selector: (row) => row.modificado_por || "--- ---",
-      sortable: false,
-    },
-    {
-      name: "FECHA MODIFICACIÓN",
-      selector: (row) => row.fecha_modificacion || "--- ---",
-      sortable: false,
-    },
-    {
-      name: "INTENTOS",
-      selector: (row) => row.intentos_login || 0,
-      sortable: false,
-    },
-
+    
     {
       name: "ACCIONES",
       cell: (row) => (
         <>
           <Link
             type="button"
-            className="btn btn-warning"
+            className="btn btn-light"
             title="Ver Más..."
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
             }}
           >
-            <i className="bi bi-eye"></i>
+            <i className="fa-solid fa-eye"></i>
           </Link>
           &nbsp;
           <Link
             to={`/admin/editUser/${row.id_usuario}`}
-            className="btn btn-secondary"
+            className="btn btn-light"
             title="Editar"
           >
             <i className="bi bi-pencil-fill"></i>
@@ -269,7 +222,7 @@ const Usuarios = () => {
           </button> */}
           &nbsp;
           <button
-            className="btn btn-danger"
+            className="btn btn-light"
             title="Eliminar"
             onClick={() => {
               // console.log(row.id_usuario);
@@ -277,7 +230,7 @@ const Usuarios = () => {
               abrirModalEliminar();
             }}
           >
-            <i className="bi bi-trash-fill"></i>
+            <i className="fa-solid fa-trash"></i>
           </button>
         </>
       ),
@@ -324,63 +277,16 @@ const Usuarios = () => {
   const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
-      <h5>Usuarios</h5>
-      {/* <h5>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni
-        consectetur odio asperiores, deserunt beatae accusantium omnis iure.
-      </h5> */}
+      <h3>Usuarios</h3>
+     
       <br />
-
+    
       <div className="row">
         <Alert isOpen={isValid} color={color}>
           {message}
         </Alert>
-        {/* <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <Link
-                to="/admin/createUser"
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
-              >
-                <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
-            </div>
 
-            
-          </div>
-        </div> */}
-
-<br />
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Buscar..."
-              aria-label="Search"
-            />
-          </div>
-        </div>
-      </div>
-      <br />
-
+        {/*Mostrar los botones: Nuevo, Excel y PDF */}
         <div className="col">
           <div
             className="btn-toolbar"
@@ -415,9 +321,9 @@ const Usuarios = () => {
 
 
 
-                
+
               >
-                <i class="bi bi-file-excel-fill"></i> Excel
+                <i class="bi bi-file-excel-fill"></i>
               </Link>
 
               <Link
@@ -426,7 +332,7 @@ const Usuarios = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
               >
-                <i className="fa-solid fa-file-pdf"></i> PDF
+                <i className="fa-solid fa-file-pdf"></i>
               </Link>
             </div>
           </div>
@@ -449,9 +355,10 @@ const Usuarios = () => {
           </div>
         </div>
       </div>
+      <br />
 
       <div className="row">
-        <br />
+    
         <DataTable
           columns={columns}
           data={results}
@@ -464,7 +371,7 @@ const Usuarios = () => {
           progressComponent="Cargando datos..."
           noDataComponent="---Datos no encontrados ---"
           paginationPerPage="6"
-          // fixedHeaderScrollHeight="550px"
+        // fixedHeaderScrollHeight="550px"
         />
       </div>
 
@@ -474,7 +381,7 @@ const Usuarios = () => {
         toggle={abrirModalVerMas}
         centered
         size="xl"
-        // style={{ maxWidth: "800px", width: "110%" }}
+      // style={{ maxWidth: "800px", width: "110%" }}
       >
         <ModalHeader toggle={abrirModalVerMas}>Detalle de usuario</ModalHeader>
         <ModalBody>
@@ -490,41 +397,6 @@ const Usuarios = () => {
                 </div>
               </div>
 
-              <div className="row ">
-                <div className="col-sm-6">
-                  <p className="colorText">USUARIO: </p>
-                </div>
-                <div className="col-sm-6">
-                  <p> {registroVerMas.usuario || "---"} </p>
-                </div>
-              </div>
-
-              <div className="row ">
-                <div className="col-sm-6">
-                  <p className="colorText">NOMBRE DE USUARIO: </p>
-                </div>
-                <div className="col-sm-6">
-                  <p> {registroVerMas.nombre_usuario || "---"} </p>
-                </div>
-              </div>
-
-              <div className="row ">
-                <div className="col-sm-6">
-                  <p className="colorText">ESTADO DE USUARIO: </p>
-                </div>
-                <div className="col-sm-6">
-                  <p> {registroVerMas.descripcion || "---"} </p>
-                </div>
-              </div>
-
-              <div className="row ">
-                <div className="col-sm-6">
-                  <p className="colorText">ROL: </p>
-                </div>
-                <div className="col-sm-6">
-                  <p> {registroVerMas.rol || "---"} </p>
-                </div>
-              </div>
 
               <div className="row ">
                 <div className="col-sm-6">
@@ -542,73 +414,46 @@ const Usuarios = () => {
                   <p> {registroVerMas.preguntas_contestadas || "---"} </p>
                 </div>
               </div>
-              <div className="row ">
-                <div className="col-sm-6">
-                  <p className="colorText">PRIMER INGRESO: </p>
-                </div>
-                <div className="col-sm-6">
-                  <p> {registroVerMas.primer_ingreso || "---"} </p>
-                </div>
-              </div>
+              
             </div>
             {/*  */}
             <div className="col-sm-6 col-md-6">
+              
               <div className="row ">
-                <p className="colorText">FECHA DE VENCIMIENTO: </p>
-              </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.fecha_vencimiento || "---"} </p>
+                <div className="col-sm-6">
+                  <p className="colorText">CREADO POR: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {registroVerMas.creado_por || "---"} </p>
+                </div>
               </div>
               <div className="row ">
-              <div className="col-sm-6">
-                <p className="colorText">CORREO: </p>
+                <div className="col-sm-6">
+                  <p className="colorText">FECHA DE CREACIÓN: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {registroVerMas.fecha_creacion || "---"} </p>
+                </div>
               </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.correo_electronico || "---"} </p>
+              <div className="row ">
+                <div className="col-sm-6">
+                  <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {registroVerMas.fecha_modificacion || "---"} </p>
+                </div>
               </div>
+              <div className="row ">
+                <div className="col-sm-6">
+                  <p className="colorText">MODIFICADO POR: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {registroVerMas.modificado_por || "---"} </p>
+                </div>
+              </div>
+              
             </div>
-            <div className="row ">
-              <div className="col-sm-6">
-                <p className="colorText">CREADO POR: </p>
-              </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.creado_por || "---"} </p>
-              </div>
-            </div>
-            <div className="row ">
-              <div className="col-sm-6">
-                <p className="colorText">FECHA DE CREACIÓN: </p>
-              </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.fecha_creacion || "---"} </p>
-              </div>
-            </div>
-            <div className="row ">
-              <div className="col-sm-6">
-                <p className="colorText">FECHA DE MODIFICACIÓN: </p>
-              </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.fecha_modificacion || "---"} </p>
-              </div>
-            </div>
-            <div className="row ">
-              <div className="col-sm-6">
-                <p className="colorText">MODIFICADO POR: </p>
-              </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.modificado_por || "---"} </p>
-              </div>
-            </div>
-            <div className="row ">
-              <div className="col-sm-6">
-                <p className="colorText">INTENTOS LOGIN: </p>
-              </div>
-              <div className="col-sm-6">
-                <p> {registroVerMas.intentos_login || "---"} </p>
-              </div>
-            </div>
-            </div>
-           
+
             {/*  */}
           </div>
         </ModalBody>

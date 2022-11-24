@@ -134,7 +134,7 @@ const mostrarAlertas = (alerta) =>{
       cell: (row) => (
         <>
           <Link
-            to="/editarcategoriacont"
+            to="/admin/editarcategoriacont"
             type="button"
             className="btn btn-light"
             title="Editar"
@@ -187,7 +187,7 @@ const mostrarAlertas = (alerta) =>{
               aria-label="First group"
             >
               <Link
-                to="/crearcategoriacont"
+                to="/admin/crearcategoriacont"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
