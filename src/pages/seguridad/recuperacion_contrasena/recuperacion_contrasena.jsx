@@ -15,20 +15,6 @@ import {
   translateUperCase,
 } from "../../../utils/utils";
 
-//url
-/*const URL_LOGIN = ""
-
-const enviarData = async (url, data) => {
-    const resp = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-type': 'application/json'
-        }
-    });
-    const json = await resp.json();
-}*/
-
 // const urlAPi = "http://localhost:3001";
 const URL_API_ENV = process.env.REACT_APP_URL_API;
 console.log("URL_API_ENV===>", URL_API_ENV);
@@ -77,8 +63,6 @@ export default function RecuperacionContra(props) {
   //Fin parametros extras
 
   //capturar los datos ingresados
-  //  const refPregunta = useRef(null);
-  //  const RefRespuesta = useRef(null);
   const refNombreUsuario = useRef(null);
 
   const [message, setMesagge] = useState("");
@@ -132,32 +116,9 @@ export default function RecuperacionContra(props) {
       });
   };
 
-  //   const onSubmit = async (values) => {
-  //     console.log("values",values);
-  //   };
-
-  // const steps = [
-  //   {title: 'StepOne', component: <Step/>},
-  //   {title: 'StepTwo', component: <Step/>},
-  //   {title: 'StepThree', component: <Step/>},
-  //   {title: 'StepFour', component: <Step/>}
-  // ];
-  // // custom styles
-  // const prevStyle = { background: '#33c3f0' }
-  // const nextStyle = { background: '#33c3f0' }
+ 
   return (
-    // <>
-    // <div className='container'>
-    //   <MultiStep activeStep={0} steps={steps} prevStyle={prevStyle} nextStyle={nextStyle} />
-    //   <div className='app-footer'>
-    //     <h6>Press 'Enter' or click on progress bar for next step.</h6>
-    //     Code is on{' '}
-    //     <a href='https://github.com/Srdjan/react-multistep' target='_blank' rel='noreferrer'>
-    //       github
-    //     </a>
-    //   </div>
-    // </div>
-    // </>
+ 
 
     <div className="background">
       <img src={burridogs} alt="burridogs" />
@@ -250,39 +211,21 @@ export default function RecuperacionContra(props) {
                 >
                   Restablecer v&iacute;a correo
                 </Button>
+                
                 <div className="buttom-container">
                   {/* <Link to="/recuperacion_preguntas" disabled={!responseUser} color="secondary" size="lg" block>Restablecer v&iacute;a preguntas</Link> */}
                   {/* <Button color="secondary" size="lg" block >Restablecer v&iacute;a preguntas</Button> */}
                   <Link to="/login">Cancelar</Link>
                 </div>
               </form>
+
+
+
+     
             </div>
           )}
         />
 
-        {/* <h1>Recuperación de contraseña</h1>
-                <div class="inputs">
-                    <div class="mensaje">¿Olvidaste tu contraseña?</div>
-                    <div class="mensaje">Ingresa tu nombre de usuario y selecciona metodo de reinicio.</div>
-                    <div class="username">
-                        <i class="fa fa-user"></i>
-                        <input
-                            type="text"
-                            placeholder="Nombre de usuario"
-                            ref={refNombreUsuario} />
-                    </div>
-                    <button
-                        onClick={handleLogin}
-                        className='btn'>Restablecer v&iacute;a correo</button>
-                    <div className="buttom-container">
-                        <Link to="/recuperacion_preguntas">
-                            Cambia tu contrase&ntilde;a via preguntas
-                        </Link>
-                        <Link to="/login">
-                            Cancelar
-                        </Link>
-                    </div>
-                </div> */}
       </div>
     </div>
   );

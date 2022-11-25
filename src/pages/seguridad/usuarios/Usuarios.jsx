@@ -16,6 +16,9 @@ import "./Usuarios.css";
 import { downloadCSV, getOneParam, toUpperCaseField } from "../../../utils/utils";
 
 
+// const urlapi = "http://localhost:3001";
+// const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
+// const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
 const Usuarios = () => {
 
 
@@ -31,7 +34,33 @@ const Usuarios = () => {
   const [color, setColor] = useState("danger");
   const [isValid, setIsValid] = useState(false);
 
-
+  /**
+   ** Creando bitacora
+   * enviado infromacion de bitacora a la BD
+   * */
+  const saveLog = async () => {
+    const userdata = JSON.parse(localStorage.getItem("data"));
+    let log = {
+      fecha: new Date(),
+      id_usuario: userdata.data.id || 0,
+      accion: "LECTURA",
+      descripcion: "Ingreso a pantalla USUARIOS",
+    };
+    fetch(urlapi + "/logs/save", {
+      method: "POST",
+      body: JSON.stringify(log),
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // console.log("responseJson", responseJson);
+      })
+      .catch((error) => {
+        // console.log(error);
+      });
+  };
 
   const [registros, setRegistros] = useState([]);
 
@@ -54,7 +83,11 @@ const Usuarios = () => {
       });
   };
 
- 
+  useEffect(() => {
+    saveLog();
+    getRegistros();
+  }, []);
+
   // const goToEdit= (id)=>{
   //   navigate('/admin/editUser/'+id,{
   //     data:"data"

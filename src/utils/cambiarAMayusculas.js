@@ -239,3 +239,13 @@ export function cambiarAMayusculasRol(valores) {
   }
 }
 
+//PREG USUARUARIO
+export function cambiarAMayusculasResppuesta(valores) {
+  try {
+    let texto = valores.respuesta;
+    valores.respuesta = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+

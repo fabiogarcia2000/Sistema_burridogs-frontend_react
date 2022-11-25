@@ -223,7 +223,7 @@ export default function Roles(props) {
   return (
 
     <div className="container">
-      <h5>Roles</h5>
+      <h3>Roles</h3>
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
