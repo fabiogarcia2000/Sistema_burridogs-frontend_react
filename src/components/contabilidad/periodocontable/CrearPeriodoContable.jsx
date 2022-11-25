@@ -7,7 +7,7 @@ import { useGlobalState } from "../../../globalStates/globalStates";
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 
-const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
+const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
@@ -77,7 +77,7 @@ useEffect(() => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_periodo_contable:edit.id_periodo_contable,
+          id_periodo_contable:"",
           descripcion_periodo: "",
           fecha_inicial: "",
           fecha_final: "",
@@ -121,7 +121,7 @@ useEffect(() => {
             console.log(res)
             if (res.data === "") {*/
               //procedimineto para guardar el nuevo registro en el caso de que no exista
-              const res = await axios.put(`${URLCrear}`);
+              const res = await axios.put(`${URLCrear}`, valores);
               if (res.status === 200) {
                 mostrarAlertas("guardado");
                 navigate("/admin/mostrarperiodo");

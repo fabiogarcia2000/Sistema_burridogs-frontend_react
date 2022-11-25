@@ -116,7 +116,7 @@ import EditarPregUsuario from "../components/seguridad/preguntas_usuario/EditarP
 //ROLES
 import Roles from "../pages/seguridad/roles/Roles";
 import CrearRol from "../pages/seguridad/roles/CrearRol";
-import EditarRol from "../pages/seguridad/roles/CrearRol";
+import EditarRol from "../pages/seguridad/roles/EditarRol";
 //---------------------------------------------------- MÓDULO DE CONTABILIDAD -----------------------------------------------------------------
 //CATEGORIA CONTABLE
 import CrearCategoriaCont from "../components/contabilidad/categoriaContable/CrearCategoriaCont";

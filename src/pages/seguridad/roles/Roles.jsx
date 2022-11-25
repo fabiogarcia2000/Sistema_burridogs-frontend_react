@@ -176,7 +176,7 @@ export default function Roles(props) {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_cuenta);
+              setRegistroDelete(row.id_rol);
               abrirModalEliminar();
             }}
           >
