@@ -30,25 +30,11 @@
 	.font-500{
 	font-weight:500;	
 	}
-	.image-size-small{
-	width:140px;
-	margin:0 auto;	
-	}
-	.image-size-small img{
-	width:140px;
-	margin-bottom:-70px;	
-	}
-	.icon-camera{
-	position: absolute !important;
-    right: -1px !important;
-    top: 21px !important;
-    width: 30px !important;
-    height: 30px !important;
-    background-color: #FFF !important;
-    border-radius: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-	}
 
+
+	.img2{
+		width:140px !important;
+		margin-bottom:-70px !important;	
+	}
+	
 	
