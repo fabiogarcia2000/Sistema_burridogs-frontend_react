@@ -228,3 +228,14 @@ export function cambiarAMayusculasTipoObjeto(valores) {
     console.log(error);
   }
 }
+
+//ROL
+export function cambiarAMayusculasRol(valores) {
+  try {
+    let texto = valores.rol;
+    valores.rol = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+

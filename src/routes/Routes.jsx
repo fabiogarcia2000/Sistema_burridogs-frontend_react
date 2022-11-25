@@ -86,7 +86,7 @@ import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
 import EditarUsuario from "../components/seguridad/usuario/EditarUsuario";
 import Login from "../pages/seguridad/login/Login"
 import Parametros from "../pages/seguridad/parametros/Parametros";
-import Roles from "../pages/seguridad/roles/Roles";
+
 import Logs from "../pages/seguridad/logs/Logs";
 import Pregunta from "../pages/seguridad/preguntas/Preguntas";
 import Layout from "../Layout/Layout";
@@ -113,6 +113,10 @@ import EditarPermiso from "../components/seguridad/permisos/EditarPermiso";
 import MostrarPregUsuario from "../components/seguridad/preguntas_usuario/MostrarPregUsuario";
 import EditarPregUsuario from "../components/seguridad/preguntas_usuario/EditarPregUsuario";
 
+//ROLES
+import Roles from "../pages/seguridad/roles/Roles";
+import CrearRol from "../pages/seguridad/roles/CrearRol";
+import EditarRol from "../pages/seguridad/roles/CrearRol";
 //---------------------------------------------------- MÓDULO DE CONTABILIDAD -----------------------------------------------------------------
 //CATEGORIA CONTABLE
 import CrearCategoriaCont from "../components/contabilidad/categoriaContable/CrearCategoriaCont";
@@ -204,7 +208,7 @@ function Rutas() {
           <Route path="createUser" element={<CreateUser />} />
           <Route path="editUser/:id" element={<EditarUsuario />} />
           <Route path="params" element={<Parametros />} />
-          <Route path="roles" element={<Roles />} />
+          
           <Route path="logs" element={<Logs />} />
           <Route path="questions" element={<Pregunta />} />
           
@@ -221,6 +225,11 @@ function Rutas() {
           {/*PREG USUARIO*/}
           <Route path="mostrarpregusuario" element={<MostrarPregUsuario />} />
           <Route path="editarpregusuario" element={<EditarPregUsuario />} />
+
+          {/*ROLES*/}
+          <Route path="roles" element={<Roles />} />
+          <Route path="crearrol" element={<CrearRol />} />
+          <Route path="editarrol" element={<EditarRol />} />
             {/*------------------------------Rutas Administración POS----------------------------------*/}
 
             {/*Rutas Administración POS*/}
