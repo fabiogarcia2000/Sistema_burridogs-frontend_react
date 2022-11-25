@@ -206,3 +206,25 @@ export function cambiarAMayusculasCorreoUsuario(valores) {
     console.log(error);
   }
 }
+
+
+//------------------------SEGURIDAD
+
+//----OBJETOS
+export function cambiarAMayusculasObjeto(valores) {
+  try {
+    let texto = valores.objeto;
+    valores.objeto = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function cambiarAMayusculasTipoObjeto(valores) {
+  try {
+    let texto = valores.tipo_objeto;
+    valores.tipo_objeto = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}

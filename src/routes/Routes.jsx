@@ -100,6 +100,10 @@ import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/rec
 import UnlockUser from "../pages/seguridad/UnlockUser/UnlockUser";
 import MyProfile from "../pages/seguridad/MyProfile/MyProfile";
 
+//Objeto
+import MostrarObjeto from "../components/seguridad/objetos/MostrarObjetos";
+import CrearObjeto from "../components/seguridad/objetos/CrearObjetos";
+import EditarObjeto from "../components/seguridad/objetos/EditarObjetos";
 //---------------------------------------------------- MÓDULO DE CONTABILIDAD -----------------------------------------------------------------
 //CATEGORIA CONTABLE
 import CrearCategoriaCont from "../components/contabilidad/categoriaContable/CrearCategoriaCont";
@@ -161,6 +165,7 @@ import ReporteLibroMayor from "../components/reports/LibroMayor";
 //--------------------------------------------MI PERFIL--------------------------------------------------
 import EditarMiUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
 import CambioContraseña from "../components/seguridad/mi_perfil/CambioContraseña";
+import MostrarObjetos from "../components/seguridad/objetos/MostrarObjetos";
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -194,6 +199,11 @@ function Rutas() {
           <Route path="permits" element={<Permits />} />
           <Route path="logs" element={<Logs />} />
           <Route path="questions" element={<Pregunta />} />
+          
+           {/*OBJETOS*/}
+          <Route path="mostrarobjetos" element={<MostrarObjeto />} />
+          <Route path="crearobjetos" element={<CrearObjeto />} />
+          <Route path="editarobjetos" element={<EditarObjeto />} />
 
             {/*------------------------------Rutas Administración POS----------------------------------*/}
 

@@ -400,6 +400,13 @@ function Sidebar() {
                 <span>Par&aacute;metros</span>
               </Link>
             </li>
+
+            <li>
+              <Link to="/admin/mostrarobjetos">
+                <i className="bi bi-gear"></i>
+                <span>Objetos</span>
+              </Link>
+            </li>
           </ul>
         </li>
       </ul>
