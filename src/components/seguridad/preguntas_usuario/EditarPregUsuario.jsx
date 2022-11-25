@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
-import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { cambiarAMayusculasResppuesta } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/ms_pregunta_usuario/actualizar/0";
 
@@ -120,6 +119,8 @@ const PregUsuarioEditar = () => {
                       id="respuesta"
                       name="respuesta"
                       placeholder="Respuesta..."
+                      onKeyUp={cambiarAMayusculasResppuesta(values)}
+
                     />
                    <ErrorMessage
                       name="respuesta"
