@@ -244,7 +244,6 @@ const MostrarCategorias = () => {
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
               <i className="fa-solid fa-magnifying-glass"></i>
-              <i className="fa fa-search" aria-hidden="true"></i>
             </span>
             <input
               className="form-control me-2"
