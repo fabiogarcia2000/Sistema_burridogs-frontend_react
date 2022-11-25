@@ -87,7 +87,6 @@ import EditarUsuario from "../components/seguridad/usuario/EditarUsuario";
 import Login from "../pages/seguridad/login/Login"
 import Parametros from "../pages/seguridad/parametros/Parametros";
 import Roles from "../pages/seguridad/roles/Roles";
-import Permits from "../pages/seguridad/permits/Permits";
 import Logs from "../pages/seguridad/logs/Logs";
 import Pregunta from "../pages/seguridad/preguntas/Preguntas";
 import Layout from "../Layout/Layout";
@@ -104,6 +103,16 @@ import MyProfile from "../pages/seguridad/MyProfile/MyProfile";
 import MostrarObjeto from "../components/seguridad/objetos/MostrarObjetos";
 import CrearObjeto from "../components/seguridad/objetos/CrearObjetos";
 import EditarObjeto from "../components/seguridad/objetos/EditarObjetos";
+
+//Permisos
+import MostrarPermiso from "../components/seguridad/permisos/MostrarPermiso";
+import CrearPermiso from "../components/seguridad/permisos/CrearPermiso";
+import EditarPermiso from "../components/seguridad/permisos/EditarPermiso";
+
+//PREG USUARIO
+import MostrarPregUsuario from "../components/seguridad/preguntas_usuario/MostrarPregUsuario";
+import EditarPregUsuario from "../components/seguridad/preguntas_usuario/EditarPregUsuario";
+
 //---------------------------------------------------- MÓDULO DE CONTABILIDAD -----------------------------------------------------------------
 //CATEGORIA CONTABLE
 import CrearCategoriaCont from "../components/contabilidad/categoriaContable/CrearCategoriaCont";
@@ -196,7 +205,6 @@ function Rutas() {
           <Route path="editUser/:id" element={<EditarUsuario />} />
           <Route path="params" element={<Parametros />} />
           <Route path="roles" element={<Roles />} />
-          <Route path="permits" element={<Permits />} />
           <Route path="logs" element={<Logs />} />
           <Route path="questions" element={<Pregunta />} />
           
@@ -205,6 +213,14 @@ function Rutas() {
           <Route path="crearobjetos" element={<CrearObjeto />} />
           <Route path="editarobjetos" element={<EditarObjeto />} />
 
+          {/*PERMISOS*/}
+          <Route path="mostrarpermiso" element={<MostrarPermiso />} />
+          <Route path="crearpermiso" element={<CrearPermiso />} />
+          <Route path="editarpermiso" element={<EditarPermiso />} />
+
+          {/*PREG USUARIO*/}
+          <Route path="mostrarpregusuario" element={<MostrarPregUsuario />} />
+          <Route path="editarpregusuario" element={<EditarPregUsuario />} />
             {/*------------------------------Rutas Administración POS----------------------------------*/}
 
             {/*Rutas Administración POS*/}

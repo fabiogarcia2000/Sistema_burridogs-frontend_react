@@ -382,7 +382,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/permits">
+              <Link to="/admin/mostrarpermiso">
                 <i className="bi bi-toggles"></i>
                 <span>Permisos</span>
               </Link>
@@ -393,7 +393,14 @@ function Sidebar() {
                 <span>Preguntas de Seguridad</span>
               </Link>
             </li>
-            
+
+            <li>
+              <Link to="/admin/mostrarpregusuario">
+                <i className="bi bi-gear"></i>
+                <span>Preguntas Usuario</span>
+              </Link>
+            </li>
+
             <li>
               <Link to="/admin/params">
                 <i className="bi bi-gear"></i>
