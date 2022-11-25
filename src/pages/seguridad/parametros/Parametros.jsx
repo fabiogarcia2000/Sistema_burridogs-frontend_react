@@ -198,22 +198,22 @@ export default function Parametros(props) {
               role="group"
               aria-label="Second group"
             >
+               <Link
+                 to="/"
+                 type="button"
+                 className="btn btn-success"
+                 title="Exportar a Excel"
+               >
+                 <i className="fa-solid fa-file-excel"></i>
+               </Link>
               <Link
-                to="/"
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-              >
-                <i className="fa-solid fa-file-excel"></i> EXCEL
-              </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-              >
-                <i className="fa-solid fa-file-pdf"></i>PDF
-              </Link>
+                 to="/"
+                 type="button"
+                 className="btn btn-danger"
+                 title="Exportar a PDF"
+               >
+                 <i className="fa-solid fa-file-pdf"></i>
+               </Link>
             </div>
           </div>
         </div>
