@@ -8,7 +8,7 @@ import { cambiarAMayusculasTipoObjeto } from "../../../utils/cambiarAMayusculas"
 import { cambiarAMayusculasObjeto } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
-const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/ms_objetos/actualizar-insertar/";
 
 
  const EditarObjeto = () => {

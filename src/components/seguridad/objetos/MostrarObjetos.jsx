@@ -92,7 +92,7 @@ const MostrarObjetos = () => {
    };
  
    //Barra de busqueda
-     const [ busqueda, setBusqueda ] = useState("");
+     const [busqueda, setBusqueda] = useState("");
        //capturar valor a buscar
      const valorBuscar = (e) => {
        setBusqueda(e.target.value) ;  
@@ -103,8 +103,8 @@ const MostrarObjetos = () => {
         results = registros;
     }else{
          results = registros.filter( (dato) =>
-         dato.objeto.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
-         dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase()) 
+        dato.objeto.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
+        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase()) 
          );
     }
  
