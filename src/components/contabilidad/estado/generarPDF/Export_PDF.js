@@ -1,7 +1,8 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import logo from './logo1.png' //Logo de la empresa
-
+import { getCurrentDateShort } from '../../../../utils/fechaYhora';
+import { getCurrentTime } from '../../../../utils/fechaYhora';
 
 export function Export_PDF (data) {
     const unit = "pt";
@@ -23,23 +24,20 @@ export function Export_PDF (data) {
       body: datos
     };
 
-    //Para mostrar la fecha en formato DD/MM/AAAA
-    let date = new Date()
-    let dia = `${(date.getDate())}`.padStart(2,'0');
-    let mes = `${(date.getMonth()+1)}`.padStart(2,'0');
-    let anio = date.getFullYear();
-
     //Parametros que se deben obtener
-    var sucursal = "Principal";
-    var usuario = "jperez";
-    var fecha = (`${dia}/${mes}/${anio}`);
+    let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
+    let reporte = "Estados";
+    let sucursal = "Principal";
+    let usuario = "jperez"
+    let fecha = getCurrentDateShort(data);
+    let hora = getCurrentTime(data)
 
     var width = doc.internal.pageSize.getWidth() //Para centrar el texto
 
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text(["ESTADOS CONTABLES", `Sucursal: ${sucursal}`, `Fecha: ${fecha}`, `Usuario: ${usuario}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
@@ -50,7 +48,7 @@ export function Export_PDF (data) {
       let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber; //Current Page
       doc.setFontSize(12);
       doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 10, doc.internal.pageSize.height - 10);
-      //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
+      doc.text(`Fecha y hora: ${fecha}, ${hora}`, width - 10, doc.internal.pageSize.height - 10, { align: 'right' });
     }
 
     //Se guarda el documento
