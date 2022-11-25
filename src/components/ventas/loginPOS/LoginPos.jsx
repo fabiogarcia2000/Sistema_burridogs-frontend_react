@@ -10,8 +10,8 @@ function LoginPos() {
                 <div className="row">
                     <div className="col-lg-6 col-12 mx-auto">
                         <div className="text-center image-size-small position-relative">
-                            <img src="https://img.freepik.com/vector-premium/terminal-pos-recibo-banco-pago-terminal-procesamiento-nfc-pago-dispositivo-vector-icono_660702-26.jpg?w=740"
-                                className="rounded-circle p-2 bg-white"  />
+                            {/**<img src="https://img.freepik.com/vector-premium/terminal-pos-recibo-banco-pago-terminal-procesamiento-nfc-pago-dispositivo-vector-icono_660702-26.jpg?w=740"
+                                className="rounded-circle p-2 bg-white img2"  /> */}
                             <div className="icon-camera">
                                 <Link to="/admin/login-pos" className="text-primary"><i className="lni lni-camera"></i></Link>
                             </div>
@@ -49,7 +49,7 @@ function LoginPos() {
                                 <label className="font-500">Contraseña</label>
                                 <input name="" className="form-control mb-4" type="password" />
                                 {/**<p className="m-0 py-4"><Link to="" className="text-muted">¿Se te olvidó tu contraseña?</Link></p> */}
-                                <Link className="btn btn-primary btn-lg w-100 shadow-lg mb-3" to="/punto-de-ventas">Ingresar</Link>
+                                <Link className="btn btn-primary btn-lg w-100 shadow-lg mb-3" to="/admin/punto-de-ventas">Ingresar</Link>
                             </form>
                             <div className="text-center pt-4">
                                 {/** <p className="m-0"><Link to="" className="text-dark font-weight-bold">¿No tiene un usuario?</Link></p> */}

@@ -639,7 +639,7 @@ useEffect(() => {
               <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">
                   <li className="nav-item">
-                    <p className="nav-link active" aria-current="page">
+                    <p className="nav-link" aria-current="page">
                       Sucursal #1
                     </p>
                   </li>
