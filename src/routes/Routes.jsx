@@ -101,6 +101,15 @@ import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/rec
 //import UnlockUser from "../pages/seguridad/UnlockUser/UnlockUser";
 import MyProfile from "../pages/seguridad/MyProfile/MyProfile";
 
+//Preguntas de seguridad
+import CrearPregunta from "../pages/seguridad/preguntas/CrearPreguntas";
+import EditarPregunta from "../pages/seguridad/preguntas/EditarPreguntas";
+
+//Parametros
+import CrearParametro from "../pages/seguridad/parametros/CrearParametro";
+import EditarParametro from "../pages/seguridad/parametros/EditarParametro";
+//import EditarParametro from "../pages/seguridad/parametros/";
+
 //Objeto
 import MostrarObjeto from "../components/seguridad/objetos/MostrarObjetos";
 import CrearObjeto from "../components/seguridad/objetos/CrearObjetos";
@@ -209,10 +218,17 @@ function Rutas() {
           <Route path="MyProfile" element={<MyProfile />} />
           <Route path="createUser" element={<CreateUser />} />
           <Route path="editUser/:id" element={<EditarUsuario />} />
-          <Route path="params" element={<Parametros />} />
-          
+
           <Route path="logs" element={<Logs />} />
+            {/*PARÁMETROS*/}
+            <Route path="params" element={<Parametros />} />
+            <Route path="crearparametro" element={<CrearParametro />} />
+            <Route path="editarparametro" element={<EditarParametro />} />
+
+          {/*PREGUNTAS DE SEGURIDAD*/}
           <Route path="questions" element={<Pregunta />} />
+          <Route path="crearpregunta" element={<CrearPregunta />} />
+          <Route path="editarpregunta" element={<EditarPregunta />} />
           
            {/*OBJETOS*/}
           <Route path="mostrarobjetos" element={<MostrarObjeto />} />

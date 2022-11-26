@@ -239,6 +239,25 @@ export function cambiarAMayusculasRol(valores) {
   }
 }
 
+//PREGUNTAS
+export function cambiarAMayusculasPregunta(valores) {
+  try {
+    let texto = valores.pregunta;
+    valores.pregunta = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//PARÁMETRO
+export function cambiarAMayusculasParametro(valores) {
+  try {
+    let texto = valores.parametro;
+    valores.parametro = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
 //PREG USUARUARIO
 export function cambiarAMayusculasResppuesta(valores) {
   try {
@@ -249,3 +268,22 @@ export function cambiarAMayusculasResppuesta(valores) {
   }
 }
 
+//VALOR
+export function cambiarAMayusculasValor(valores) {
+  try {
+    let texto = valores.valor;
+    valores.valor = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//CREADO POR
+export function cambiarAMayusculasCreadoPor(valores) {
+  try {
+    let texto = valores.creado_por;
+    valores.creado_por = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}

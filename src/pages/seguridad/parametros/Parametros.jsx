@@ -1,16 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
 import { downloadCSV, getOneParam, toUpperCaseField } from '../../../utils/utils';
-
-
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import axios from "axios";
+import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
 // const urlapi = "http://localhost:3001";
+
+const UrlMostrar = "http://190.53.243.69:3001/ms_parametros/getall";
+const UrlEliminar = "http://190.53.243.69:3001/ms_parametros/eliminar/";
+
 export default function Parametros(props) {
 
+ //Configurar los hooks
+ const [registroDelete, setRegistroDelete] = useState('');
+ useEffect(() => {
+   getRegistros();
+ }, []);
 
   var dataPar = JSON.parse(localStorage.getItem("params")) || []
   var urlApiParam = getOneParam(dataPar, "URL_API")
   const urlapi = urlApiParam.valor
+
   /** 
      ** Creando bitacora  
      * enviado infromacion de bitacora a la BD
@@ -40,7 +53,6 @@ export default function Parametros(props) {
       })
   };
 
-
   const [registros, setRegistros] = useState([]);
   const getRegistros = async () => {
     fetch(urlapi + "/ms_parametros/getall"
@@ -67,6 +79,72 @@ export default function Parametros(props) {
     getRegistros();
   }, []);
 
+//Alertas de éxito o error al eliminar
+const mostrarAlertas = (alerta) => {
+  switch (alerta) {
+    case 'eliminado':
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: "La cuenta se eliminó con éxito",
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+    case 'error':
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo eliminar la cuenta',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+    case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Mostrar',
+        text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+
+    default: break;
+  }
+};
+
+//procedimineto para eliminar un registro
+const deleteRegistro = async () => {
+  try {
+    console.log(registroDelete)
+    const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+    getRegistros();
+    if (res.status === 200) {
+      mostrarAlertas("eliminado");
+    } else {
+      mostrarAlertas("error");
+    }
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("error");
+  }
+};
+
+//Ventana modal de confirmación de eliminar
+const [modalEliminar, setModalEliminar] = useState(false);
+const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
+
+//Ventana modal para mostrar mas
+const [modalVerMas, setVerMas] = useState(false);
+const abrirModalVerMas = () => setVerMas(!modalVerMas);
+const [cuentaVerMas, setCuentaVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -113,23 +191,38 @@ export default function Parametros(props) {
       sortable: true,
 
     },
-    // {
-    //   name: "ACCIONES",
-    //   cell: (row) => (
-    //     <>
-    //       <Link
-    //         to={`/admin/editUser/${row.id_parametro}`}
-    //         className="btn  btn-light"
-    //         title="Editar"
-    //       >
-    //         <i className="bi bi-pencil-fill"></i>
-    //       </Link>
-    //     </>
-    //   ),
-    //   ignoreRowClick: true,
-    //   allowOverflow: true,
-    //   button: true,
-    // },
+    {
+      name: "ACCIONES",
+      cell: (row) => (
+        <>
+          &nbsp;
+          <Link
+            to="/admin/editarparametro"
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => setGlobalState('registroEdit', row)}
+          >
+            <i className="fa-solid fa-pen-to-square"></i>
+          </Link>
+          &nbsp;
+          <button
+            className="btn btn-light"
+            title="Eliminar"
+            onClick={() => {
+              setRegistroDelete(row.id_pregunta);
+              abrirModalEliminar();
+            }}
+          >
+            <i className="fa-solid fa-trash"></i>
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+
   ];
 
   //Configurar la paginación de la tabla
@@ -154,14 +247,9 @@ export default function Parametros(props) {
     results = registros
   } else {
     results = registros.filter((dato) =>
-      dato.id_parametro.toString().includes(busqueda.toLocaleLowerCase()) ||
       dato?.valor?.toString().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.parametro?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.creado_por?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.fecha_creacion?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.modificado_por?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.fecha_modificacion?.toLowerCase().includes(busqueda.toLocaleLowerCase())
-    )
+      dato?.parametro?.toLowerCase().includes(busqueda.toLocaleLowerCase())
+      )
   };
   const [pending, setPending] = React.useState(true);
   return (
@@ -185,7 +273,7 @@ export default function Parametros(props) {
               aria-label="First group"
             >
               <Link
-                to="/admin/home"
+                to="/admin/crearparametro"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
@@ -227,7 +315,7 @@ export default function Parametros(props) {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar parámetro..."
               aria-label="Search"
             />
           </div>
@@ -251,6 +339,27 @@ export default function Parametros(props) {
           paginationPerPage="6"
         />
       </div>
+       {/* Ventana Modal de Eliminar*/}
+       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
+        <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
+        <ModalBody>
+          <p>¿Está seguro de Eliminar este Registro?</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="danger"
+            onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+          >
+            Eliminar
+          </Button>
+          <Button color="secondary" onClick={abrirModalEliminar}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 }

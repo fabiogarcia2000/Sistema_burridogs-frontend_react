@@ -1,11 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
 import { downloadCSV, getOneParam, toUpperCaseField } from '../../../utils/utils';
-import '../preguntas/preguntas.css';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import axios from "axios";
+import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
 // const urlapi = "http://localhost:3001";
 
+const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta/getall/";
+const UrlEliminar = "http://190.53.243.69:3001/ms_pregunta/eliminar/";
+
 export default function Pregunta(props) {
+
+    //Configurar los hooks
+  const [registroDelete, setRegistroDelete] = useState('');
+  useEffect(() => {
+    getRegistros();
+  }, []);
 
   var dataPar = JSON.parse(localStorage.getItem("params")) || []
   var urlApiParam = getOneParam(dataPar, "URL_API")
@@ -39,6 +52,7 @@ export default function Pregunta(props) {
         // console.log(error)   
       })
   };
+  
   const [registros, setRegistros] = useState([]);
   const getRegistros = async () => {
     fetch(urlapi + "/ms_pregunta/getall"
@@ -65,6 +79,72 @@ export default function Pregunta(props) {
     getRegistros();
   }, []);
 
+//Alertas de éxito o error al eliminar
+const mostrarAlertas = (alerta) => {
+  switch (alerta) {
+    case 'eliminado':
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: "La cuenta se eliminó con éxito",
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+    case 'error':
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo eliminar la cuenta',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+    case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Mostrar',
+        text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+
+    default: break;
+  }
+};
+
+//procedimineto para eliminar un registro
+const deleteRegistro = async () => {
+  try {
+    console.log(registroDelete)
+    const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+    getRegistros();
+    if (res.status === 200) {
+      mostrarAlertas("eliminado");
+    } else {
+      mostrarAlertas("error");
+    }
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("error");
+  }
+};
+
+//Ventana modal de confirmación de eliminar
+const [modalEliminar, setModalEliminar] = useState(false);
+const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
+
+//Ventana modal para mostrar mas
+const [modalVerMas, setVerMas] = useState(false);
+const abrirModalVerMas = () => setVerMas(!modalVerMas);
+const [cuentaVerMas, setCuentaVerMas] = useState({});
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -78,8 +158,39 @@ export default function Pregunta(props) {
       selector: (row) => toUpperCaseField(row.pregunta),
       sortable: false,
     },
+    
+    {
+      name: "ACCIONES",
+      cell: (row) => (
+        <>
 
-
+          &nbsp;
+          <Link
+            to="/admin/editarpregunta"
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => setGlobalState('registroEdit', row)}
+          >
+            <i className="fa-solid fa-pen-to-square"></i>
+          </Link>
+          &nbsp;
+          <button
+            className="btn btn-light"
+            title="Eliminar"
+            onClick={() => {
+              setRegistroDelete(row.id_pregunta);
+              abrirModalEliminar();
+            }}
+          >
+            <i className="fa-solid fa-trash"></i>
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
 
   ];
 
@@ -90,9 +201,6 @@ export default function Pregunta(props) {
     selectAllRowsItem: true,
     selectAllRowsItemText: "Todos",
   };
-
-
-
 
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("")
@@ -131,7 +239,7 @@ export default function Pregunta(props) {
               aria-label="First group"
             >
               <Link
-                to="/admin/home"
+                to="/admin/crearpregunta"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
@@ -150,7 +258,7 @@ export default function Pregunta(props) {
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>EXCEL
+                <i className="fa-solid fa-file-excel"></i>
               </Link>
               <Link
                 to="/"
@@ -158,7 +266,7 @@ export default function Pregunta(props) {
                 className="btn btn-danger"
                 title="Exportar a PDF"
               >
-                <i className="fa-solid fa-file-pdf"></i>PDF
+                <i className="fa-solid fa-file-pdf"></i>
               </Link>
             </div>
           </div>
@@ -195,6 +303,30 @@ export default function Pregunta(props) {
           paginationPerPage="6"
         />
       </div>
+
+
+      {/* Ventana Modal de Eliminar*/}
+      <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
+        <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
+        <ModalBody>
+          <p>¿Está seguro de Eliminar este Registro?</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="danger"
+            onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+          >
+            Eliminar
+          </Button>
+          <Button color="secondary" onClick={abrirModalEliminar}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
     </div>
   );
 }
