@@ -203,26 +203,26 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
   };
 
   //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("")
+  const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
   const valorBuscar = (e) => {
-    setBusqueda(e.target.value)
-  }
+    setBusqueda(e.target.value);
+  };
   //metodo de filtrado 
-  let results = []
+  let results = [];
   if (!busqueda) {
-    results = registros
+    results = registros;
   } else {
     results = registros.filter((dato) =>
       dato.id_pregunta.toString().includes(busqueda.toLocaleLowerCase()) ||
       dato?.pregunta?.toLowerCase().includes(busqueda.toLocaleLowerCase())
-    )
-  };
+    );
+  }
   const [pending, setPending] = React.useState(true);
 
   return (
     <div className="container">
-      <h5>Preguntas de seguridad</h5>
+      <h3>Preguntas de seguridad</h3>
 
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
@@ -281,7 +281,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por Id pregunta / pregunta..."
               aria-label="Search"
             />
           </div>

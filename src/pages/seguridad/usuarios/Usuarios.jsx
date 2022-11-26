@@ -342,7 +342,7 @@ const Usuarios = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i class="bi bi-search"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
             </span>
             <input
               className="form-control me-2"

@@ -236,29 +236,27 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
 
 
   //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("")
+  const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
   const valorBuscar = (e) => {
-    setBusqueda(e.target.value)
-  }
+    setBusqueda(e.target.value);
+  };
   //metodo de filtrado 
-  let results = []
+  let results = [];
   if (!busqueda) {
-    results = registros
+    results = registros;
   } else {
     results = registros.filter((dato) =>
       dato?.valor?.toString().includes(busqueda.toLocaleLowerCase()) ||
       dato?.parametro?.toLowerCase().includes(busqueda.toLocaleLowerCase())
-      )
-  };
+      );
+  }
   const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
-      <h5>Par&aacute;metros del sistema</h5>
-
-      <div className="row">
-
+      <h3>Par&aacute;metros del sistema</h3>
       <br />
+      <div className="row">
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -315,7 +313,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar parámetro..."
+              placeholder="Buscar parámetro / valor..."
               aria-label="Search"
             />
           </div>

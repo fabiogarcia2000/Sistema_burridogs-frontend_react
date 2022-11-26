@@ -99,15 +99,9 @@ const MostrarPermiso = () => {
     } else {
         results = registros.filter(
             (dato) =>
-                dato.id_permiso
-                    .toLowerCase()
-                    .includes(busqueda.toLocaleLowerCase()) ||
-                dato.rol
-                    .toLowerCase()
-                    .includes(busqueda.toLocaleLowerCase()) ||
-                dato.objeto
-                    .toLowerCase()
-                    .includes(busqueda.toLocaleLowerCase())
+                dato.id_permiso.toString().includes(busqueda.toLocaleLowerCase()) ||
+                dato?.rol?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+                dato?.objeto?.toLowerCase().includes(busqueda.toLocaleLowerCase())
         );
     }
 

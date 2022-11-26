@@ -5,16 +5,7 @@ import { useParams } from "react-router-dom";
 // import { Button, FormGroup, Input, Label } from "reactstrap";
 import { Button, FormGroup, Label, Input, Row, Col, Spinner } from "reactstrap";
 import { Form, Field } from "react-final-form";
-import {
-  getOneParam,
-  isChar,
-  isNumber,
-  isRange,
-  isText,
-  isTextWhitSpace,
-  toUpperCaseField,
-  translateUperCase,
-} from "../../../utils/utils";
+import { getOneParam, isChar, isNumber, isRange, isText, isTextWhitSpace, toUpperCaseField, translateUperCase, } from "../../../utils/utils";
 
 // const urlapi = "http://localhost:3001";
 
@@ -262,7 +253,7 @@ const EditarUsuario = () => {
                       </Field>
                     </FormGroup>
 
-                    {/* ulrima conexion */}
+                    {/* ulrima conexion 
                     <FormGroup>
                       <Label for="fecha_ultima_conexion">Ultima conexión</Label>
                       <Field name="fecha_ultima_conexion">
@@ -282,9 +273,9 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* preguntas contestadas */}
+                    {/* preguntas contestadas 
                     <FormGroup>
                       <Label for="preguntas_contestadas">
                         Preguntas contestadas
@@ -306,9 +297,9 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* intentos login */}
+                    {/* intentos login 
                     <FormGroup>
                       <Label for="intentos_login">Intentos Login</Label>
                       <Field name="intentos_login">
@@ -328,18 +319,11 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    <Link
-                      className="btn btn-secondary btn-block"
-                      to="/admin/users"
-                    >
-                      Cancelar
-                    </Link>
-                  </Col>
-
-                  <Col md={6} lg={6}>
-                    {/* primer ingreso */}
+                  
+            
+                    {/* primer ingreso 
                     <FormGroup>
                       <Label for="primer_ingreso">Primer Ingreso</Label>
                       <Field name="primer_ingreso">
@@ -359,7 +343,7 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
                     {/* fecha venciemiento */}
                     <FormGroup>
@@ -405,7 +389,7 @@ const EditarUsuario = () => {
                       </Field>
                     </FormGroup>
 
-                    {/* creado por */}
+                    {/* creado por 
                     <FormGroup>
                       <Label for="createdBy">Creado por</Label>
                       <Field name="createdBy">
@@ -425,9 +409,9 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* fecha de creacion */}
+                    {/* fecha de creacion 
                     <FormGroup>
                       <Label for="fecha_creacion">Fecha creación </Label>
                       <Field name="fecha_creacion">
@@ -447,9 +431,9 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* modificado por */}
+                    {/* modificado por 
                     <FormGroup>
                       <Label for="modificado_por">Modificado Por</Label>
                       <Field name="modificado_por">
@@ -469,9 +453,9 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* fecha de modificaicon */}
+                    {/* fecha de modificaicon 
                     <FormGroup>
                       <Label for="fecha_modificacion">
                         Fecha de modificación
@@ -493,16 +477,23 @@ const EditarUsuario = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
                     <Button
                       type="submit"
-                      color="primary"
-                      className="btn-block"
+                      //color="primary"
+                      className="btn btn-success mb-3 me-2"
                       disabled={!valid}
                     >
-                      Editar
+                      Guardar
                     </Button>
+
+                    <Link
+                      className="btn btn-danger mb-3 me-2"
+                      to="/admin/users"
+                    >
+                      Cancelar
+                    </Link>
                   </Col>
                 </Row>
               </form>
