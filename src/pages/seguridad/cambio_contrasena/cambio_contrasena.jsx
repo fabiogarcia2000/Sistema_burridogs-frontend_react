@@ -21,31 +21,34 @@ import { getOneParam } from "../../../utils/utils";
 
 // const urlAPi = "http://localhost:3001";
 const URL_API_ENV = process.env.REACT_APP_URL_API;
-console.log('URL_API_ENV===>',URL_API_ENV)
+console.log("URL_API_ENV===>", URL_API_ENV);
 export default function CambioContra(props) {
-
-    /**
+  /**
    ** get settign params
    * obteniendo todos los parametros de configuracion del sistema
    * */
-   const getAllSettingsParams = async () => {
-      fetch(URL_API_ENV + "/ms_parametros/getall", {method: "GET",headers: { "Content-type": "application/json" },})
+  const getAllSettingsParams = async () => {
+    fetch(URL_API_ENV + "/ms_parametros/getall", {
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    })
       .then((response) => response.json())
       .then((responseJson) => {
         if (!responseJson.status) {
           return;
         }
         localStorage.setItem("params", JSON.stringify(responseJson.object));
-      })
+      });
   };
-  useEffect(  () => {
-      getAllSettingsParams();
-    }, []);
+  useEffect(() => {
+    getAllSettingsParams();
+  }, []);
 
-    var dataPar=JSON.parse(localStorage.getItem("params")) || []
-    var urlApiParam=getOneParam(dataPar,"URL_API")
-    const urlAPi =urlApiParam.valor
-
+  var dataPar = JSON.parse(localStorage.getItem("params")) || [];
+  var urlApiParam = getOneParam(dataPar, "URL_API");
+  var paramSetting = [getOneParam(dataPar, "JWT_SECRET")];
+  console.log(paramSetting);
+  const urlAPi = urlApiParam.valor;
 
   let navigate = useNavigate();
   const [password, setPassword] = useState("");
@@ -57,8 +60,8 @@ export default function CambioContra(props) {
   const refConfirmContrasena = useRef(null);
 
   const { id, token } = useParams();
-  //   console.log("id", id);
-  //   console.log("token", token);
+  console.log("id", id);
+  console.log("token", token);
 
   //   var isValidLink = false;
   const [validLink, setValidLink] = useState(false);
@@ -69,7 +72,7 @@ export default function CambioContra(props) {
   };
 
   const validateLink = () => {
-    let data = { id, token };
+    let data = { id, token, paramSetting };
 
     fetch(URL_API_ENV + "/validateUser", {
       method: "POST",
@@ -149,7 +152,6 @@ export default function CambioContra(props) {
             </Alert>
 
             <h1>Cambio de contraseña</h1>
-            
 
             <form onSubmit={handleSubmit}>
               <div className="inputs">
