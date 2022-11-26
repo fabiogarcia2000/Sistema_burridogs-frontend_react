@@ -5,37 +5,17 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
-import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
-
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
-const CrearPeriodoContable = () => {
+const PeriodoCrear = () => {
 
   const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
-
-//procedimineto para obtener todos las sucursales y mostrarlas en select
-const [sucursal, setsucursal] = useState([]);
-useEffect(() => {
-  getsucursal();
-}, []);
-
-  //petición a api
-  const getsucursal = async () => {
-    try {
-      const res = await axios.get(UrlMostrar);
-      setsucursal(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -48,6 +28,7 @@ useEffect(() => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
         });
+
         break;
 
       case 'error':
@@ -67,71 +48,74 @@ useEffect(() => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
         });
+
         break;
+
       default: break;
     }
   };
+
 
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id_periodo_contable:"",
           descripcion_periodo: "",
           fecha_inicial: "",
           fecha_final: "",
           fecha_creacion: date,
           id_usuario: edit.id_usuario,
-          tipo_periodo: "",
-          abierto: "1",
+          tipo_periodo: "A",
+          estado_periodo: "",
 
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
+
           // Validacion descripción periodo
           if (!valores.descripcion_periodo) {
             errores.descripcion_periodo = "Por favor ingresa la descripción del periodo";
           } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion_periodo)) {
             errores.descripcion_periodo = "Escribir solo en MAYÚSCULAS";
           }
+
           // Validacion fecha inicial
           if (!valores.fecha_inicial) {
             errores.fecha_inicial = "Por favor seleccione fecha inicial";
           }
+
           // Validacion fecha final
           if (!valores.fecha_final) {
             errores.fecha_final = "Por favor seleccione fecha final";
           }
           if (!valores.tipo_periodo) {
-           errores.tipo_periodo = "Por favor seleccione el tipo de periodo";
+            errores.tipo_periodo = "Por favor seleccione el tipo de periodo";
           }
           if (!valores.abierto) {
             errores.abierto = "Por favor seleccione una opcion";
           }
+
           return errores;
 
         }}
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
           try {
-
-            /*const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);   //NO SE CON QUE CAMPO VALIDAR
-            console.log(res)
-            if (res.data === "") {*/
-              //procedimineto para guardar el nuevo registro en el caso de que no exista
-              const res = await axios.put(`${URLCrear}`, valores);
-              if (res.status === 200) {
-                mostrarAlertas("guardado");
-                navigate("/admin/mostrarperiodo");
-              } else {
-                mostrarAlertas("error");
-              }
-            }/*else {
-              mostrarAlertas("duplicado");
+            const res = await axios.put(`${URLCrear}`, valores);
+            if (res.status === 200) {
+              console.log(res)
+              mostrarAlertas("guardado");
+              navigate("/admin/mostrarperiodo");
+            } else {
+              mostrarAlertas("error");
             }
-          } */catch (error) {
+
+            // } else {
+            //    mostrarAlertas("duplicado");
+            //  }
+          } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/mostrarperiodo");
@@ -154,7 +138,9 @@ useEffect(() => {
                     name="descripcion_periodo"
                     placeholder="Descripción Periodo..."
                     onKeyUp={cambiarAMayusculasDescripcionPeriodo(values)}
+
                   />
+
                   <ErrorMessage
                     name="descripcion_periodo"
                     component={() => (
@@ -176,6 +162,7 @@ useEffect(() => {
                     name="fecha_inicial"
                     placeholder="Fecha Inicial"
                   />
+
                   <ErrorMessage
                     name="fecha_inicial"
                     component={() => (
@@ -237,9 +224,10 @@ useEffect(() => {
                   <Field
                     type="text"
                     className="form-control"
-                    id="nombreUsuario"
+                    id="idUsuario"
                     name="id_usuario"
                     placeholder="Nombre usuario..."
+                    disabled
                   />
                   <ErrorMessage
                     name="id_usuario"
@@ -249,6 +237,7 @@ useEffect(() => {
                   />
                 </div>
               </div>
+
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="tipoPeriodo" className="form-label">
@@ -259,47 +248,50 @@ useEffect(() => {
                     className="form-select"
                     id="tipoPeriodo"
                     name="tipo_periodo"
-                    >
-                      <option value="">Seleccionar...</option>
-                      {sucursal.map((item, i) =>(
-                        <option key={i} value={item.id_periodo_contable}>{item.tipo_periodo}</option>
-                      ))}
-                    </Field>
-    
-                      <ErrorMessage
-                        name="id_periodo_contable"
-                        component={() => (
-                          <div className="error">{errors.id_periodo_contable}</div>
-                        )}
+                    placeholder="Tipo Periodo..."
+                  >
+                    <option value="1">Mensual</option>
+                    <option value="0">Trimestral</option>
+                    <option value="0">Anual</option>
+                  </Field>
+
+                  <ErrorMessage
+                    name="tipo_periodo"
+                    component={() => (
+                      <div className="error">{errors.tipo_periodo}</div>
+                    )}
                   />
                 </div>
               </div>
-            </div> 
-            <div className="row g-3">
-                <div className="col-sm-6">
-                  <div className="mb-3">
-                    <label htmlFor="estadoPeriodo" className="form-label">
-                      Estado periodo:
-                    </label>
-                    <Field
-                      as="select"
-                      className="form-select"
-                      id="estadoPeriodo"
-                      name="abierto"
-                      >
-                      <option value="1">Abierto</option>
-                      <option value="0">Cerrado</option>
-                    </Field>
+            </div>
 
-                    <ErrorMessage
-                      name="abierto"
-                      component={() => (
-                        <div className="error">{errors.abierto}</div>
-                      )}
-                    />
-                  </div>
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="estadoPeriodo" className="form-label">
+                    Estado periodo:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="estadoPeriodo"
+                    name="abierto"
+                  ><option value="">Seleccionar...</option>
+                    <option value="A">Abierto</option>
+                    <option value="C">Cerrado</option>
+                  </Field>
+
+                  <ErrorMessage
+                    name="abierto"
+                    component={() => (
+                      <div className="error">{errors.abierto}</div>
+                    )}
+                  />
                 </div>
               </div>
+
+            </div>
+
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
             </button>
@@ -310,6 +302,7 @@ useEffect(() => {
             >
               Cancelar
             </Link>
+
           </Form>
         )}
       </Formik>
@@ -317,4 +310,4 @@ useEffect(() => {
   );
 };
 
-export default CrearPeriodoContable;
+export default PeriodoCrear;

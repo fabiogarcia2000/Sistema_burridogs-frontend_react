@@ -6,11 +6,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates";
 
-import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
-
 const URLCrear = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
-//const URLMostrarUno = "http://190.53.243.69:3001/";
-const UrlMostrar = "http://190.53.243.69:3001/ms_permisos/getall/";
+
+const Urlrol = "http://190.53.243.69:3001/ms_rol/getall/";
+const Urlobjetos = "http://190.53.243.69:3001/ms_objetos/getall/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
 const current = new Date();
@@ -19,6 +18,41 @@ const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDa
 const CrearPermiso = () => {
 
   const navigate = useNavigate();
+
+  //procedimineto para obtener todos las sucursales y mostrarlas en select
+  /* const [roles, setrol] = useState([]);
+   useEffect(() => {
+     getrol();
+   }, []);
+  
+   //petición a api
+   const getrol = async () => {
+     try {
+       const res = await axios.get(Urlrol);
+       setrol(res.data);
+     } catch (error) {
+       console.log(error);
+       mostrarAlertas("errormostrar");
+     }
+   };*/
+
+  //procedimineto para obtener todos las sucursales y mostrarlas en select
+  const [objeto, setobjeto] = useState([]);
+  useEffect(() => {
+    getobjeto();
+  }, []);
+
+  //petición a api
+  const getobjeto = async () => {
+    try {
+      const res = await axios.get(Urlobjetos);
+      setobjeto(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -74,6 +108,7 @@ const CrearPermiso = () => {
       <Formik
         //valores iniciales
         initialValues={{
+          id_permiso: "",
           permiso_insercion: "1",
           permiso_eliminacion: "1",
           permiso_actualizacion: "1",
@@ -271,7 +306,7 @@ const CrearPermiso = () => {
                     className="form-control"
                     id="fecha_creacion"
                     name="fecha_creacion"
-               
+                    disabled
                   />
                   <ErrorMessage
                     name="fecha_creacion"
@@ -286,47 +321,20 @@ const CrearPermiso = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="Rol" className="form-label">
-                    Rol:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="Rol"
-                    name="id_rol"
-                  />
-                  {/*    <option value="">Seleccionar...</option>
-                    {sucursal.map((item, i) => (
-                      <option key={i} value={item.id_permiso}>{item.id_rol}</option>
-                    ))}*/}
-
-
-                  <ErrorMessage
-                    name="id_rol"
-                    component={() => (
-                      <div className="error">{errors.id_rol}</div>
-                    )}
-
-                  />
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="Objeto" className="form-label">
+                  <label htmlFor="id_objeto" className="form-label">
                     Objeto:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="Objeto"
+                    as="select"
+                    className="form-select"
+                    id="id_objeto"
                     name="id_objeto"
-                  />
-                  {/*} <option value="">Seleccionar...</option>
-                    {sucursal.map((item, i) => (
-                      <option key={i} value={item.id_permiso}>{item.id_objeto}</option>
+                  >
+                    <option value="">Seleccionar...</option>
+                    {objeto.map((item, i) => (
+                      <option key={i} value={item.id_objeto}>{item.objeto}</option>
                     ))}
-                  </Field>*/}
-
+                  </Field>
                   <ErrorMessage
                     name="id_objeto"
                     component={() => (
@@ -335,7 +343,30 @@ const CrearPermiso = () => {
                   />
                 </div>
               </div>
-
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="id_rol" className="form-label">
+                    Rol:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="id_rol"
+                    name="id_rol"
+                  />
+                  {/*<option value="">Seleccionar...</option>
+                    {roles.map((item, i) => (
+                      <option key={i} value={item.id_rol}>{item.rol}</option>
+                    ))}
+                    </Field>*/}
+                  <ErrorMessage
+                    name="id_objeto"
+                    component={() => (
+                      <div className="error">{errors.id_objeto}</div>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">
