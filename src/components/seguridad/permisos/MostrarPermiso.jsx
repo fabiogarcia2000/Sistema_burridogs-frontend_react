@@ -132,17 +132,22 @@ const MostrarPermiso = () => {
         },
         {
             name: "PERMISO INSERCION",
-            selector: (row) => row.permiso_insercion,
+            selector: (row) => row.permiso_insercion.toString(),
             sortable: true,
         },
         {
             name: "PERMISO ELIMINACION",
-            selector: (row) => row.permiso_eliminacion,
+            selector: (row) => row.permiso_eliminacion.toString(),
             sortable: true,
         },
         {
             name: "PERMISO ACTUALIZACION",
-            selector: (row) => row.permiso_actualizacion,
+            selector: (row) => row.permiso_actualizacion.toString(),
+            sortable: true,
+        },
+        {
+            name: "PERMISO CONSULTAR",
+            selector: (row) => row.permiso_consultar.toString(),
             sortable: true,
         },
         {
@@ -291,7 +296,7 @@ const MostrarPermiso = () => {
                             <p> {registroVerMas.id_permiso} </p>
                         </div>
                     </div>
-
+                   
                     <div className="row g-3">
                         <div className="col-sm-6">
                             <p className="colorText">CREADO POR: </p>
