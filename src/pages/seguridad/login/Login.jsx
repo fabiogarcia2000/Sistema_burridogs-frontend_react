@@ -305,7 +305,8 @@ export default function Login(props) {
                   <Link to="/recuperacion_contrasena">
                     ¿Olvidaste tu contraseña?
                   </Link>
-                  <Link to="/recuperacion_contrasena">
+                  {/* DESBLOQUEAR USUARIO*/}
+                  <Link to="/desbloquearUsuario">
                     Desbloquear usuario
                   </Link>
                   {/* <Link to="/unlockuser">Desbloquea tu usuario</Link> */}

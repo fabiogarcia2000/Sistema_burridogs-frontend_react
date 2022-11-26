@@ -79,6 +79,7 @@ import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds
 
 import ReporteVentaResumen from "../components/reports/pos/VentaResumen";
 
+
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
 import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
@@ -96,7 +97,8 @@ import CambioContra from "../pages/seguridad/cambio_contrasena/cambio_contrasena
 import RecuperacionContra from "../pages/seguridad/recuperacion_contrasena/recuperacion_contrasena"
 import RecuperacionCorreo from "../pages/seguridad/recuperacion_correo/recuperacion_correo"
 import RecuperacionPreguntas from "../pages/seguridad/recuperacion_preguntas/recuperacion_preguntas"
-import UnlockUser from "../pages/seguridad/UnlockUser/UnlockUser";
+//import desbloquearUsuario from "../pages/seguridad/desbloquearUsuario/desbloquearUsuario"
+//import UnlockUser from "../pages/seguridad/UnlockUser/UnlockUser";
 import MyProfile from "../pages/seguridad/MyProfile/MyProfile";
 
 //Objeto
@@ -177,7 +179,7 @@ import ReporteLibroMayor from "../components/reports/LibroMayor";
 
 //--------------------------------------------MI PERFIL--------------------------------------------------
 import EditarMiUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
-import CambioContraseña from "../components/seguridad/mi_perfil/CambioContraseña";
+import CambioContrasena from "../components/seguridad/mi_perfil/CambioContrasena";
 import MostrarObjetos from "../components/seguridad/objetos/MostrarObjetos";
 
 function Rutas() {
@@ -195,8 +197,8 @@ function Rutas() {
         <Route path="/cambio_contrasena/:id/:token" element={<CambioContra />} />
         <Route path="/recuperacion_contrasena" element={<RecuperacionContra />} />
         <Route path="/recuperacion_correo" element={<RecuperacionCorreo />} />
-        <Route path="/recuperacion_preguntas/:id_usuario" element={<RecuperacionPreguntas />} />
-        <Route path="/unlockuser" element={<UnlockUser />} />
+        {/*<Route path="/recuperacion_preguntas/:id_usuario" element={<RecuperacionPreguntas />} />*/}
+       {/* <Route path="/desbloquearUsuario/" element={<desbloquearUsuario />} />*/}
       </Routes>
    
       <Routes>

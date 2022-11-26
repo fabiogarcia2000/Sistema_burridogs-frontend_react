@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 
 const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
- const CambioContraseña = () => {
+ const CambioContrasena = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
@@ -186,4 +186,4 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
   );
 };
 
-export default CambioContraseña;
+export default CambioContrasena;
