@@ -365,7 +365,7 @@ function Rutas() {
             {/*-----------------------------------RUTAS MI PERFIL-----------------------------------------------*/}
 
             <Route path="editarusuario" element={<EditarMiUsuario />} />
-            <Route path="cambiocontrasena" element={<CambioContraseña />} />
+            <Route path="cambiocontrasena" element={<CambioContrasena />} />
 
             {/*--------------------------------------Rutas reportes--------------------------------------------*/}
             {/*reportes POS*/}
