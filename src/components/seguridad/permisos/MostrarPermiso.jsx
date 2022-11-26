@@ -146,6 +146,11 @@ const MostrarPermiso = () => {
             sortable: true,
         },
         {
+            name: "PERMISO CONSULTAR",
+            selector: (row) => row.permiso_consultar.toString(),
+            sortable: true,
+        },
+        {
             name: "ACCIONES",
             cell: (row) => (
                 <>
@@ -291,7 +296,7 @@ const MostrarPermiso = () => {
                             <p> {registroVerMas.id_permiso} </p>
                         </div>
                     </div>
-
+                   
                     <div className="row g-3">
                         <div className="col-sm-6">
                             <p className="colorText">CREADO POR: </p>
