@@ -132,17 +132,17 @@ const MostrarPermiso = () => {
         },
         {
             name: "PERMISO INSERCION",
-            selector: (row) => row.permiso_insercion,
+            selector: (row) => row.permiso_insercion.toString(),
             sortable: true,
         },
         {
             name: "PERMISO ELIMINACION",
-            selector: (row) => row.permiso_eliminacion,
+            selector: (row) => row.permiso_eliminacion.toString(),
             sortable: true,
         },
         {
             name: "PERMISO ACTUALIZACION",
-            selector: (row) => row.permiso_actualizacion,
+            selector: (row) => row.permiso_actualizacion.toString(),
             sortable: true,
         },
         {
