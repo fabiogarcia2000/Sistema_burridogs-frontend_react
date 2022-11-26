@@ -8,7 +8,7 @@ import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusc
 //import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/0";
-const UrlMostrar = "http://190.53.243.69:3001/mc_subcuenta/getall";
+const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 const CrearSubCuenta = () => {
 

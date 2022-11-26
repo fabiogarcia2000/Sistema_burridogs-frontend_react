@@ -13,34 +13,12 @@ const URLCrear = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 const UrlMostrar = "http://190.53.243.69:3001/ms_permisos/getall/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
-let date = new Date()
-let dia = `${(date.getDate())}`.padStart(2, '0');
-let mes = `${(date.getMonth() + 1)}`.padStart(2, '0');
-let anio = date.getFullYear();
-
-//Parametros que se deben obtener
-var fecha = (`${dia}/${mes}/${anio}`);
+const current = new Date();
+const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
 const CrearPermiso = () => {
 
   const navigate = useNavigate();
-
-  //procedimineto para obtener todos las sucursales y mostrarlas en select
-  const [sucursal, setsucursal] = useState([]);
-  useEffect(() => {
-    getsucursal();
-  }, []);
-
-  //petición a api
-  const getsucursal = async () => {
-    try {
-      const res = await axios.get(UrlMostrar);
-      setsucursal(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -91,19 +69,18 @@ const CrearPermiso = () => {
     }
   };
 
-
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-
-          permiso_insercion: "",
-          permiso_eliminacion: "",
-          permiso_actualizacion: "",
-          permiso_consulta: "",
+          permiso_insercion: "1",
+          permiso_eliminacion: "1",
+          permiso_actualizacion: "1",
+          permiso_consultar: "1",
+          activo: "1",
           creado_por: "",
-          fecha_creacion: fecha,
+          fecha_creacion: date,
           id_rol: "",
           id_objeto: "",
 
@@ -132,6 +109,8 @@ const CrearPermiso = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
+
+          console.log("entro hasta aqui")
           //validar si existe un registro con el codigo ingresado
           try {
             /*const res = await axios.get(${URLMostrarUno}${valores.id_permiso});
@@ -161,18 +140,18 @@ const CrearPermiso = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="permisoInsercion" className="form-label">
+                  <label htmlFor="permisoinsercion" className="form-label">
                     Permiso Inserción:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoInsercion"
+                    id="permisoinsercion"
                     name="permiso_insercion"
                   >
-                    <option value="">Seleccionar...</option>
-                    <option value="4">Permitir</option>
-                    <option value="5">No permitir</option>
+
+                    <option value="1">Permitir</option>
+                    <option value="0">No permitir</option>
                   </Field>
                   <ErrorMessage
                     name="permiso_insercion"
@@ -185,16 +164,16 @@ const CrearPermiso = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="permisoEliminacion" className="form-label">
+                  <label htmlFor="permisoeliminacion" className="form-label">
                     Permiso Eliminacion:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoEliminacion"
+                    id="permisoeliminacion"
                     name="permiso_eliminacion"
                   >
-                    <option value="">Seleccionar...</option>
+
                     <option value="1">Permitir</option>
                     <option value="0">No permitir</option>
                   </Field>
@@ -212,18 +191,18 @@ const CrearPermiso = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="permisoActualizacion" className="form-label">
+                  <label htmlFor="permisoactualizacion" className="form-label">
                     Permiso Actualizacion:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoActualizacion"
+                    id="permisoactualizacion"
                     name="permiso_actualizacion"
                   >
-                    <option value="">Seleccionar...</option>
-                    <option value="P">Permitir</option>
-                    <option value="N">No permitir</option>
+
+                    <option value="1">Permitir</option>
+                    <option value="0">No permitir</option>
                   </Field>
 
                   <ErrorMessage
@@ -237,24 +216,24 @@ const CrearPermiso = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="permisoConsultar" className="form-label">
+                  <label htmlFor="permisoconsultar" className="form-label">
                     Permiso Consultar:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoConsultar"
-                    name="permiso_consulta"
+                    id="permisoconsultar"
+                    name="permiso_consultar"
                   >
-                    <option value="">Seleccionar...</option>
-                    <option value="2">Permitir</option>
-                    <option value="3">No permitir</option>
+
+                    <option value="1">Permitir</option>
+                    <option value="0">No permitir</option>
                   </Field>
 
                   <ErrorMessage
                     name="permiso_consulta"
                     component={() => (
-                      <div className="error">{errors.permiso_consulta}</div>
+                      <div className="error">{errors.permiso_consultar}</div>
                     )}
                   />
                 </div>
@@ -284,15 +263,15 @@ const CrearPermiso = () => {
               </div>
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="fechaCreacion" className="form-label">
+                  <label htmlFor="fecha_creacion" className="form-label">
                     Fecha Creacion:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="fechaCreacion"
+                    id="fecha_creacion"
                     name="fecha_creacion"
-                    disabled
+               
                   />
                   <ErrorMessage
                     name="fecha_creacion"

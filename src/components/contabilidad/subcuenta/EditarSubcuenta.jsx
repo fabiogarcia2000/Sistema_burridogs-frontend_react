@@ -2,18 +2,37 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/";
-
+const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 const EditarSubCuenta = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+ //procedimineto para obtener todos las sucursales y mostrarlas en select
+ const [cuenta, setcuenta] = useState([]);
+ useEffect(() => {
+   getcuenta();
+ }, []);
+
+ //petición a api
+ const getcuenta = async () => {
+   try {
+     const res = await axios.get(UrlMostrar);
+     setcuenta(res.data);
+   } catch (error) {
+     console.log(error);
+     mostrarAlertas("errormostrar");
+   }
+ };
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -124,12 +143,16 @@ const EditarSubCuenta = () => {
                     Nombre Cuenta:
                   </label>
                   <Field
-                    type="text"
-                    className="form-control"
-                    id="idCuenta"
+                    as="select"
+                    className="form-select"
+                    id="id_cuenta"
                     name="id_cuenta"
-                    placeholder="Id cuenta..."
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    {cuenta.map((item, i) => (
+                      <option key={i} value={item.id_cuenta}>{item.nombre_cuenta}</option>
+                    ))}
+                  </Field>
 
                   <ErrorMessage
                     name="id_cuenta"
