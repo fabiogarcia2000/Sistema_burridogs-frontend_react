@@ -184,11 +184,6 @@ const FormularioEditar = () => {
             errores.precio = "El precio solo puede contener números";
           }
 
-          // Validacion socio negocio
-          if (!valores.id_socio_negocio) {
-            errores.id_socio_negocio = "Por favor seleccione una opción";
-          }
-
           // Validacion código de barra
           if (!valores.codigo_barra) {
             errores.codigo_barra = "Por favor ingresa el código de barra";
@@ -408,33 +403,6 @@ const FormularioEditar = () => {
 
               <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="socionegocioArticulo" className="form-label">
-                    Socio Negocio:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="socionegocioArticulo"
-                    name="id_socio_negocio"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {socios.map((item, i) => (
-                      <option key={i} value={item.id_socio_negocio}>
-                        {item.descripcion}
-                      </option>
-                    ))}
-                  </Field>
-
-                  <ErrorMessage
-                    name="id_socio_negocio"
-                    component={() => (
-                      <div className="error">{errors.id_socio_negocio}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-4">
-                <div className="mb-3">
                   <label htmlFor="codigobarraArticulo" className="form-label">
                     Código de Barra:
                   </label>
@@ -454,9 +422,6 @@ const FormularioEditar = () => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="unidadmedidaArticulo" className="form-label">
@@ -484,6 +449,9 @@ const FormularioEditar = () => {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="estadoArticulo" className="form-label">

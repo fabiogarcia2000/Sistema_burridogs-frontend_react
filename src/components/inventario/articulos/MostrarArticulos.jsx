@@ -127,7 +127,7 @@ const MostrarArticulos = () => {
     },
     {
       name: "TIPO",
-      selector: (row) => row.tipo,
+      selector: (row) => (row.tipo === "V" ? "VENTA" : "INVENTARIO"),
       sortable: true,
       maxWidth: "100px",
     },
@@ -166,8 +166,15 @@ const MostrarArticulos = () => {
     },
 
     {
-      name: "SOCIO DE NEGOCIO",
-      selector: (row) => row.descripcion_socio_negocio,
+      name: "CANT. MÍN",
+      selector: (row) => row.inventario_minimo,
+      sortable: true,
+      maxWidth: "160px",
+    },
+
+    {
+      name: "CANT. MAX",
+      selector: (row) => row.inventario_maximo,
       sortable: true,
       maxWidth: "160px",
     },
@@ -279,7 +286,7 @@ const MostrarArticulos = () => {
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
-                onClick={()=>{
+                onClick={() => {
                   Export_Excel(results);
                 }}
               >
@@ -289,7 +296,7 @@ const MostrarArticulos = () => {
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
-                onClick={()=>{
+                onClick={() => {
                   Export_PDF(results);
                 }}
               >
