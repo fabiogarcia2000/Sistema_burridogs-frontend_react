@@ -206,7 +206,7 @@ function Rutas() {
         <Route path="/cambio_contrasena/:id/:token" element={<CambioContra />} />
         <Route path="/recuperacion_contrasena" element={<RecuperacionContra />} />
         <Route path="/recuperacion_correo" element={<RecuperacionCorreo />} />
-        {/*<Route path="/recuperacion_preguntas/:id_usuario" element={<RecuperacionPreguntas />} />*/}
+        <Route path="/recuperacion_preguntas/:id_usuario" element={<RecuperacionPreguntas />} />
        {/* <Route path="/desbloquearUsuario/" element={<desbloquearUsuario />} />*/}
       </Routes>
    
