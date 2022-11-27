@@ -32,11 +32,11 @@ export function Export_PDF (data) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Categorías";
     let sucursal = "Principal";
-    let usuario = "jperez"
+    let usuario = "jperez";
     let fecha = getCurrentDateShort(data);
-    let hora = getCurrentTime(data)
+    let hora = getCurrentTime(data);
 
-    var width = doc.internal.pageSize.getWidth() //Para centrar el texto
+    var width = doc.internal.pageSize.getWidth(); //Para centrar el texto
 
     //Preparacion del documento
     doc.setFontSize(12);
