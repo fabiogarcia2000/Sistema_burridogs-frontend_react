@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import axios from "axios";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
+import { Export_PDF } from "./generarPDF/Export_PDF";
 // const urlapi = "http://localhost:3001";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta/getall/";
@@ -260,14 +261,16 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
               >
                 <i className="fa-solid fa-file-excel"></i>
               </Link>
-              <Link
-                to="/"
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(results);
+                }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

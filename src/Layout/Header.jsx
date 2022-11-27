@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import { setGlobalState } from "../globalStates/globalStates.js";
+import { setGlobalState } from "./responseClass";
 
 import logoEmpresa from "../assets/img/logo1.png";
 import imgPerfil from "../assets/img/profile-img.jpg";
