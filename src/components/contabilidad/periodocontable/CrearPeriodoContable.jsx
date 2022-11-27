@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useGlobalState } from "../../../globalStates/globalStates"; 
+import { useGlobalState } from "../../../globalStates/globalStates";
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
