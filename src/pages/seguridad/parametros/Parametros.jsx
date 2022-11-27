@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import axios from "axios";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
+import { Export_PDF } from "./generarPDF/Export_PDF";
 // const urlapi = "http://localhost:3001";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_parametros/getall";
@@ -210,7 +211,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_pregunta);
+              setRegistroDelete(row.id_parametro);
               abrirModalEliminar();
             }}
           >
@@ -236,29 +237,27 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
 
 
   //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("")
+  const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
   const valorBuscar = (e) => {
-    setBusqueda(e.target.value)
-  }
+    setBusqueda(e.target.value);
+  };
   //metodo de filtrado 
-  let results = []
+  let results = [];
   if (!busqueda) {
-    results = registros
+    results = registros;
   } else {
     results = registros.filter((dato) =>
       dato?.valor?.toString().includes(busqueda.toLocaleLowerCase()) ||
       dato?.parametro?.toLowerCase().includes(busqueda.toLocaleLowerCase())
-      )
-  };
+      );
+  }
   const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
-      <h5>Par&aacute;metros del sistema</h5>
-
-      <div className="row">
-
+      <h3>Par&aacute;metros del sistema</h3>
       <br />
+      <div className="row">
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -294,14 +293,16 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                >
                  <i className="fa-solid fa-file-excel"></i>
                </Link>
-              <Link
-                 to="/"
-                 type="button"
-                 className="btn btn-danger"
-                 title="Exportar a PDF"
-               >
-                 <i className="fa-solid fa-file-pdf"></i>
-               </Link>
+               <Button
+                type="button"
+                className="btn btn-danger"
+                title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(results);
+                }}
+              >
+                <i className="fa-solid fa-file-pdf"></i>
+              </Button>
             </div>
           </div>
         </div>
@@ -310,13 +311,15 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
             </span>
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar parámetro..."
+              placeholder="Buscar parámetro / valor..."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>

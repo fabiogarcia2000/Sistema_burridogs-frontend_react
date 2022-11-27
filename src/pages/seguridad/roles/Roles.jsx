@@ -199,23 +199,22 @@ export default function Roles(props) {
   };
 
   //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("")
+  const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
   const valorBuscar = (e) => {
-    setBusqueda(e.target.value)
-  }
-  //metodo de filtrado 
-  let results = []
-  if (!busqueda) {
-    results = registros
-  } else {
-    results = registros.filter((dato) =>
-      dato.id_rol.toString().includes(busqueda.toLocaleLowerCase()) ||
-      dato.rol.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato.fecha_creacion.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
-    )
+    setBusqueda(e.target.value);
   };
+  //metodo de filtrado 
+  let results = [];
+  if (!busqueda) {
+    results = registros;
+  } else {
+    results = registros.filter(
+      (dato) =>
+      dato.id_rol.toString().includes(busqueda.toLocaleLowerCase()) ||
+      dato?.rol?.toLowerCase().includes(busqueda.toLocaleLowerCase()) 
+    );
+  }
 
 
 
@@ -278,13 +277,15 @@ export default function Roles(props) {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
             </span>
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar ID de rol / rol...."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useGlobalState } from "../globalStates/globalStates";
+import { useGlobalState } from "./responseClass";
 
 function Sidebar() {
   const [classSidebar] = useGlobalState("sidebar_class");

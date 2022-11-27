@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
-const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 
 
 const current = new Date();
@@ -19,8 +19,8 @@ const PermisoEditar = () => {
   const navigate = useNavigate();
 
   //Alertas de éxito o error
-  const mostrarAlertas = (alerta) =>{
-    switch (alerta){
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
       case 'guardado':
         Swal.fire({
           title: '¡Guardado!',
@@ -30,225 +30,177 @@ const PermisoEditar = () => {
           confirmButtonText: 'Ok'
         })
 
-      break;
+        break;
 
-      case 'error': 
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudieron guardar los cambios',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      })
-      break;
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron guardar los cambios',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        })
+        break;
 
       default: break;
     }
   };
+  
+  return (
+    <div className="container">
+      <Formik
+        //valores iniciales
+        initialValues={{
+          id_permiso: edit.id_permiso,
+          id_rol: edit.rol,
+          id_objeto: edit.objeto,
+          permiso_insercion: "1",
+          permiso_eliminacion: "1",
+          permiso_actualizacion: "1",
+          permiso_consultar: "1",
+          activo: "1",
+          modificado_por: "",
+          fecha_modificacion: date
+        }}
+        //Funcion para validar
+        validate={(valores) => {
+          let errores = {};
 
-return (
-  <div className="container">
-    <Formik
-      //valores iniciales
-      initialValues={{
-        id_permiso: edit.id_permiso,
-        id_rol: edit.rol,
-        id_objeto: edit.objeto,
-        activo:edit.activo ,
-        modificado_por:"" ,
-        fecha_modificacion: date
-      }}
-      //Funcion para validar
-      validate={(valores) => {
-        let errores = {};
+          // Validacion descripción
+          if (!valores.modificado_por) {
+            errores.modificado_por = "Por favor ingresa un nombre";
+          }
 
-        // Validacion descripción
-        if (!valores.modificado_por) {
-          errores.modificado_por = "Por favor ingresa un nombre";
-        }
+          // Validacion estado
+          if (!valores.activo) {
+            errores.activo = "Por favor seleccione un estado";
+          }
 
-        // Validacion estado
-        if (!valores.activo) {
-          errores.activo = "Por favor seleccione un estado";
-        }
+          return errores;
+        }}
 
-        return errores;
-      }}
-
-      onSubmit={async (valores) => {
-            //procedimineto para guardar el nuevo registro
+        onSubmit={async (valores) => {
+          //procedimineto para guardar el nuevo registro
           try {
-            const res = await axios.put(`${URLEditar}${valores.id_permiso}`, valores);
+            const res = await axios.put(`${URLEditar}`, valores);
 
-              if (res.status === 200) {
-                mostrarAlertas("guardado");
-                navigate("/admin/mostrarpermiso");
-              } else {
-                mostrarAlertas("error");
-              }
+            if (res.status === 200) {
+              mostrarAlertas("guardado");
+              navigate("/admin/mostrarpermiso");
+            } else {
+              mostrarAlertas("error");
+            }
 
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/mostrarpermiso");
           }
-      }}
-    >
-      {({ errors, values }) => (
-        <Form >
-        <h3 className="mb-3">Editar Permisos</h3>
-        <div className="row g-3">
-          <div className="col-sm-6">
-            <div className="mb-3">
-              <label htmlFor="idPermiso" className="form-label">
-                Id Permiso:
-              </label>
-              <Field
-                type="text"
-                className="form-control"
-                id="idPermiso"
-                name="id-Permiso"
-                placeholder="Id Permiso..."
-                disabled
-              />
+        }}
+      >
+        {({ errors, values }) => (
+          <Form >
+            <h3 className="mb-3">Editar Permisos</h3>
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="idPermiso" className="form-label">
+                    Id Permiso:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="idPermiso"
+                    name="id_permiso"
+                    placeholder="Id Permiso..."
+                    disabled
+                  />
 
-              <ErrorMessage
-                name="id-permiso"
-                component={() => <div className="error">{errors.id_permiso}</div>}
-              />
+                  <ErrorMessage
+                    name="id_permiso"
+                    component={() => <div className="error">{errors.id_permiso}</div>}
+                  />
+                </div>
+              </div>
+
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="idRol" className="form-label">
+                    Id Rol:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="idRol"
+                    name="id_rol"
+                    placeholder="Nombre Rol..."
+                    disabled
+                  />
+
+                  <ErrorMessage
+                    name="id_rol"
+                    component={() => <div className="error">{errors.id_rol}</div>}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="idObjeto" className="form-label">
+                    Id Objeto:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="idObjeto"
+                    name="id_objeto"
+                    placeholder="Nombre objeto..."
+                    disabled
+                  />
+                  <ErrorMessage
+                    name="id_objeto"
+                    component={() => <div className="error">{errors.id_objeto}</div>}
+                  />
+                </div>
+              </div>
 
-          <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="idRol" className="form-label">
-                Id Rol:
-              </label>
-              <Field
-                type="text"
-                className="form-control"
-                id="idRol"
-                name="id_rol"
-                placeholder="Nombre Rol..."
-                disabled
-              />
-
-              <ErrorMessage
-                name="id_rol"
-                component={() => <div className="error">{errors.id_rol}</div>}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="row g-3">
-          <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="idObjeto" className="form-label">
-                Id Objeto:
-              </label>
-              <Field
-                type="text"
-                className="form-control"
-                id="idObjeto"
-                name="id_objeto"
-                placeholder="Nombre objeto..."
-                disabled
-              />
-              <ErrorMessage
-                name="id_objeto"
-                component={() => <div className="error">{errors.id_objeto}</div>}
-              />
-            </div>
-          </div>
-
-          <div className="col-sm-6">
-            <div className="mb-3">
-              <label htmlFor="permisoInsercion" className="form-label">
-              Permiso Insercion:
-                </label>
-                <Field
-                  as="select"
-                  className="form-select"
-                  id="permisoInsercion"
-                  name="activo"
-                >
-
-                  <option value="1">Permitir</option>
-                  <option value="0">No permitir</option>
-                </Field>
-                <ErrorMessage
-                  name="activo"
-                  component={() => (
-                    <div className="error">{errors.activo}</div>
-                  )}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="row g-3">
-          <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="permisoEliminacion" className="form-label">
-                  Permiso Eliminacion:
-                </label>
-                <Field
-                  as="select"
-                  className="form-select"
-                  id="permisoEliminacion"
-                  name="activo"
-                >
-
-                  <option value="1">Permitir</option>
-                  <option value="0">No permitir</option>
-                </Field>
-
-                <ErrorMessage
-                  name="activo"
-                  component={() => (
-                    <div className="error">{errors.activo}</div>
-                  )}
-                />
-            </div>
-          </div>
-
-          <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="permisoActualizacion" className="form-label">
-                  Permiso Actualizacion:
-                </label>
-                <Field
-                  as="select"
-                  className="form-select"
-                  id="permisoActualizacion"
-                  name="activo"
-                >
-
-                  <option value="1">Permitir</option>
-                  <option value="0">No permitir</option>
-                </Field>
-
-                <ErrorMessage
-                  name="activo"
-                  component={() => (
-                    <div className="error">{errors.activo}</div>
-                  )}
-                />
-            </div>
-          </div>
-        </div>
-
-        <div className="row g-3">
-          <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="permisoConsultar" className="form-label">
-                    Permiso Consultar:
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="permisoinsercion" className="form-label">
+                    Permiso Inserción:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoConsultar"
-                    name="activo"
+                    id="permisoinsercion"
+                    name="permiso_insercion"
+                  >
+
+                    <option value="1">Permitir</option>
+                    <option value="0">No permitir</option>
+                  </Field>
+                  <ErrorMessage
+                    name="permiso_insercion"
+                    component={() => (
+                      <div className="error">{errors.permiso_insercion}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="permisoeliminacion" className="form-label">
+                    Permiso Eliminacion:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="permisoeliminacion"
+                    name="permiso_eliminacion"
                   >
 
                     <option value="1">Permitir</option>
@@ -256,22 +208,74 @@ return (
                   </Field>
 
                   <ErrorMessage
-                    name="activo"
+                    name="permiso_eliminacion"
                     component={() => (
-                      <div className="error">{errors.activo}</div>
+                      <div className="error">{errors.permiso_eliminacion}</div>
                     )}
                   />
+                </div>
+              </div>
+
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="permisoactualizacion" className="form-label">
+                    Permiso Actualizacion:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="permisoactualizacion"
+                    name="permiso_actualizacion"
+                  >
+
+                    <option value="1">Permitir</option>
+                    <option value="0">No permitir</option>
+                  </Field>
+
+                  <ErrorMessage
+                    name="permiso_actualizacion"
+                    component={() => (
+                      <div className="error">{errors.permiso_actualizacion}</div>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="modificadoPor" className="form-label">
+
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="permisoconsultar" className="form-label">
+                    Permiso Consultar:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="permisoconsultar"
+                    name="permiso_consultar"
+                  >
+
+                    <option value="1">Permitir</option>
+                    <option value="0">No permitir</option>
+                  </Field>
+
+                  <ErrorMessage
+                    name="permiso_consulta"
+                    component={() => (
+                      <div className="error">{errors.permiso_consultar}</div>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="modificado_por" className="form-label">
                     Modificado Por:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
-                    id="modificadoPor"
+                    id="modificado_por"
                     name="modificado_por"
                     placeholder="Modificado por..."
                   />
@@ -282,47 +286,47 @@ return (
                       <div className="error">{errors.modificado_por}</div>
                     )}
                   />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="col-sm-6">
-            <div className="mb-3">
-            <label htmlFor="fechaModificacion" className="form-label">
-                    Fecha Modificacion:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="fechaModificacion"
-                    name="fecha_modificacion"
-                    disabled
-                  />
+            <div className="col-sm-6">
+              <div className="mb-3">
+                <label htmlFor="fechaModificacion" className="form-label">
+                  Fecha Modificacion:
+                </label>
+                <Field
+                  type="text"
+                  className="form-control"
+                  id="fechaModificacion"
+                  name="fecha_modificacion"
+                  disabled
+                />
 
-                  <ErrorMessage
-                    name="fecha_modificacion"
-                    component={() => (
-                      <div className="error">{errors.fecha_modificacion}</div>
-                    )}
-                  />
+                <ErrorMessage
+                  name="fecha_modificacion"
+                  component={() => (
+                    <div className="error">{errors.fecha_modificacion}</div>
+                  )}
+                />
+              </div>
             </div>
-          </div>
 
-        <button className="btn btn-success mb-3 me-2" type="submit">
-          Guardar
-        </button>
-        <Link
-          to="/admin/mostrarpermisos"
-          type="button"
-          className="btn btn-danger mb-3 me-2"
-        >
-          Cancelar
-        </Link>
-      </Form>
-      )}
-    </Formik>
-  </div>
-);
+            <button className="btn btn-success mb-3 me-2" type="submit">
+              Guardar
+            </button>
+            <Link
+              to="/admin/mostrarpermiso"
+              type="button"
+              className="btn btn-danger mb-3 me-2"
+            >
+              Cancelar
+            </Link>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
 };
 
 export default PermisoEditar;

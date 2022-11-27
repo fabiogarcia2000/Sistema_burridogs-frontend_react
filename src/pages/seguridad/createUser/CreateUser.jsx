@@ -2,91 +2,17 @@
 // import { ErrorMessage, Field, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  FormGroup,
-  Label,
-  Input,
-  FormText,
-  Spinner,
-  Row,
-  Col,
-} from "reactstrap";
+import { Button, FormGroup, Label, Input, FormText, Spinner, Row, Col, } from "reactstrap";
 // import { Alert } from 'reactstrap';
 import { Form, Field } from "react-final-form";
-import {
-  getOneParam,
-  isChar,
-  isNumber,
-  isRange,
-  isSpace,
-  isText,
-  isTextWhitSpace,
-  toReplaceSpace,
-  toUpperCaseField,
-  translateUperCase,
-} from "../../../utils/utils";
+import { getOneParam, isChar, isNumber, isRange, isSpace, isText, isTextWhitSpace, toReplaceSpace, toUpperCaseField, translateUperCase, } from "../../../utils/utils";
 import isEmail from "validator/lib/isEmail";
 // import "./CreateUser.css";
 var newOTP = require("otp-generators");
 var md5 = require("md5");
 // const urlapi = "http://localhost:3001";
 const CreateUser = () => {
-  //   var dataPar=JSON.parse(localStorage.getItem("params")) || []
-  //   var urlApiParam=getOneParam(dataPar,"URL_API")
-  //   const urlapi =urlApiParam.valor
-
-  //   let navigate = useNavigate();
-  //   const [usuario, setUsuario] = useState('');
-  //   const [name, setName] = useState('');
-  //   const [email, setEmail] = useState('');
-  //   const [role, setRole] = useState('Operador');
-
-  //   const [message, setMesagge] = useState("");
-  // const [color, setColor] = useState("danger");
-  // const [isValid, setIsValid] = useState(false);
-
-  //   const handleSubmit = event => {
-  //     event.preventDefault();
-  //     const userdata= JSON.parse(localStorage.getItem('data'))
-
-  //     let data={
-  //       "usuario":toUpperCaseField(toReplaceSpace(usuario)),
-  //       "nombre_usuario":toReplaceSpace(name),
-  //       "correo_electronico":email,
-  //       "id_rol":parseInt(role || 6),
-  //       "creado_por":userdata.data.nameUser
-  //     }
-
-  //     fetch(urlapi+'/ms_registro/createUser',
-  //           {
-  //           method: 'POST',
-  //           body: JSON.stringify(data),
-  //           headers: {
-  //               'Content-type': 'application/json'
-  //           }
-  //       })
-  //       .then(response => response.json())
-  //       .then(responseJson => {
-
-  //           setIsValid(true)
-  //           if(!responseJson.status){
-  //               setColor("danger")
-  //               setMesagge(responseJson.message)
-  //               setTimeout(1000,()=>{
-  //                   setIsValid(false)
-  //                  })
-  //                  return
-  //           }
-
-  //          navigate("/admin/users");
-  //       })
-
-  //     setUsuario('');
-  //     setName('');
-  //     setEmail('');
-  //     setRole('');
-  //   };
+  
   const [loading, setLoading] = useState(false);
 
   var dataPar = JSON.parse(localStorage.getItem("params")) || [];
@@ -161,20 +87,7 @@ const CreateUser = () => {
       });
   };
 
-  // const getRegistroById = async () => {
-  //   fetch(urlapi + "/getById/" + id, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-type": "application/json",
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-  //       setRegistro(responseJson.object);
-  //       setLoading(false)
-  //     })
-  // };
-
+ 
   useEffect(() => {
     getEstados();
     getRoles();
@@ -238,22 +151,10 @@ const CreateUser = () => {
         <div className="col-md-12">
           <Form
             onSubmit={onSubmit}
-            // initialValues={
-            //   {
-            //     id_rol: registro.id_rol,
-            //     estado_usuario: registro.estado_usuario,
-            //     nombre_usuario: registro.nombre_usuario,
-            //     usuario: registro.usuario,
-            //     }
-            // }
+            
             validate={(values) => {
               const errors = {};
-              // rol
-              // if (!values.id_rol) {
-              //   errors.id_rol = "Campo Requerido";
-              // }
-
-              // usuario
+              
               if (!values.usuario) {
                 errors.usuario = "Usuario es requerido";
               } else if (isSpace(values.usuario)) {
@@ -278,12 +179,6 @@ const CreateUser = () => {
                   maxLengthUserParam.valor;
               }
 
-              // // estado de usaurio
-              // if (!values.estado_usuario) {
-              //   errors.estado_usuario = "Campo Requerido";
-              // }
-
-              //  nombre de usuario
               if (!values.nombre_usuario) {
                 errors.nombre_usuario = "Nombre es requerido";
               } else if (!isTextWhitSpace(values.nombre_usuario)) {
@@ -314,10 +209,7 @@ const CreateUser = () => {
                 errors.correo_electronico = "Este no es un correo válido";
               }
 
-              // password validations
-              // if (!values.password) {
-              //   errors.password = "Contraseña es requerida";
-              // }
+             
 
               return errors;
             }}
@@ -402,13 +294,13 @@ const CreateUser = () => {
                       </Field>
                     </FormGroup>
 
-                    {/* contrasena */}
+                    {/* contrasena 
                     <FormGroup>
                       <Field name="contrasena">
                         {({ input, meta }) => (
                           <div>
                             <Label for="contrasena">Contraseña</Label>
-                            {/* <span className="labelHint">{values?.nombre_usuario?.length || 0}/{maxLengthParam?.valor || 0}</span> */}
+                            {/* <span className="labelHint">{values?.nombre_usuario?.length || 0}/{maxLengthParam?.valor || 0}</span> 
                             <Input
                               {...input}
                               type="text"
@@ -424,7 +316,7 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
                     {/* role */}
                     <FormGroup>
@@ -443,7 +335,7 @@ const CreateUser = () => {
                       </Field>
                     </FormGroup>
 
-                    {/* ulrima conexion */}
+                    {/* ulrima conexion 
                     <FormGroup>
                       <Label for="fecha_ultima_conexion">Ultima conexión</Label>
                       <Field name="fecha_ultima_conexion">
@@ -463,9 +355,9 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* preguntas contestadas */}
+                    {/* preguntas contestadas 
                     <FormGroup>
                       <Label for="preguntas_contestadas">
                         Preguntas contestadas
@@ -488,9 +380,9 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* intentos login */}
+                    {/* intentos login 
                     <FormGroup>
                       <Label for="intentos_login">Intentos Login</Label>
                       <Field name="intentos_login">
@@ -512,11 +404,11 @@ const CreateUser = () => {
                       </Field>
                     </FormGroup>
 
-                    {/* <Link className="btn btn-secondary btn-bloc"   to="/admin/users">Cancelar</Link> */}
-                  </Col>
+                    {/* <Link className="btn btn-secondary btn-bloc"   to="/admin/users">Cancelar</Link> 
+                  </Col>*/}
 
-                  <Col md={6} lg={6}>
-                    {/* primer ingreso */}
+                  {/*<Col md={6} lg={6}>
+                     primer ingreso 
                     <FormGroup>
                       <Label for="primer_ingreso">Primer Ingreso</Label>
                       <Field name="primer_ingreso">
@@ -537,7 +429,7 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
                     {/* fecha venciemiento */}
                     <FormGroup>
@@ -585,7 +477,7 @@ const CreateUser = () => {
                       </Field>
                     </FormGroup>
 
-                    {/* creado por */}
+                    {/* creado por 
                     <FormGroup>
                       <Label for="createdBy">Creado por</Label>
                       <Field name="createdBy">
@@ -605,9 +497,9 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* fecha de creacion */}
+                    {/* fecha de creacion 
                     <FormGroup>
                       <Label for="fecha_creacion">Fecha creación </Label>
                       <Field name="fecha_creacion">
@@ -627,9 +519,9 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
-                    {/* modificado por */}
+                    {/* modificado por
                     <FormGroup>
                       <Label for="modificado_por">Modificado Por</Label>
                       <Field name="modificado_por">
@@ -649,9 +541,9 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup> */}
 
-                    {/* fecha de modificaicon */}
+                    {/* fecha de modificaicon 
                     <FormGroup>
                       <Label for="fecha_modificacion">
                         Fecha de modificación
@@ -673,17 +565,26 @@ const CreateUser = () => {
                           </div>
                         )}
                       </Field>
-                    </FormGroup>
+                    </FormGroup>*/}
 
                     <Button
                       type="submit"
-                      color="success"
-                      size="lg"
-                      block
-                      disabled={!valid}
+                      //color="success"
+                      className="btn btn-success mb-3 me-2"
+                      //size="lg"
+                      //block
+                      //disabled={!valid}
                     >
-                      Crear
+                      Guardar
                     </Button>
+
+                    <Link
+                            to="/admin/users"
+                            type="button"
+                            className="btn btn-danger mb-3 me-2"
+                        >
+                            Cancelar
+                        </Link>
                   </Col>
                 </Row>
               </form>
@@ -692,136 +593,9 @@ const CreateUser = () => {
         </div>
       </div>
     </div>
-    //     <div className='formulario'>
-    //         <Alert
-    //                      isOpen={isValid}
-    //                      color={color}
-    //                      >{message}</Alert>
-    //     <form onSubmit={handleSubmit}>
 
-    // <div className="inputs">
-
-    //                 <h1>Crear usuario</h1>
-
-    //                     <label>Usuario</label>
-    //                     <div className="username">
-    //                         <input
-    //                             type="text"
-    //                             placeholder="Usuario"
-    //                             id="usuario"
-    //                             name="usuario"
-    //                             onChange={event => setName(event.target.value)}
-    //                             value={usuario}
-    //                         />
-    //                     </div>
-
-    //                     <label>Nombre de Usuario</label>
-    //                     <div className="username">
-    //                         <input
-    //                             type="text"
-    //                             placeholder="Nombre de usuario"
-    //                             id="name"
-    //                             name="name"
-    //                             onChange={event => setName(event.target.value)}
-    //                             value={name}
-    //                         />
-    //                     </div>
-
-    //                     <label>Correo</label>
-    //                     <div className="username">
-    //                         <input
-    //                             type="email"
-    //                             placeholder="Correo"
-    //                             id="email"
-    //                             name="email"
-    //                             value={email}
-    //                             onChange={event => setEmail(event.target.value)}
-    //                         />
-    //                     </div>
-
-    //                     <label>Role de usuario</label>
-    //                     <div className="username">
-    //                     <select id="role"
-    //                             name="role"
-    //                             value={role}
-    //                             onChange={event => setRole(event.target.value)} >
-    //                       <option value="5" >-Selecciona rol-</option>
-    //                       <option value="5" >Operador</option>
-    //                       <option value="6">Auditor</option>
-    //                       <option value="1">Invitado</option>
-    //                     </select>
-    //                     </div>
-    //                     <button className="btn" type="submit">Ingresar</button>
-    //                     <Link to='/admin/users' className="primary">cancelar</Link>
-
-    //                 </div>
-
-    //     </form>
-    //   </div>
   );
 
-  // return (
-  //   <Form>
-  //     <h4>Crear Usuario</h4>
-  //     <h5>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos commodi mollitia facilis optio ipsa, architecto assumenda facere</h5>
-  //     <FormGroup>
-  //       <Label for="exampleEmail">Email</Label>
-  //       <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
-  //     </FormGroup>
-  //     <FormGroup>
-  //       <Label for="examplePassword">Password</Label>
-  //       <Input type="password" name="password" id="examplePassword" placeholder="password placeholder" />
-  //     </FormGroup>
-  //     <FormGroup>
-  //       <Label for="exampleSelect">Select</Label>
-  //       <Input type="select" name="select" id="exampleSelect">
-  //         <option>1</option>
-  //         <option>2</option>
-  //         <option>3</option>
-  //         <option>4</option>
-  //         <option>5</option>
-  //       </Input>
-  //     </FormGroup>
-  //     <FormGroup>
-  //       <Label for="exampleSelectMulti">Select Multiple</Label>
-  //       <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple>
-  //         <option>1</option>
-  //         <option>2</option>
-  //         <option>3</option>
-  //         <option>4</option>
-  //         <option>5</option>
-  //       </Input>
-  //     </FormGroup>
 
-  //     <FormGroup tag="fieldset">
-  //       <legend>Radio Buttons</legend>
-  //       <FormGroup check>
-  //         <Label check>
-  //           <Input type="radio" name="radio1" />{' '}
-  //           Option one is this and that—be sure to include why it's great
-  //         </Label>
-  //       </FormGroup>
-  //       <FormGroup check>
-  //         <Label check>
-  //           <Input type="radio" name="radio1" />{' '}
-  //           Option two can be something else and selecting it will deselect option one
-  //         </Label>
-  //       </FormGroup>
-  //       <FormGroup check disabled>
-  //         <Label check>
-  //           <Input type="radio" name="radio1" disabled />{' '}
-  //           Option three is disabled
-  //         </Label>
-  //       </FormGroup>
-  //     </FormGroup>
-  //     <FormGroup check>
-  //       <Label check>
-  //         <Input type="checkbox" />{' '}
-  //         Check me out
-  //       </Label>
-  //     </FormGroup>
-  //     <Button>Submit</Button>
-  //   </Form>
-  // );
 };
 export default CreateUser;

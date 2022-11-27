@@ -211,7 +211,10 @@ function Rutas() {
           element={<RecuperacionContra />}
         />
         <Route path="/recuperacion_correo" element={<RecuperacionCorreo />} />
-        {/*<Route path="/recuperacion_preguntas/:id_usuario" element={<RecuperacionPreguntas />} />*/}
+        <Route
+          path="/recuperacion_preguntas/:id_usuario"
+          element={<RecuperacionPreguntas />}
+        />
         {/* <Route path="/desbloquearUsuario/" element={<desbloquearUsuario />} />*/}
       </Routes>
 

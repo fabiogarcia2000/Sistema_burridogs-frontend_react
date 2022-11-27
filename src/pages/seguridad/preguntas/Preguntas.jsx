@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import axios from "axios";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
+import { Export_PDF } from "./generarPDF/Export_PDF";
 // const urlapi = "http://localhost:3001";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta/getall/";
@@ -203,26 +204,26 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
   };
 
   //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("")
+  const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
   const valorBuscar = (e) => {
-    setBusqueda(e.target.value)
-  }
+    setBusqueda(e.target.value);
+  };
   //metodo de filtrado 
-  let results = []
+  let results = [];
   if (!busqueda) {
-    results = registros
+    results = registros;
   } else {
     results = registros.filter((dato) =>
       dato.id_pregunta.toString().includes(busqueda.toLocaleLowerCase()) ||
       dato?.pregunta?.toLowerCase().includes(busqueda.toLocaleLowerCase())
-    )
-  };
+    );
+  }
   const [pending, setPending] = React.useState(true);
 
   return (
     <div className="container">
-      <h5>Preguntas de seguridad</h5>
+      <h3>Preguntas de seguridad</h3>
 
       <br />
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
@@ -260,14 +261,16 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
               >
                 <i className="fa-solid fa-file-excel"></i>
               </Link>
-              <Link
-                to="/"
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(results);
+                }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -276,13 +279,15 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
             </span>
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por Id pregunta / pregunta..."
               aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
             />
           </div>
         </div>

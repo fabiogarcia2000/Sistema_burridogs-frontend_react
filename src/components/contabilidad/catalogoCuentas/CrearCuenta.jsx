@@ -10,7 +10,10 @@ import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayuscula
 const URLCrear = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/0";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
-const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
+//const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
+const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
+
+
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
 
 const CrearCuenta = () => {
@@ -101,7 +104,7 @@ const CrearCuenta = () => {
           nombre_cuenta: "",
           id_categoria: "",
           id_destino_cuenta: "",
-          id_informe_financiero:""
+          id_informe_financiero: ""
         }}
         //Funcion para validar
         validate={(valores) => {
@@ -294,15 +297,15 @@ const CrearCuenta = () => {
                     Destino de cuenta:
                   </label>
                   <Field
-                     as="select"
-                     className="form-select"
+                    as="select"
+                    className="form-select"
                     id="idDestinoCuenta"
                     name="id_destino_cuenta"
                     placeholder="ID del destino de la cuenta..."
-                    >
+                  >
                     <option value="">Seleccionar...</option>
                     {destino.map((item, i) => (
-                      <option key={i} value={item.id_informe_financiero}>{item.descripcion_informe_financiero}</option>
+                      <option key={i} value={item.id_destino_cuenta}>{item.descripcion_informe_financiero}</option>
                     ))}
                   </Field>
 

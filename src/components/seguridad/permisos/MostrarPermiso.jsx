@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
+import { Export_PDF } from "./generarPDF/Export_PDF";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_permisos/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/ms_permisos/eliminar/";
@@ -99,15 +100,9 @@ const MostrarPermiso = () => {
     } else {
         results = registros.filter(
             (dato) =>
-                dato.id_permiso
-                    .toLowerCase()
-                    .includes(busqueda.toLocaleLowerCase()) ||
-                dato.rol
-                    .toLowerCase()
-                    .includes(busqueda.toLocaleLowerCase()) ||
-                dato.objeto
-                    .toLowerCase()
-                    .includes(busqueda.toLocaleLowerCase())
+                dato.id_permiso.toString().includes(busqueda.toLocaleLowerCase()) ||
+                dato?.rol?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+                dato?.objeto?.toLowerCase().includes(busqueda.toLocaleLowerCase())
         );
     }
 
@@ -138,17 +133,22 @@ const MostrarPermiso = () => {
         },
         {
             name: "PERMISO INSERCION",
-            selector: (row) => row.permiso_insercion,
+            selector: (row) => row.permiso_insercion.toString(),
             sortable: true,
         },
         {
             name: "PERMISO ELIMINACION",
-            selector: (row) => row.permiso_eliminacion,
+            selector: (row) => row.permiso_eliminacion.toString(),
             sortable: true,
         },
         {
             name: "PERMISO ACTUALIZACION",
-            selector: (row) => row.permiso_actualizacion,
+            selector: (row) => row.permiso_actualizacion.toString(),
+            sortable: true,
+        },
+        {
+            name: "PERMISO CONSULTAR",
+            selector: (row) => row.permiso_consultar.toString(),
             sortable: true,
         },
         {
@@ -242,14 +242,16 @@ const MostrarPermiso = () => {
                             >
                                 <i className="fa-solid fa-file-excel"></i>
                             </Link>
-                            <Link
-                                to="/"
+                            <Button
                                 type="button"
                                 className="btn btn-danger"
                                 title="Exportar a PDF"
+                                onClick={() =>{
+                                Export_PDF(results);
+                                }}
                             >
                                 <i className="fa-solid fa-file-pdf"></i>
-                            </Link>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -297,7 +299,7 @@ const MostrarPermiso = () => {
                             <p> {registroVerMas.id_permiso} </p>
                         </div>
                     </div>
-
+                   
                     <div className="row g-3">
                         <div className="col-sm-6">
                             <p className="colorText">CREADO POR: </p>

@@ -100,12 +100,9 @@ const MostrarPregUsuario = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_sucursal
-          .toLowerCase()
-          .includes(busqueda.toLocaleLowerCase()) ||
-        dato.descripcion_sucursal
-          .toLowerCase()
-          .includes(busqueda.toLocaleLowerCase())
+        dato.id_preguntas_usuario.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato?.nombre_usuario?.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato?.respuesta?.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -230,7 +227,7 @@ const MostrarPregUsuario = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por nombre de permiso..."
+              placeholder="Buscar por Id pregunta / usuario / respuesta..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
