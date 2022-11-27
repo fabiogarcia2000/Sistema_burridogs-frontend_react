@@ -210,7 +210,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_pregunta);
+              setRegistroDelete(row.id_parametro);
               abrirModalEliminar();
             }}
           >
