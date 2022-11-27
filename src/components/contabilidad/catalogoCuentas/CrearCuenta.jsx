@@ -12,8 +12,6 @@ const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 //const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
-
-
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
 
 const CrearCuenta = () => {

@@ -10,7 +10,7 @@ import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayuscula
 
 const URLEditar = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/";
 
-const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
+const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
 
 const EditarCuenta = () => {
@@ -91,8 +91,7 @@ const EditarCuenta = () => {
           codigo_cuenta: edit.codigo_cuenta,
           nombre_cuenta: edit.nombre_cuenta,
           id_categoria: edit.nombre_categoria,
-          id_destino_cuenta: edit.id_descripcion,
-          id_informe_financiero: ""
+          id_destino_cuenta: "",
         }}
 
         //Funcion para validar
@@ -126,9 +125,7 @@ const EditarCuenta = () => {
 
           // Validacion de id destino cuenta
           if (!valores.id_destino_cuenta) {
-            errores.id_destino_cuenta = "Por favor ingresa un id de destino cuenta";
-          } else if (!/^[0-9]+$/.test(valores.id_destino_cuenta)) {
-            errores.id_destino_cuenta = "Escribir solo números";
+            errores.id_destino_cuenta = "Por favor seleccione una opcion";
           }
 
           return errores;
@@ -267,13 +264,12 @@ const EditarCuenta = () => {
                     id="idCategoria"
                     name="id_categoria"
                     placeholder="Nombre de la categoría..."
-                  >
+                    >
                     <option value="">Seleccionar...</option>
                     {categoria.map((item, i) => (
                       <option key={i} value={item.id_categoria}>{item.nombre_categoria}</option>
                     ))}
                   </Field>
-
                   <ErrorMessage
                     name="id_categoria"
                     component={() => (
@@ -287,7 +283,7 @@ const EditarCuenta = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="idDestinoCuenta" className="form-label">
+                  <label htmlFor="id_destino_cuenta" className="form-label">
                     Destino de cuenta:
                   </label>
                   <Field
@@ -296,10 +292,10 @@ const EditarCuenta = () => {
                     className="form-select"
                     name="id_destino_cuenta"
                     placeholder="ID del destino de la cuenta..."
-                  >
+                    >
                     <option value="">Seleccionar...</option>
                     {destino.map((item, i) => (
-                      <option key={i} value={item.id_informe_financiero}>{item.descripcion_informe_financiero}</option>
+                      <option key={i} value={item.id_destino_cuenta}>{item.descripcion_informe_financiero}</option>
                     ))}
                   </Field>
                   <ErrorMessage
