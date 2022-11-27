@@ -50,9 +50,9 @@ export default function Roles(props) {
     switch (alerta) {
       case 'eliminado':
         Swal.fire({
-          title: '¡Eliminado!',
-          text: "La cuenta se eliminó con éxito",
-          icon: 'success',
+          title: '¡Error!',
+          text: "No es posible eliminar el rol, tiene dependencia",
+          icon: 'error',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
         });

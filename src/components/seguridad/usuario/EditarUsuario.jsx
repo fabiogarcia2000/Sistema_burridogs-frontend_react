@@ -81,7 +81,7 @@ const EditarUsuario = () => {
       nombre_usuario: event.nombre_usuario,
       estado_usuario: event.estado_usuario,
       id_rol: event.id_rol,
-      modificado_por: userdata.data.nameUser.replace('"', ""),
+      modificado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
       //modificado_por: event.nombre_usuario,
       id_usuario: id,
     };

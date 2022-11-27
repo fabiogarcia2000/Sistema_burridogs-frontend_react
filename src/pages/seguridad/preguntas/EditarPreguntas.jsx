@@ -6,7 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasPregunta } from "../../../utils/cambiarAMayusculas";
 
-const URLEditar = "http://190.53.243.69:3001/ms_pregunta/actualizar-insertar/";
+const URLEditar = "http://190.53.243.69:3001/ms_pregunta/actualizar/";
 
 
 const EditarPregunta = () => {
