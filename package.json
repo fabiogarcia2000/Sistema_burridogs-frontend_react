@@ -31,6 +31,7 @@
     "react-password-checklist": "^1.4.2",
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
+    "react-to-print": "^2.14.10",
     "reactstrap": "^9.1.4",
     "styled-components": "^5.3.6",
     "supervisor": "^0.12.0",

@@ -1,6 +1,6 @@
 /* eslint-disable use-isnan */
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import "./style.css";
@@ -11,6 +11,8 @@ import { MostrarAlertas } from "./utils/Alertas";
 import { InsertVenta } from "./insertVenta";
 import { numeroALetras } from "./utils/num_a_letras";
 import { getCurrentDate, getCurrentTime, getCurrentDateShort } from "../../../utils/fechaYhora";
+import { useReactToPrint } from "react-to-print";
+import Factura from "../facturaA4/Factura";
 
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
 const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactive/";
@@ -22,6 +24,8 @@ const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
 const isv = 0.15;
 
 const PuntoDeVentas = () => {
+  const componenteRef = useRef();
+
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
   const [articulosMostrar, setArticulosMostrar] = useState([]);
@@ -96,7 +100,7 @@ const PuntoDeVentas = () => {
     getMetodosPago();
     getDescuentos();
     getPedidos();
-    Enc();
+    //Enc();
     Fecha();
     Hora();
   }, []);
@@ -454,6 +458,13 @@ useEffect(() => {
   const resetSubTotal = () => {
     setSubTotal(0);
   };
+
+//Para generar factura/imprimir
+const handlePrint = useReactToPrint({
+  content: () => componenteRef.current,
+  documentTitle: 'Factura',
+  onAfterPrint: () => resetValores()
+});
 
   //resetea el valores
   const resetValores = () => {
@@ -1003,7 +1014,10 @@ useEffect(() => {
               </div>
               <hr />
 
-                 
+              {/**FACTURA**/}
+              <div ref={componenteRef} className="imprimir">
+                <Factura/>          
+              </div>
 
         </ModalBody>
         <ModalFooter>
@@ -1011,8 +1025,8 @@ useEffect(() => {
             color="primary"
             onClick={() => {
               abrirModalCliente();
-              InsertVenta(venta);
-              resetValores();
+              //InsertVenta(venta);
+              handlePrint();              
             }}
           >
             Aceptar

@@ -1,0 +1,36 @@
+.text-aligned {
+    display: flex !important;
+    align-items: flex-end !important;
+}
+
+.text{
+    font-size: 10px;
+}
+
+.regul{
+    --bs-gutter-x: 0rem !important;
+}
+
+.imgfactura{
+    width: 200px !important;
+    height: 80px !important;
+    filter: blur(0px) !important;
+    position: inherit !important;
+    margin: 5px;
+}
+
+.color1{
+    background-color: darkgray !important;
+}
+
+.print2{
+    display: none !important; 
+}
+
+@media print{
+    .print2{
+        display: inline !important; 
+        
+    }
+}
+

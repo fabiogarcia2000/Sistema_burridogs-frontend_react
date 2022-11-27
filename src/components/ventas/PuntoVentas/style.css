@@ -20,3 +20,9 @@
     height: 200px;
 
 }
+
+@media print{
+    .imprimir{
+        margin: 30px 30px !important;
+    }
+}
