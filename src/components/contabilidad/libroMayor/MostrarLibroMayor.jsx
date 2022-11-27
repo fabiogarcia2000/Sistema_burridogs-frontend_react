@@ -50,30 +50,30 @@ const MostrarLibroMayor = () => {
   };
 
   //************************************************/
-//petición a api con la opción del select
-const getPediodoSelect = async () => {
-  try {
-    const res = await axios.get(UrlMostrar+opcionSelect);
-    setRegistros(res.data);
-  } catch (error) {
-    console.log(error);
-    mostrarAlertas("errormostrar");
+  //petición a api con la opción del select
+  const getPediodoSelect = async () => {
+    try {
+      const res = await axios.get(UrlMostrar + opcionSelect);
+      setRegistros(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //opción seleccionada en el select
+  const handlerCargarPerido = function (e) {
+    const opcion = e.target.value;
+    setOpcionSelect(opcion)
   }
-};
 
-//opción seleccionada en el select
-const  handlerCargarPerido = function (e) {
-  const opcion = e.target.value;
-  setOpcionSelect(opcion)
-}
+  useEffect(() => {
+    if (opcionSelect !== "") {
+      getPediodoSelect();
+    }
+  }, [opcionSelect]);
 
-useEffect(() => {
-  if(opcionSelect !== ""){
-    getPediodoSelect();
-  }
-}, [opcionSelect]);
-
-//************************************************/
+  //************************************************/
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -178,6 +178,16 @@ useEffect(() => {
       sortable: true,
     },
     {
+      name: "MONTO DEBE",
+      selector: (row) => row.monto_debe,
+      sortable: true,
+    },
+    {
+      name: "MONTO HABER",
+      selector: (row) => row.monto_haber,
+      sortable: true,
+    },
+    {
       name: "FECHA INICIAL",
       selector: (row) => row.fecha_inicial,
       sortable: true,
@@ -267,7 +277,7 @@ useEffect(() => {
               >
                 <i className="fa-solid fa-file-pdf"></i>
               </Link>
-              
+
             </div>
           </div>
         </div>
@@ -341,50 +351,47 @@ useEffect(() => {
 
           </div>
         </div>
-<br /><br />
+        <br /><br />
         <div className="row">
           <div className="col-4">
-                  <div className="mb-3">
+            <div className="mb-3">
 
-                    <label htmlFor="id_periodo_contable" className="form-label">
-                      Periodo contable
-                    </label>
-                    <select 
-                      className="form-select"
-                      id="id_periodo_contable"
-                      name="id_periodo_contable"
-                      onClick={handlerCargarPerido}
-                    >
-                      <option value="">Seleccionar...</option>
-                      {sucursal.map((item, i) => (
-                        <option key={i} value={item.id_periodo_contable}> Periodo:{item.id_periodo_contable} Fecha inicio:{item.fecha_inicial} Fecha final{item.fecha_final}</option>
-                      ))}
-                    </select >
-
-                  </div>
+              <label htmlFor="id_periodo_contable" className="form-label">
+                Periodo contable
+              </label>
+              <select
+                className="form-select"
+                id="id_periodo_contable"
+                name="id_periodo_contable"
+                onClick={handlerCargarPerido}
+              >
+                <option value="">Seleccionar...</option>
+                {sucursal.map((item, i) => (
+                  <option key={i} value={item.id_periodo_contable}> Periodo:{item.id_periodo_contable} Fecha inicio:{item.fecha_inicial} Fecha final{item.fecha_final}</option>
+                ))}
+              </select >
+            </div>
           </div>
         </div>
-
-        
       </div>
       <br />
 
       {/*Mostramos la tabla con los datos*/}
 
       <div className="row">
-      {results.length > 0? (
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
-      ) : (
-        <p className="text-center">No hay registros que mostrar</p>
-      )}
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={results}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="550px"
+          />
+        ) : (
+          <p className="text-center">No hay registros que mostrar</p>
+        )}
       </div>
 
       {/* Ventana Modal de ver más*/}
