@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useGlobalState } from "../globalStates/globalStates";
+import { useGlobalState } from "./responseClass";
 
 function Sidebar() {
   const [classSidebar] = useGlobalState("sidebar_class");
@@ -189,6 +189,13 @@ function Sidebar() {
               <Link to="/admin/MostrarCentroCosto">
                 <i className="bi bi-circle"></i>
                 <span>Bodega</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/admin/mostrarinvart">
+                <i className="bi bi-circle"></i>
+                <span>Artículos por Bodega</span>
               </Link>
             </li>
 
