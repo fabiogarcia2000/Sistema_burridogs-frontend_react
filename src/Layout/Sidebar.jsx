@@ -193,6 +193,13 @@ function Sidebar() {
             </li>
 
             <li>
+              <Link to="/admin/mostrarinvart">
+                <i className="bi bi-circle"></i>
+                <span>Artículos por Bodega</span>
+              </Link>
+            </li>
+
+            <li>
               <Link to="/admin/mostrarmateriales">
                 <i className="bi bi-circle"></i>
                 <span>Materiales</span>

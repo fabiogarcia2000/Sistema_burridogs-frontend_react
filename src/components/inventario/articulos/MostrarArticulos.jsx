@@ -26,7 +26,7 @@ const MostrarArticulos = () => {
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido conectar con el servidor :(");
+      mostrarAlertas("errormostrar");
     }
   };
 
