@@ -488,7 +488,7 @@ const handlePrint = useReactToPrint({
 
   //resetea el valores
   const Refrescar = () => {
-    window.location.reload();
+    //window.location.reload();
   };
 
   //calcular el cambio a entregar
