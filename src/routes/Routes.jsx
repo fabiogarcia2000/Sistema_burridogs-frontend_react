@@ -230,6 +230,7 @@ function Rutas() {
           <Route path="editUser/:id" element={<EditarUsuario />} />
 
           <Route path="logs" element={<Logs />} />
+          
           {/*PARÁMETROS*/}
           <Route path="params" element={<Parametros />} />
           <Route path="crearparametro" element={<CrearParametro />} />
