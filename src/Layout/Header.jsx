@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { setGlobalState } from "./responseClass";
 
 import logoEmpresa from "../assets/img/logo1.png";
-import imgPerfil from "../assets/img/profile-img.jpg";
+import imgPerfil from "../assets/img/profile-img.png";
 import { getOneParam } from "../utils/utils";
 
 function Header() {
@@ -42,7 +42,7 @@ function Header() {
         <div className="burger-menu" onClick={updateClassMenu}>
           <i className="bi bi-list toggle-sidebar-btn"></i>
         </div>
-        <Link to="/" className="logoGeneral d-flex align-items-center">
+        <Link to="/admin/home" className="logoGeneral d-flex align-items-center">
           <img src={logoEmpresa} alt="Logo Empresa" className="imglogo"/>
         </Link>
       </div>

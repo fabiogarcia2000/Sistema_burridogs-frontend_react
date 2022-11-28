@@ -160,7 +160,7 @@ const MostrarSucursales = () => {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link
+          <button
             type="button"
             className="btn btn-light"
             title="Ver Más..."
@@ -170,9 +170,9 @@ const MostrarSucursales = () => {
             }}
           >
             <i className="fa-solid fa-eye"></i>
-          </Link>
+          </button>
           &nbsp;
-          <Link
+          <button
             to="/admin/editarsucursal"
             type="button"
             className="btn btn-light"
@@ -180,7 +180,7 @@ const MostrarSucursales = () => {
             onClick={() => setGlobalState("registroEdit", row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
