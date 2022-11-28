@@ -10,7 +10,7 @@ function Home() {
   const urlAPi = urlApiParam.valor;
 
   let navigate = useNavigate();
-
+  console.log(localStorage);
   /**
    ** Validando estado de usuario
    * validando estado de usuario para crear cambio de pass
@@ -60,4 +60,3 @@ function Home() {
 }
 
 export default Home;
-

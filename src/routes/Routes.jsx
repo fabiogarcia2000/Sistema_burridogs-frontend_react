@@ -80,6 +80,7 @@ import CrearSalidaMds from "../components/inventario/salida_mds/CrearSalidaMds";
 import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds";
 
 import ReporteVentaResumen from "../components/reports/pos/VentaResumen";
+import ReporteVentaFecha from "../components/reports/ReporteVentaFecha/ReporteVentaFecha";
 
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
@@ -422,6 +423,7 @@ function Rutas() {
 
           {/*--------------------------------------Rutas reportes--------------------------------------------*/}
           {/*reportes POS*/}
+          <Route path="reporte-venta-fecha" element={<ReporteVentaFecha />} />
           <Route
             path="reporte-venta-resumen"
             element={<ReporteVentaResumen />}

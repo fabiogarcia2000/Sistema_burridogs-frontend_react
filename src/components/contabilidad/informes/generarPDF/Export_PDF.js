@@ -4,7 +4,7 @@ import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
 
-export function Export_PDF (data,dataActivo,dataPasivo,dataPatrimonio) {
+export function Export_PDF (data,data2,data3) {
     const unit = "pt";
     const size = "Letter"; // Use A1, A2, A3 or A4
     const orientation = "portrait"; // portrait or landscape
@@ -15,7 +15,7 @@ export function Export_PDF (data,dataActivo,dataPasivo,dataPatrimonio) {
     const encabezado = [["DESTINO CUENTA","CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
     //const encabezadoActivo = [["ACTIVOS"]];
     //Registros de la tabla
-    const datos = dataActivo.map(elt1=> [elt1.id_destino_cuenta, elt1.nombre_cuenta, elt1.nombre_subcuenta, elt1.descripcion, elt1.saldo]);
+    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
     
     //Tabla
     const tabla = {
@@ -27,10 +27,10 @@ export function Export_PDF (data,dataActivo,dataPasivo,dataPatrimonio) {
     };
     
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado2 = [["CUENTA", "DESCRIPCION"]];
+    const encabezado2 = [["DESTINO CUENTA","CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
    
     //Registros de la tabla
-    const datos2 = dataPasivo.map(elt2=> [elt2.nombre_cuenta, elt2.nombre_subcuenta]);
+    const datos2 = data2.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
 
     //Tabla #2
     const tabla2 = {
@@ -41,10 +41,10 @@ export function Export_PDF (data,dataActivo,dataPasivo,dataPatrimonio) {
     };
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado3 = [["TABLA 3", "DESCRIPCION"]];
+    const encabezado3 = [["DESTINO CUENTA","CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
    
     //Registros de la tabla
-    const datos3 = dataPatrimonio.map(elt3=> [elt3.id_categoria, elt3.nombre_categoria]);
+    const datos3 = data3.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
 
     //Tabla #3
     const tabla3 = {
@@ -83,6 +83,7 @@ export function Export_PDF (data,dataActivo,dataPasivo,dataPatrimonio) {
       let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber; //Current Page
       doc.setFontSize(12);
       doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 10, doc.internal.pageSize.height - 10);
+      doc.text(`Fecha y hora: ${fecha}, ${hora}`, width - 10, doc.internal.pageSize.height - 10, { align: 'right' });
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 

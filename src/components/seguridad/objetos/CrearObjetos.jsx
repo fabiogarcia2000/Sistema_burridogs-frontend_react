@@ -74,10 +74,7 @@ const CrearObjeto = () => {
                     // Validacion de objeto
                     if (!valores.objeto) {
                         errores.objeto = "Por favor ingresa un nombre de objeto";
-                    } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.objeto)) {
-                        errores.objeto = "Escribir solo en MAYÚSCULAS";
-                    }
-
+                    } 
 
                     // Validacion descripcion
                     if (!valores.descripcion) {
