@@ -33,6 +33,10 @@ export default function CambioContra(props) {
         localStorage.setItem("params", JSON.stringify(responseJson.object));
       });
   };
+  useEffect(() => {
+    getAllSettingsParams();
+  }, []);
+  
   const validapassword = (url, data) => {
     console.log(data);
     setColor("danger");
@@ -156,6 +160,7 @@ export default function CambioContra(props) {
         if (!responseJson.status) {
           setMesagge(responseJson.message);
           setIsValid(false);
+          mostrarAlertas("error");
         } else {
           fetch(urlAPi + "/changePass", {
             method: "POST",
@@ -184,6 +189,7 @@ export default function CambioContra(props) {
               setMesagge("ha ocurrido un error al actualizar datos");
               navigate("/admin/home");
             });
+            mostrarAlertas("guardado");
         }
         setColor("success");
         setIsValid(true);
