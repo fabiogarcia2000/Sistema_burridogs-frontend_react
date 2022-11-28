@@ -65,25 +65,13 @@ function Sidebar() {
             <li>
               <Link to="/admin/login-pos">
                 <i className="bi bi-circle"></i>
-                <span>Punto de venta</span>
+                <span>Punto de Venta</span>
               </Link>
             </li>
             <li>
               <Link to="/admin/ventas-realizadas">
                 <i className="bi bi-circle"></i>
-                <span>Ventas Realizadas</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/home">
-                <i className="bi bi-circle"></i>
-                <span>Opción 3</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/home">
-                <i className="bi bi-circle"></i>
-                <span>Opción 4</span>
+                <span>Consultar Ventas</span>
               </Link>
             </li>
           </ul>

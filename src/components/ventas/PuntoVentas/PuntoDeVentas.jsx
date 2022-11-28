@@ -1015,7 +1015,7 @@ const handlePrint = useReactToPrint({
               <hr />
 
               {/**FACTURA**/}
-              <div ref={componenteRef} className="imprimir">
+              <div ref={componenteRef} className="">
                 <Factura/>          
               </div>
 
