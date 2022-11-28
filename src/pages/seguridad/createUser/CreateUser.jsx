@@ -116,7 +116,7 @@ const CreateUser = () => {
       correo_electronico: event.correo_electronico,
       // estado_usuario:2,
       id_rol: event.id_rol,
-      creado_por: userdata.data.nameUser,
+      creado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
       contrasena: md5(otp),
       otp: otp,
       paramSetting,

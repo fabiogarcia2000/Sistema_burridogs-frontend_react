@@ -17,6 +17,8 @@ const PermisoEditar = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+   const userdata = JSON.parse(localStorage.getItem('data'))
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -59,7 +61,7 @@ const PermisoEditar = () => {
           permiso_actualizacion: "1",
           permiso_consultar: "1",
           activo: "1",
-          modificado_por: "",
+          modificado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
           fecha_modificacion: date
         }}
         //Funcion para validar
@@ -278,6 +280,7 @@ const PermisoEditar = () => {
                     id="modificado_por"
                     name="modificado_por"
                     placeholder="Modificado por..."
+                    disabled
                   />
 
                   <ErrorMessage
