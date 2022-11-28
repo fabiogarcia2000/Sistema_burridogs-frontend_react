@@ -3,36 +3,37 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect} from "react";
+import { useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import Factura from "../facturaA4/Factura";
 
 import Swal from "sweetalert2";
 
 const UrlEncabezado = "http://190.53.243.69:3001/venta/venta_por_fecha/";
 const UrlDetalles = "http://190.53.243.69:3001/venta/detalle_por_encabezado/";
 
-
 const VentaResumen = () => {
-    const [encabezado, setEncabezado] = useState([]);
-    const [detalles, setDetalles] = useState([]);
-    const [listo, setListo] = useState(false);
+  const componenteRef = useRef();
 
-    //Ventana modal para mostrar mas
-const [modalVerMas, setVerMas] = useState(false);
-const abrirModalVerMas = () => setVerMas(!modalVerMas);
+  const [encabezado, setEncabezado] = useState([]);
+  const [detalles, setDetalles] = useState([]);
 
-//procedimineto para obtener los detalles
-const getDetalles = async (id) => {
-  try {
-    const res = await axios.get(UrlDetalles+id);
-    setDetalles(res.data);
-  } catch (error) {
-    console.log(error);
-    mostrarAlertas("errormostrar");
-  }
-};
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
 
+  //procedimineto para obtener los detalles
+  const getDetalles = async (id) => {
+    try {
+      const res = await axios.get(UrlDetalles + id);
+      setDetalles(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
-    //Barra de busqueda
+  //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
   const valorBuscar = (e) => {
@@ -46,13 +47,21 @@ const getDetalles = async (id) => {
   } else {
     results = encabezado.filter(
       (dato) =>
-        dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.nombre_cliente
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
         dato.rtn.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.venta_total.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
     );
   }
 
+  //Para generar factura/imprimir
+  const handlePrint = useReactToPrint({
+    content: () => componenteRef.current,
+    documentTitle: "Factura",
+    onAfterPrint: () => console.log("Listo"),
+  });
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -67,9 +76,9 @@ const getDetalles = async (id) => {
       sortable: true,
     },
     {
-        name: "RTN",
-        selector: (row) => row.rtn,
-        sortable: true,
+      name: "RTN",
+      selector: (row) => row.rtn,
+      sortable: true,
     },
     {
       name: "VENTA TOTAL",
@@ -77,19 +86,19 @@ const getDetalles = async (id) => {
       sortable: true,
     },
     {
-        name: "FACTURA",
-        selector: (row) => row.correlativo,
-        sortable: true,
+      name: "FACTURA",
+      selector: (row) => row.correlativo,
+      sortable: true,
     },
     {
-        name: "VENDEDOR",
-        selector: (row) => row.usuario,
-        sortable: true,
+      name: "VENDEDOR",
+      selector: (row) => row.usuario,
+      sortable: true,
     },
     {
-        name: "ESTADO",
-        selector: (row) => row.descripcion_estado,
-        sortable: true,
+      name: "ESTADO",
+      selector: (row) => row.descripcion_estado,
+      sortable: true,
     },
     {
       name: "VER MÁS...",
@@ -102,7 +111,7 @@ const getDetalles = async (id) => {
             title="Ver Más..."
             onClick={() => {
               getDetalles(row.secuencia_enc);
-              abrirModalVerMas()
+              abrirModalVerMas();
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -113,7 +122,6 @@ const getDetalles = async (id) => {
       allowOverflow: true,
       button: true,
     },
-    
   ];
 
   //Configurar la paginación de la tabla
@@ -125,19 +133,20 @@ const getDetalles = async (id) => {
   };
 
   //Alertas de éxito o error
-  const mostrarAlertas = (alerta) =>{
-    switch (alerta){
-      case 'error': 
-      Swal.fire({
-        title: 'Error',
-        text:  'No se realizo la consulta',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      })
-      break;
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se realizo la consulta",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
 
-      default: break;
+      default:
+        break;
     }
   };
 
@@ -160,7 +169,7 @@ const getDetalles = async (id) => {
             // Validacion de código
             if (!valores.fecha_inicial) {
               errores.fecha_inicial = "Seleccione una fecha";
-            } 
+            }
 
             // Validacion descripción
             if (!valores.fecha_final) {
@@ -171,15 +180,14 @@ const getDetalles = async (id) => {
           }}
           onSubmit={async (valores) => {
             try {
-              console.log(valores)
+              console.log(valores);
               const res = await axios.post(UrlEncabezado, valores);
-              setEncabezado(res.data)
-              console.log(res)
+              setEncabezado(res.data);
+              console.log(res);
             } catch (error) {
               console.log(error);
               mostrarAlertas("errormostrar");
             }
-
           }}
         >
           {({ errors, values }) => (
@@ -233,22 +241,19 @@ const getDetalles = async (id) => {
                   </button>
                 </div>
               </div>
-
-              
-
             </Form>
           )}
         </Formik>
       </div>
 
-        <hr /> 
+      <hr />
 
       <div className="row">
         {/*Mostrar la barra de busqueda*/}
         <div className="col-6">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-            <i className="bi bi-search"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -264,25 +269,25 @@ const getDetalles = async (id) => {
       <br />
 
       {/*Mostramos la tabla con los datos*/}
- 
+
       <div className="row">
-      {results.length > 0 ? (
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="400px"
-        />
-      ) : (
-        <p className="text-center">No hay registros que mostrar</p>
-      )}
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={results}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="400px"
+          />
+        ) : (
+          <p className="text-center">No hay registros que mostrar</p>
+        )}
       </div>
 
-{/* Ventana Modal de ver más*/}
-<Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
         <ModalBody>
           <div className="row g-3">
@@ -329,9 +334,20 @@ const getDetalles = async (id) => {
               <p> {} </p>
             </div>
           </div>
+
+          {/**FACTURA**/}
+          <div ref={componenteRef} className="imprimir">
+            <Factura />
+          </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" >
+          <Button
+            color="primary"
+            onClick={() => {
+              handlePrint();
+              abrirModalVerMas();
+            }}
+          >
             Imprimir Factura
           </Button>
           <Button color="secondary" onClick={abrirModalVerMas}>
@@ -339,7 +355,6 @@ const getDetalles = async (id) => {
           </Button>
         </ModalFooter>
       </Modal>
-
     </div>
   );
 };
