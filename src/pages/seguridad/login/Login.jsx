@@ -118,6 +118,45 @@ export default function Login(props) {
             setIsValid(false);
           });
           return;
+        } else {
+          // Inicio get permisos
+          fetch(
+            "http://localhost:3001/ms_permisos/getallporusuario/" +
+              data.nombre_usuario,
+            {
+              method: "GET",
+              body: JSON.stringify(data),
+              headers: {
+                "Content-type": "application/json",
+              },
+            }
+          )
+            .then((response) => response.json())
+            .then((responseJson) => {
+              setIsValid(true);
+              if (!responseJson.status) {
+                setColor("danger");
+                setMesagge(responseJson.message);
+                setTimeout(1000, () => {
+                  setIsValid(false);
+                });
+                return;
+              }
+              localStorage.setItem("permisos", JSON.stringify(responseJson));
+            })
+            .catch((error) => {
+              setColor("danger");
+              setTimeout(1000, () => {
+                setIsValid(false);
+              });
+            })
+            .finally(() => {
+              setTimeout(1000, () => {
+                setIsValid(false);
+              });
+            });
+
+          //Fin get permisos
         }
         let dataUser = {
           "x-token": responseJson["x-token"],
@@ -125,6 +164,7 @@ export default function Login(props) {
         };
         localStorage.setItem("data", JSON.stringify(dataUser));
         navigate("/admin/home");
+
         // }
       })
       .catch((error) => {
@@ -306,9 +346,7 @@ export default function Login(props) {
                     ¿Olvidaste tu contraseña?
                   </Link>
                   {/* DESBLOQUEAR USUARIO*/}
-                  <Link to="/desbloquearUsuario">
-                    Desbloquear usuario
-                  </Link>
+                  <Link to="/desbloquearUsuario">Desbloquear usuario</Link>
                   {/* <Link to="/unlockuser">Desbloquea tu usuario</Link> */}
                   <Link to="/registro">Crear cuenta</Link>
                 </div>
