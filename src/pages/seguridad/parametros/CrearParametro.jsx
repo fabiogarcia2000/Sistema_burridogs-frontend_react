@@ -75,7 +75,7 @@ const CrearParametro = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          //id_parametro: "",
+          id_parametro: "",
           parametro: "",
           valor: "",
           creado_por:"",
@@ -110,7 +110,7 @@ const CrearParametro = () => {
             console.log(res)
             if (res.data === "") {
               //procedimineto para guardar el nuevo registro en el caso de que no exista*/
-              const res = await axios.put(`${URLCrear}${valores.parametro}`, valores);
+              const res = await axios.put(`${URLCrear}`, valores);
               if (res.status === 200) {
                 mostrarAlertas("guardado");
                 navigate("/admin/params");

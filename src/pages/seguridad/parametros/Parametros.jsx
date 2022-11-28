@@ -13,72 +13,24 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 const UrlMostrar = "http://190.53.243.69:3001/ms_parametros/getall";
 const UrlEliminar = "http://190.53.243.69:3001/ms_parametros/eliminar/";
 
-export default function Parametros(props) {
-
+const Parametros = () => {
  //Configurar los hooks
  const [registroDelete, setRegistroDelete] = useState('');
+ const [registros, setRegistros] = useState([]);
  useEffect(() => {
    getRegistros();
  }, []);
 
-  var dataPar = JSON.parse(localStorage.getItem("params")) || []
-  var urlApiParam = getOneParam(dataPar, "URL_API")
-  const urlapi = urlApiParam.valor
-
-  /** 
-     ** Creando bitacora  
-     * enviado infromacion de bitacora a la BD
-     * */
-  const saveLog = async () => {
-    const userdata = JSON.parse(localStorage.getItem('data'))
-    let log = {
-      fecha: new Date(),
-      id_usuario: userdata.data.id || 0,
-      accion: 'LECTURA',
-      descripcion: 'Ingreso a pantalla PARAMETROS',
-    }
-    fetch(urlapi + "/logs/save"
-      , {
-        method: 'POST',
-        body: JSON.stringify(log),
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(responseJson => {
-        // console.log("responseJson",responseJson)
-      })
-      .catch(error => {
-        // console.log(error)   
-      })
-  };
-
-  const [registros, setRegistros] = useState([]);
-  const getRegistros = async () => {
-    fetch(urlapi + "/ms_parametros/getall"
-      , {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(responseJson => {
-        // console.log("responseJson",responseJson)
-        // console.log("responseJson.status",responseJson.status)
-        setRegistros(responseJson.object);
-        setPending(false)
-      })
-      .catch(error => {
-        // console.log(error)   
-      })
-  };
-
-  useEffect(() => {
-    saveLog()
-    getRegistros();
-  }, []);
+ //procedimineto para obtener todos los registros
+ const getRegistros = async () => {
+  try {
+    const res = await axios.get(UrlMostrar);
+    setRegistros(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
 
 //Alertas de éxito o error al eliminar
 const mostrarAlertas = (alerta) => {
@@ -137,6 +89,24 @@ const deleteRegistro = async () => {
     mostrarAlertas("error");
   }
 };
+
+//Barra de busqueda
+     const [busqueda, setBusqueda] = useState("");
+       //capturar valor a buscar
+     const valorBuscar = (e) => {
+       setBusqueda(e.target.value) ;  
+   };
+       //metodo de filtrado 
+   let results = [];
+    if(!busqueda){
+        results = registros;
+    }else{
+         results = registros.filter( (dato) =>
+        dato.parametro.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
+        dato.valor.toLowerCase().includes(busqueda.toLocaleLowerCase()) 
+         );
+    }
+ 
 
 //Ventana modal de confirmación de eliminar
 const [modalEliminar, setModalEliminar] = useState(false);
@@ -234,25 +204,6 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
     selectAllRowsItemText: "Todos",
   };
 
-
-
-  //Barra de busqueda
-  const [busqueda, setBusqueda] = useState("");
-  //capturar valor a buscar
-  const valorBuscar = (e) => {
-    setBusqueda(e.target.value);
-  };
-  //metodo de filtrado 
-  let results = [];
-  if (!busqueda) {
-    results = registros;
-  } else {
-    results = registros.filter((dato) =>
-      dato?.valor?.toString().includes(busqueda.toLocaleLowerCase()) ||
-      dato?.parametro?.toLowerCase().includes(busqueda.toLocaleLowerCase())
-      );
-  }
-  const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
       <h3>Par&aacute;metros del sistema</h3>
@@ -336,10 +287,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
           highlightOnHover
           fixedHeader
           fixedHeaderScrollHeight="550px"
-          progressPending={pending}
-          progressComponent="Cargando datos..."
-          noDataComponent="---Datos no encontrados ---"
-          paginationPerPage="6"
+    
         />
       </div>
        {/* Ventana Modal de Eliminar*/}
@@ -365,4 +313,5 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
       </Modal>
     </div>
   );
-}
+};
+export default Parametros;
