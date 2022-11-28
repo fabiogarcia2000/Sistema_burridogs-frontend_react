@@ -8,7 +8,7 @@ import { useGlobalState } from "../../../globalStates/globalStates";
 
 const URLCrear = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 
-const Urlrol = "http://190.53.243.69:3001/ms_rol/getall/";
+const Urlrol = "http://190.53.243.69:3001/ms_rol/traerrol/";
 const Urlobjetos = "http://190.53.243.69:3001/ms_objetos/getall/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
@@ -22,21 +22,21 @@ const CrearPermiso = () => {
   const userdata = JSON.parse(localStorage.getItem('data'))
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
-  /* const [roles, setrol] = useState([]);
-   useEffect(() => {
-     getrol();
-   }, []);
-  
-   //petición a api
-   const getrol = async () => {
-     try {
-       const res = await axios.get(Urlrol);
-       setrol(res.data);
-     } catch (error) {
-       console.log(error);
-       mostrarAlertas("errormostrar");
-     }
-   };*/
+  const [roles, setroles] = useState([]);
+  useEffect(() => {
+    getroles();
+  }, []);
+
+  //petición a api
+  const getroles = async () => {
+    try {
+      const res = await axios.get(Urlrol);
+      setroles(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [objeto, setobjeto] = useState([]);
@@ -174,6 +174,59 @@ const CrearPermiso = () => {
         {({ errors, values }) => (
           <Form >
             <h3 className="mb-3">Nuevo permiso</h3>
+
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="id_objeto" className="form-label">
+                    Objeto:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="id_objeto"
+                    name="id_objeto"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {objeto.map((item, i) => (
+                      <option key={i} value={item.id_objeto}>{item.objeto}</option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="id_objeto"
+                    component={() => (
+                      <div className="error">{errors.id_objeto}</div>
+                    )}
+                  />
+                </div>
+              </div>
+              
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="id_rol" className="form-label">
+                    Rol:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="id_rol"
+                    name="id_rol"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {roles.map((item, i) => (
+                      <option key={i} value={item.id_rol}>{item.rol}</option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="id_rol"
+                    component={() => (
+                      <div className="error">{errors.id_rol}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -321,56 +374,7 @@ const CrearPermiso = () => {
               </div>
             </div>
 
-            <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="id_objeto" className="form-label">
-                    Objeto:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="id_objeto"
-                    name="id_objeto"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {objeto.map((item, i) => (
-                      <option key={i} value={item.id_objeto}>{item.objeto}</option>
-                    ))}
-                  </Field>
-                  <ErrorMessage
-                    name="id_objeto"
-                    component={() => (
-                      <div className="error">{errors.id_objeto}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="id_rol" className="form-label">
-                    Rol:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="id_rol"
-                    name="id_rol"
-                  />
-                  {/*<option value="">Seleccionar...</option>
-                    {roles.map((item, i) => (
-                      <option key={i} value={item.id_rol}>{item.rol}</option>
-                    ))}
-                    </Field>*/}
-                  <ErrorMessage
-                    name="id_objeto"
-                    component={() => (
-                      <div className="error">{errors.id_objeto}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
+            
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar

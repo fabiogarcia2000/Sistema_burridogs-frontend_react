@@ -150,12 +150,12 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID",
+      name: "ID PREGUNTA SEGURIDAD",
       selector: (row) => row.id_pregunta,
       sortable: false,
     },
     {
-      name: "Pregunta",
+      name: "PREGUNTA",
       selector: (row) => toUpperCaseField(row.pregunta),
       sortable: false,
     },

@@ -120,7 +120,7 @@ const mostrarAlertas = (alerta) =>{
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID",
+      name: "ID CATEGORÍA CONTABLE",
       selector: (row) => row.id_categoria,
       sortable: true,
     },

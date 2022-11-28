@@ -61,11 +61,6 @@ const mostrarAlertas = (alerta) => {
         validate={(valores) => {
           let errores = {};
 
-            // Validacion parametro
-            if (!valores.parametro) {
-                errores.parametro = "Por favor ingrese un parámetro";
-              }
-    
               // Validacion valor
               if (!valores.valor) {
                 errores.valor = "Por favor ingrese una valor";
@@ -134,6 +129,7 @@ const mostrarAlertas = (alerta) => {
                             name="parametro"
                             placeholder= "Parámetro"
                             onKeyUp={cambiarAMayusculasParametro(values)}
+                            disabled
                         />
 
                         <ErrorMessage

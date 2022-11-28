@@ -353,7 +353,7 @@ const MostrarLibroMayor = () => {
         </div>
         <br /><br />
         <div className="row">
-          <div className="col-4">
+          <div className="col-5">
             <div className="mb-3">
 
               <label htmlFor="id_periodo_contable" className="form-label">
@@ -367,7 +367,7 @@ const MostrarLibroMayor = () => {
               >
                 <option value="">Seleccionar...</option>
                 {sucursal.map((item, i) => (
-                  <option key={i} value={item.id_periodo_contable}> Periodo:{item.id_periodo_contable} Fecha inicio:{item.fecha_inicial} Fecha final{item.fecha_final}</option>
+                  <option key={i} value={item.id_periodo_contable}>Periodo:{item.id_periodo_contable}       Fecha inicio:{item.fecha_inicial}      Fecha final{item.fecha_final}</option>
                 ))}
               </select >
             </div>

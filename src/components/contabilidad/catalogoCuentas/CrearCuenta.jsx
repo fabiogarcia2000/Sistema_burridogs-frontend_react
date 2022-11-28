@@ -18,6 +18,9 @@ const CrearCuenta = () => {
 
   const navigate = useNavigate();
 
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
+
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [destino, setdestino] = useState([]);
   useEffect(() => {
@@ -97,7 +100,7 @@ const CrearCuenta = () => {
         //valores iniciales
         initialValues={{
           id_cuenta: "",
-          id_usuario: "",
+          id_usuario: userdata.data.id,
           codigo_cuenta: "",
           nombre_cuenta: "",
           id_categoria: "",
@@ -115,12 +118,7 @@ const CrearCuenta = () => {
              errores.id_cuenta = "Escribir solo números";
            }  */
 
-          // Validacion de usuario
-          if (!valores.id_usuario) {
-            errores.id_usuario = "Por favor ingresa un id de usuario";
-          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
-            errores.id_usuario = "Escribir solo números";
-          }
+         
 
           // Validacion de código cuenta
           if (!valores.codigo_cuenta) {
@@ -202,6 +200,7 @@ const CrearCuenta = () => {
                     id="idUsuario"
                     name="id_usuario"
                     placeholder="ID del usuario..."
+                    disabled
                   />
 
                   <ErrorMessage

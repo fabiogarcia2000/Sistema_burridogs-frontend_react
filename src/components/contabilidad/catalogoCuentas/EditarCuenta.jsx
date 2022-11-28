@@ -19,6 +19,9 @@ const EditarCuenta = () => {
 
   const navigate = useNavigate();
 
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
+
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [destino, setdestino] = useState([]);
   useEffect(() => {
@@ -87,7 +90,7 @@ const EditarCuenta = () => {
         //valores iniciales
         initialValues={{
           id_cuenta: edit.id_cuenta,
-          id_usuario: "",
+          id_usuario: userdata.data.id,
           codigo_cuenta: edit.codigo_cuenta,
           nombre_cuenta: edit.nombre_cuenta,
           id_categoria: edit.nombre_categoria,
@@ -156,7 +159,7 @@ const EditarCuenta = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idCuenta" className="form-label">
-                    ID Cuenta:
+                    Id Cuenta:
                   </label>
                   <Field
                     type="text"
@@ -189,6 +192,7 @@ const EditarCuenta = () => {
                     id="idUsuario"
                     name="id_usuario"
                     placeholder="ID del usuario..."
+                    disabled
                   />
 
                   <ErrorMessage

@@ -120,7 +120,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID",
+      name: "ID PARÁMETRO",
       selector: (row) => row.id_parametro || 'NO APLICA',
       sortable: true,
 

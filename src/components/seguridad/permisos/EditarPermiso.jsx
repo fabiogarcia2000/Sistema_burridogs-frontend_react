@@ -87,6 +87,7 @@ const PermisoEditar = () => {
             const res = await axios.put(`${URLEditar}`, valores);
 
             if (res.status === 200) {
+              console.log(valores)
               mostrarAlertas("guardado");
               navigate("/admin/mostrarpermiso");
             } else {
