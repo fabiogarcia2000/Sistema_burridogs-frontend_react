@@ -52,7 +52,7 @@ const mostrarAlertas = (alerta) => {
             id_parametro: edit.id_parametro,
             parametro: edit.parametro,
             valor: edit.valor,
-            modificado_por: "",
+            modificado_por:  userdata.data.nameUser.replace('"', "").replace('"', ""),
             fecha_modificacion: edit.fecha_modificacion,
         }}
 
