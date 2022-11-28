@@ -1,61 +1,58 @@
 import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel_MV } from "./generarExcel_MV/Export_Excel_MV";
+import { Export_PDF_MV } from "./generarPDF_MV/Export_PDF_MV";
 
 const UrlMostrar = "http://190.53.243.69:3001/articulo/getallporbodega";
+const UrlMostrarInv = "http://190.53.243.69:3001/articulo/getallactiveinv";
+const UrlMostrarBod = "http://190.53.243.69:3001/centro_costo/getall";
 const UrlMostrarArtBod =
   "http://190.53.243.69:3001/articulo/movimientosporarticulo/";
 
 const MostrarInvArticulos = () => {
+  const [encabezado, setEncabezado] = useState([]);
+
   //Configurar los hooks
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
-    setHay(false);
   }, []);
 
-  const [listaCompras, setListaCompras] = useState([]);
-  const [hay, setHay] = useState(false);
-  const [articuloClick, setArticuloClick] = useState({});
-  const [cantidad, setCantidad] = useState(1);
-
-  //agregar articulos a la lista
-  const agregarArticulos = () => {
-    if (
-      !listaCompras.find(
-        (list) => list.cod_centro_costo === articuloClick.cod_articulo
-      )
-    ) {
-      setListaCompras([
-        ...listaCompras,
-        {
-          id: articuloClick.cod_articulo,
-          porc: articuloClick.descripcion_articulo,
-          cod: articuloClick.cod_centro_costo,
-          desc: articuloClick.descripcion_centro_costo,
-          cant: cantidad,
-        },
-      ]);
-    }
-  };
-
-  //procedimineto para obtener las unidades de medida
-  const [articulos, setUnidades] = useState([]);
+  //procedimineto para obtener los artículos
+  const [articulos, setArticulos] = useState([]);
   useEffect(() => {
-    getUnidades();
+    getArticulos();
   }, []);
 
   //petición a api
-  const getUnidades = async () => {
+  const getArticulos = async () => {
     try {
-      const res = await axios.get(UrlMostrarArtBod);
-      setUnidades(res.data);
+      const res = await axios.get(UrlMostrarInv);
+      setArticulos(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener los artículos
+  const [bodegas, setBodegas] = useState([]);
+  useEffect(() => {
+    getBodegas();
+  }, []);
+
+  //petición a api
+  const getBodegas = async () => {
+    try {
+      const res = await axios.get(UrlMostrarBod);
+      setBodegas(res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -117,7 +114,7 @@ const MostrarInvArticulos = () => {
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
-  const [registroVerMas, setRegistroVerMas] = useState({});
+  //const [registroVerMas, setRegistroVerMas] = useState({});
 
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
@@ -139,6 +136,9 @@ const MostrarInvArticulos = () => {
           .includes(busqueda.toLocaleLowerCase())
     );
   }
+
+  let results2 = [];
+  results2 = encabezado;
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -189,53 +189,28 @@ const MostrarInvArticulos = () => {
       sortable: true,
       maxWidth: "160px",
     },
-
-    {
-      name: "ACCIONES",
-      cell: (row) => (
-        <>
-          <div className="btn-group me-2" role="group" aria-label="First group">
-            <Link
-              type="button"
-              className="btn btn-primary"
-              title="Ver Movimientos..."
-              onClick={() => {
-                agregarArticulos();
-                abrirModalVerMas();
-              }}
-            >
-              <i className="fa-solid fa-plus"></i> Ver Movimientos
-            </Link>
-          </div>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-      maxWidth: "200px",
-    },
   ];
 
   //Configuramos las columnas de la tabla
   const columns2 = [
     {
       name: "FECHA",
-      selector: (row) => row.cod_articulo,
+      selector: (row) => row.fecha,
       sortable: true,
-      maxWidth: "160px", //ancho de la columna
+      maxWidth: "260px", //ancho de la columna
     },
 
     {
       name: "TIPO",
-      selector: (row) => row.cod_centro_costo,
+      selector: (row) => row.tipo,
       sortable: true,
       maxWidth: "450px",
     },
     {
       name: "CANTIDAD",
-      selector: (row) => row.en_mano,
+      selector: (row) => row.cantidad,
       sortable: true,
-      maxWidth: "120px",
+      maxWidth: "150px",
     },
   ];
   //Configurar la paginación de la tabla
@@ -318,6 +293,149 @@ const MostrarInvArticulos = () => {
           fixedHeaderScrollHeight="550px"
         />
       </div>
+      <br />
+      <hr />
+      <h3>Consultar Movimientos</h3>
+      <br />
+      <div className="row">
+        <Formik
+          //valores iniciales
+          initialValues={{
+            id_articulo: "",
+            id_centro_costo: "",
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
+
+            // Validacion de artículo
+            if (!valores.id_articulo) {
+              errores.id_articulo = "Seleccione una campo";
+            }
+
+            // Validacion centro costo
+            if (!valores.id_centro_costo) {
+              errores.id_centro_costo = "Seleccione una campo";
+            }
+
+            return errores;
+          }}
+          onSubmit={async (valores) => {
+            try {
+              console.log(valores);
+              const res = await axios.post(UrlMostrarArtBod, valores);
+              setEncabezado(res.data);
+              console.log(res);
+            } catch (error) {
+              console.log(error);
+              mostrarAlertas("errormostrar");
+            }
+          }}
+        >
+          {({ errors, values }) => (
+            <Form>
+              <div className="row g-3">
+                <div className="col-sm-4">
+                  <div className="mb-3">
+                    <label htmlFor="idArticulo" className="form-label">
+                      Artículo:
+                    </label>
+                    <Field
+                      as="select"
+                      className="form-select"
+                      id="idArticulo"
+                      name="id_articulo"
+                    >
+                      <option value="">Seleccionar...</option>
+                      {articulos.map((item, i) => (
+                        <option key={i} value={item.id_articulo}>
+                          {item.descripcion}
+                        </option>
+                      ))}
+                    </Field>
+
+                    <ErrorMessage
+                      name="id_articulo"
+                      component={() => (
+                        <div className="error">{errors.id_articulo}</div>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4">
+                  <div className="mb-3">
+                    <label htmlFor="idCentro_costo" className="form-label">
+                      Bodega:
+                    </label>
+                    <Field
+                      as="select"
+                      className="form-select"
+                      id="idCentro_costo"
+                      name="id_centro_costo"
+                    >
+                      <option value="">Seleccionar...</option>
+                      {bodegas.map((item, i) => (
+                        <option key={i} value={item.id_centro_costo}>
+                          {item.descripcion}
+                        </option>
+                      ))}
+                    </Field>
+                    <ErrorMessage
+                      name="id_centro_costo"
+                      component={() => (
+                        <div className="error">{errors.id_centro_costo}</div>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 bottom-aligned">
+                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                    Consultar
+                  </button>
+                  <Link
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                    onClick={() => {
+                      Export_Excel_MV(results2);
+                    }}
+                  >
+                    <i className="fa-solid fa-file-excel"></i>
+                  </Link>
+                  <Link
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                    onClick={() => {
+                      Export_PDF_MV(results2);
+                    }}
+                  >
+                    <i className="fa-solid fa-file-pdf"></i>
+                  </Link>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+      {/*Mostramos la segunda tabla con los datos*/}
+      <div className="row">
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns2}
+            data={results2}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="400px"
+          />
+        ) : (
+          <p className="text-center">No hay registros que mostrar</p>
+        )}
+      </div>
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
@@ -326,7 +444,7 @@ const MostrarInvArticulos = () => {
           <div className="row">
             <DataTable
               columns={columns2}
-              data={results}
+              data={""}
               highlightOnHover
               fixedHeader
               fixedHeaderScrollHeight="200px"
