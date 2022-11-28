@@ -1,19 +1,25 @@
 import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate} from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasCorreo, cambiarAMayusculasCorreoUsuario, cambiarAMayusculasNombreUsuario, cambiarAMayusculasUsuario } from "../../../utils/cambiarAMayusculas";
+import { cambiarAMayusculasNombreUsuario, cambiarAMayusculasUsuario } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
 
  const UsuarioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
-
   const navigate = useNavigate();
 
+
+  //TRAER INFORMACI[ON DEL USUARIO]
+  const userdata = JSON.parse(localStorage.getItem('data'))
+  const [registro, setRegistro] = useState({});
+
+  
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
     switch (alerta){
@@ -47,10 +53,10 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
       <Formik
         //valores iniciales
         initialValues={{
-            id_usuario: edit.id_usuario,
+            id_usuario: userdata.data.id,
             usuario: edit.usuario,
-            nombre_usuario: edit.nombre_usuario,
-            correo_electronico: edit.correo_electronico   
+            nombre_usuario: userdata.data.nameUser.replace('"', "").replace('"', ""),
+            correo_electronico: edit.correo_electronico 
         }}
 
         //Funcion para validar
@@ -173,7 +179,6 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                     id="correoElectronico"
                     name="correo_electronico"
                     placeholder="Correo electronico..."
-                    onKeyUp={cambiarAMayusculasCorreoUsuario(values)}
                   />
                   <ErrorMessage
                     name="correo_electronico"

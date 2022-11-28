@@ -197,6 +197,7 @@ const CrearParametro = () => {
                             name="creado_por"
                             placeholder= "Creado por..."
                             onKeyUp={cambiarAMayusculasCreadoPor(values)}
+                            disabled
                         />
 
                         <ErrorMessage
@@ -219,7 +220,7 @@ const CrearParametro = () => {
                             id="fechaCreacion"
                             name="fecha_creacion"
                             placeholder= "Fecha de creación..."
-                            onKeyUp={cambiarAMayusculasCreadoPor(values)}
+                            disabled
                         />
 
                         <ErrorMessage
