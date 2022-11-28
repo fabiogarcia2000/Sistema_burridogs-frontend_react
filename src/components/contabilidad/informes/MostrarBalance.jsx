@@ -15,12 +15,18 @@ const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
 
 const MostrarBalance = () => {
   //Configurar los hooks
-  const [registroDelete, setRegistroDelete] = useState('');
+  //const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);
 
+  //Configurar los hooks
+  //const [registroDelete, setRegistroDelete] = useState('');
+  const [registrosActivo, setRegistrosActivo] = useState([]);
+  useEffect(() => {
+    getRegistrosActivos();
+  }, []);
 
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
@@ -37,7 +43,7 @@ const MostrarBalance = () => {
    const getRegistrosActivos = async () => {
     try {
       const res = await axios.get(UrlMostrarActivos);
-      setRegistros(res.data);
+      setRegistrosActivo(res.dataActivo);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -97,6 +103,16 @@ const MostrarBalance = () => {
     )
   };
 
+  //metodo de filtrado 
+  let resultsActivo = []
+  if (!busqueda) {
+    results = registrosActivo
+  } else {
+    resultsActivo = registrosActivo.filter((dato) =>
+      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
 
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -175,7 +191,7 @@ const MostrarBalance = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF(results);
+                  Export_PDF(results, resultsActivo);
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
