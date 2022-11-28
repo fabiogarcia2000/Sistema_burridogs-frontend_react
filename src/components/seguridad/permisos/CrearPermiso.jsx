@@ -18,6 +18,8 @@ const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDa
 const CrearPermiso = () => {
 
   const navigate = useNavigate();
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   /* const [roles, setrol] = useState([]);
@@ -114,7 +116,7 @@ const CrearPermiso = () => {
           permiso_actualizacion: "1",
           permiso_consultar: "1",
           activo: "1",
-          creado_por: "",
+          creado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
           fecha_creacion: date,
           id_rol: "",
           id_objeto: "",
@@ -287,6 +289,7 @@ const CrearPermiso = () => {
                     id="creadoPor"
                     name="creado_por"
                     placeholder="Creado por..."
+                    disabled
                   />
                   <ErrorMessage
                     name="creado_por"

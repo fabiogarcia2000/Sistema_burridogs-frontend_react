@@ -17,6 +17,8 @@ const EditarRol = () => {
     const [edit] = useGlobalState('registroEdit')
 
     const navigate = useNavigate();
+    //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
     //Alertas de éxito o error
     const mostrarAlertas = (alerta) => {
@@ -50,9 +52,9 @@ const EditarRol = () => {
                 //valores iniciales
                 initialValues={{
                     id_rol: edit.id_rol,
-                    rol: "",
-                    descripcion: "",
-                    modificado_por: "SYSTEMUSER",
+                    rol: edit.rol,
+                    descripcion: edit.descripcion,
+                    modificado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
                     fecha_modificacion: date,
                 }}
 

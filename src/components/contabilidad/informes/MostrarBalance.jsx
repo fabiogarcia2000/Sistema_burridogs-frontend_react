@@ -10,13 +10,34 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_balance/getall/";
+const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
+const UrlMostrarPasivos = "http://190.53.243.69:3001/mc_pasivos/getall/";
+const UrlMostrarPatrimonio = "http://190.53.243.69:3001/mc_patrimonios/getall/";
+
 
 const MostrarBalance = () => {
   //Configurar los hooks
-  const [registroDelete, setRegistroDelete] = useState('');
+  //const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
+  }, []);
+
+//Configurar los hooks activo
+  const [RegistrosActivos, setRegistrosActivos] = useState([]);
+  useEffect(() => {
+    getRegistrosActivos();
+  }, []);
+
+  const [RegistrosPasivos, setRegistrosPasivos] = useState([]);
+  useEffect(() => {
+    getRegistrosPasivos();
+  }, []);
+
+
+  const [registrosPatrimonio, setRegistrosPatrimonio] = useState([]);
+  useEffect(() => {
+    getRegistrosPatrimonio();
   }, []);
 
 
@@ -30,6 +51,40 @@ const MostrarBalance = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+   //procedimineto para obtener todos los registros de activo
+   const getRegistrosActivos = async () => {
+    try {
+      const res = await axios.get(UrlMostrarActivos);
+      setRegistrosActivos(res.dataActivo); //--
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+   //procedimineto para obtener todos los registros de pasivo
+   const getRegistrosPasivos = async () => {
+    try {
+      const res = await axios.get(UrlMostrarPasivos);
+      setRegistrosPasivos(res.dataPasivo); //--
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+   //procedimineto para obtener todos los registros de patrimonio
+   const getRegistrosPatrimonio = async () => {
+    try {
+      const res = await axios.get(UrlMostrarPatrimonio);
+      setRegistrosPatrimonio(res.dataPatrimonio);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -84,6 +139,48 @@ const MostrarBalance = () => {
     )
   };
 
+  
+  //Barra de busqueda activo
+  const [busqueda1] = useState("")
+  
+  const [busqueda2] = useState("")
+  
+  const [busqueda3] = useState("")
+
+//lo de busqueda no estoy muy seguro de lo que hace
+
+
+  //metodo de filtrado activo
+  let resultsActivos = []
+  if (!busqueda1) {
+    results = RegistrosActivos
+  } else {
+    resultsActivos = RegistrosActivos.filter((dato) =>
+      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
+  //metodo de filtrado pasivo
+  let resultsPasivos = []
+  if (!busqueda2) {
+    results = RegistrosPasivos
+  } else {
+    resultsPasivos = RegistrosPasivos.filter((dato) =>
+      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
+
+  //metodo de filtrado patrimonio
+  let resultsPatrimonio = []
+  if (!busqueda3) {
+    results = registrosPatrimonio
+  } else {
+    resultsPatrimonio = registrosPatrimonio.filter((dato) =>
+      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
 
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -162,7 +259,7 @@ const MostrarBalance = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF(results);
+                  Export_PDF(results,resultsActivos,resultsPasivos,resultsPatrimonio);
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>

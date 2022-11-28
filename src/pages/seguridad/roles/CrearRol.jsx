@@ -13,14 +13,22 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 const URLCrear = "http://190.53.243.69:3001/ms_rol/actualizar-insertar/0";
 const UrlMostrar = "http://190.53.243.69:3001/ms_rol/getall/";
 
-const current = new Date();
-const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
+//Para mostrar la fecha en formato DD/MM/AAAA
+let date = new Date()
+let dia = `${(date.getDate())}`.padStart(2,'0');
+let mes = `${(date.getMonth()+1)}`.padStart(2,'0');
+let anio = date.getFullYear();
 
+//Parametros que se deben obtener
+var fecha = (`${anio}/${mes}/${dia}`);
 
 const CrearRol = () => {
 
   const navigate = useNavigate();
   const [cuenta, setCuenta] = useState();
+
+//TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+const userdata = JSON.parse(localStorage.getItem('data'))
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -68,8 +76,8 @@ const CrearRol = () => {
         initialValues={{
           rol: "",
           descripcion: "",
-          creado_por: "SYSTEMUSER",
-          fecha_creacion: date,
+          creado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
+          fecha_creacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {

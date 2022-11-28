@@ -65,25 +65,13 @@ function Sidebar() {
             <li>
               <Link to="/admin/login-pos">
                 <i className="bi bi-circle"></i>
-                <span>Punto de venta</span>
+                <span>Punto de Venta</span>
               </Link>
             </li>
             <li>
               <Link to="/admin/ventas-realizadas">
                 <i className="bi bi-circle"></i>
-                <span>Ventas Realizadas</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/home">
-                <i className="bi bi-circle"></i>
-                <span>Opción 3</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/home">
-                <i className="bi bi-circle"></i>
-                <span>Opción 4</span>
+                <span>Consultar Ventas</span>
               </Link>
             </li>
           </ul>
@@ -242,28 +230,22 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-            <li>
-              <Link to="/admin/mostrarcatalogo">
-                <i className="bi bi-circle"></i>
-                <span>Catalogo de cuentas</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/mostrarcategoriacont">
-                <i className="bi bi-circle"></i>
-                <span>Categoria contable</span>
-              </Link>
-            </li>
-            <li>
+             <li>
               <Link to="/admin/mostrarinformefinanciero">
                 <i className="bi bi-circle"></i>
                 <span>Informe Financiero</span>
               </Link>
             </li>
             <li>
-              <Link to="/admin/mostrarlibromayor">
+            <li>
+              <Link to="/admin/mostrarcategoriacont">
                 <i className="bi bi-circle"></i>
-                <span>Libro Mayor</span>
+                <span>Categoria contable</span>
+              </Link>
+            </li>
+              <Link to="/admin/mostrarcatalogo">
+                <i className="bi bi-circle"></i>
+                <span>Catalogo de cuentas</span>
               </Link>
             </li>
             <li>
@@ -273,17 +255,17 @@ function Sidebar() {
               </Link>
             </li>
             <li>
+              <Link to="/admin/mostrarperiodo">
+                <i className="bi bi-circle"></i>
+                <span>Periodo Contable</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/admin/mostrarestado">
                 <i className="bi bi-circle"></i>
                 <span>Estado Libro Diario</span>
               </Link>
             </li>
-            {/*<li>
-              <Link to="/admin/mostrarlibrodetalle">
-                <i className="bi bi-circle"></i>
-                <span>Libro Diario Detalle</span>
-              </Link>
-  </li>*/}
             <li>
               <Link to="/admin/mostrarlibroencabezado">
                 <i className="bi bi-circle"></i>
@@ -291,11 +273,21 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/mostrarperiodo">
+              <Link to="/admin/mostrarlibromayor">
                 <i className="bi bi-circle"></i>
-                <span>Periodo Contable</span>
+                <span>Libro Mayor</span>
               </Link>
             </li>
+         
+            
+            {/*<li>
+              <Link to="/admin/mostrarlibrodetalle">
+                <i className="bi bi-circle"></i>
+                <span>Libro Diario Detalle</span>
+              </Link>
+              </li>*/}
+            
+            
           </ul>
         </li>
 

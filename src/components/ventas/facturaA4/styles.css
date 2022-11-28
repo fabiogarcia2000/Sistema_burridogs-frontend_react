@@ -25,12 +25,16 @@
 
 .print2{
     display: none !important; 
+    margin: 30px 30px !important;
+
+    width: 95% !important;
 }
 
 @media print{
     .print2{
         display: inline !important; 
-        
+        margin: 30px 30px !important;
+        width: 95% !important;
     }
 }
 

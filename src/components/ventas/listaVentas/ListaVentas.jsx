@@ -1,28 +1,67 @@
 import DataTable from "react-data-table-component";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState} from "react";
+import { useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import Factura from "../facturaA4/Factura";
 
 import Swal from "sweetalert2";
 
-const UrlConsultar = "http://190.53.243.69:3001/venta/venta_por_fecha/";
-
+const UrlEncabezado = "http://190.53.243.69:3001/venta/venta_por_fecha/";
+const UrlDetalles = "http://190.53.243.69:3001/venta/detalle_por_encabezado/";
 
 const VentaResumen = () => {
-    const [mostrar, setMostrar] = useState([]);
-    const [mostrar2, setMostrar2] = useState([]);
+  const componenteRef = useRef();
 
-    //const [prueba, setPrueba] = useState({"fecha":"2022/11/01"});
+  const [encabezado, setEncabezado] = useState([]);
+  const [detalles, setDetalles] = useState([]);
 
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
 
+  //procedimineto para obtener los detalles
+  const getDetalles = async (id) => {
+    try {
+      const res = await axios.get(UrlDetalles + id);
+      setDetalles(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
-    //Barra de busqueda
-    const [busqueda, setBusqueda] = useState("");
-    //capturar valor a buscar
-    const valorBuscar = (e) => {
+  //Barra de busqueda
+  const [busqueda, setBusqueda] = useState("");
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
     setBusqueda(e.target.value);
-    };
+  };
 
+  //metodo de filtrado
+  let results = [];
+  if (!busqueda) {
+    results = encabezado;
+  } else {
+    results = encabezado.filter(
+      (dato) =>
+        dato.nombre_cliente
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.rtn.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.venta_total.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
+    );
+  }
+
+  //Para generar factura/imprimir
+  const handlePrint = useReactToPrint({
+    content: () => componenteRef.current,
+    documentTitle: "Factura",
+    onAfterPrint: () => console.log("Listo"),
+  });
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -37,9 +76,9 @@ const VentaResumen = () => {
       sortable: true,
     },
     {
-        name: "RTN",
-        selector: (row) => row.rtn,
-        sortable: true,
+      name: "RTN",
+      selector: (row) => row.rtn,
+      sortable: true,
     },
     {
       name: "VENTA TOTAL",
@@ -47,21 +86,42 @@ const VentaResumen = () => {
       sortable: true,
     },
     {
-        name: "FACTURA",
-        selector: (row) => row.correlativo,
-        sortable: true,
+      name: "FACTURA",
+      selector: (row) => row.correlativo,
+      sortable: true,
     },
     {
-        name: "VENDEDOR",
-        selector: (row) => row.usuario,
-        sortable: true,
+      name: "VENDEDOR",
+      selector: (row) => row.usuario,
+      sortable: true,
     },
     {
-        name: "ESTADO",
-        selector: (row) => row.descripcion_estado,
-        sortable: true,
-    }
-    
+      name: "ESTADO",
+      selector: (row) => row.descripcion_estado,
+      sortable: true,
+    },
+    {
+      name: "VER MÁS...",
+      cell: (row) => (
+        <>
+          <Link
+            to="#"
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              getDetalles(row.secuencia_enc);
+              abrirModalVerMas();
+            }}
+          >
+            <i className="bi bi-eye-fill"></i>
+          </Link>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
   ];
 
   //Configurar la paginación de la tabla
@@ -73,111 +133,127 @@ const VentaResumen = () => {
   };
 
   //Alertas de éxito o error
-  const mostrarAlertas = (alerta) =>{
-    switch (alerta){
-      case 'error': 
-      Swal.fire({
-        title: 'Error',
-        text:  'No se realizo la consulta',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      })
-      break;
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se realizo la consulta",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
 
-      default: break;
+      default:
+        break;
     }
   };
-
-
-const getRegistros = async (fecha) => {
-  try {
-    console.log(fecha)
-    const res = await axios.get(UrlConsultar, {fecha});
-    setMostrar2(res.data)
-    console.log(res)
-  } catch (error) {
-    console.log(error);
-    mostrarAlertas("errormostrar");
-  }
-};
-
 
   return (
     <div className="container">
       <h3>Consultar Ventas</h3>
       <br />
 
-        <div className="row">
+      <div className="row">
         <Formik
-        //valores iniciales
-        initialValues={{
-          fecha: ""
-        }}
-        //Funcion para validar
-        validate={(valores) => {
-          let errores = {};
+          //valores iniciales
+          initialValues={{
+            fecha_inicial: "",
+            fecha_final: "",
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
 
-          // Validacion de código
-          if (!valores.fecha) {
-            errores.fecha = "Seleccione una fecha";
-          }
+            // Validacion de código
+            if (!valores.fecha_inicial) {
+              errores.fecha_inicial = "Seleccione una fecha";
+            }
 
-          return errores;
-        }}
-        onSubmit={(valores) => {
-          getRegistros(valores)
-        }}
-      >
-        {({ errors }) => (
-          <Form>
+            // Validacion descripción
+            if (!valores.fecha_final) {
+              errores.fecha_final = "Seleccione una fecha";
+            }
 
-            <div className="row g-3">
-              <div className="col-4">
-                <label htmlFor="fechaInicio" className="form-label">
-                  Fecha:
-                </label>
-                <Field
-                  type="date"
-                  className="form-select"
-                  id="fechaInicio"
-                  name="fecha"
-                />
+            return errores;
+          }}
+          onSubmit={async (valores) => {
+            try {
+              console.log(valores);
+              const res = await axios.post(UrlEncabezado, valores);
+              setEncabezado(res.data);
+              console.log(res);
+            } catch (error) {
+              console.log(error);
+              mostrarAlertas("errormostrar");
+            }
+          }}
+        >
+          {({ errors, values }) => (
+            <Form>
+              <div className="row g-3">
+                <div className="col-sm-4">
+                  <div className="mb-3">
+                    <label htmlFor="inicio" className="form-label">
+                      Fecha Inicio:
+                    </label>
+                    <Field
+                      type="date"
+                      className="form-control"
+                      id="inicio"
+                      name="fecha_inicial"
+                    />
 
-                <ErrorMessage
-                  name="fecha"
-                  component={() => <div className="error">{errors.fecha}</div>}
-                />
-              </div>
+                    <ErrorMessage
+                      name="fecha_inicial"
+                      component={() => (
+                        <div className="error">{errors.fecha_inicial}</div>
+                      )}
+                    />
+                  </div>
+                </div>
 
-              <div className="col-2 bottom-aligned">
-                <button className="btn btn-primary me-2" type="submit">
+                <div className="col-sm-4">
+                  <div className="mb-3">
+                    <label htmlFor="final" className="form-label">
+                      Fecha Final:
+                    </label>
+                    <Field
+                      type="date"
+                      className="form-control"
+                      id="final"
+                      name="fecha_final"
+                    />
+
+                    <ErrorMessage
+                      name="fecha_final"
+                      component={() => (
+                        <div className="error">{errors.fecha_final}</div>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 bottom-aligned">
+                  <button className="btn btn-primary mb-3 me-2" type="submit">
                     Consultar
-                </button>
-
-{/** 
-                <button className="btn btn-danger" type="button">
-                    Limpiar
-                </button>
-*/}
-
+                  </button>
+                </div>
               </div>
-            </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
 
-          </Form>
-        )}
-      </Formik>
-        </div>
+      <hr />
 
-        <br /> <hr /> <br /> 
-
-      {/*Mostrar los botones: Excel y PDF */}
       <div className="row">
         {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
+        <div className="col-6">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -193,24 +269,94 @@ const getRegistros = async (fecha) => {
       <br />
 
       {/*Mostramos la tabla con los datos*/}
- 
+
       <div className="row">
-      {mostrar.length > 0 ? (
-        <DataTable
-          columns={columns}
-          data={mostrar}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="200px"
-        />
-      ) : (
-        <p className="text-center">No hay registros que mostrar</p>
-      )}
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={results}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="400px"
+          />
+        ) : (
+          <p className="text-center">No hay registros que mostrar</p>
+        )}
       </div>
+
+      {/* Ventana Modal de ver más*/}
+      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CLIENTE: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.nombre_cliente} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">R.T.N: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.rtn} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MODIFICADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {} </p>
+            </div>
+          </div>
+
+          {/**FACTURA**/}
+          <div ref={componenteRef} className="imprimir">
+            <Factura />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="primary"
+            onClick={() => {
+              handlePrint();
+              abrirModalVerMas();
+            }}
+          >
+            Imprimir Factura
+          </Button>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
-}
+};
 
-export default VentaResumen
+export default VentaResumen;
