@@ -9,13 +9,58 @@ import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 
 const UrlMostrar = "http://190.53.243.69:3001/articulo/getallporbodega";
+const UrlMostrarArtBod =
+  "http://190.53.243.69:3001/articulo/movimientosporarticulo/";
 
 const MostrarInvArticulos = () => {
   //Configurar los hooks
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
+    setHay(false);
   }, []);
+
+  const [listaCompras, setListaCompras] = useState([]);
+  const [hay, setHay] = useState(false);
+  const [articuloClick, setArticuloClick] = useState({});
+  const [cantidad, setCantidad] = useState(1);
+
+  //agregar articulos a la lista
+  const agregarArticulos = () => {
+    if (
+      !listaCompras.find(
+        (list) => list.cod_centro_costo === articuloClick.cod_articulo
+      )
+    ) {
+      setListaCompras([
+        ...listaCompras,
+        {
+          id: articuloClick.cod_articulo,
+          porc: articuloClick.descripcion_articulo,
+          cod: articuloClick.cod_centro_costo,
+          desc: articuloClick.descripcion_centro_costo,
+          cant: cantidad,
+        },
+      ]);
+    }
+  };
+
+  //procedimineto para obtener las unidades de medida
+  const [articulos, setUnidades] = useState([]);
+  useEffect(() => {
+    getUnidades();
+  }, []);
+
+  //petición a api
+  const getUnidades = async () => {
+    try {
+      const res = await axios.get(UrlMostrarArtBod);
+      setUnidades(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //procedimineto para mostrar todos los registros
   const getRegistros = async () => {
@@ -69,10 +114,6 @@ const MostrarInvArticulos = () => {
     }
   };
 
-  //Ventana modal de confirmación de eliminar
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
-
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
@@ -93,7 +134,7 @@ const MostrarInvArticulos = () => {
     results = registros.filter(
       (dato) =>
         dato.cod_articulo.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.descripcion_corta
+        dato.descripcion_articulo
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())
     );
@@ -157,10 +198,10 @@ const MostrarInvArticulos = () => {
             <Link
               type="button"
               className="btn btn-primary"
-              title="Agregar Nuevo"
+              title="Ver Movimientos..."
               onClick={() => {
+                agregarArticulos();
                 abrirModalVerMas();
-                setRegistroVerMas(row);
               }}
             >
               <i className="fa-solid fa-plus"></i> Ver Movimientos
@@ -175,6 +216,28 @@ const MostrarInvArticulos = () => {
     },
   ];
 
+  //Configuramos las columnas de la tabla
+  const columns2 = [
+    {
+      name: "FECHA",
+      selector: (row) => row.cod_articulo,
+      sortable: true,
+      maxWidth: "160px", //ancho de la columna
+    },
+
+    {
+      name: "TIPO",
+      selector: (row) => row.cod_centro_costo,
+      sortable: true,
+      maxWidth: "450px",
+    },
+    {
+      name: "CANTIDAD",
+      selector: (row) => row.en_mano,
+      sortable: true,
+      maxWidth: "120px",
+    },
+  ];
   //Configurar la paginación de la tabla
   const paginationComponentOptions = {
     rowsPerPageText: "Filas por página",
@@ -260,49 +323,14 @@ const MostrarInvArticulos = () => {
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Movimientos</ModalHeader>
         <ModalBody>
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">CÓDIGO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.cod_articulo} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">DESCRIPCIÓN: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.descripcion_articulo} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">EN MANO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.en_mano} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">CANT. MIN: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.inventario_minimo} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">CANT. MAX: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {registroVerMas.inventario_maximo} </p>
-            </div>
+          <div className="row">
+            <DataTable
+              columns={columns2}
+              data={results}
+              highlightOnHover
+              fixedHeader
+              fixedHeaderScrollHeight="200px"
+            />
           </div>
         </ModalBody>
         <ModalFooter>
