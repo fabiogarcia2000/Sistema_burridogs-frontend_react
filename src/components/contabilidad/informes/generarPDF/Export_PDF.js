@@ -27,10 +27,10 @@ export function Export_PDF (data,data2,data3) {
     };
     
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado2 = [["CUENTA", "DESCRIPCION"]];
+    const encabezado2 = [["DESTINO CUENTA","CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
    
     //Registros de la tabla
-    const datos2 = data2.map(elt=> [elt.nombre_cuenta, elt.nombre_subcuenta]);
+    const datos2 = data2.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
 
     //Tabla #2
     const tabla2 = {
@@ -41,10 +41,10 @@ export function Export_PDF (data,data2,data3) {
     };
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado3 = [["TABLA 3", "DESCRIPCION"]];
+    const encabezado3 = [["DESTINO CUENTA","CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
    
     //Registros de la tabla
-    const datos3 = data3.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta]);
+    const datos3 = data3.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
 
     //Tabla #3
     const tabla3 = {

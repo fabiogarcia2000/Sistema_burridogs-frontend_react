@@ -11,14 +11,19 @@ import { cambiarAMayusculasCreadoPor, cambiarAMayusculasParametro, cambiarAMayus
 const URLCrear = "http://190.53.243.69:3001/ms_parametros/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/";
 
-const current = new Date();
-const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
+//Para mostrar la fecha en formato DD/MM/AAAA
+let date = new Date()
+let dia = `${(date.getDate())}`.padStart(2,'0');
+let mes = `${(date.getMonth()+1)}`.padStart(2,'0');
+let anio = date.getFullYear();
 
+//Parametros que se deben obtener
+var fecha = (`${anio}/${mes}/${dia}`);
 
 const CrearParametro = () => {
 
   const navigate = useNavigate();
-
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -78,7 +83,8 @@ const CrearParametro = () => {
           id_parametro: "",
           parametro: "",
           valor: "",
-          creado_por:"",
+          creado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
+          fecha_creacion: fecha,
         }}
 
         //Funcion para validar
@@ -191,12 +197,36 @@ const CrearParametro = () => {
                             name="creado_por"
                             placeholder= "Creado por..."
                             onKeyUp={cambiarAMayusculasCreadoPor(values)}
+                            disabled
                         />
 
                         <ErrorMessage
                             name="creado_por"
                             component={() => (
                             <div className="error">{errors.creado_por}</div>
+                            )}
+                        />
+                        </div>
+                    </div>
+
+                    <div className="col-sm-6">
+                        <div className="mb-3">
+                        <label htmlFor="fechaCreacion" className="form-label">
+                            Fecha de creación:
+                        </label>
+                        <Field
+                            type="text"
+                            className="form-control"
+                            id="fechaCreacion"
+                            name="fecha_creacion"
+                            placeholder= "Fecha de creación..."
+                            disabled
+                        />
+
+                        <ErrorMessage
+                            name="fecha_creacion"
+                            component={() => (
+                            <div className="error">{errors.fecha_creacion}</div>
                             )}
                         />
                         </div>

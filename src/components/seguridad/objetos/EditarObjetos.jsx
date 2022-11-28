@@ -142,6 +142,7 @@ const mostrarAlertas = (alerta) => {
                     name="objeto"
                     placeholder="Objeto..."
                     onKeyUp={cambiarAMayusculasObjeto(values)}
+                    disabled
                   />
 
                   <ErrorMessage

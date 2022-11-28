@@ -6,7 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasParametro } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasValor } from "../../../utils/cambiarAMayusculas";
-import { cambiarAMayusculasCreadoPor } from "../../../utils/cambiarAMayusculas";
+//import { cambiarAMayusculasCreadoPor } from "../../../utils/cambiarAMayusculas";
 
 const URLEditar = "http://190.53.243.69:3001/ms_parametros/actualizar-insertar/";
 
@@ -15,6 +15,7 @@ const URLEditar = "http://190.53.243.69:3001/ms_parametros/actualizar-insertar/"
 const [edit] = useGlobalState('registroEdit')
 
 const navigate = useNavigate();
+const userdata = JSON.parse(localStorage.getItem('data'))
 
 //Alertas de éxito o error
 const mostrarAlertas = (alerta) => {
@@ -52,8 +53,8 @@ const mostrarAlertas = (alerta) => {
             id_parametro: edit.id_parametro,
             parametro: edit.parametro,
             valor: edit.valor,
-            modificado_por: "",
-            fecha_modificacion: edit.fecha_modificacion,
+            modificado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
+            fecha_modificacion: edit.fecha_modificacion
         }}
 
         //Funcion para validar
@@ -100,8 +101,7 @@ const mostrarAlertas = (alerta) => {
           <Form>
             <h3 className="mb-3">Editar Pregunta</h3>
             <div className="row g-3">
-
-            <div className="col-sm-6">
+              <div className="col-sm-6">
                         <div className="mb-3">
                         <label htmlFor="idParametro" className="form-label">
                             Id Parámetro:
@@ -111,8 +111,7 @@ const mostrarAlertas = (alerta) => {
                             className="form-control"
                             id="idParametro"
                             name="id_parametro"
-                            placeholder= "Parámetro"
-                            //onKeyUp={cambiarAMayusculasParametro(values)}
+                            disabled
                         />
 
                         <ErrorMessage
@@ -145,8 +144,6 @@ const mostrarAlertas = (alerta) => {
                         />
                         </div>
                     </div>
-
-                    
               </div>
             
               <div className="row g-3">
@@ -183,7 +180,7 @@ const mostrarAlertas = (alerta) => {
                             id="modificadoPor"
                             name="modificado_por"
                             placeholder= "Modificado por..."
-                           
+                           disabled
                            // onKeyUp={cambiarAMayusculasCreadoPor(values)}
                         />
 
@@ -195,9 +192,9 @@ const mostrarAlertas = (alerta) => {
                         />
                         </div>
                     </div>
-
-                   
               </div>
+              
+              <div className="row g-3">
               <div className="col-sm-6">
                         <div className="mb-3">
                         <label htmlFor="fechaModi" className="form-label">
@@ -221,6 +218,7 @@ const mostrarAlertas = (alerta) => {
                         />
                         </div>
                     </div>
+                  </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
