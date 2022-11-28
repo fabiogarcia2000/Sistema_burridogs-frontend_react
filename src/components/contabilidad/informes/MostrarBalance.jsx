@@ -10,6 +10,8 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_balance/getall/";
+const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
+
 
 const MostrarBalance = () => {
   //Configurar los hooks
@@ -24,6 +26,17 @@ const MostrarBalance = () => {
   const getRegistros = async () => {
     try {
       const res = await axios.get(UrlMostrar);
+      setRegistros(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+   //procedimineto para obtener todos los registros
+   const getRegistrosActivos = async () => {
+    try {
+      const res = await axios.get(UrlMostrarActivos);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);

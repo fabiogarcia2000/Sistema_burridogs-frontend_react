@@ -12,16 +12,17 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
     
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
-   
+    const encabezado = [["DESTINO CUENTA","CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
+    //const encabezadoActivo = [["ACTIVOS"]];
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta]);
+    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
     
     //Tabla
     const tabla = {
       theme: 'striped', // 'striped', 'grid' or 'plain'
       startY: 100,
       head: encabezado,
+      //head: encabezadoActivo,
       body: datos
     };
     
@@ -29,12 +30,12 @@ export function Export_PDF (data) {
     const encabezado2 = [["CUENTA", "DESCRIPCION"]];
    
     //Registros de la tabla
-    const datos2 = data.map(elt=> [elt.nombre_cuenta, elt.descripcion]);
+    const datos2 = data.map(elt=> [elt.nombre_cuenta, elt.nombre_subcuenta]);
 
     //Tabla #2
     const tabla2 = {
       theme: 'striped',
-      startY: 400,
+      startY: 100,
       head: encabezado2,
       body: datos2
     };
@@ -48,7 +49,7 @@ export function Export_PDF (data) {
     //Tabla #3
     const tabla3 = {
       theme: 'striped',
-      startY: 400,
+      startY: 100,
       head: encabezado3,
       body: datos3
     };
@@ -68,8 +69,11 @@ export function Export_PDF (data) {
     doc.addImage(logo, 38, 20, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
     doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
+    doc.addPage();
     doc.autoTable(tabla2);
+    doc.addPage();
     doc.autoTable(tabla3);
+    
 
     //Se recorre el documento para encontrar el numero de paginas
     var pageCount = doc.internal.getNumberOfPages(); //Total Page Number
