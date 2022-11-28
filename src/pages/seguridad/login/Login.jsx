@@ -27,7 +27,9 @@ const URL_API_ENV = process.env.REACT_APP_URL_API;
 console.log("URL_API_ENV===>", URL_API_ENV);
 //
 export default function Login(props) {
-  // const [params, setParams] = useState("");
+  const [params, setParams] = useState("");
+  const [permisos] = useState("");
+
   var nameCompany = "";
   var phone = "";
   var mailContact = "";
@@ -37,19 +39,23 @@ export default function Login(props) {
    * obteniendo todos los parametros de configuracion del sistema
    * */
   const getAllSettingsParams = async () => {
+    console.log("Linea42");
     fetch(URL_API_ENV + "/ms_parametros/getall", {
       method: "GET",
       headers: { "Content-type": "application/json" },
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        // console.log("dataSettingsParams", responseJson);
-        // console.log("dataSettingsParams", responseJson.object);
+        console.log("responseJson.status", responseJson.status);
+        console.log("dataSettingsParams", responseJson);
+        console.log("responseJson.data", responseJson.data);
+        localStorage.setItem("params", JSON.stringify(responseJson));
         if (!responseJson.status) {
-          // console.log("algo salio mal en el servidor");
+          console.log("algo salio mal en el servidor");
           return;
         }
-        localStorage.setItem("params", JSON.stringify(responseJson.object));
+        console.log("Estoy antes del localstorgae");
+
         // setParams(responseJson.object);
       })
       .catch((error) => {
@@ -57,6 +63,7 @@ export default function Login(props) {
       });
   };
   useEffect(() => {
+    console.log("Antes de getall");
     getAllSettingsParams();
     //  nameCompany=params
   }, []);
@@ -118,51 +125,14 @@ export default function Login(props) {
             setIsValid(false);
           });
           return;
-        } else {
-          // Inicio get permisos
-          fetch(
-            "http://localhost:3001/ms_permisos/getallporusuario/" +
-              data.nombre_usuario,
-            {
-              method: "GET",
-              body: JSON.stringify(data),
-              headers: {
-                "Content-type": "application/json",
-              },
-            }
-          )
-            .then((response) => response.json())
-            .then((responseJson) => {
-              setIsValid(true);
-              if (!responseJson.status) {
-                setColor("danger");
-                setMesagge(responseJson.message);
-                setTimeout(1000, () => {
-                  setIsValid(false);
-                });
-                return;
-              }
-              localStorage.setItem("permisos", JSON.stringify(responseJson));
-            })
-            .catch((error) => {
-              setColor("danger");
-              setTimeout(1000, () => {
-                setIsValid(false);
-              });
-            })
-            .finally(() => {
-              setTimeout(1000, () => {
-                setIsValid(false);
-              });
-            });
-
-          //Fin get permisos
         }
         let dataUser = {
           "x-token": responseJson["x-token"],
           data: responseJson.data,
         };
+        console.log("Ants del fetcj");
         localStorage.setItem("data", JSON.stringify(dataUser));
+        traerPermisos(urlAPi, data);
         navigate("/admin/home");
 
         // }
@@ -179,6 +149,50 @@ export default function Login(props) {
         });
       });
   };
+  const traerPermisos = (url, data) => {
+    console.log(data);
+    setColor("danger");
+
+    // Inicio get permisos
+    console.log(data.nombre_usuario);
+    fetch(url + "/ms_permisos/getallporusuario/" + data.nombre_usuario, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setIsValid(true);
+        console.log("linea 145", responseJson);
+        localStorage.setItem("permisos", JSON.stringify(responseJson));
+        if (!responseJson.status) {
+          setColor("danger");
+          setMesagge(responseJson.message);
+          setTimeout(1000, () => {
+            setIsValid(false);
+          });
+          return;
+        }
+        let dataPermisos = {
+          data: responseJson.data,
+        };
+        console.log("Lines 158");
+      })
+      .catch((error) => {
+        setColor("danger");
+        setTimeout(1000, () => {
+          setIsValid(false);
+        });
+      })
+      .finally(() => {
+        setTimeout(1000, () => {
+          setIsValid(false);
+        });
+      });
+
+    //Fin get permisos
+  };
   //capturar los datos ingresados
   // const refNombreUsuario = useRef(null);
   // const RefContrasena = useRef(null);
@@ -193,6 +207,7 @@ export default function Login(props) {
       parametros: [paramJwtSecret, paramTimeExpired],
     };
     console.log("data", data);
+
     await enviarData(urlAPi, data);
   };
 
