@@ -196,6 +196,7 @@ const MostrarCategorias = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS");
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -208,7 +209,8 @@ const MostrarCategorias = () => {
             onClick={() => {
               if(permisos[0].permiso_actualizacion){
                 setGlobalState("registroEdit", row);
-                navigate("/admin/editarcategoria")
+                navigate("/admin/editarcategoria");
+                RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CATEGORIA");
               }else{
                 mostrarAlertas("permisos");
               }              
@@ -224,6 +226,7 @@ const MostrarCategorias = () => {
               if(permisos[0].permiso_eliminacion){
                 setRegistroDelete(row.cod_categoria);
                 abrirModalEliminar();
+                RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR CATEGORIA");
               }else{
                 mostrarAlertas("permisos");
               }
@@ -426,7 +429,6 @@ const MostrarCategorias = () => {
             onClick={() => {
               deleteRegistro();
               abrirModalEliminar();
-              RegistroEnVitacora(11, "ELIMINAR", "ELIMINAR CATEGORIA");
             }}
           >
             Eliminar
