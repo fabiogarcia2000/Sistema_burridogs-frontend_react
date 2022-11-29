@@ -12,10 +12,10 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["ID", "NOMBRE CUENTA", "NOMBRE SUBCUENTA", "DESCRIPCION", "CATEGORIA", "SALDO"]];
+    const encabezado = [["ID", "NOMBRE CUENTA", "NOMBRE SUBCUENTA", "CATEGORIA", "SALDO"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.nombre_categoria, elt.saldo]);
+    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.nombre_categoria, elt.saldo]);
     
     //Tabla
     const tabla = {
