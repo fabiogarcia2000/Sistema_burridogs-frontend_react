@@ -224,7 +224,7 @@ const MostrarIngresoGasto = () => {
       </div>
 
       <Link
-        to="/mostrarlibromayor"
+        to="/admin/mostrarlibromayor"
         type="button"
         className="btn btn-danger mb-3 me-2"
       >
