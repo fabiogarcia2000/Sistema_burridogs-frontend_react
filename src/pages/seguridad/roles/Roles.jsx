@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { downloadCSV, getOneParam, toUpperCaseField } from '../../../utils/utils';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -11,7 +11,10 @@ import { Export_PDF } from "./generarPDF_rol/Export_PDF";
 
 const UrlEliminar = "http://190.53.243.69:3001/ms_rol/eliminar/";
 
+const objeto = "FORM_ROLES"
+
 export default function Roles(props) {
+  const navigate = useNavigate();
 
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
@@ -45,6 +48,42 @@ export default function Roles(props) {
       })
   };
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+/*******************/
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -81,8 +120,18 @@ export default function Roles(props) {
 
         break;
 
+        case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
-      default: break;
+        break;
+
+      default: 
+       break;
     }
   };
 
@@ -162,22 +211,33 @@ export default function Roles(props) {
             <i className="fa-solid fa-eye"></i>
           </Link>
           &nbsp;
-          <Link
-            to="/admin/editarrol"
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarrol")
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_rol);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_rol);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -224,6 +284,10 @@ export default function Roles(props) {
     <div className="container">
       <h3>Roles</h3>
       <br />
+
+{permitido? (
+     
+    <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -237,28 +301,34 @@ export default function Roles(props) {
               role="group"
               aria-label="First group"
             >
-              <Link
-                to="/admin/crearrol"
+              <button
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/crearrol")
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+              </button>
             </div>
             <div
               className="btn-group me-2"
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
                 <i className="fa-solid fa-file-excel"></i>
-              </Link>
+              </Button>
               <Button
                 type="button"
                 className="btn btn-danger"
@@ -292,6 +362,7 @@ export default function Roles(props) {
       </div>
       <br />
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -306,7 +377,17 @@ export default function Roles(props) {
         // actions={actionsMemo}
         // fixedHeaderScrollHeight="550px"
         />
+      ) : (
+        <p className="text-center">Ninguna Categoría</p>
+      )}
+    </div>
       </div>
+      
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
+
+
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
