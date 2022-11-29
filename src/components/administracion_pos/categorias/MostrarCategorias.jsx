@@ -295,7 +295,7 @@ const MostrarCategorias = () => {
            title="Exportar a Excel"
            onClick={()=>{
              Export_Excel(results);
-             RegistroEnVitacora(11, "EXPORTAR", "EXPORTAR EXCEL");
+             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
            }}
          >
            <i className="bi bi-file-earmark-excel-fill"></i>
@@ -306,7 +306,7 @@ const MostrarCategorias = () => {
            title="Exportar a PDF"
            onClick={() =>{
              Export_PDF(results);
-             RegistroEnVitacora(11, "EXPORTAR", "EXPORTAR PDF");
+             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF");
            }}
          >
           <i className="bi bi-filetype-pdf"></i>
