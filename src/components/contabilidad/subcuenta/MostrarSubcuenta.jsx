@@ -220,7 +220,7 @@ const MostrarSubCuentas = () => {
             title="Eliminar"
             onClick={() => {
               if (permisos[0].permiso_eliminacion) {
-                setRegistroDelete(row.cod_categoria);
+                setRegistroDelete(row.id_subcuenta);
                 abrirModalEliminar();
               } else {
                 mostrarAlertas("permisos");

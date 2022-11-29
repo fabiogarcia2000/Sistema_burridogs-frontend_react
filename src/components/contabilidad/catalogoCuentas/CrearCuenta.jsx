@@ -81,7 +81,7 @@ const CrearCuenta = () => {
 
       case 'duplicado':
         Swal.fire({
-          text: 'Ya existe una cuenta con el código ingresado',
+          text: 'Ya existe cuenta contable con ese código',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'

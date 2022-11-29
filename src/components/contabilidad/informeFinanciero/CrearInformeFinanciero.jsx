@@ -41,7 +41,7 @@ const CrearInformeFinanciero = () => {
 
       case 'duplicado':
         Swal.fire({
-          text:  'Ya existe un informe financiero con el código ingresado',
+          text:  'Ya existe ese informe financiero',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'

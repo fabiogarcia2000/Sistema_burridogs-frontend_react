@@ -310,7 +310,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                 title="Agregar Nuevo"
                 onClick={() => {
                   if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearpregunta")
+                    navigate("/admin/crearpregunta") //
                   }else{
                    mostrarAlertas("permisos");
                   }              

@@ -40,7 +40,7 @@ const CrearCategoriaCont = () => {
 
       case 'duplicado':
         Swal.fire({
-          text:  'Ya existe una categoría contable con el código ingresado',
+          text:  'Ya existe esa categoría contable ',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
