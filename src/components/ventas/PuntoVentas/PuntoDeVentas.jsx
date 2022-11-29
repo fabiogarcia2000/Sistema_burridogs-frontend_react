@@ -25,6 +25,7 @@ const isv = 0.15;
 
 const PuntoDeVentas = () => {
   const componenteRef = useRef();
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -35,6 +36,7 @@ const PuntoDeVentas = () => {
 
   /**************Fecha y Hora*************************/
   const [fecha, setFecha] = useState("--/--/--");
+  const [fechaCorta, setFechaCorta] = useState("--/--/----")
   const [hora, setHora] = useState("--:--:--");
   /***************************************************/
 
@@ -49,10 +51,12 @@ const PuntoDeVentas = () => {
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
+  const [montoDesc, setMontoDesc] = useState(0.0);
   const [total, setTotal] = useState(0.0);
 
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoPedido, setTipoPedido] = useState(2);
+  const [porcDescuento, setPorcDescuento] = useState({});
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
   const [cambio, setCambio] = useState(0);
@@ -100,7 +104,7 @@ const PuntoDeVentas = () => {
     getMetodosPago();
     getDescuentos();
     getPedidos();
-    //Enc();
+    Enc();
     Fecha();
     Hora();
   }, []);
@@ -109,6 +113,7 @@ const PuntoDeVentas = () => {
   //obtener fecha
   const Fecha = () => {
     setFecha(getCurrentDate());
+    setFechaCorta(getCurrentDateShort())
   };
 
   //obtener hora
@@ -165,17 +170,32 @@ const PuntoDeVentas = () => {
   };
 
   //procedimineto para obtener todos los descuentos y mostrarlas en select
-  const [descuentos, setDescuentos] = useState([]);
+  const [tiposDescuentos, setTiposDescuentos] = useState([]);
 
   //petición a api
   const getDescuentos = async () => {
     try {
       const res = await axios.get(UrlDescuentos);
-      setDescuentos(res.data);
+      setTiposDescuentos(res.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const Desc = (id) =>{
+    const desc = tiposDescuentos.filter(
+      (item) => item.id_descuento == id
+    );
+    setPorcDescuento(desc)
+    
+  }
+
+
+  //Descuento
+ const handlerDescuento = function (e) {
+  let id = e.target.value;  
+  Desc(id);
+}
 
   //procedimineto para obtener todos los modos de pedido y mostrarlas en select
   const [pedidos, setPedidos] = useState([]);
@@ -239,13 +259,24 @@ useEffect(() => {
     );
   }, [listaCompras]);
 
-  useEffect(() => {
+/**
+useEffect(() => {
     setImpuesto(subTotal * isv);
   }, [subTotal]);
 
+* 
+ */
+
+useEffect(() => {
+  setTotal((subTotal + Impuesto) - montoDesc);
+}, [Impuesto, subTotal, montoDesc]);
+
   useEffect(() => {
-    setTotal(subTotal + Impuesto);
-  }, [Impuesto, subTotal]);
+    setImpuesto(0)
+    detalles.map((item) =>
+      setImpuesto((prevValor) => prevValor + item.total_impuesto)
+    );
+  }, [detalles]);
 
   //Buscador --con expresiones regulares js
   const handleBuscador = (e) => {
@@ -264,6 +295,7 @@ useEffect(() => {
     }
     setArticulosMostrar(tmpArray);
   };
+
 
   //procedimineto para obtener la secuencia det y enc
   const urlDet = "http://190.53.243.69:3001/venta/secuencia_det_getone";
@@ -513,7 +545,7 @@ const handlePrint = useReactToPrint({
   };
 
   //detalles de desc
-  const detalles_Desc = () => {
+  const detalles_Desc2 = () => {
     setDetallesDesc([
       ...detallesDesc,
       {
@@ -525,10 +557,26 @@ const handlePrint = useReactToPrint({
     ]);
   };
 
+  const Calc_Desc = () => {
+    setMontoDesc(subTotal * porcDescuento[0].porcentaje)
+  };
+
+  useEffect(() => {
+    if(porcDescuento.length > 0){
+      Calc_Desc();
+    }else if(porcDescuento.length === 0){
+      setMontoDesc(0)
+    }
+  }, [porcDescuento, detalles]);
+
   //preparar data de la venta
   const PrepararData = () => {
     setVenta({
       ...venta,
+      fecha: fechaCorta,
+      nombre_cliente: cliente.descripcion,
+      rtn: cliente.rtn,
+      id_usuario: userdata.data.id,
       secuencia_enc: parseInt(enc),
       detalle: detalles,
       detalle_pago: detallesPago,
@@ -536,6 +584,12 @@ const handlePrint = useReactToPrint({
       detalle_desc: detallesDesc,
     });
   };
+
+
+  useEffect(() => {
+    InsertVenta(venta);
+  }, [venta]);
+
 
   //Ventana modal cliente
   const [modalCliente2, setModalCliente2] = useState(false);
@@ -825,7 +879,6 @@ const handlePrint = useReactToPrint({
                 } else {
                   //procedimineto para guardar el los cambios
                   abrirModalVenta();
-                  detalles_Desc();
                   Detalles_Pago();
                   setTipoPedido(valores.id_modo_pedido);
                   setTotalEnLetras(numeroALetras(parseFloat(total)));
@@ -844,9 +897,10 @@ const handlePrint = useReactToPrint({
                             id="floatingSelectGrid"
                             aria-label="Floating label select example"
                             name="id_descuento"
+                            onClick={handlerDescuento}
                           >
                             <option value="">Ninguno</option>
-                            {descuentos.map((item, i) => (
+                            {tiposDescuentos.map((item, i) => (
                               <option key={i} value={item.id_descuento}>
                                 {item.descripcion}
                               </option>
@@ -897,7 +951,7 @@ const handlePrint = useReactToPrint({
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Descuento
-                          <span className="">L. 0</span>
+                          <span className="">{"L. " + montoDesc}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
@@ -1066,7 +1120,7 @@ const handlePrint = useReactToPrint({
           console.log("Nombre: "+valores.nombre)
           abrirModalCliente2();
           abrirModalCliente();
-          
+          PrepararData();
         }}
       >
 
@@ -1160,7 +1214,6 @@ const handlePrint = useReactToPrint({
             setTipoPago(valores.metodo_pago)
             abrirModalVenta();
             abrirModalFactura();
-            PrepararData();
           }}
         >
           {({ errors, values }) => (
@@ -1354,8 +1407,6 @@ const handlePrint = useReactToPrint({
             color="secondary"
             onClick={() => {
               abrirModalFactura();
-              InsertVenta(venta);
-              resetValores();
             }}
           >
             No

@@ -4,6 +4,7 @@ import "./styles.css";
 
 
 function LoginPos() {
+    const userdata = JSON.parse(localStorage.getItem('data'))
     return (
         <div className="demo-container">
             <div className="container">
@@ -18,7 +19,7 @@ function LoginPos() {
                         </div>
                         <div className="p-5 bg-white rounded shadow-lg">
                             <h3 className="mb-2 text-center pt-5">Punto de Ventas</h3>
-                            <p className="text-center lead">Ingrese sus credenciales para acceder</p>
+                            {/**<p className="text-center lead">Ingrese sus credenciales para acceder</p> */}
                             <form>
                                 <div className='row'>
                                     <div className='col'>
@@ -32,21 +33,10 @@ function LoginPos() {
                                             <label for="floatingSelectGrid">Terminal</label>
                                         </div>
                                     </div>
-                                    <div className='col'>
-                                        <div class="form-floating">
-                                            <select class="form-select mb-3" id="floatingSelectGrid" aria-label="Floating label select example">
-                                                <option value="">Seleccionar...</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                            <label for="floatingSelectGrid">Otro Dato</label>
-                                        </div>
-                                    </div>
                                 </div>
                                 <label className="font-500">Usuario</label>
-                                <input name="" className="form-control mb-3" type="email" disabled />
-                                <label className="font-500">Contraseña</label>
+                                <input name="" className="form-control mb-3" type="text" value={userdata.data.nameUser} disabled />
+                                <label className="font-500">Pin</label>
                                 <input name="" className="form-control mb-4" type="password" />
                                 {/**<p className="m-0 py-4"><Link to="" className="text-muted">¿Se te olvidó tu contraseña?</Link></p> */}
                                 <Link className="btn btn-primary btn-lg w-100 shadow-lg mb-3" to="/admin/punto-de-ventas">Ingresar</Link>

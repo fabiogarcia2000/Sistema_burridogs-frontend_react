@@ -234,11 +234,11 @@ export default function Factura() {
                                     <td className='color1'>L. 0.0</td>
                                 </tr>
                                 <tr>
-                                    <td>IMPORTE GRABADO 15%</td>
+                                    <td>IMPORTE GRAVADO 15%</td>
                                     <td className='color1'>L. 0.0</td>
                                 </tr>
                                 <tr>
-                                    <td>IMPORTE GRABADO 18%</td>
+                                    <td>IMPORTE GRAVADO 18%</td>
                                     <td className='color1'>L. 0.0</td>
                                 </tr>
                                 <tr>
