@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -10,7 +10,11 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 const UrlMostrar = "http://190.53.243.69:3001/ms_permisos/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/ms_permisos/eliminar/";
 
+const objeto = "FORM_PERMISOS"
+
 const MostrarPermiso = () => {
+    const navigate = useNavigate();
+
     //Configurar los hooks
     const [registroDelete, setRegistroDelete] = useState("");
     const [registros, setRegistros] = useState([]);
@@ -28,6 +32,43 @@ const MostrarPermiso = () => {
             mostrarAlertas("errormostrar");
         }
     };
+
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+/*******************/
 
     //Alertas de éxito o error al eliminar
     const mostrarAlertas = (alerta) => {
@@ -61,6 +102,16 @@ const MostrarPermiso = () => {
                     icon: "error",
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "Ok",
+                });
+
+                break;
+
+            case "permisos":
+                Swal.fire({
+                title: "Lo siento, no tienes permisos para realizar esta acción.",
+                icon: "error",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Ok",
                 });
 
                 break;
@@ -114,6 +165,7 @@ const MostrarPermiso = () => {
     const [modalVerMas, setVerMas] = useState(false);
     const abrirModalVerMas = () => setVerMas(!modalVerMas);
     const [registroVerMas, setRegistroVerMas] = useState({});
+
     //Configuramos las columnas de la tabla
     const columns = [
         {
@@ -167,23 +219,34 @@ const MostrarPermiso = () => {
                         <i className="fa-solid fa-eye"></i>
                     </Link>
                     &nbsp;
-                    <Link
-                        to="/admin/editarpermiso"
+                    <button
                         type="button"
                         className="btn btn-light"
                         title="Editar"
-                        onClick={() => setGlobalState("registroEdit", row)}
+                        onClick={() => {
+                            if(permisos[0].permiso_actualizacion){
+                              setGlobalState("registroEdit", row);
+                              navigate("/admin/editarpermiso")
+                            }else{
+                              mostrarAlertas("permisos");
+                            }              
+                          }}
                     >
                         <i className="fa-solid fa-pen-to-square"></i>
-                    </Link>
+                    </button>
                     &nbsp;
                     <button
                         className="btn btn-light"
                         title="Eliminar"
                         onClick={() => {
-                            setRegistroDelete(row.id_permiso);
-                            abrirModalEliminar();
-                        }}
+                            if(permisos[0].permiso_eliminacion){
+                              setRegistroDelete(row.id_permiso);
+                              abrirModalEliminar();
+                            }else{
+                              mostrarAlertas("permisos");
+                            }
+                            
+                          }}
                     >
                         <i className="fa-solid fa-trash"></i>
                     </button>
@@ -207,6 +270,10 @@ const MostrarPermiso = () => {
         <div className="container">
             <h3>Permisos</h3>
             <br />
+
+{permitido? (
+     
+     <div>
             {/*Mostrar los botones: Nuevo, Excel y PDF */}
             <div className="row">
                 <div className="col">
@@ -220,28 +287,34 @@ const MostrarPermiso = () => {
                             role="group"
                             aria-label="First group"
                         >
-                            <Link
-                                to="/admin/crearpermiso"
+                            <button
                                 type="button"
                                 className="btn btn-primary"
                                 title="Agregar Nuevo"
+                                onClick={() => {
+                                    if(permisos[0].permiso_insercion){
+                                      navigate("/admin/crearpermiso")
+                                    }else{
+                                     mostrarAlertas("permisos");
+                                    }              
+                                  }}
                             >
                                 <i className="fa-solid fa-plus"></i> Nuevo
-                            </Link>
+                            </button>
                         </div>
                         <div
                             className="btn-group me-2"
                             role="group"
                             aria-label="Second group"
                         >
-                            <Link
+                            <Button
                                 to="/"
                                 type="button"
                                 className="btn btn-success"
                                 title="Exportar a Excel"
                             >
                                 <i className="fa-solid fa-file-excel"></i>
-                            </Link>
+                            </Button>
                             <Button
                                 type="button"
                                 className="btn btn-danger"
@@ -276,6 +349,7 @@ const MostrarPermiso = () => {
             <br />
             {/*Mostramos la tabla con los datos*/}
             <div className="row">
+            {results.length > 0 ? (
                 <DataTable
                     columns={columns}
                     data={results}
@@ -285,8 +359,15 @@ const MostrarPermiso = () => {
                     fixedHeader
                     fixedHeaderScrollHeight="550px"
                 />
+                ) : (
+                    <p className="text-center">Ningun permiso</p>
+                  )}
+                </div>
             </div>
 
+) : (
+    <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+  )}
             {/* Ventana Modal de ver más*/}
             <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
                 <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>

@@ -115,7 +115,17 @@ export default function CambioContra(props) {
       case "error":
         Swal.fire({
           title: "Error",
-          text: "No se pudieron guardar los cambios",
+          text: "La contraseña actual no es correcta",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      case "completar":
+        Swal.fire({
+          title: "Error",
+          text: "Asegurese de completar correctamente todos los campos",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -145,6 +155,7 @@ export default function CambioContra(props) {
     console.log(data);
     console.log(currentpassword);
     setIsValid(false);
+
     //inicia valida password actual
     fetch(urlAPi + "/validatecurrentpassword", {
       method: "POST",
@@ -160,8 +171,8 @@ export default function CambioContra(props) {
         if (!responseJson.status) {
           setMesagge(responseJson.message);
           setIsValid(false);
-          mostrarAlertas("error");
-        } else {
+          
+        } else if (data.newPassword === data.confirmPassword){
           fetch(urlAPi + "/changePass", {
             method: "POST",
             body: JSON.stringify(data),
@@ -169,38 +180,13 @@ export default function CambioContra(props) {
               "Content-type": "application/json",
             },
           })
-            .then((response) => response.json())
-            .then((responseJson) => {
-              // console.log("responseJson", responseJson);
-              // console.log("responseJson.status", responseJson.status);
-              if (!responseJson.status) {
-                setMesagge(responseJson.message);
-                setIsValid(false);
-              }
-              setColor("success");
-              setIsValid(true);
-              setMesagge(responseJson.message);
-              setTimeout(() => {
-                navigate("/admin/home");
-              }, 2000);
-            })
-            .catch((error) => {
-              setIsValid(false);
-              setMesagge("ha ocurrido un error al actualizar datos");
-              navigate("/admin/home");
-            });
             mostrarAlertas("guardado");
-        }
-        setColor("success");
-        setIsValid(true);
-        setMesagge(responseJson.message);
+              navigate("/admin/home");
+        } 
       })
-      .catch((error) => {
-        setIsValid(false);
-        setMesagge("ha ocurrido un error al actualizar datos");
-        navigate("/admin/home");
-      });
-
+        mostrarAlertas("completar");
+          navigate("/admin/cambiocontrasena");
+      
     //fin valida password actual
 
     //inicio cambia contrasena

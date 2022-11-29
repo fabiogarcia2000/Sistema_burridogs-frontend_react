@@ -13,6 +13,10 @@ const UrlMostrar = "http://190.53.243.69:3001/mc_balance/getall/";
 const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
 const UrlMostrarPasivos = "http://190.53.243.69:3001/mc_pasivos/getall/";
 const UrlMostrarPatrimonio = "http://190.53.243.69:3001/mc_patrimonios/getall/";
+const UrlMostrarTotal = "http://localhost:3001/mc_total_activo/getall";
+const UrlMostrarTotalPasivo = "http://localhost:3001/mc_total_pasivo/getall";
+const UrlMostrarTotalPatrimonio = "http://localhost:3001/mc_total_patrimonio/getall";
+
 
 const MostrarBalance = () => {
   //Configurar los hooks
@@ -39,6 +43,24 @@ const MostrarBalance = () => {
  const [registrosPatrimonio, setRegistrosPatrimonio] = useState([]);
  useEffect(() => {
    getRegistrosPatrimonio();
+ }, []);
+
+ //Configurar los hooks TOTAL ACTIVO
+ const [registrosTotal, setRegistrosTotal] = useState([]);
+ useEffect(() => {
+   getRegistrosTotal();
+ }, []);
+
+ //Configurar los hooks TOTAL PASIVO
+ const [registrosTotalPasivo, setRegistrosTotalPasivo] = useState([]);
+ useEffect(() => {
+   getRegistrosTotalPasivo();
+ }, []);
+
+ //Configurar los hooks TOTAL PASIVO
+ const [registrosTotalPatrimonio, setRegistrosTotalPatrimonio] = useState([]);
+ useEffect(() => {
+   getRegistrosTotalPatrimonio();
  }, []);
 
   //procedimineto para obtener todos los registros
@@ -79,6 +101,40 @@ const MostrarBalance = () => {
     try {
       const res = await axios.get(UrlMostrarPatrimonio);
       setRegistrosPatrimonio(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los registros de TOTAL
+  const getRegistrosTotal = async () => {
+    try {
+      const res = await axios.get(UrlMostrarTotal);
+      setRegistrosTotal(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los registros de TOTAL PASIVO
+  const getRegistrosTotalPasivo = async () => {
+    try {
+      const res = await axios.get(UrlMostrarTotalPasivo);
+      setRegistrosTotalPasivo(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+
+  //procedimineto para obtener todos los registros de TOTAL PATRIMONIO
+  const getRegistrosTotalPatrimonio = async () => {
+    try {
+      const res = await axios.get(UrlMostrarTotalPatrimonio);
+      setRegistrosTotalPatrimonio(res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -216,7 +272,7 @@ const MostrarBalance = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF(registrosActivos, registrosPasivos, registrosPatrimonio);
+                  Export_PDF(registrosActivos, registrosPasivos, registrosPatrimonio, registrosTotal, registrosTotalPasivo, registrosTotalPatrimonio);
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>

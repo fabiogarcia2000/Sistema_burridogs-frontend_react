@@ -18,8 +18,8 @@ const MostrarCategorias = () => {
   const navigate = useNavigate();
 
   //Configurar los hooks
-  const [registros, setRegistros] = useState([]);
   const [registroDelete, setRegistroDelete] = useState("");
+  const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);

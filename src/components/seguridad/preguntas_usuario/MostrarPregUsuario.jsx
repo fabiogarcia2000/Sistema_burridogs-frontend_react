@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -10,7 +10,10 @@ import { Export_PDF } from "./generarPDF_pregusuario/Export_PDF";
 const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta_usuario/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/ms_pregunta_usuario/eliminar/";
 
+const objeto = "FORM_PREGUNTAS_USUARIO"
+
 const MostrarPregUsuario = () => {
+  const navigate = useNavigate();
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState("");
   const [registros, setRegistros] = useState([]);
@@ -29,13 +32,50 @@ const MostrarPregUsuario = () => {
     }
   };
 
+    /*****Obtener y corroborar Permisos*****/
+    const [temp, setTemp] = useState([]);
+    const [permisos, setPermisos] = useState([]);
+    const [permitido, setPermitido] = useState(true)
+  
+    const Permisos = () =>{
+      const newData = temp.filter(
+        (item) => item.objeto === objeto
+      );
+      setPermisos(newData);
+    }
+  
+    useEffect(() => {
+      let data = localStorage.getItem('permisos')
+      if(data){
+        setTemp(JSON.parse(data))
+      }
+    }, []);
+  
+    useEffect(() => {
+      Permisos();
+    }, [temp]);
+  
+  
+    useEffect(() => {
+      if(permisos.length > 0){
+        TienePermisos();
+      }
+    }, [permisos]);
+  
+  
+    const TienePermisos = () =>{
+      setPermitido(permisos[0].permiso_consultar)
+    }
+  
+  /*******************/
+  
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
       case "eliminado":
         Swal.fire({
           title: "¡Eliminado!",
-          text: "El permiso se eliminó con éxito",
+          text: "La pregunta se eliminó con éxito",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -46,7 +86,7 @@ const MostrarPregUsuario = () => {
       case "error":
         Swal.fire({
           title: "Error",
-          text: "No se pudo eliminar el permiso",
+          text: "No se pudo eliminar la pregunta",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -58,6 +98,16 @@ const MostrarPregUsuario = () => {
         Swal.fire({
           title: "Error al Mostrar",
           text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+        case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -114,6 +164,7 @@ const MostrarPregUsuario = () => {
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
   const [registroVerMas, setRegistroVerMas] = useState({});
+
   //Configuramos las columnas de la tabla
   const columns = [
     {
@@ -142,22 +193,33 @@ const MostrarPregUsuario = () => {
         <>
        
           &nbsp;
-          <Link
-            to="/admin/editarpregusuario"
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState("registroEdit", row)}
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarpregusuario")
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_preguntas_usuario);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_preguntas_usuario);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -182,6 +244,10 @@ const MostrarPregUsuario = () => {
     <div className="container">
       <h3>Preguntas Usuario</h3>
       <br />
+
+{permitido? (
+     
+    <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -190,20 +256,19 @@ const MostrarPregUsuario = () => {
             role="toolbar"
             aria-label="Toolbar with button groups"
           >
-           
             <div
               className="btn-group me-2"
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
                 <i className="fa-solid fa-file-excel"></i>
-              </Link>
+              </Button>
               <Button
                 type="button"
                 className="btn btn-danger"
@@ -239,6 +304,7 @@ const MostrarPregUsuario = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -248,7 +314,15 @@ const MostrarPregUsuario = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ninguna Categoría</p>
+        )}
       </div>
+    </div>
+
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
         <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
