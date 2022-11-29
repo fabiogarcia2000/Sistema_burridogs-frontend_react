@@ -94,7 +94,7 @@ const mostrarAlertas = (alerta) => {
       >
         {({ errors, values }) => (
           <Form>
-            <h3 className="mb-3">Editar Pregunta</h3>
+            <h3 className="mb-3">Editar Parámetros</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                         <div className="mb-3">

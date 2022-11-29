@@ -8,7 +8,7 @@ import { cambiarAMayusculasCodigo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
 
 const URLCrear = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/0";
-const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getone/";
 
 //const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
@@ -158,31 +158,57 @@ const CrearCuenta = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado  
           try {
-            /*const res = await axios.get(`${UrlMostrar}`);
-            setCuenta(res.data)
-            console.log(cuenta) 
-            cuenta &&
-            cuenta.map(async (item) =>{
-              if(item.nombre_cuenta === valores.nombre_cuenta){
-                mostrarAlertas("duplicado");
-              }else{
+            const res = await axios.get(`${UrlMostrar}${valores.codigo_cuenta}`
+            );
+             console.log(res);
+             if (res.data === "") {
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(`${URLCrear}`, valores);
+      
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
+                navigate("/admin/mostrarcatalogo");
+              } else {
+                mostrarAlertas("error");
               }
-        });*/
-            //procedimineto para guardar el nuevo registro en el caso de que no exista
-            await axios.put(`${URLCrear}`, valores);
-            //if (res.status === 200) {
-            mostrarAlertas("guardado");
-            navigate("/admin/mostrarcatalogo");
-            /*} else {
-              mostrarAlertas("error");
-            }       */
-
+            } else {
+              mostrarAlertas("duplicado");
+            }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/mostrarcatalogo");
           }
         }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+           
       >
         {({ errors, values }) => (
           <Form>
