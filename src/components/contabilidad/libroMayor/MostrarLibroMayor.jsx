@@ -273,7 +273,7 @@ const MostrarLibroMayor = () => {
               abrirModalEliminar();
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -338,7 +338,7 @@ const MostrarLibroMayor = () => {
             <div className="col-4">
               <div className="input-group flex-nowrap">
                 <span className="input-group-text" id="addon-wrapping">
-                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="bi bi-search"></i>
                 </span>
                 <input
                   className="form-control me-2"
@@ -364,29 +364,14 @@ const MostrarLibroMayor = () => {
                   className="btn-group me-2"
                 >
 
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    title="Agregar Nuevo"
-                    onClick={() => {
-                      if (permisos[0].permiso_insercion) {
-                        navigate("/admin/mostrarbalance")
-                      } else {
-                        mostrarAlertas("permisos");
-                      }
-                    }}
-                  >
-                    <i className="bi bi-plus-lg"></i> Nuevo
-                  </button>
-
-                  {/*<Link
+                  <Link
                 to="/admin/mostrarbalance"
                 type="button"
                 className="btn btn-danger"
                 title="Agregar Nuevo"
               >
                 <i className="fa-solid fa-file"></i> Balance general
-              </Link>*/}
+              </Link>
                 </div>
                 <div
                   className="btn-group me-2"

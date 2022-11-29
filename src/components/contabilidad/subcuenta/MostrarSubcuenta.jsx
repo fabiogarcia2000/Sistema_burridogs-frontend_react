@@ -228,7 +228,7 @@ const MostrarSubCuentas = () => {
 
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -302,7 +302,7 @@ const MostrarSubCuentas = () => {
                     className="btn btn-success"
                     title="Exportar a Excel"
                   >
-                    <i className="fa-solid fa-file-excel"></i>
+                    <i className="bi bi-file-earmark-excel-fill"></i>
                   </Link>
                   <Button
                     type="button"
@@ -312,7 +312,7 @@ const MostrarSubCuentas = () => {
                       Export_PDF(results);
                     }}
                   >
-                    <i className="fa-solid fa-file-pdf"></i>
+                    <i className="bi bi-filetype-pdf"></i>
                   </Button>
                 </div>
               </div>
@@ -322,7 +322,7 @@ const MostrarSubCuentas = () => {
             <div className="col-4">
               <div className="input-group flex-nowrap">
                 <span className="input-group-text" id="addon-wrapping">
-                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="bi bi-search"></i>
                 </span>
                 <input
                   className="form-control me-2"

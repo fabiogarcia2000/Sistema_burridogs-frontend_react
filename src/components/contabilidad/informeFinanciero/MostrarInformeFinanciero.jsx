@@ -199,15 +199,6 @@ const mostrarAlertas = (alerta) =>{
           >
             <i className="bi bi-pencil-square"></i>
           </button>
-          {/*<Link
-            to="/admin/editarinformefinanciero"
-            type="button"
-            className="btn btn-light"
-            title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
-          >
-            <i className="fa-solid fa-pen-to-square"></i>
-          </Link>*/}
           &nbsp;
           <button
             className="btn btn-light"
@@ -222,7 +213,7 @@ const mostrarAlertas = (alerta) =>{
               
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -278,14 +269,7 @@ const mostrarAlertas = (alerta) =>{
            <i className="bi bi-plus-lg"></i> Nuevo
          </button>    
              
-              {/*<Link
-                to="/admin/crearinformefinanciero"
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
-              >
-                <i className="fa-solid fa-plus"></i> Nuevo
-      </Link>*/}
+          
             </div>
             <div
               className="btn-group me-2"
@@ -298,7 +282,7 @@ const mostrarAlertas = (alerta) =>{
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Link>
               <Button
                 type="button"
@@ -308,7 +292,7 @@ const mostrarAlertas = (alerta) =>{
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -318,7 +302,7 @@ const mostrarAlertas = (alerta) =>{
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"

@@ -263,7 +263,7 @@ const TienePermisos = () =>{
               setEncabezadoVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
           <button
@@ -285,7 +285,7 @@ const TienePermisos = () =>{
               } 
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -301,7 +301,7 @@ const TienePermisos = () =>{
               
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -347,13 +347,13 @@ const TienePermisos = () =>{
                 title="Agregar Nuevo"
                 onClick={() => {
                   if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearencabezado..........")
+                    navigate("/admin/crearencabezado..........") //NO HAY RUTA
                   }else{
                    mostrarAlertas("permisos");
                   }              
                 }}
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
+                <i className="bi bi-plus-lg"></i> Nuevo
               </button>
             </div>
             <div
@@ -367,7 +367,7 @@ const TienePermisos = () =>{
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Link>
               <Link
                 to="/"
@@ -375,7 +375,7 @@ const TienePermisos = () =>{
                 className="btn btn-danger"
                 title="Exportar a PDF"
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Link>
               
             </div>
@@ -386,7 +386,7 @@ const TienePermisos = () =>{
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"

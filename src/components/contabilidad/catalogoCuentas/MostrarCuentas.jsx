@@ -209,7 +209,7 @@ const MostrarCuentas = () => {
               setCuentaVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
           <button
@@ -227,7 +227,7 @@ const MostrarCuentas = () => {
 
           //  setGlobalState('registroEdit', row)}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -246,7 +246,7 @@ const MostrarCuentas = () => {
           > {/*} setRegistroDelete(row.id_cuenta);
           abrirModalEliminar();
         }}*/}
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -299,22 +299,22 @@ const MostrarCuentas = () => {
                   >
                     <i className="bi bi-plus-lg"></i> Nuevo
                   </button>
-
-
                 </div>
                 <div
                   className="btn-group me-2"
                   role="group"
                   aria-label="Second group"
                 >
-                  <Link
-                    to="/"
+                  <Button
                     type="button"
                     className="btn btn-success"
                     title="Exportar a Excel"
+                    /*onClick={() => {
+                      Export_Excel(results);
+                    }}*/
                   >
-                    <i className="fa-solid fa-file-excel"></i>
-                  </Link>
+                    <i className="bi bi-file-earmark-excel-fill"></i>
+                  </Button>
                   <Button
                     type="button"
                     className="btn btn-danger"
@@ -323,7 +323,7 @@ const MostrarCuentas = () => {
                       Export_PDF(results);
                     }}
                   >
-                    <i className="fa-solid fa-file-pdf"></i>
+                    <i className="bi bi-filetype-pdf"></i>
                   </Button>
                 </div>
               </div>
@@ -333,7 +333,7 @@ const MostrarCuentas = () => {
             <div className="col-4">
               <div className="input-group flex-nowrap">
                 <span className="input-group-text" id="addon-wrapping">
-                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <i className="bi bi-search"></i>
                 </span>
                 <input
                   className="form-control me-2"

@@ -292,7 +292,7 @@ const mostrarAlertas = (alerta) => {
               setRegistroVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
           <button
@@ -308,7 +308,7 @@ const mostrarAlertas = (alerta) => {
               }              
             }}
           >
-            <i className="bi bi-pencil-fill"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           {/* <button
             className="btn "
@@ -331,7 +331,7 @@ const mostrarAlertas = (alerta) => {
               
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -414,8 +414,7 @@ const mostrarAlertas = (alerta) => {
                   }              
                 }}
               >
-                Nuevo
-                <i class="bi bi-plus-lg"></i>
+              <i className="bi bi-plus-lg"></i> Nuevo
               </button>
             </div>
             <div
@@ -433,7 +432,7 @@ const mostrarAlertas = (alerta) => {
 
 
               >
-                <i class="bi bi-file-excel-fill"></i>
+                <i class="bi bi-file-earmark-excel-fill"></i>
               </Button>
 
               <Button
@@ -444,7 +443,7 @@ const mostrarAlertas = (alerta) => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -454,7 +453,7 @@ const mostrarAlertas = (alerta) => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"

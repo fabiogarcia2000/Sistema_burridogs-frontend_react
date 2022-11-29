@@ -208,7 +208,7 @@ export default function Roles(props) {
               setCuentaVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
           <button
@@ -224,7 +224,7 @@ export default function Roles(props) {
               }              
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -240,7 +240,7 @@ export default function Roles(props) {
               
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -313,7 +313,7 @@ export default function Roles(props) {
                   }              
                 }}
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
+                <i className="bi bi-plus-lg"></i> Nuevo
               </button>
             </div>
             <div
@@ -327,7 +327,7 @@ export default function Roles(props) {
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>
               <Button
                 type="button"
@@ -337,7 +337,7 @@ export default function Roles(props) {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -347,7 +347,7 @@ export default function Roles(props) {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
