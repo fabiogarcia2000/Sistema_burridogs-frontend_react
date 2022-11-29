@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { downloadCSV, getOneParam, toUpperCaseField } from '../../../utils/utils';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -13,7 +13,10 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/ms_pregunta/eliminar/";
 
+const objeto = "FORM_PREGUNTAS_SEGURIDAD"
+
 export default function Pregunta(props) {
+  const navigate = useNavigate();
 
     //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
@@ -80,7 +83,43 @@ export default function Pregunta(props) {
     getRegistros();
   }, []);
 
-//Alertas de éxito o error al eliminar
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+/*******************/
+  //Alertas de éxito o error al eliminar
 const mostrarAlertas = (alerta) => {
   switch (alerta) {
     case 'eliminado':
@@ -116,8 +155,18 @@ const mostrarAlertas = (alerta) => {
 
       break;
 
+      case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
-    default: break;
+        break;
+
+      default: 
+       break;
   }
 };
 
@@ -166,22 +215,33 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
         <>
 
           &nbsp;
-          <Link
-            to="/admin/editarpregunta"
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarpregunta")
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_pregunta);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_pregunta);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -192,7 +252,6 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
       allowOverflow: true,
       button: true,
     },
-
   ];
 
   //Configurar la paginación de la tabla
@@ -219,13 +278,19 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
       dato?.pregunta?.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
-  const [pending, setPending] = React.useState(true);
 
+
+
+  const [pending, setPending] = React.useState(true);
   return (
     <div className="container">
       <h3>Preguntas de seguridad</h3>
 
       <br />
+
+{permitido? (
+     
+     <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -239,28 +304,34 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
               role="group"
               aria-label="First group"
             >
-              <Link
-                to="/admin/crearpregunta"
+              <button
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/crearpregunta")
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+              </button>
             </div>
             <div
               className="btn-group me-2"
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
                 <i className="fa-solid fa-file-excel"></i>
-              </Link>
+              </Button>
               <Button
                 type="button"
                 className="btn btn-danger"
@@ -294,6 +365,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
       </div>
       <br />
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -307,7 +379,15 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
           noDataComponent="---Datos no encontrados ---"
           paginationPerPage="6"
         />
+        ) : (
+          <p className="text-center">Ninguna Pregunta</p>
+        )}
       </div>
+    </div>
+
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
 
 
       {/* Ventana Modal de Eliminar*/}
