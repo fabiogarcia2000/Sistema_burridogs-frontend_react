@@ -4,7 +4,7 @@ import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
 
-export function Export_PDF (data) {
+export function Export_PDF_IngresoGasto (data) {
     const unit = "pt";
     const size = "Letter"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
@@ -12,10 +12,10 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["ID", "NOMBRE CUENTA", "NOMBRE SUBCUENTA", "CATEGORIA", "SALDO"]];
+    const encabezado = [["ID", "NOMBRE CUENTA", "NOMBRE SUBCUENTA", "DESCRIPCION", "CATEGORIA", "SALDO"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.nombre_categoria, elt.saldo]);
+    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.nombre_categoria, elt.saldo]);
     
     //Tabla
     const tabla = {
@@ -27,7 +27,7 @@ export function Export_PDF (data) {
 
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
-    let reporte = "Estado de Resultados";
+    let reporte = "Ingresos y Gastos";
     let sucursal = "Principal";
     let usuario = "jperez"
     let fecha = getCurrentDateShort(data);
@@ -54,6 +54,6 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Estado de Resultados.pdf")
+    doc.save("Ingresos y Gastos.pdf")
 
 };
