@@ -192,6 +192,7 @@ import ReporteLibroMayor from "../components/reports/LibroMayor";
 import EditarMiUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
 import CambioContrasena from "../components/seguridad/mi_perfil/CambioContrasena";
 import MostrarObjetos from "../components/seguridad/objetos/MostrarObjetos";
+import DesbloqueoUsuario from "../pages/seguridad/desbloqueo_usuario/desbloqueo_usuario";
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -204,6 +205,7 @@ function Rutas() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/Preguntas" element={<Pregunta />} />
+        <Route path="/desbloqueo_usuario" element={<DesbloqueoUsuario />} />
         <Route
           path="/cambio_contrasena/:id/:token"
           element={<CambioContra />}

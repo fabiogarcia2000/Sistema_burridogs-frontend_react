@@ -80,7 +80,9 @@ export default function RecuperacionContra(props) {
     setIsValid(true);
     setColor("primary");
     setMesagge("Enviado solicitud....");
-    fetch(urlAPi + "/reset", {
+
+    // Aqui deberia ir URL_API_ENV
+    fetch(URL_API_ENV + "/reset?unlock=true", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -100,9 +102,12 @@ export default function RecuperacionContra(props) {
         setMesagge(responseJson.message);
         setColor("success");
         setIsValid(true);
+
         setTimeout(() => {
           setIsValid(false);
-          // navigate("/login");
+          if (responseJson.status === true) {
+            navigate("/login");
+          }
         }, 3000);
       })
       .catch((error) => {
@@ -124,7 +129,7 @@ export default function RecuperacionContra(props) {
           {" "}
           {message}{" "}
         </Alert>
-        <h2>¿Olvidaste tu contraseña?</h2>
+        <h2>Desbloquear usuario</h2>
         <h5 className="caption">
           Ingresa tu nombre de usuario y selecciona metodo de reinicio{" "}
         </h5>
