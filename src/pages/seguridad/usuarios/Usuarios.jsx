@@ -12,6 +12,8 @@ import {
   ModalHeader,
   Badge
 } from "reactstrap";
+import { setGlobalState } from "../../../globalStates/globalStates";
+import Swal from "sweetalert2";
 import "./Usuarios.css";
 import { downloadCSV, getOneParam, toUpperCaseField } from "../../../utils/utils";
 import { Export_PDF } from "./generarPDF/Export_PDF";
@@ -19,14 +21,16 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 // const urlapi = "http://localhost:3001";
 // const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
 // const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
+
+
+const objeto = "FORM_USUARIOS"
+
 const Usuarios = () => {
-
-
+  let navigate = useNavigate();
   var dataPar = JSON.parse(localStorage.getItem("params")) || []
   var urlApiParam = getOneParam(dataPar, "URL_API")
   const urlapi = urlApiParam.valor
 
-  let navigate = useNavigate();
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState("");
 
@@ -63,7 +67,6 @@ const Usuarios = () => {
   };
 
   const [registros, setRegistros] = useState([]);
-
   const getRegistros = async () => {
     fetch(urlapi + "/registro/getall", {
       method: "GET",
@@ -82,11 +85,98 @@ const Usuarios = () => {
         // console.log(error);
       });
   };
-
   useEffect(() => {
     saveLog();
     getRegistros();
   }, []);
+
+    /*****Obtener y corroborar Permisos*****/
+    const [temp, setTemp] = useState([]);
+    const [permisos, setPermisos] = useState([]);
+    const [permitido, setPermitido] = useState(true)
+  
+    const Permisos = () =>{
+      const newData = temp.filter(
+        (item) => item.objeto === objeto
+      );
+      setPermisos(newData);
+    }
+  
+    useEffect(() => {
+      let data = localStorage.getItem('permisos')
+      if(data){
+        setTemp(JSON.parse(data))
+      }
+    }, []);
+  
+    useEffect(() => {
+      Permisos();
+    }, [temp]);
+  
+  
+    useEffect(() => {
+      if(permisos.length > 0){
+        TienePermisos();
+      }
+    }, [permisos]);
+  
+  
+    const TienePermisos = () =>{
+      setPermitido(permisos[0].permiso_consultar)
+    }
+  
+  /*******************/
+//Alertas de éxito o error al eliminar
+const mostrarAlertas = (alerta) => {
+  switch (alerta) {
+    case 'eliminado':
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: "La cuenta se eliminó con éxito",
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+    case 'error':
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo eliminar la cuenta',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+    case 'errormostrar':
+      Swal.fire({
+        title: 'Error al Mostrar',
+        text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+      break;
+
+      case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default: 
+       break;
+  }
+};
+
 
   // const goToEdit= (id)=>{
   //   navigate('/admin/editUser/'+id,{
@@ -96,7 +186,6 @@ const Usuarios = () => {
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
-    // console.log("registroDelete", registroDelete);
     try {
       // console.log("id arriba");
       setIsValid(true);
@@ -206,13 +295,21 @@ const Usuarios = () => {
             <i className="fa-solid fa-eye"></i>
           </Link>
           &nbsp;
-          <Link
-            to={`/admin/editUser/${row.id_usuario}`}
+          <button
+            type="button"
             className="btn btn-light"
             title="Editar"
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate(`/admin/editUser/${row.id_usuario}`)
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
           >
             <i className="bi bi-pencil-fill"></i>
-          </Link>
+          </button>
           {/* <button
             className="btn "
             title="Editar"
@@ -225,9 +322,13 @@ const Usuarios = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              // console.log(row.id_usuario);
-              setRegistroDelete(row.id_usuario);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_usuario);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -280,13 +381,16 @@ const Usuarios = () => {
       <h3>Usuarios</h3>
      
       <br />
-    
+{permitido? (
+
+<div>
       <div className="row">
         <Alert isOpen={isValid} color={color}>
           {message}
         </Alert>
 
-        {/*Mostrar los botones: Nuevo, Excel y PDF */}
+      {/*Mostrar los botones: Nuevo, Excel y PDF */}
+      <div className="row">
         <div className="col">
           <div
             className="btn-toolbar"
@@ -298,22 +402,28 @@ const Usuarios = () => {
               role="group"
               aria-label="First group"
             >
-              <Link
-                to="/admin/createUser"
+              <button
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/createUser")
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
                 Nuevo
                 <i class="bi bi-plus-lg"></i>
-              </Link>
+              </button>
             </div>
             <div
               className="btn-group me-2"
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
@@ -324,7 +434,7 @@ const Usuarios = () => {
 
               >
                 <i class="bi bi-file-excel-fill"></i>
-              </Link>
+              </Button>
 
               <Button
                 type="button"
@@ -358,9 +468,10 @@ const Usuarios = () => {
         </div>
       </div>
       <br />
-
+      </div>
+      <br />
       <div className="row">
-    
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -375,7 +486,15 @@ const Usuarios = () => {
           paginationPerPage="6"
         // fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ningun parametro</p>
+        )}
       </div>
+      </div>
+
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
 
       {/* Ventana Modal de ver más*/}
       <Modal
