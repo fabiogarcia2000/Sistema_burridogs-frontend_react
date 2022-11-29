@@ -4,14 +4,17 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
-
+import { useNavigate } from "react-router-dom";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_subcuenta/eliminar/";
 
-const MostrarSubCuentas= () => {
+const objeto = "FORM_SUBCUENTA"
+
+const MostrarSubCuentas = () => {
+  const navigate = useNavigate();
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -19,7 +22,7 @@ const MostrarSubCuentas= () => {
     getRegistros();
   }, []);
 
-  
+
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -31,47 +34,91 @@ const MostrarSubCuentas= () => {
     }
   };
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
 
-//Alertas de éxito o error al eliminar
-const mostrarAlertas = (alerta) =>{
-  switch (alerta){
-    case 'eliminado':
-      Swal.fire({
-        title: '¡Eliminado!',
-        text: "La subcuenta se eliminó con éxito",
-        icon: 'success',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-    case 'error':
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudo eliminar la subcuenta',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-    case 'errormostrar':
-      Swal.fire({
-        title: 'Error al Mostrar',
-        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-
-    default: break;
+  const Permisos = () => {
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
   }
-};
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if (data) {
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+  /*******************/
+
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case 'eliminado':
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: "La subcuenta se eliminó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo eliminar la subcuenta',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+
+      case 'errormostrar':
+        Swal.fire({
+          title: 'Error al Mostrar',
+          text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+      case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default: break;
+    }
+  };
 
 
   //procedimineto para eliminar un registro
@@ -81,7 +128,7 @@ const mostrarAlertas = (alerta) =>{
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-         mostrarAlertas("eliminado"); 
+        mostrarAlertas("eliminado");
       } else {
         mostrarAlertas("error");
       }
@@ -92,23 +139,23 @@ const mostrarAlertas = (alerta) =>{
   };
 
   //Barra de busqueda
-    const [ busqueda, setBusqueda ] = useState("")
-      //capturar valor a buscar
-    const valorBuscar = (e) => {
-      setBusqueda(e.target.value)   
+  const [busqueda, setBusqueda] = useState("")
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value)
   }
-      //metodo de filtrado 
+  //metodo de filtrado 
   let results = []
-   if(!busqueda){
-       results = registros
-   }else{
-        results = registros.filter( (dato) =>
-        dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase()) || 
-        dato.nombre_subcuenta.toString().includes(busqueda.toLocaleLowerCase()) 
-        )
-   };
+  if (!busqueda) {
+    results = registros
+  } else {
+    results = registros.filter((dato) =>
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_subcuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
 
-    
+
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
@@ -122,29 +169,43 @@ const mostrarAlertas = (alerta) =>{
       sortable: true,
     },
     {
-        name: "NOMBRE CUENTA",
-        selector: (row) => row.nombre_cuenta,
-        sortable: true,
+      name: "NOMBRE CUENTA",
+      selector: (row) => row.nombre_cuenta,
+      sortable: true,
     },
     {
-        name: "NOMBRE SEUBCUENTA",
-        name: "NOMBRE SUBCUENTA",
-        selector: (row) => row.nombre_subcuenta,
-        sortable: true,
+      name: "NOMBRE SEUBCUENTA",
+      name: "NOMBRE SUBCUENTA",
+      selector: (row) => row.nombre_subcuenta,
+      sortable: true,
     },
     {
-        name: "SALDO",
-        selector: (row) => row.saldo,
-        sortable: true,
+      name: "SALDO",
+      selector: (row) => row.saldo,
+      sortable: true,
     },
-    
+
 
     {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          
-          <Link
+          <button
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => {
+              if (permisos[0].permiso_actualizacion) {
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarsubcuenta")
+              } else {
+                mostrarAlertas("permisos");
+              }
+            }}
+          >
+            <i className="bi bi-pencil-square"></i>
+          </button>
+          {/*<Link
             to="/admin/editarsubcuenta"
             type="button"
             className="btn btn-light"
@@ -152,14 +213,19 @@ const mostrarAlertas = (alerta) =>{
             onClick={() => setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+      </Link>*/}
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_subcuenta);
-              abrirModalEliminar();
+              if (permisos[0].permiso_eliminacion) {
+                setRegistroDelete(row.cod_categoria);
+                abrirModalEliminar();
+              } else {
+                mostrarAlertas("permisos");
+              }
+
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -180,115 +246,144 @@ const mostrarAlertas = (alerta) =>{
     selectAllRowsItemText: "Todos",
   };
 
-  return (    
+  return (
     <div className="container">
       <h3>SubCuentas</h3>
       <br />
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <Link
+
+      {permitido ? (
+
+        <div>
+          {/*Mostrar los botones: Nuevo, Excel y PDF */}
+          <div className="row">
+            <div className="col">
+              <div
+                className="btn-toolbar"
+                role="toolbar"
+                aria-label="Toolbar with button groups"
+              >
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="First group"
+                >
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    title="Agregar Nuevo"
+                    onClick={() => {
+                      if (permisos[0].permiso_insercion) {
+                        navigate("/admin/crearsubcuenta")
+                      } else {
+                        mostrarAlertas("permisos");
+                      }
+                    }}
+                  >
+                    <i className="bi bi-plus-lg"></i> Nuevo
+                  </button>
+
+                  {/* <Link
                 to="/admin/crearsubcuenta"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+              </Link>*/}
+                </div>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="Second group"
+                >
+                  <Link
+                    to="/"
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                  >
+                    <i className="fa-solid fa-file-excel"></i>
+                  </Link>
+                  <Button
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                    onClick={() => {
+                      Export_PDF(results);
+                    }}
+                  >
+                    <i className="fa-solid fa-file-pdf"></i>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="Second group"
-            >
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-              >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
+
+            {/*Mostrar la barra de busqueda*/}
+            <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por nombre cuenta o nombre subcuenta..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
+              </div>
+            </div>
+          </div>
+          <br />
+
+          {/*Mostramos la tabla con los datos*/}
+          <div className="row">
+          {results.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={results}
+              pagination
+              paginationComponentOptions={paginationComponentOptions}
+              highlightOnHover
+              fixedHeader
+              fixedHeaderScrollHeight="550px"
+            />
+            ) : (
+              <p className="text-center">Ninguna Categoría</p>
+            )}
+          </div>
+             </div>
+         
+         ) : (
+           <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+         )}
+         
+
+          {/* Ventana Modal de Eliminar*/}
+          <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
+            <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
+            <ModalBody>
+              <p>¿Está seguro de Eliminar este Registro?</p>
+            </ModalBody>
+            <ModalFooter>
               <Button
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-                onClick={() =>{
-                  Export_PDF(results);
+                color="danger"
+                onClick={() => {
+                  deleteRegistro();
+                  abrirModalEliminar();
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                Eliminar
               </Button>
-            </div>
-          </div>
+              <Button color="secondary" onClick={abrirModalEliminar}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+
         </div>
-
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Buscar por nombre cuenta o nombre subcuenta..."
-              aria-label="Search"
-              value={busqueda}
-              onChange={valorBuscar}
-            />
-          </div>
-        </div>
-      </div>
-      <br />
-
-      {/*Mostramos la tabla con los datos*/}
-      <div className="row">
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
-      </div>
-
-      {/* Ventana Modal de Eliminar*/}
-      <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
-        <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
-        <ModalBody>
-          <p>¿Está seguro de Eliminar este Registro?</p>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="danger"
-            onClick={() => {
-              deleteRegistro();
-              abrirModalEliminar();
-            }}
-          >
-            Eliminar
-          </Button>
-          <Button color="secondary" onClick={abrirModalEliminar}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-    </div>
-  );
+      );
 };
 
-export default MostrarSubCuentas;
+      export default MostrarSubCuentas;

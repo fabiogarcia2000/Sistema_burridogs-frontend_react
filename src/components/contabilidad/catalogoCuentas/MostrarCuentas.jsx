@@ -4,14 +4,17 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
-
+import { useNavigate } from "react-router-dom";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/mc_catalogo/eliminar/";
 
-const MostrarCuentas= () => {
+const objeto = "FORM_CATEGORIA_CONTABLE"
+
+const MostrarCuentas = () => {
+  const navigate = useNavigate();
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -19,7 +22,7 @@ const MostrarCuentas= () => {
     getRegistros();
   }, []);
 
-  
+
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -31,47 +34,90 @@ const MostrarCuentas= () => {
     }
   };
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
 
-//Alertas de éxito o error al eliminar
-const mostrarAlertas = (alerta) =>{
-  switch (alerta){
-    case 'eliminado':
-      Swal.fire({
-        title: '¡Eliminado!',
-        text: "La cuenta se eliminó con éxito",
-        icon: 'success',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-    case 'error':
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudo eliminar la cuenta',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-    case 'errormostrar':
-      Swal.fire({
-        title: 'Error al Mostrar',
-        text:  'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-
-    break;
-
-
-    default: break;
+  const Permisos = () => {
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
   }
-};
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if (data) {
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case 'eliminado':
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: "La cuenta se eliminó con éxito",
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo eliminar la cuenta',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+
+      case 'errormostrar':
+        Swal.fire({
+          title: 'Error al Mostrar',
+          text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+      case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+      default: break;
+    }
+  };
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -80,7 +126,7 @@ const mostrarAlertas = (alerta) =>{
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-         mostrarAlertas("eliminado"); 
+        mostrarAlertas("eliminado");
       } else {
         mostrarAlertas("error");
       }
@@ -91,23 +137,23 @@ const mostrarAlertas = (alerta) =>{
   };
 
   //Barra de busqueda
-    const [ busqueda, setBusqueda ] = useState("")
-      //capturar valor a buscar
-    const valorBuscar = (e) => {
-      setBusqueda(e.target.value)   
+  const [busqueda, setBusqueda] = useState("")
+  //capturar valor a buscar
+  const valorBuscar = (e) => {
+    setBusqueda(e.target.value)
   }
-      //metodo de filtrado 
+  //metodo de filtrado 
   let results = []
-   if(!busqueda){
-       results = registros
-   }else{
-        results = registros.filter( (dato) =>
-        dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||     
-        dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase()) 
-        )
-   };
+  if (!busqueda) {
+    results = registros
+  } else {
+    results = registros.filter((dato) =>
+      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+    )
+  };
 
-    
+
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
@@ -130,24 +176,24 @@ const mostrarAlertas = (alerta) =>{
     //  sortable: true,
     //},
     {
-        name: "CÓDIGO CUENTA",
-        selector: (row) => row.codigo_cuenta,
-        sortable: true,
+      name: "CÓDIGO CUENTA",
+      selector: (row) => row.codigo_cuenta,
+      sortable: true,
     },
     {
-        name: "NOMBRE CUENTA",
-        selector: (row) => row.nombre_cuenta,
-        sortable: true,
+      name: "NOMBRE CUENTA",
+      selector: (row) => row.nombre_cuenta,
+      sortable: true,
     },
     {
-        name: "CATEGORIA",
-        selector: (row) => row.nombre_categoria,
-        sortable: true,
+      name: "CATEGORIA",
+      selector: (row) => row.nombre_categoria,
+      sortable: true,
     },
     {
-        name: "DESTINO CUENTA",
-        selector: (row) => row.descripcion,
-        sortable: true,
+      name: "DESTINO CUENTA",
+      selector: (row) => row.descripcion,
+      sortable: true,
     },
 
     {
@@ -166,24 +212,40 @@ const mostrarAlertas = (alerta) =>{
             <i className="fa-solid fa-eye"></i>
           </Link>
           &nbsp;
-          <Link
-            to="/admin/editarcatalogo"
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row)}
+            onClick={() => {
+              if (permisos[0].permiso_actualizacion) {
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarcatalogo")
+              } else {
+                mostrarAlertas("permisos");
+              }
+            }}
+
+          //  setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_cuenta);
-              abrirModalEliminar();
+              if (permisos[0].permiso_eliminacion) {
+                setRegistroDelete(row.id_cuenta);
+                abrirModalEliminar();
+              } else {
+                mostrarAlertas("permisos");
+              }
             }}
-          >
+
+
+          > {/*} setRegistroDelete(row.id_cuenta);
+          abrirModalEliminar();
+        }}*/}
             <i className="fa-solid fa-trash"></i>
           </button>
         </>
@@ -202,90 +264,111 @@ const mostrarAlertas = (alerta) =>{
     selectAllRowsItemText: "Todos",
   };
 
-  return (    
+  return (
     <div className="container">
       <h3>Catálogo de cuentas</h3>
       <br />
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <Link
-                to="/admin/crearcatalogo"
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
+
+      {permitido ? (
+
+        <div>
+          {/*Mostrar los botones: Nuevo, Excel y PDF */}
+          <div className="row">
+            <div className="col">
+              <div
+                className="btn-toolbar"
+                role="toolbar"
+                aria-label="Toolbar with button groups"
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="First group"
+                >
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    title="Agregar Nuevo"
+                    onClick={() => {
+                      if (permisos[0].permiso_insercion) {
+                        navigate("/admin/crearcatalogo")
+                      } else {
+                        mostrarAlertas("permisos");
+                      }
+                    }}
+                  >
+                    <i className="bi bi-plus-lg"></i> Nuevo
+                  </button>
+
+
+                </div>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="Second group"
+                >
+                  <Link
+                    to="/"
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                  >
+                    <i className="fa-solid fa-file-excel"></i>
+                  </Link>
+                  <Button
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                    onClick={() => {
+                      Export_PDF(results);
+                    }}
+                  >
+                    <i className="fa-solid fa-file-pdf"></i>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="Second group"
-            >
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-              >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Button
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-                onClick={() =>{
-                  Export_PDF(results);
-                }}
-              >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Button>
+
+            {/*Mostrar la barra de busqueda*/}
+            <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por código o nombre de la cuenta..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
+              </div>
             </div>
           </div>
-        </div>
+          <br />
 
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Buscar por código o nombre de la cuenta..."
-              aria-label="Search"
-              value={busqueda}
-              onChange={valorBuscar}
-            />
+          {/*Mostramos la tabla con los datos*/}
+          <div className="row">
+            {results.length > 0 ? (
+              <DataTable
+                columns={columns}
+                data={results}
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="550px"
+              />
+            ) : (
+              <p className="text-center">Ninguna Categoría</p>
+            )}
           </div>
         </div>
-      </div>
-      <br />
+      ) : (
+        <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+      )}
 
-      {/*Mostramos la tabla con los datos*/}
-      <div className="row">
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
-      </div>
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
@@ -383,7 +466,7 @@ const mostrarAlertas = (alerta) =>{
         </ModalFooter>
       </Modal>
 
-    </div>
+    </div >
   );
 };
 

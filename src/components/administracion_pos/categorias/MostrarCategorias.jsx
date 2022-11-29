@@ -12,7 +12,7 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
 
-const objeto = "FORM_SUBCUENTA"
+const objeto = "FORM_CATEGORIA_PDV"
 
 const MostrarCategorias = () => {
   const navigate = useNavigate();

@@ -9,7 +9,7 @@ import { cambiarAMayusculasCreadoPor, cambiarAMayusculasParametro, cambiarAMayus
 
 
 const URLCrear = "http://190.53.243.69:3001/ms_parametros/actualizar-insertar/0";
-const URLMostrarUno = "http://190.53.243.69:3001/";
+const URLMostrarUno = "http://190.53.243.69:3001/ms_parametros/getone/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
 let date = new Date()
@@ -112,7 +112,7 @@ const CrearParametro = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado
           try {
-            /*const res = await axios.get(${URLMostrarUno}${valores.id_permiso});
+            const res = await axios.get(`${URLMostrarUno}${valores.parametro}`);
             console.log(res)
             if (res.data === "") {
               //procedimineto para guardar el nuevo registro en el caso de que no exista*/
@@ -123,10 +123,10 @@ const CrearParametro = () => {
               } else {
                 mostrarAlertas("error");
               }
-            } /*else {
+            } else {
               mostrarAlertas("duplicado");
             }
-          }*/ catch (error) {
+          } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/params");

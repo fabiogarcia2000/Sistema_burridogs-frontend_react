@@ -96,11 +96,11 @@ const CrearObjeto = () => {
                 onSubmit={async (valores) => {
                     //validar si existe un registro con el codigo ingresado
                     try {
-                      /*const res = await axios.get(
+                      const res = await axios.get(
                         `${URLMostrarUno}${valores.objeto}`
                       );
                       console.log(res);
-                      if (res.data === "") {*/
+                      if (res.data === "") {
                         //procedimineto para guardar el nuevo registro en el caso de que no exista
                         const res = await axios.put(`${URLCrear}${valores.id_objeto}`,valores
                         );
@@ -110,10 +110,10 @@ const CrearObjeto = () => {
                         } else {
                           mostrarAlertas("error");
                         }
-                      } /*else {
+                      } else {
                         mostrarAlertas("duplicado");
                       }
-                    } */catch (error) {
+                    } catch (error) {
                       console.log(error);
                       mostrarAlertas("error");
                       navigate("/admin/mostrarobjetos");
