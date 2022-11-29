@@ -7,11 +7,11 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 
-
-
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 const fechaHoy = "2022-02-01"
+
+const objeto = "FORM_LIBRO_ENCABEZADO"
 
 const MostrarLibroDetalle = () => {
   const navigate = useNavigate();
@@ -70,6 +70,47 @@ useEffect(() => {
 
 //************************************************/
 
+
+/*****Obtener y corroborar Permisos*****/
+const [temp, setTemp] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [permitido, setPermitido] = useState(true)
+
+const Permisos = () =>{
+  const newData = temp.filter(
+    (item) => item.objeto === objeto
+  );
+  setPermisos(newData);
+}
+
+useEffect(() => {
+  let data = localStorage.getItem('permisos')
+  if(data){
+    setTemp(JSON.parse(data))
+  }
+}, []);
+
+useEffect(() => {
+  Permisos();
+}, [temp]);
+
+
+useEffect(() => {
+  if(permisos.length > 0){
+    TienePermisos();
+  }
+}, [permisos]);
+
+
+const TienePermisos = () =>{
+  setPermitido(permisos[0].permiso_consultar)
+}
+
+/*******************/
+
+
+
+
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -114,6 +155,16 @@ useEffect(() => {
         });
 
         break;
+
+        case "permisos":
+      Swal.fire({
+        title: "Lo siento, no tienes permisos para realizar esta acción.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+      });
+
+      break;
       default: break;
     }
   };
@@ -226,6 +277,12 @@ useEffect(() => {
                 navigate(`/admin/mostrarlibrodetalle/${row.id_libro_diario_enca}`)
               }
               
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarestado")
+              }else{
+                mostrarAlertas("/admin/mostrarlibrodetalle");
+              } 
             }}
           >
             <i className="fa-solid fa-pen-to-square"></i>
@@ -235,8 +292,13 @@ useEffect(() => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_subcuenta);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_libro_diario_enca);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
             <i className="fa-solid fa-trash"></i>
@@ -261,6 +323,10 @@ useEffect(() => {
     <div className="container">
       <h3>Encabezado Libro Diario</h3>
       <br />
+
+      {permitido? (
+     
+     <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -279,7 +345,13 @@ useEffect(() => {
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
-                
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/crearencabezado..........")
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
               </button>
@@ -331,6 +403,7 @@ useEffect(() => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -340,7 +413,15 @@ useEffect(() => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ninguna Categoría</p>
+        )}
       </div>
+         </div>
+     
+     ) : (
+       <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+     )}
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>

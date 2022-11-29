@@ -5,14 +5,17 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
-
+import { useNavigate } from "react-router-dom";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
+const objeto = "FORM_LIBRO_MAYOR"
+
 const MostrarLibroMayor = () => {
+  const navigate = useNavigate();
   // Opcion del select
   const [opcionSelect, setOpcionSelect] = useState('');
 
@@ -75,6 +78,42 @@ const MostrarLibroMayor = () => {
 
   //************************************************/
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () => {
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if (data) {
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+  /*******************/
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -105,6 +144,15 @@ const MostrarLibroMayor = () => {
           icon: 'error',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
+        });
+
+        break;
+      case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
         break;
@@ -207,7 +255,7 @@ const MostrarLibroMayor = () => {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link
+          {/*<Link
             to="/editarlibromayor"
             type="button"
             className="btn btn-light"
@@ -215,7 +263,7 @@ const MostrarLibroMayor = () => {
             onClick={() => setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+      </Link>*/}
           &nbsp;
           <button
             className="btn btn-light"
@@ -247,241 +295,266 @@ const MostrarLibroMayor = () => {
     <div className="container">
       <h3>Libro Mayor</h3>
       <br />
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
 
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="Second group"
-            >
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-              >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Link
-                to="/"
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-              >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+      {permitido ? (
 
+        <div>
+          {/*Mostrar los botones: Nuevo, Excel y PDF */}
+          <div className="row">
+            <div className="col">
+              <div
+                className="btn-toolbar"
+                role="toolbar"
+                aria-label="Toolbar with button groups"
+              >
+
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="Second group"
+                >
+                  <Link
+                    to="/"
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                  >
+                    <i className="fa-solid fa-file-excel"></i>
+                  </Link>
+                  <Link
+                    to="/"
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                  >
+                    <i className="fa-solid fa-file-pdf"></i>
+                  </Link>
+
+                </div>
+              </div>
+            </div>
+
+            {/*Mostrar la barra de busqueda*/}
+            <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por código o nombre de la cuenta..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
+              </div>
             </div>
           </div>
-        </div>
+          <br />
 
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Buscar por código o nombre de la cuenta..."
-              aria-label="Search"
-              value={busqueda}
-              onChange={valorBuscar}
-            />
-          </div>
-        </div>
-      </div>
-      <br />
+          {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
+          <div className="row">
+            <div className="col">
+              <div
+                className="btn-toolbar"
+                role="toolbar"
+              >
+                <div
+                  className="btn-group me-2"
+                >
 
-      {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-          >
-            <div
-              className="btn-group me-2"
-            >
-              <Link
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    title="Agregar Nuevo"
+                    onClick={() => {
+                      if (permisos[0].permiso_insercion) {
+                        navigate("/admin/mostrarbalance")
+                      } else {
+                        mostrarAlertas("permisos");
+                      }
+                    }}
+                  >
+                    <i className="bi bi-plus-lg"></i> Nuevo
+                  </button>
+
+                  {/*<Link
                 to="/admin/mostrarbalance"
                 type="button"
                 className="btn btn-danger"
                 title="Agregar Nuevo"
               >
                 <i className="fa-solid fa-file"></i> Balance general
-              </Link>
-            </div>
-            <div
-              className="btn-group me-2"
-            >
-              <Link
-                to="/admin/mostrarresultado"
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a Excel"
-              >
-                <i className="fa-solid fa-file"></i> Estado de resultados
-              </Link>
-            </div>
-            <div
-              className="btn-group me-2"
-            >
-              <Link
-                to="/admin/mostraringresosgasto"
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-              >
-                <i className="fa-solid fa-file"></i> Ingresos y egresos
-              </Link>
-            </div>
-            <div
-              className="btn-group me-2"
-            >
-            </div>
+              </Link>*/}
+                </div>
+                <div
+                  className="btn-group me-2"
+                >
+                  <Link
+                    to="/admin/mostrarresultado"
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a Excel"
+                  >
+                    <i className="fa-solid fa-file"></i> Estado de resultados
+                  </Link>
+                </div>
+                <div
+                  className="btn-group me-2"
+                >
+                  <Link
+                    to="/admin/mostraringresosgasto"
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                  >
+                    <i className="fa-solid fa-file"></i> Ingresos y egresos
+                  </Link>
+                </div>
+                <div
+                  className="btn-group me-2"
+                >
+                </div>
 
+              </div>
+            </div>
+            <br /><br />
+            <div className="row">
+              <div className="col-5">
+                <div className="mb-3">
+
+                  <label htmlFor="id_periodo_contable" className="form-label">
+                    Periodo contable
+                  </label>
+                  <select
+                    className="form-select"
+                    id="id_periodo_contable"
+                    name="id_periodo_contable"
+                    onClick={handlerCargarPerido}
+                  >
+                    <option value="">Seleccionar...</option>
+                    {sucursal.map((item, i) => (
+                      <option key={i} value={item.id_periodo_contable}>Periodo:{item.id_periodo_contable}       Fecha inicio:{item.fecha_inicial}      Fecha final{item.fecha_final}</option>
+                    ))}
+                  </select >
+                </div>
+              </div>
+            </div>
           </div>
+          <br />
+
+          {/*Mostramos la tabla con los datos*/}
+
+          <div className="row">
+            {results.length > 0 ? (
+              <DataTable
+                columns={columns}
+                data={results}
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="550px"
+              />
+            ) : (
+              <p className="text-center">No hay registros que mostrar</p>
+            )}
+          </div>
+
+          </div>    
+     ) : (
+       <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+     )}
+
+          {/* Ventana Modal de ver más*/}
+          <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+            <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+            <ModalBody>
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <p className="colorText">ID: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {encabezadoVerMas.id_libro_diario_enca} </p>
+                </div>
+              </div>
+
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <p className="colorText">FECHA: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {encabezadoVerMas.fecha} </p>
+                </div>
+              </div>
+
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <p className="colorText">MONTO DEBE: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {encabezadoVerMas.monto_debe} </p>
+                </div>
+              </div>
+
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <p className="colorText">MONTO HABER: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {encabezadoVerMas.monto_haber} </p>
+                </div>
+              </div>
+
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <p className="colorText">USUARIO: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {encabezadoVerMas.usuario} </p>
+                </div>
+              </div>
+
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <p className="colorText">DESCRIPCION TIPO PERIODO: </p>
+                </div>
+                <div className="col-sm-6">
+                  <p> {encabezadoVerMas.descripcion_tipo_periodo} </p>
+                </div>
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="secondary" onClick={abrirModalVerMas}>
+                Cerrar
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          {/* Ventana Modal de Eliminar*/}
+          <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
+            <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
+            <ModalBody>
+              <p>¿Está seguro de Eliminar este Registro?</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                color="danger"
+                onClick={() => {
+                  deleteRegistro();
+                  abrirModalEliminar();
+                }}
+              >
+                Eliminar
+              </Button>
+              <Button color="secondary" onClick={abrirModalEliminar}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
         </div>
-        <br /><br />
-        <div className="row">
-          <div className="col-5">
-            <div className="mb-3">
-
-              <label htmlFor="id_periodo_contable" className="form-label">
-                Periodo contable
-              </label>
-              <select
-                className="form-select"
-                id="id_periodo_contable"
-                name="id_periodo_contable"
-                onClick={handlerCargarPerido}
-              >
-                <option value="">Seleccionar...</option>
-                {sucursal.map((item, i) => (
-                  <option key={i} value={item.id_periodo_contable}>Periodo:{item.id_periodo_contable}       Fecha inicio:{item.fecha_inicial}      Fecha final{item.fecha_final}</option>
-                ))}
-              </select >
-            </div>
-          </div>
-        </div>
-      </div>
-      <br />
-
-      {/*Mostramos la tabla con los datos*/}
-
-      <div className="row">
-        {results.length > 0 ? (
-          <DataTable
-            columns={columns}
-            data={results}
-            pagination
-            paginationComponentOptions={paginationComponentOptions}
-            highlightOnHover
-            fixedHeader
-            fixedHeaderScrollHeight="550px"
-          />
-        ) : (
-          <p className="text-center">No hay registros que mostrar</p>
-        )}
-      </div>
-
-      {/* Ventana Modal de ver más*/}
-      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
-        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
-        <ModalBody>
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">ID: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {encabezadoVerMas.id_libro_diario_enca} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">FECHA: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {encabezadoVerMas.fecha} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">MONTO DEBE: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {encabezadoVerMas.monto_debe} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">MONTO HABER: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {encabezadoVerMas.monto_haber} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">USUARIO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {encabezadoVerMas.usuario} </p>
-            </div>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">DESCRIPCION TIPO PERIODO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {encabezadoVerMas.descripcion_tipo_periodo} </p>
-            </div>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={abrirModalVerMas}>
-            Cerrar
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      {/* Ventana Modal de Eliminar*/}
-      <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
-        <ModalHeader toggle={abrirModalEliminar}>Eliminar Registro</ModalHeader>
-        <ModalBody>
-          <p>¿Está seguro de Eliminar este Registro?</p>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="danger"
-            onClick={() => {
-              deleteRegistro();
-              abrirModalEliminar();
-            }}
-          >
-            Eliminar
-          </Button>
-          <Button color="secondary" onClick={abrirModalEliminar}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </div>
-  );
+      );
 };
 
-export default MostrarLibroMayor;
+      export default MostrarLibroMayor;
