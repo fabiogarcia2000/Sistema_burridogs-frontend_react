@@ -8,6 +8,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
@@ -294,6 +295,7 @@ const MostrarCategorias = () => {
            title="Exportar a Excel"
            onClick={()=>{
              Export_Excel(results);
+             RegistroEnVitacora(11, "EXPORTAR", "EXPORTAR EXCEL");
            }}
          >
            <i className="bi bi-file-earmark-excel-fill"></i>
@@ -304,6 +306,7 @@ const MostrarCategorias = () => {
            title="Exportar a PDF"
            onClick={() =>{
              Export_PDF(results);
+             RegistroEnVitacora(11, "EXPORTAR", "EXPORTAR PDF");
            }}
          >
           <i className="bi bi-filetype-pdf"></i>
@@ -423,6 +426,7 @@ const MostrarCategorias = () => {
             onClick={() => {
               deleteRegistro();
               abrirModalEliminar();
+              RegistroEnVitacora(11, "ELIMINAR", "ELIMINAR CATEGORIA");
             }}
           >
             Eliminar

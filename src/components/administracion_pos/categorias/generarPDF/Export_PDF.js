@@ -3,6 +3,8 @@ import "jspdf-autotable";
 import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
+import { UsuarioConectado } from "../../../seguridad/bitacora/UsuarioActivo";
+
 
 export function Export_PDF (data) {
     const unit = "pt";
@@ -32,7 +34,7 @@ export function Export_PDF (data) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Categorías";
     let sucursal = "Principal";
-    let usuario = "jperez";
+    let usuario = UsuarioConectado(data);
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
 
