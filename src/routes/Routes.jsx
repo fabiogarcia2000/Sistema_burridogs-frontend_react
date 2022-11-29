@@ -400,7 +400,7 @@ function Rutas() {
           <Route path="crearestado" element={<CrearEstado />} />
 
           {/*DETALLE LIBRO DIARIO*/}
-          <Route path="mostrarlibrodetalle" element={<MostrarLibroDetalle />} />
+          <Route path="mostrarlibrodetalle/:id" element={<MostrarLibroDetalle />} />
           <Route path="editarlibrodetalle" element={<EditarLibroDetalle />} />
           <Route path="crearlibrodetalle" element={<CrearLibroDetalle />} />
 

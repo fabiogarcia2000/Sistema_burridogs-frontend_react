@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -7,14 +8,19 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 
 
+
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
+const fechaHoy = "2022-02-01"
 
 const MostrarLibroDetalle = () => {
+  const navigate = useNavigate();
+
   const [opcionSelect, setOpcionSelect] = useState('');
 
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
+  const [fechaFinal, setFechaFinal] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
@@ -26,11 +32,17 @@ const MostrarLibroDetalle = () => {
     try {
       const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
+
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
     }
   };
+
+  const ValidarFecha = () => {
+
+  }
+
 
 //************************************************/
 //petición a api con la opción del select
@@ -87,6 +99,15 @@ useEffect(() => {
         Swal.fire({
           title: 'Error al Mostrar',
           text: 'En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+        case 'periodocerrado':
+        Swal.fire({
+          text: 'Periodo Cerrado',
           icon: 'error',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -194,15 +215,21 @@ useEffect(() => {
             <i className="fa-solid fa-eye"></i>
           </Link>
           &nbsp;
-          <Link
-            to="/admin/mostrarlibrodetalle" //AQUI
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row.id_libro_diario_enca)}
+            onClick={() => {
+              if(row.fecha_final < fechaHoy){
+                mostrarAlertas("periodocerrado");
+              }else{
+                navigate(`/admin/mostrarlibrodetalle/${row.id_libro_diario_enca}`)
+              }
+              
+            }}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
@@ -247,14 +274,15 @@ useEffect(() => {
               role="group"
               aria-label="First group"
             >
-              <Link
-                to="/"  //AQUI
+              <button
+                //AQUI
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
+                
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+              </button>
             </div>
             <div
               className="btn-group me-2"
