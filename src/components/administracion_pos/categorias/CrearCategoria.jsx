@@ -4,12 +4,60 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/categoria/getone/";
 
+
+//Identificador del formulario
+const objeto = "FORM_CATEGORIA_PDV"
+
 const Formulario = () => {
   const navigate = useNavigate();
+
+
+
+  //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -102,6 +150,7 @@ const Formulario = () => {
               );
               if (res.status === 200) {
                 mostrarAlertas("guardado");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR CATEGORIA"); //Insertar bitacora
                 navigate("/admin/mostrarcategorias");
               } else {
                 mostrarAlertas("error");

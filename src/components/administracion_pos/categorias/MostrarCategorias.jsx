@@ -132,6 +132,7 @@ const MostrarCategorias = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR CATEGORIA");
       } else {
         mostrarAlertas("error");
       }
@@ -210,7 +211,6 @@ const MostrarCategorias = () => {
               if(permisos[0].permiso_actualizacion){
                 setGlobalState("registroEdit", row);
                 navigate("/admin/editarcategoria");
-                RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CATEGORIA");
               }else{
                 mostrarAlertas("permisos");
               }              
@@ -226,7 +226,6 @@ const MostrarCategorias = () => {
               if(permisos[0].permiso_eliminacion){
                 setRegistroDelete(row.cod_categoria);
                 abrirModalEliminar();
-                RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR CATEGORIA");
               }else{
                 mostrarAlertas("permisos");
               }
