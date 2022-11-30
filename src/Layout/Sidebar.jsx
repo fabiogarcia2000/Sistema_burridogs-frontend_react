@@ -415,6 +415,12 @@ function Sidebar() {
             </li>
           </ul>
         </li>
+        <li className="nav-heading">Más</li>
+        <li className="nav-item">
+          <Link className="nav-link collapsed" to="/admin/datos-empresa">
+            <i class="bi bi-person"></i> <span>Empresa</span>
+          </Link>
+        </li>
       </ul>
     </aside>
   );

@@ -7,4 +7,5 @@ export const { setGlobalState, useGlobalState } = createGlobalState({
     footer_class:'footer',
     registroEdit: {},
     dataVenta:{},
+    datosEmpresa:{}
 });
