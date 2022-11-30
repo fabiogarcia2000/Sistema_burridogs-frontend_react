@@ -12,7 +12,7 @@ import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/descuento/eliminar/";
 
-const objeto = "FORM_DESCUENTO_PDV";
+const objeto = "FORM_DESCUENTO";
 
 const MostrarSucursales = () => {
   //Configurar los hooks

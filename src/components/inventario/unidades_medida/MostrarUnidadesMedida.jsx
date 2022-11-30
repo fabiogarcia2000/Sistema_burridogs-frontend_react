@@ -7,9 +7,13 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/unidad_medida/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/unidad_medida/eliminar/";
+
+const objeto = "FORM_UNIDADES_MEDIDA";
+
 
 const MostrarUnidadesMedida = () => {
   //Configurar los hooks
@@ -29,6 +33,52 @@ const MostrarUnidadesMedida = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+
+
+
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true)
+ 
+   const Permisos = () =>{
+     const newData = temp.filter(
+       (item) => item.objeto === objeto
+     );
+     setPermisos(newData);
+   }
+ 
+   useEffect(() => {
+     let data = localStorage.getItem('permisos')
+     if(data){
+       setTemp(JSON.parse(data))
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+ 
+   useEffect(() => {
+     if(permisos.length > 0){
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+   const TienePermisos = () =>{
+     setPermitido(permisos[0].permiso_consultar)
+   }
+ /*******************/ 
+
+
+
+
+
+
+
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -79,6 +129,7 @@ const MostrarUnidadesMedida = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR UNIDAD DE MEDIDA");
       } else {
         mostrarAlertas("error");
       }
@@ -142,6 +193,7 @@ const MostrarUnidadesMedida = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
+              InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS UNIDAD DE MEDIDA")
             }}
           >
             <i className="fa-solid fa-eye"></i>
@@ -220,6 +272,7 @@ const MostrarUnidadesMedida = () => {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL UNIDADES DE MEDIDA")
                 }}
               >
                 <i className="fa-solid fa-file-excel"></i>
@@ -230,6 +283,7 @@ const MostrarUnidadesMedida = () => {
                 title="Exportar a PDF"
                 onClick={()=>{
                   Export_PDF(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF UNIDADES DE MEDIDA")
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>

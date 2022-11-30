@@ -10,7 +10,7 @@ import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 const URLCrear = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/descuento/getone/";
 
-const objeto = "FORM_DESCUENTO_PDV";
+const objeto = "FORM_DESCUENTO";
 
 const Formulario = () => {
 

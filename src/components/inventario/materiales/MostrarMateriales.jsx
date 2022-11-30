@@ -6,9 +6,13 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/lista_materiales/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/lista_materiales/eliminar/";
+
+
+const objeto = "FORM_LISTA_MATERIALES";
 
 const MostrarMateriales = () => {
   //Configurar los hooks
@@ -29,6 +33,49 @@ const MostrarMateriales = () => {
     }
   };
 
+
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true)
+ 
+   const Permisos = () =>{
+     const newData = temp.filter(
+       (item) => item.objeto === objeto
+     );
+     setPermisos(newData);
+   }
+ 
+   useEffect(() => {
+     let data = localStorage.getItem('permisos')
+     if(data){
+       setTemp(JSON.parse(data))
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+ 
+   useEffect(() => {
+     if(permisos.length > 0){
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+   const TienePermisos = () =>{
+     setPermitido(permisos[0].permiso_consultar)
+   }
+ /*******************/ 
+
+
+
+
+
+
+
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
     try {
@@ -37,6 +84,7 @@ const MostrarMateriales = () => {
       getRegistros();
       if (res.status === 200) {
         alert("Eliminado!");
+        InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR MATERIAL");
       } else {
         alert("ERROR al Eliminar :(");
       }
@@ -116,6 +164,7 @@ const MostrarMateriales = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
+              InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS MATERIAL")
             }}
           >
             <i className="fa-solid fa-eye"></i>
@@ -194,6 +243,7 @@ const MostrarMateriales = () => {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LISTA MATERIALES")
                 }}
               >
                 <i className="fa-solid fa-file-excel"></i>
@@ -204,6 +254,7 @@ const MostrarMateriales = () => {
                 title="Exportar a PDF"
                 onClick={()=>{
                   Export_PDF(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LISTA MATERIALES")
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>
