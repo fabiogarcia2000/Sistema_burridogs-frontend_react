@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
@@ -15,6 +16,9 @@ const UrlEliminar = "http://190.53.243.69:3001/descuento/eliminar/";
 const objeto = "FORM_DESCUENTO";
 
 const MostrarSucursales = () => {
+
+  const navigate = useNavigate();
+
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState("");
   const [registros, setRegistros] = useState([]);
@@ -100,6 +104,16 @@ const MostrarSucursales = () => {
         Swal.fire({
           title: "Error al Mostrar",
           text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+
+        case "permisos":
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -193,28 +207,39 @@ const MostrarSucursales = () => {
               InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS DESCUENTO")
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
-          <Link
-            to="/admin/editardescuento"
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState("registroEdit", row)}
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editardescuento");
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+            <i className="bi bi-pencil-square"></i>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.cod_descuento);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.cod_descuento);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -236,6 +261,10 @@ const MostrarSucursales = () => {
     <div className="container">
       <h3>Descuentos</h3>
       <br />
+  
+  {permitido? ( 
+
+     <div>    
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -249,14 +278,20 @@ const MostrarSucursales = () => {
               role="group"
               aria-label="First group"
             >
-              <Link
-                to="/admin/creardescuento"
+              <button
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/creardescuento")
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+                <i className="bi bi-plus-lg"></i> Nuevo
+              </button>
             </div>
             <div
               className="btn-group me-2"
@@ -272,7 +307,7 @@ const MostrarSucursales = () => {
                   InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL DESCUENTO")
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>
               <Link
                 type="button"
@@ -283,7 +318,7 @@ const MostrarSucursales = () => {
                   InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF DESCUENTO")
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Link>
             </div>
           </div>
@@ -320,6 +355,11 @@ const MostrarSucursales = () => {
           fixedHeaderScrollHeight="550px"
         />
       </div>
+    </div>            
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
+
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
