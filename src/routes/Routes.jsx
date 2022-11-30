@@ -90,7 +90,7 @@ import EditarUsuario from "../components/seguridad/usuario/EditarUsuario";
 import Login from "../pages/seguridad/login/Login";
 import Parametros from "../pages/seguridad/parametros/Parametros";
 
-import Logs from "../pages/seguridad/logs/Logs";
+//import Logs from "../pages/seguridad/logs/Logs";
 import Pregunta from "../pages/seguridad/preguntas/Preguntas";
 import Layout from "../Layout/Layout";
 import Registro from "../pages/seguridad/registro/Registro";
@@ -231,7 +231,7 @@ function Rutas() {
           <Route path="createUser" element={<CreateUser />} />
           <Route path="editUser/:id" element={<EditarUsuario />} />
 
-          <Route path="logs" element={<Logs />} />
+          {/*<Route path="logs" element={<Logs />} />*/}
           
           {/*PARÁMETROS*/}
           <Route path="params" element={<Parametros />} />

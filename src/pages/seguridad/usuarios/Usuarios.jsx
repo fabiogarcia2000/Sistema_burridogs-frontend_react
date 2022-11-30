@@ -42,7 +42,7 @@ const Usuarios = () => {
    ** Creando bitacora
    * enviado infromacion de bitacora a la BD
    * */
-  const saveLog = async () => {
+  /*const saveLog = async () => {
     const userdata = JSON.parse(localStorage.getItem("data"));
     let log = {
       fecha: new Date(),
@@ -64,7 +64,7 @@ const Usuarios = () => {
       .catch((error) => {
         // console.log(error);
       });
-  };
+  };*/
 
   const [registros, setRegistros] = useState([]);
   const getRegistros = async () => {
@@ -86,7 +86,7 @@ const Usuarios = () => {
       });
   };
   useEffect(() => {
-    saveLog();
+    //saveLog();
     getRegistros();
   }, []);
 

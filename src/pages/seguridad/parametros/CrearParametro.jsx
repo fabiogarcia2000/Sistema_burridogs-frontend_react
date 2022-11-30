@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
@@ -112,9 +112,9 @@ const CrearParametro = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado
           try {
-            const res = await axios.get(`${URLMostrarUno}${valores.parametro}`);
+            /*const res = await axios.get(`${URLMostrarUno}${valores.parametro}`);
             console.log(res)
-            if (res.data === "") {
+            if (res.data === "") {*/
               //procedimineto para guardar el nuevo registro en el caso de que no exista*/
               const res = await axios.put(`${URLCrear}`, valores);
               if (res.status === 200) {
@@ -123,14 +123,14 @@ const CrearParametro = () => {
               } else {
                 mostrarAlertas("error");
               }
-            } else {
+            /*} else {
               mostrarAlertas("duplicado");
-            }
+            }*/
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/params");
-          };
+          }
         }}
         >
           {({ errors, values }) => (

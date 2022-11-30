@@ -28,34 +28,7 @@ export default function Pregunta(props) {
   var urlApiParam = getOneParam(dataPar, "URL_API")
   const urlapi = urlApiParam.valor
 
-  /** 
-     ** Creando bitacora  
-     * enviado infromacion de bitacora a la BD
-     * */
-  const saveLog = async () => {
-    const userdata = JSON.parse(localStorage.getItem('data'))
-    let log = {
-      fecha: new Date(),
-      id_usuario: userdata.data.id || 0,
-      accion: 'LECTURA',
-      descripcion: 'Ingreso a pantalla ROLES',
-    }
-    fetch(urlapi + "/logs/save"
-      , {
-        method: 'POST',
-        body: JSON.stringify(log),
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(responseJson => {
-        // console.log("responseJson",responseJson)
-      })
-      .catch(error => {
-        // console.log(error)   
-      })
-  };
+  
   
   const [registros, setRegistros] = useState([]);
   const getRegistros = async () => {
@@ -79,7 +52,7 @@ export default function Pregunta(props) {
   };
 
   useEffect(() => {
-    saveLog()
+    //saveLog()
     getRegistros();
   }, []);
 
