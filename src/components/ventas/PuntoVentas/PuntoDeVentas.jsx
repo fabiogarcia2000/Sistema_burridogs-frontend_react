@@ -38,6 +38,8 @@ const PuntoDeVentas = () => {
 
   const userdata = JSON.parse(localStorage.getItem("data"));
 
+ 
+
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
   const [articulosMostrar, setArticulosMostrar] = useState([]);
@@ -81,6 +83,9 @@ const PuntoDeVentas = () => {
   const [detallesPromo, setDetallesPromo] = useState([]);
 
   const [detallesDesc, setDetallesDesc] = useState([]);
+
+ const [listo, setListo] = useState(false);
+ const [preparar, setPreparar] = useState(false);
 
   const valuesInicial = {
     secuencia_enc: undefined,
@@ -233,7 +238,7 @@ const PuntoDeVentas = () => {
           rtn: id,
           descripcion: "",
           creado_por: "Fabio",
-          fecha_creacion: "2022-11-23",
+          fecha_creacion: "2022/11/30",
           modificado_por: "",
           fecha_modificacion: "",
         });
@@ -270,7 +275,7 @@ const PuntoDeVentas = () => {
     if (detalles.length > 0) {
       PrepararData();
     }
-  }, [cliente]);
+  }, [preparar]);
 
   useEffect(() => {
     listaCompras.map((list) =>
@@ -282,7 +287,6 @@ const PuntoDeVentas = () => {
 useEffect(() => {
     setImpuesto(subTotal * isv);
   }, [subTotal]);
-
 * 
  */
 
@@ -642,6 +646,7 @@ useEffect(() => {
       InsertVenta(venta);
       console.log("DATA VENTA:");
       console.log(venta);
+      setListo(true)
     }
   }, [venta]);
 
@@ -1077,6 +1082,7 @@ useEffect(() => {
               setTimeout(function () {
                 //PrepararData()
               }, 3000);
+          
             }}
           >
             {({ errors, values }) => (
@@ -1120,7 +1126,7 @@ useEffect(() => {
             <div className="alert alert-primary" role="alert">
               {cliente.descripcion ? (
                 <>
-                  <p>{"ID: " + cliente.rtn}</p>
+                  <p>{"ID: " + (cliente.rtn || "")}</p>
                   <p>{" Nombre: " + cliente.descripcion}</p>
                 </>
               ) : (
@@ -1139,10 +1145,19 @@ useEffect(() => {
           <Button
             color="primary"
             onClick={() => {
-              abrirModalCliente();
-
               //InsertVenta(venta);
-              handlePrint();
+
+              if(cliente.descripcion === undefined){
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+                //setListo(true)
+              }
+
+              setPreparar(true)
+              if(listo === true){
+                handlePrint();
+                abrirModalCliente();
+              }
+             
             }}
           >
             Aceptar
@@ -1173,9 +1188,10 @@ useEffect(() => {
             return errores;
           }}
           onSubmit={(valores) => {
+            setCliente({ ...cliente, descripcion: valores.nombre });
+            //dataCliente(valores);
             abrirModalCliente2();
-            abrirModalCliente();
-            dataCliente(valores);
+            abrirModalCliente();            
           }}
         >
           {({ errors, values }) => (
@@ -1325,7 +1341,6 @@ useEffect(() => {
                         />
                       </div>
                   </div>
-
                   <div className="col">
                     <div className="form-floating">
                       <select

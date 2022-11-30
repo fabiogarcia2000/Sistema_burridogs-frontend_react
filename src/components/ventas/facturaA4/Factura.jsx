@@ -12,6 +12,8 @@ export default function Factura() {
     const [venta] = useGlobalState('dataVenta')
     const detalles = venta.detalle;
 
+    const [DatosEmpresa] = useGlobalState('datosEmpresa');
+    console.log(DatosEmpresa)
 
     useEffect(() => {
         if(detalles){
@@ -38,15 +40,13 @@ export default function Factura() {
                 </div>
                 <div className='row'>
                     <div>
-                        <strong className='h6 fw-bold'>RAZON SOCIAL DEL CLIENTE</strong><br />
-                        <strong>R.T.N.: 0101010101010101</strong>
+                        <strong className='h6 fw-bold'>{(DatosEmpresa.descripcion || "NO HAY NOMBRE DEFINIDO")}</strong><br />
+                        <strong>{"R.T.N.: "+(DatosEmpresa.rtn ||"")}</strong>
                     </div>
                     <div>
-                        <span>DIRECCION</span><br />
-                        <span>TEL: 2222-2222</span><br />
-                        <span>DIRECCION</span><br />
-                        <span>TEL: 2222-2222</span><br />
-                        <span>Correo electronico: xxxxxxxx@xxxx.com</span><br />
+                        <span>{"DIRECCIÓN: "+(DatosEmpresa.direccion || "")}</span><br />
+                        <span>{"TEL: "+(DatosEmpresa.telefono || "")}</span><br />
+                        <span>{"Correo: "+(DatosEmpresa.correo || "")}</span><br />
                         <span>C.A.I.:000000-000000-00000-000000-000000-00</span><br />
                         <strong>RANGO AUTORIZADO DEL: 0000-0000-000-0000000000 AL 0000-0000-000-0000000000 </strong><br />
                         <span>Fecha Limite de Emisión: XX/XX/XXXX</span><br />
@@ -70,9 +70,9 @@ export default function Factura() {
         <div className='row'>
             <div class="input-group input-group-sm mb-3">
                 <span class="input-group-text color1" id="basic-addon1"><strong>CLIENTE: </strong></span>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" value={venta.nombre_cliente}/>
+                <input type="text" class="form-control" placeholder="" aria-label="Username" value={(venta.nombre_cliente||"")}/>
                 <span class="input-group-text color1"><strong>R.T.N: </strong></span>
-                <input type="text" class="form-control" placeholder="Server" aria-label="Server" value={venta.rtn}/>
+                <input type="text" class="form-control" placeholder="" aria-label="Server" value={(venta.rtn||"")}/>
             </div>
         </div>
 
