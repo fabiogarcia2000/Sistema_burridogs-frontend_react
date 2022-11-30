@@ -2,19 +2,60 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLEditar = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
+//Identificador del formulario
+const objeto = "FORM_SUBCUENTA"
+
 const EditarSubCuenta = () => {
   const [edit] = useGlobalState('registroEdit')
+   const navigate = useNavigate();
 
-  const navigate = useNavigate();
+ //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
  //procedimineto para obtener todos las sucursales y mostrarlas en select
  const [cuenta, setcuenta] = useState([]);
@@ -98,6 +139,7 @@ const EditarSubCuenta = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR SUBCUENTA"); //Insertar bitacora
               navigate("/admin/mostrarsubcuenta");
             } else {
               mostrarAlertas("error");

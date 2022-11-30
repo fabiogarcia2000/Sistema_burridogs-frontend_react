@@ -4,7 +4,7 @@ import logo from "./logo1.png"; //Logo de la empresa
 
 export function Export_PDF_MV(data) {
   const unit = "pt";
-  const size = "A2"; // Use A1, A2, A3 or A4
+  const size = "A4"; // Use A1, A2, A3 or A4
   const orientation = "landscape"; // portrait or landscape
 
   const doc = new jsPDF(orientation, unit, size);

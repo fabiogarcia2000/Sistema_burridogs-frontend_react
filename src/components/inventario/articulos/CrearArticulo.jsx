@@ -8,6 +8,7 @@ import {
   cambiarAMayusculasDescripCorta,
   cambiarAMayusculasDescripArticulo,
 } from "../../../utils/cambiarAMayusculas";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/articulo/getone/";
@@ -17,8 +18,55 @@ const UrlMostrarCategorias = "http://190.53.243.69:3001/categoria/getall/";
 const UrlMostrarImpuestos = "http://190.53.243.69:3001/impuesto/getall/";
 const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
 
+const objeto = "FORM_ARTICULO";
+
 const Formulario = () => {
   const navigate = useNavigate();
+
+
+
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true)
+ 
+   const Permisos = () =>{
+     const newData = temp.filter(
+       (item) => item.objeto === objeto
+     );
+     setPermisos(newData);
+   }
+ 
+   useEffect(() => {
+     let data = localStorage.getItem('permisos')
+     if(data){
+       setTemp(JSON.parse(data))
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+ 
+   useEffect(() => {
+     if(permisos.length > 0){
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+   const TienePermisos = () =>{
+     setPermitido(permisos[0].permiso_consultar)
+   }
+ /*******************/
+
+
+
+
+
+
+
 
   //procedimineto para obtener las unidades de medida
   const [unidades, setUnidades] = useState([]);
@@ -141,9 +189,10 @@ const Formulario = () => {
           id_categoria: "",
           //descripcion_categoria: "",
           precio: "",
+          inventario_minimo: "",
+          inventario_maximo: "",
           //id_unidad_venta: "",
           //descripcion_unidad_venta: "",
-          id_socio_negocio: "",
           //descripcion_socio_negocio: "",
           //id_unidad_compra: "",
           //descripcion_unidad_compra: "",
@@ -197,17 +246,18 @@ const Formulario = () => {
             errores.precio = "El precio solo puede contener números";
           }
 
-          // Validacion código de barra
-          if (!valores.codigo_barra) {
-            errores.codigo_barra = "Por favor ingresa el código de barra";
-          } else if (!/^^[0-9]+$/.test(valores.codigo_barra)) {
-            errores.codigo_barra =
-              "El código de barra solo puede contener números";
+          // Validacion inventario minimo
+          if (!valores.inventario_minimo) {
+            errores.inventario_minimo = "Por favor ingrese el precio";
+          } else if (!/^^[0-9]+$/.test(valores.inventario_minimo)) {
+            errores.inventario_minimo = "Las unidades deben ser en números";
           }
 
-          // Validacion unidad medida
-          if (!valores.id_unidad_medida) {
-            errores.id_unidad_medida = "Por favor seleccione una opción";
+          // Validacion inventario maximo
+          if (!valores.inventario_maximo) {
+            errores.inventario_maximo = "Por favor ingrese el precio";
+          } else if (!/^^[0-9]+$/.test(valores.inventario_maximo)) {
+            errores.inventario_maximo = "Las unidades deben ser en números";
           }
 
           // Validacion estado
@@ -232,6 +282,7 @@ const Formulario = () => {
               );
               if (res.status === 200) {
                 mostrarAlertas("guardado");
+                InsertarBitacora(permisos[0].id_objeto, "CREAR", "CREAR ARTICULO");
                 navigate("/admin/mostrararticulos");
               } else {
                 mostrarAlertas("error");
@@ -425,6 +476,51 @@ const Formulario = () => {
 
               <div className="col-sm-4">
                 <div className="mb-3">
+                  <label htmlFor="invMinArticulo" className="form-label">
+                    Inventario Mínimo:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="invMinArticulo"
+                    name="inventario_minimo"
+                    placeholder="Unidades mínimas..."
+                  />
+
+                  <ErrorMessage
+                    name="inventario_minimo"
+                    component={() => (
+                      <div className="error">{errors.inventario_minimo}</div>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="invMaxArticulo" className="form-label">
+                    Inventario Máximo:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="invMaxArticulo"
+                    name="inventario_maximo"
+                    placeholder="Unidades máximas..."
+                  />
+
+                  <ErrorMessage
+                    name="inventario_maximo"
+                    component={() => (
+                      <div className="error">{errors.inventario_maximo}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-sm-4">
+                <div className="mb-3">
                   <label htmlFor="codigobarraArticulo" className="form-label">
                     Código de Barra:
                   </label>
@@ -471,9 +567,7 @@ const Formulario = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="estadoArticulo" className="form-label">

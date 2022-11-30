@@ -6,7 +6,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 import { Export_PDF } from "./generarPDF/Export_PDF";
-
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_destino/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_destino/eliminar/";
@@ -205,14 +205,17 @@ const mostrarAlertas = (alerta) =>{
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                }}
               >
                 <i className="fa-solid fa-file-excel"></i>
-              </Link>
+              </Button>
               <Button
                 type="button"
                 className="btn btn-danger"

@@ -12,8 +12,11 @@ import Productos from "../pages/inventario/Productos";
 import LoginPos from "../components/ventas/loginPOS/LoginPos";
 import PuntoDeVentas from "../components/ventas/PuntoVentas/PuntoDeVentas";
 import VentasRealizadas from "../components/ventas/listaVentas/ListaVentas";
+
 import FacturaA4 from "../components/ventas/facturaA4/Factura"
 import Corte from "../components/ventas/corte/Corte"
+
+
 
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
 import CrearSucursal from "../components/administracion_pos/sucursales/CrearSucursal";
@@ -65,7 +68,7 @@ import EditarCentroCosto from "../components/inventario/centro_Costo/EditarCentr
 import MostrarCentroCosto from "../components/inventario/centro_Costo/MostrarCentroCosto";
 
 import MostrarMateriales from "../components/inventario/materiales/MostrarMateriales";
-import CrearMaterial from "../components/inventario/materiales/CrearMaterial";
+import CrearMaterial from "../components/inventario/articulos/CrearMaterial";
 import EditarMaterial from "../components/inventario/materiales/EditarMateriales";
 
 import MostrarUnidadesMedida from "../components/inventario/unidades_medida/MostrarUnidadesMedida";
@@ -228,7 +231,7 @@ function Rutas() {
           <Route path="editUser/:id" element={<EditarUsuario />} />
 
           {/*<Route path="logs" element={<Logs />} />*/}
-          
+
           {/*PARÁMETROS*/}
           <Route path="params" element={<Parametros />} />
           <Route path="crearparametro" element={<CrearParametro />} />
@@ -259,6 +262,7 @@ function Rutas() {
           <Route path="editarrol" element={<EditarRol />} />
           {/*------------------------------Rutas Administración POS----------------------------------*/}
 
+
             {/*Rutas Administración POS*/}
             <Route path="login-pos" element={<LoginPos />} />
             <Route path="punto-de-ventas" element={<PuntoDeVentas />} />
@@ -266,11 +270,11 @@ function Rutas() {
             <Route path="factura-generada" element={<FacturaA4 />} />
             <Route path="corte-caja/:id" element={<Corte />} />
 
+
           {/*Rutas Administración POS*/}
           <Route path="login-pos" element={<LoginPos />} />
           <Route path="punto-de-ventas/:idPos" element={<PuntoDeVentas />} />
           <Route path="ventas-realizadas" element={<VentasRealizadas />} />
-
 
           <Route path="mostrarsucursales" element={<MostrarSucursales />} />
           <Route path="crearsucursal" element={<CrearSucursal />} />
@@ -379,7 +383,6 @@ function Rutas() {
           <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
           <Route path="editarlibromayor" element={<EditarLibroMayor />} />
           <Route path="mayorizar" element={<Mayorizar />} />
-        
 
           {/*SUBCUENTA*/}
           <Route path="mostrarsubcuenta" element={<MostrarSubCuentas />} />
@@ -392,7 +395,10 @@ function Rutas() {
           <Route path="crearestado" element={<CrearEstado />} />
 
           {/*DETALLE LIBRO DIARIO*/}
-          <Route path="mostrarlibrodetalle/:id" element={<MostrarLibroDetalle />} />
+          <Route
+            path="mostrarlibrodetalle/:id"
+            element={<MostrarLibroDetalle />}
+          />
           <Route path="editarlibrodetalle" element={<EditarLibroDetalle />} />
           <Route path="crearlibrodetalle" element={<CrearLibroDetalle />} />
 

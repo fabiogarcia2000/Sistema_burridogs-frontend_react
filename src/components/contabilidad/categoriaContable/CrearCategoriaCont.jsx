@@ -4,14 +4,59 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreCategoria } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/mc_categoriacont/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_categoriacont/getone/";
 
 
-const CrearCategoriaCont = () => {
+//Identificador del formulario
+const objeto = "FORM_CATEGORIA_CONTABLE"
 
+const CrearCategoriaCont = () => {
   const navigate = useNavigate();
+
+
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
 
 
   //Alertas de éxito o error
@@ -48,10 +93,10 @@ const CrearCategoriaCont = () => {
 
       break;
 
-      default: break;
+      default: 
+      break;
     }
   };
-
 
   return (
     <div className="container">
@@ -84,6 +129,7 @@ const CrearCategoriaCont = () => {
                       const res = await axios.put(`${URLCrear}${valores.id_categoria}`, valores);
                       if (res.status === 200) {
                         mostrarAlertas("guardado");
+                        RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR CATEGORIA CONTABLE"); //Insertar bitacora
                         navigate("/admin/mostrarcategoriacont");
                     } else {
                       mostrarAlertas("error");

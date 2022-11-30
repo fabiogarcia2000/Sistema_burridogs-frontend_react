@@ -8,6 +8,16 @@ export function cambiarAMayusculasDescripcion(valores) {
   }
 }
 
+//función convertir a mayuscula comentario
+export function cambiarAMayusculasComentario(valores) {
+  try {
+    let texto = valores.comentario;
+    valores.comentario = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //función comvertir a mayuscula código unidad medida
 export function cambiarAMayusculasCodigoUND(valores) {
   try {
@@ -206,7 +216,6 @@ export function cambiarAMayusculasCorreoUsuario(valores) {
     console.log(error);
   }
 }
-
 
 //------------------------SEGURIDAD
 

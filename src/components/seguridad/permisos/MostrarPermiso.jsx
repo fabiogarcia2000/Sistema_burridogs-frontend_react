@@ -6,6 +6,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_permisos/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/ms_permisos/eliminar/";
@@ -129,6 +131,7 @@ const MostrarPermiso = () => {
             getRegistros();
             if (res.status === 200) {
                 mostrarAlertas("eliminado");
+                RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PERMISO");
             } else {
                 mostrarAlertas("error");
             }
@@ -214,6 +217,7 @@ const MostrarPermiso = () => {
                         onClick={() => {
                             abrirModalVerMas();
                             setRegistroVerMas(row);
+                            RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS PERMISO");
                         }}
                     >
                         <i className="bi bi-eye-fill"></i>
@@ -312,6 +316,10 @@ const MostrarPermiso = () => {
                                 type="button"
                                 className="btn btn-success"
                                 title="Exportar a Excel"
+                                onClick={()=>{
+                                    Export_Excel(results);
+                                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+                                  }}
                             >
                                 <i className="bi bi-file-earmark-excel-fill"></i>
                             </Button>
@@ -321,6 +329,7 @@ const MostrarPermiso = () => {
                                 title="Exportar a PDF"
                                 onClick={() =>{
                                 Export_PDF(results);
+                                RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF PERMISOS");
                                 }}
                             >
                                 <i className="bi bi-filetype-pdf"></i>

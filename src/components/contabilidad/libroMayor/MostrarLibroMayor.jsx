@@ -9,6 +9,7 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_PDF_R } from "./generarPDF_resultado/Export_PDF_R";
 import { Export_PDF_IngresoGasto } from "./generarPDF_ingresogasto/Export_PDF_IngresoGasto";
 import { useNavigate } from "react-router-dom";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
@@ -343,6 +344,7 @@ const getRegistrosGasto = async () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO MAYOR");
       } else {
         mostrarAlertas("error");
       }
@@ -476,55 +478,7 @@ const getRegistrosGasto = async () => {
         <div>
           {/*Mostrar los botones: Nuevo, Excel y PDF */}
           <div className="row">
-            <div className="col">
-              <div
-                className="btn-toolbar"
-                role="toolbar"
-                aria-label="Toolbar with button groups"
-              >
-
-                <div
-                  className="btn-group me-2"
-                  role="group"
-                  aria-label="Second group"
-                >
-                  <Link
-                    to="/"
-                    type="button"
-                    className="btn btn-success"
-                    title="Exportar a Excel"
-                  >
-                    <i className="fa-solid fa-file-excel"></i>
-                  </Link>
-                  <Link
-                    to="/"
-                    type="button"
-                    className="btn btn-danger"
-                    title="Exportar a PDF"
-                  >
-                    <i className="fa-solid fa-file-pdf"></i>
-                  </Link>
-
-                </div>
-              </div>
-            </div>
-
-            {/*Mostrar la barra de busqueda*/}
-            <div className="col-4">
-              <div className="input-group flex-nowrap">
-                <span className="input-group-text" id="addon-wrapping">
-                  <i className="bi bi-search"></i>
-                </span>
-                <input
-                  className="form-control me-2"
-                  type="text"
-                  placeholder="Buscar por código o nombre de la cuenta..."
-                  aria-label="Search"
-                  value={busqueda}
-                  onChange={valorBuscar}
-                />
-              </div>
-            </div>
+            
           </div>
           <br />
 
@@ -544,6 +498,7 @@ const getRegistrosGasto = async () => {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(registrosActivos, registrosPasivos, registrosPatrimonio, registrosTotal, registrosTotalPasivo, registrosTotalPatrimonio);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF BALANCE GENERAL");
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i> Balance General
@@ -558,6 +513,7 @@ const getRegistrosGasto = async () => {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF_R(registrosResultado);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF ESTADO RESULTADOS");
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i> Estado de Resultados
@@ -572,6 +528,7 @@ const getRegistrosGasto = async () => {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF_IngresoGasto(registrosIngreso, registrosGasto);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF INGRESOS GASTOS");
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>Ingresos y Gastos
@@ -581,8 +538,23 @@ const getRegistrosGasto = async () => {
               className="btn-group me-2"
             >
             </div>
-
+              {/*Mostrar la barra de busqueda*/}
+              <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por código o nombre de la cuenta..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
               </div>
+            </div>
+            </div>
             </div>
             <br /><br />
             <div className="row">
@@ -605,6 +577,8 @@ const getRegistrosGasto = async () => {
                   </select >
                 </div>
               </div>
+
+
             </div>
           </div>
           <br />

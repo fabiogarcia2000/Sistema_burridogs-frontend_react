@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 import "./Usuarios.css";
 import { downloadCSV, getOneParam, toUpperCaseField } from "../../../utils/utils";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 // const urlapi = "http://localhost:3001";
 // const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
@@ -426,11 +427,9 @@ const mostrarAlertas = (alerta) => {
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
-                onClick={() => downloadCSV(registros, "Reporte_usuarios_")}
-
-
-
-
+                onClick={()=>{
+                  Export_Excel(results);
+                }}
               >
                 <i class="bi bi-file-earmark-excel-fill"></i>
               </Button>

@@ -5,6 +5,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import { cambiarAMayusculasDescripcionPeriodo } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
@@ -12,11 +14,51 @@ const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
+const objeto = "FORM_PERIODO_CONTABLE"
 const PeriodoCrear = () => {
 
   const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
 
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
+
+const userdata = JSON.parse(localStorage.getItem('data'))
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -65,7 +107,7 @@ const PeriodoCrear = () => {
           fecha_inicial: "",
           fecha_final: "",
           fecha_creacion: date,
-          id_usuario: edit.id_usuario,
+          id_usuario: userdata.data.nameUser.replace('"', "").replace('"', ""),
           tipo_periodo: "A",
           estado_periodo: "",
 
@@ -107,6 +149,7 @@ const PeriodoCrear = () => {
             if (res.status === 200) {
               console.log(res)
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR PERIODO CONTABLE"); //Insertar bitacora
               navigate("/admin/mostrarperiodo");
             } else {
               mostrarAlertas("error");

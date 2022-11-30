@@ -7,9 +7,13 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/sucursal/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/sucursal/eliminar/";
+
+
+const objeto = "FORM_SUCURSAL";
 
 const MostrarSucursales = () => {
   //Configurar los hooks
@@ -29,6 +33,51 @@ const MostrarSucursales = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+
+
+
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true)
+ 
+   const Permisos = () =>{
+     const newData = temp.filter(
+       (item) => item.objeto === objeto
+     );
+     setPermisos(newData);
+   }
+ 
+   useEffect(() => {
+     let data = localStorage.getItem('permisos')
+     if(data){
+       setTemp(JSON.parse(data))
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+ 
+   useEffect(() => {
+     if(permisos.length > 0){
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+   const TienePermisos = () =>{
+     setPermitido(permisos[0].permiso_consultar)
+   }
+ /*******************/    
+
+
+
+
+
+
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -79,6 +128,7 @@ const MostrarSucursales = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR SUCURSAL");
       } else {
         mostrarAlertas("error");
       }
@@ -167,6 +217,7 @@ const MostrarSucursales = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
+              InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS SUCURSAL")
             }}
           >
             <i className="fa-solid fa-eye"></i>
@@ -245,6 +296,7 @@ const MostrarSucursales = () => {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL SUCURSALES")
                 }}
               >
                 <i className="fa-solid fa-file-excel"></i>
@@ -255,6 +307,7 @@ const MostrarSucursales = () => {
                 title="Exportar a PDF"
                 onClick={()=>{
                   Export_PDF(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF SUCURSALES")
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>

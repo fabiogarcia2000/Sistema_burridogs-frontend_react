@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
@@ -177,6 +178,7 @@ const TienePermisos = () =>{
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO DIARIO ENCABEZADO");
       } else {
         mostrarAlertas("error");
       }
@@ -261,6 +263,7 @@ const TienePermisos = () =>{
             onClick={() => {
               abrirModalVerMas();
               setEncabezadoVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS LIBRO DIARIO ENCABEZADO");
             }}
           >
             <i className="bi bi-eye-fill"></i>
