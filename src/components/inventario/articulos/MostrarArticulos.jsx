@@ -10,6 +10,8 @@ import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel_RC } from "../articulos/generarExcel_RC/Export_Excel_RC";
 import { Export_PDF_RC } from "../articulos/generarPDF_RC/Export_PDF_RC";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+
 
 const UrlMostrar = "http://190.53.243.69:3001/articulo/getall/";
 const UrlMostrarReceta =
@@ -17,6 +19,9 @@ const UrlMostrarReceta =
 const UrlEliminarArt = "http://190.53.243.69:3001/articulo/eliminar/";
 const UrlEliminarReceta =
   "http://190.53.243.69:3001/lista_materiales/eliminar/";
+
+const objeto = "FORM_ARTICULO";
+
 
 const MostrarArticulos = () => {
   //Configurar los hooks
@@ -45,6 +50,47 @@ const MostrarArticulos = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true)
+ 
+   const Permisos = () =>{
+     const newData = temp.filter(
+       (item) => item.objeto === objeto
+     );
+     setPermisos(newData);
+   }
+ 
+   useEffect(() => {
+     let data = localStorage.getItem('permisos')
+     if(data){
+       setTemp(JSON.parse(data))
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+ 
+   useEffect(() => {
+     if(permisos.length > 0){
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+   const TienePermisos = () =>{
+     setPermitido(permisos[0].permiso_consultar)
+   }
+ /*******************/ 
+
+
+
+
 
   //procedimineto para mostrar todos los registros
   const getRegistros = async () => {
@@ -117,6 +163,7 @@ const MostrarArticulos = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR ARTICULO");
       } else {
         mostrarAlertas("error");
       }
@@ -274,6 +321,7 @@ const MostrarArticulos = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
+              InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS ARTICULO")
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -436,6 +484,7 @@ const MostrarArticulos = () => {
                 title="Exportar a Excel"
                 onClick={() => {
                   Export_Excel(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL ARTICULOS")
                 }}
               >
                 <i class="bi bi-file-earmark-excel-fill"></i>
@@ -446,6 +495,7 @@ const MostrarArticulos = () => {
                 title="Exportar a PDF"
                 onClick={() => {
                   Export_PDF(results);
+                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF ARTICULOS")
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

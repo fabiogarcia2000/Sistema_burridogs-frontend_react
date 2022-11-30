@@ -5,11 +5,12 @@ import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const URLEditar = "http://190.53.243.69:3001/descuento/actualizar-insertar/";
 
-const objeto = "FORM_DESCUENTO_PDV";
+const objeto = "FORM_DESCUENTO";
 
 const Formulario = () => {
   const [edit] = useGlobalState('registroEdit')

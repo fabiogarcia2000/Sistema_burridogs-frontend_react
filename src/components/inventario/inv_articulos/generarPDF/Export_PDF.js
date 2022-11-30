@@ -42,7 +42,7 @@ export function Export_PDF(data) {
 
   //Parametros que se deben obtener
   var sucursal = "Principal";
-  var usuario = "jperez";
+  var usuario = "SYSTEMUSER";
   var fecha = "22-11-2022";
 
   var width = doc.internal.pageSize.getWidth(); //Para centrar el texto

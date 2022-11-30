@@ -28,7 +28,7 @@ export function Export_PDF (data) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Unidades de Medida";
     let sucursal = "Principal";
-    let usuario = "jperez";
+    let usuario = "SYSTEMUSER";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
 

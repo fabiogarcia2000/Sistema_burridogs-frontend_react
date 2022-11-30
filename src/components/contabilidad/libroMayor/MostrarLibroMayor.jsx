@@ -9,6 +9,7 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_PDF_R } from "./generarPDF_resultado/Export_PDF_R";
 import { Export_PDF_IngresoGasto } from "./generarPDF_ingresogasto/Export_PDF_IngresoGasto";
 import { useNavigate } from "react-router-dom";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
@@ -27,8 +28,10 @@ const UrlMostrarResultado = "http://190.53.243.69:3001/mc_estado_resultado/getal
 
 //INGRESOS Y GASTOS
 const UrlMostrarIngresos = "http://190.53.243.69:3001/mc_ingresos/getall";
-const UrlMostrarGastos = "http://localhost:3001/mc_gastos/getall";
-//const UrlMostrarTotalIngresos = "http://190.53.243.69:3001/mc_total_ingresos_gastos/getall";
+const UrlMostrarGastos = "http://190.53.243.69:3001/mc_gastos/getall";
+const UrlMostrarTotalIngresos = "http://190.53.243.69:3001/mc_total_ingresos/getall";
+const UrlMostrarTotalGastos = "http://localhost:3001/mc_total_gastos/getall";
+const UrlMostrarTotalIngresosGastos = "http://localhost:3001/mc_total_ingresos_gastos/getall";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
@@ -99,6 +102,29 @@ const [registrosGasto, setRegistrosGasto] = useState([]);
 useEffect(() => {
   getRegistrosGasto();
 }, []);
+
+//Configurar los hooks TOTAL INGRESOS
+const [registrosTotalIngreso, setRegistrosTotalIngreso] = useState([]);
+useEffect(() => {
+ getRegistrosTotalIngreso();
+}, []);
+
+//Configurar los hooks TOTAL GASTOS
+const [registrosTotalGasto, setRegistrosTotalGasto] = useState([]);
+useEffect(() => {
+ getRegistrosTotalGasto();
+}, []);
+
+//Configurar los hooks TOTAL GASTOS
+const [registrosTotalIngresoGasto, setRegistrosTotalIngresoGasto] = useState([]);
+useEffect(() => {
+ getRegistrosTotalIngresoGasto();
+}, []);
+
+
+
+
+
 
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
@@ -200,7 +226,7 @@ const getRegistrosIngreso = async () => {
   }
 };
 
-//procedimineto para obtener todos los registros INGRESOS
+//procedimineto para obtener todos los registros GASTOS
 const getRegistrosGasto = async () => {
   try {
     const res = await axios.get(UrlMostrarGastos);
@@ -210,6 +236,42 @@ const getRegistrosGasto = async () => {
     mostrarAlertas("errormostrar");
   }
 };
+
+//procedimineto para obtener todos los registros de TOTAL INGRESOS
+const getRegistrosTotalIngreso = async () => {
+  try {
+    const res = await axios.get(UrlMostrarTotalIngresos);
+    setRegistrosTotalIngreso(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//procedimineto para obtener todos los registros de TOTAL GASTOS
+const getRegistrosTotalGasto = async () => {
+  try {
+    const res = await axios.get(UrlMostrarTotalGastos);
+    setRegistrosTotalGasto(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+
+//procedimineto para obtener todos los registros de TOTAL GASTOS
+const getRegistrosTotalIngresoGasto = async () => {
+  try {
+    const res = await axios.get(UrlMostrarTotalIngresosGastos);
+    setRegistrosTotalIngresoGasto(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+
 
   const [sucursal, setperiodo] = useState([]);
   useEffect(() => {
@@ -343,6 +405,7 @@ const getRegistrosGasto = async () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO MAYOR");
       } else {
         mostrarAlertas("error");
       }
@@ -474,59 +537,6 @@ const getRegistrosGasto = async () => {
       {permitido ? (
 
         <div>
-          {/*Mostrar los botones: Nuevo, Excel y PDF */}
-          <div className="row">
-            <div className="col">
-              <div
-                className="btn-toolbar"
-                role="toolbar"
-                aria-label="Toolbar with button groups"
-              >
-
-                <div
-                  className="btn-group me-2"
-                  role="group"
-                  aria-label="Second group"
-                >
-                  <Link
-                    to="/"
-                    type="button"
-                    className="btn btn-success"
-                    title="Exportar a Excel"
-                  >
-                    <i className="fa-solid fa-file-excel"></i>
-                  </Link>
-                  <Link
-                    to="/"
-                    type="button"
-                    className="btn btn-danger"
-                    title="Exportar a PDF"
-                  >
-                    <i className="fa-solid fa-file-pdf"></i>
-                  </Link>
-
-                </div>
-              </div>
-            </div>
-
-            {/*Mostrar la barra de busqueda*/}
-            <div className="col-4">
-              <div className="input-group flex-nowrap">
-                <span className="input-group-text" id="addon-wrapping">
-                  <i className="bi bi-search"></i>
-                </span>
-                <input
-                  className="form-control me-2"
-                  type="text"
-                  placeholder="Buscar por código o nombre de la cuenta..."
-                  aria-label="Search"
-                  value={busqueda}
-                  onChange={valorBuscar}
-                />
-              </div>
-            </div>
-          </div>
-          <br />
 
       {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
       <div className="row">
@@ -544,6 +554,7 @@ const getRegistrosGasto = async () => {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(registrosActivos, registrosPasivos, registrosPatrimonio, registrosTotal, registrosTotalPasivo, registrosTotalPatrimonio);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF BALANCE GENERAL");
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i> Balance General
@@ -557,7 +568,8 @@ const getRegistrosGasto = async () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF_R(registrosResultado);
+                  Export_PDF_R(registrosResultado, registrosTotalIngresoGasto);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF ESTADO RESULTADOS");
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i> Estado de Resultados
@@ -571,7 +583,8 @@ const getRegistrosGasto = async () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF_IngresoGasto(registrosIngreso, registrosGasto);
+                  Export_PDF_IngresoGasto(registrosIngreso, registrosGasto, registrosTotalIngreso, registrosTotalGasto);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF INGRESOS GASTOS");
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>Ingresos y Gastos
@@ -581,8 +594,23 @@ const getRegistrosGasto = async () => {
               className="btn-group me-2"
             >
             </div>
-
+              {/*Mostrar la barra de busqueda*/}
+              <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por código o nombre de la cuenta..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
               </div>
+            </div>
+            </div>
             </div>
             <br /><br />
             <div className="row">
@@ -605,6 +633,8 @@ const getRegistrosGasto = async () => {
                   </select >
                 </div>
               </div>
+
+
             </div>
           </div>
           <br />

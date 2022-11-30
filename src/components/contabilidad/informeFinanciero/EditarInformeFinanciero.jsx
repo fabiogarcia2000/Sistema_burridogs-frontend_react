@@ -5,14 +5,58 @@ import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLEditar = "http://190.53.243.69:3001/mc_informefinanciero/actualizar-insertar/";
 
+//Identificador del formulario
+const objeto = "FORM_INFORME_FINANCIERO"
 
  const EditarInformeFinanciero = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
@@ -76,6 +120,7 @@ const URLEditar = "http://190.53.243.69:3001/mc_informefinanciero/actualizar-ins
 
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
+                    RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR INFORME FINANCIERO"); //Insertar bitacora
                     navigate("/admin/mostrarinformefinanciero");
                   } else {
                     mostrarAlertas("error");

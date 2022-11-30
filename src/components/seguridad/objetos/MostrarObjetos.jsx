@@ -132,6 +132,7 @@ const MostrarObjetos = () => {
        getRegistros();
        if (res.status === 200) {
           mostrarAlertas("eliminado"); 
+          RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR OBJETO");
        } else {
          mostrarAlertas("error");
        }
@@ -287,7 +288,7 @@ const MostrarObjetos = () => {
                  title="Exportar a Excel"
                  onClick={()=>{
                   Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL OBJETOS");
                 }}
                >
                  <i className="bi bi-file-earmark-excel-fill"></i>
@@ -298,7 +299,7 @@ const MostrarObjetos = () => {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF OBJETOS");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

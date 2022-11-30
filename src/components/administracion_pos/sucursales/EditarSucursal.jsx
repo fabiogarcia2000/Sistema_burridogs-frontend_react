@@ -6,15 +6,61 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const URLEditar = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
 
 const UrlMostrarBodegas = "http://190.53.243.69:3001/centro_costo/getall";
 
+const objeto = "FORM_SUCURSAL";
+
 const EditarSucursal = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+
+
+ /*****Obtener y corroborar Permisos*****/
+ const [temp, setTemp] = useState([]);
+ const [permisos, setPermisos] = useState([]);
+ const [permitido, setPermitido] = useState(true)
+
+ const Permisos = () =>{
+   const newData = temp.filter(
+     (item) => item.objeto === objeto
+   );
+   setPermisos(newData);
+ }
+
+ useEffect(() => {
+   let data = localStorage.getItem('permisos')
+   if(data){
+     setTemp(JSON.parse(data))
+   }
+ }, []);
+
+ useEffect(() => {
+   Permisos();
+ }, [temp]);
+
+
+ useEffect(() => {
+   if(permisos.length > 0){
+     TienePermisos();
+   }
+ }, [permisos]);
+
+ const TienePermisos = () =>{
+   setPermitido(permisos[0].permiso_consultar)
+ }
+/*******************/
+
+
+
+
+
+
 
   //procedimineto para obtener todos las bodegas y mostrarlas en select
   const [bodegas, setBodegas] = useState([]);
@@ -136,6 +182,7 @@ const EditarSucursal = () => {
 
                 if (res.status === 200) {
                   mostrarAlertas("guardado");
+                  InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR SUCURSAL");
                   navigate("/admin/mostrarsucursales");
                 } else {
                   mostrarAlertas("error");

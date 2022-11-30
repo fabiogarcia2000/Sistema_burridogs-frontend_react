@@ -70,7 +70,7 @@ export default class Wizard extends React.Component {
               )}
               {!isLastPage && <button type="submit">Siguiente</button>}
               {isLastPage && (
-                <button type="submit" disabled={submitting}>Restablecer</button>
+                <button type="submit" disabled={submitting}>Terminar</button>
               )}
             </div>
 

@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { useNavigate } from "react-router-dom";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_informefinanciero/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_informefinanciero/eliminar/";
@@ -15,7 +17,6 @@ const UrlEliminar = "http://190.53.243.69:3001/mc_informefinanciero/eliminar/";
 const objeto = "FORM_INFORME_FINANCIERO"
 
 const MostrarInformeFinanciero= () => {
-
   const navigate = useNavigate();
 
   //Configurar los hooks
@@ -135,6 +136,7 @@ const mostrarAlertas = (alerta) =>{
       getRegistros();
       if (res.status === 200) {
          mostrarAlertas("eliminado"); 
+         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR INFORME FINANCIERO");
       } else {
         mostrarAlertas("error");
       }
@@ -283,6 +285,7 @@ const mostrarAlertas = (alerta) =>{
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL INFORME FINANCIERO");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -293,6 +296,7 @@ const mostrarAlertas = (alerta) =>{
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF INFORME FINANCIERO");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

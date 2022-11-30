@@ -4,13 +4,54 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { useState, useEffect } from "react";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const URLCrear = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/impuesto/getone/";
 
+const objeto = "FORM_IMPUESTO";
+
 const Formulario = () => {
 
   const navigate = useNavigate();
+
+
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+/*******************/
+  
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) =>{
@@ -111,6 +152,7 @@ const Formulario = () => {
                   const res = await axios.put(`${URLCrear}${valores.cod_impuesto}`, valores);
                   if (res.status === 200) {
                     mostrarAlertas("guardado");
+                    InsertarBitacora(permisos[0].id_objeto, "CREAR", "CREAR IMPUESTO");
                     navigate("/admin/mostrarimpuestos");
                 } else {
                   mostrarAlertas("error");

@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 
@@ -15,9 +16,51 @@ const Urlobjetos = "http://190.53.243.69:3001/ms_objetos/getall/";
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
-const CrearPermiso = () => {
+//Identificador del formulario
+const objeto = "FORM_PERMISOS"
 
+const CrearPermiso = () => {
   const navigate = useNavigate();
+
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
   const userdata = JSON.parse(localStorage.getItem('data'))
 
@@ -55,6 +98,7 @@ const CrearPermiso = () => {
     }
   };
 
+  
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -157,6 +201,7 @@ const CrearPermiso = () => {
             const res = await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR PERMISO"); //Insertar bitacora
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");

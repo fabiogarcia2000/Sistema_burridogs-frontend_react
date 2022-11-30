@@ -131,6 +131,7 @@ const MostrarPermiso = () => {
             getRegistros();
             if (res.status === 200) {
                 mostrarAlertas("eliminado");
+                RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PERMISO");
             } else {
                 mostrarAlertas("error");
             }
@@ -216,6 +217,7 @@ const MostrarPermiso = () => {
                         onClick={() => {
                             abrirModalVerMas();
                             setRegistroVerMas(row);
+                            RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS PERMISO");
                         }}
                     >
                         <i className="bi bi-eye-fill"></i>
@@ -316,7 +318,7 @@ const MostrarPermiso = () => {
                                 title="Exportar a Excel"
                                 onClick={()=>{
                                     Export_Excel(results);
-                                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+                                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL PERMISOS");
                                   }}
                             >
                                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -327,6 +329,7 @@ const MostrarPermiso = () => {
                                 title="Exportar a PDF"
                                 onClick={() =>{
                                 Export_PDF(results);
+                                RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF PERMISOS");
                                 }}
                             >
                                 <i className="bi bi-filetype-pdf"></i>

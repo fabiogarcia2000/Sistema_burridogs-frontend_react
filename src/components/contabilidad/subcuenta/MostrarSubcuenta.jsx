@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { useNavigate } from "react-router-dom";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_subcuenta/eliminar/";
@@ -130,6 +132,7 @@ const MostrarSubCuentas = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR SUBCUENTA");
       } else {
         mostrarAlertas("error");
       }
@@ -304,6 +307,7 @@ const MostrarSubCuentas = () => {
                     title="Exportar a Excel"
                     onClick={()=>{
                       Export_Excel(results);
+                      RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL SUBCUENTA");
                     }}
                   >
                     <i className="bi bi-file-earmark-excel-fill"></i>
@@ -314,6 +318,7 @@ const MostrarSubCuentas = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF(results);
+                      RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF SUBCUENTA");
                     }}
                   >
                     <i className="bi bi-filetype-pdf"></i>

@@ -28,7 +28,7 @@ class FormatoTablaPDF extends React.Component {
     };
 
     var sucursal = "Principal";
-    var usuario = "jperez"
+    var usuario = "SYSTEMUSER"
     var fecha = "22-11-2022"
 
     var width = doc.internal.pageSize.getWidth() //Para centrar el texto
