@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import logo from "./logo1.png"; //Logo de la empresa
 
-export function Export_PDF_MV(data) {
+export function Export_PDF_RC(data) {
   const unit = "pt";
   const size = "A4"; // Use A1, A2, A3 or A4
   const orientation = "landscape"; // portrait or landscape
@@ -10,10 +10,26 @@ export function Export_PDF_MV(data) {
   const doc = new jsPDF(orientation, unit, size);
 
   //Encabezado de las columnas
-  const encabezado = [["FECHA", "TIPO", "CANTIDAD"]];
+  const encabezado = [
+    [
+      "CODIGO ARTÍCULO",
+      "NOMBRE ARTÍCULO",
+      "CÓDIGO MATERIAL",
+      "NOMBRE MATERIAL",
+      "CANTIDAD",
+      "COMENTARIO",
+    ],
+  ];
 
   //Se establecen los campos que se desean exportar
-  const datos = data.map((elt) => [elt.fecha, elt.tipo, elt.cantidad]);
+  const datos = data.map((elt) => [
+    elt.cod_articulo_padre,
+    elt.descripcion_articulo_padre,
+    elt.cod_articulo_hijo,
+    elt.descripcion_articulo_hijo,
+    elt.cantidad,
+    elt.comentario,
+  ]);
 
   //Tabla
   const tabla = {
@@ -23,6 +39,7 @@ export function Export_PDF_MV(data) {
   };
 
   //Parametros que se deben obtener
+  var artículo = data.descripcion_articulo_padre;
   var sucursal = "Principal";
   var usuario = "jperez";
   var fecha = "22-11-2022";
@@ -34,7 +51,7 @@ export function Export_PDF_MV(data) {
   doc.addImage(logo, 1500, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
   doc.text(
     [
-      "Reporte de Movimientos de Articulos Por Bodega",
+      `Receta para el artículo "${artículo}"`,
       `Sucursal: ${sucursal}`,
       `Fecha: ${fecha}`,
       `Usuario: ${usuario}`,
@@ -61,5 +78,5 @@ export function Export_PDF_MV(data) {
   }
 
   //Se guarda el documento
-  doc.save("Artic_BdgMov.pdf");
+  doc.save("Receta.pdf");
 }
