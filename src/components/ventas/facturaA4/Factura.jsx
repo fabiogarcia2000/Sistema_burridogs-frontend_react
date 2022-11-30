@@ -16,6 +16,8 @@ export default function Factura() {
     console.log(DatosEmpresa)
 
     useEffect(() => {
+        setTotalDesc(0)
+        setSubTotal(0)
         if(detalles){
             
             detalles.map((list) =>

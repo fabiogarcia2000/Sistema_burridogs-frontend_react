@@ -69,7 +69,7 @@ const PuntoDeVentas = () => {
 
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoPedido, setTipoPedido] = useState(2);
-  const [porcDescuento, setPorcDescuento] = useState({});
+  const [porcDescuento, setPorcDescuento] = useState([]);
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
   const [cambio, setCambio] = useState(0);
@@ -571,9 +571,7 @@ useEffect(() => {
       secuencia_det: item.secuencia_det,
       id_articulo: item.id_articulo,
       id_descuento: porcDescuento[0].id_descuento,
-      monto:
-        parseFloat(porcDescuento[0].porcentaje) *
-        (parseFloat(item.precio) * parseFloat(item.cantidad)),
+      monto:parseFloat(porcDescuento[0].porcentaje) *(parseFloat(item.precio) * parseFloat(item.cantidad)),
     }));
     setDetallesDesc(...detallesDesc, dato);
 
@@ -585,24 +583,20 @@ useEffect(() => {
       precio: items.precio,
       cantidad: items.cantidad,
       id_impuesto: items.id_impuesto,
-      total_impuesto:
-        (parseFloat(items.precio) * parseFloat(items.cantidad) -
-          parseFloat(items.precio) *
-            parseFloat(items.cantidad) *
-            parseFloat(porcDescuento[0].porcentaje)) *
+      total_impuesto:(parseFloat(items.precio) * parseFloat(items.cantidad)-parseFloat(items.precio) *parseFloat(items.cantidad) *parseFloat(porcDescuento[0].porcentaje)) *
         (parseFloat(items.total_impuesto) /
           (parseFloat(items.precio) * parseFloat(items.cantidad))),
       total:
-        parseFloat(items.precio) * parseFloat(items.cantidad) -
+      parseFloat(items.precio) * parseFloat(items.cantidad) -
+      parseFloat(items.precio) *
+        parseFloat(items.cantidad) *
+        parseFloat(porcDescuento[0].porcentaje) +
+      (parseFloat(items.precio) * parseFloat(items.cantidad) -
         parseFloat(items.precio) *
           parseFloat(items.cantidad) *
-          parseFloat(porcDescuento[0].porcentaje) +
-        (parseFloat(items.precio) * parseFloat(items.cantidad) -
-          parseFloat(items.precio) *
-            parseFloat(items.cantidad) *
-            parseFloat(porcDescuento[0].porcentaje)) *
-          (parseFloat(items.total_impuesto) /
-            (parseFloat(items.precio) * parseFloat(items.cantidad))),
+          parseFloat(porcDescuento[0].porcentaje)) *
+        (parseFloat(items.total_impuesto) /
+          (parseFloat(items.precio) * parseFloat(items.cantidad))),
     }));
     setNewDetalles(...newDetalles, newData);
   };
@@ -621,9 +615,11 @@ useEffect(() => {
 
   //preparar data de la venta
   const PrepararData = () => {
-    if (porcDescuento.length > 0) {
+    /**if (!porcDescuento === []) {
       setDetalles(newDetalles);
-    }
+      console.log(porcDescuento)
+      console.log("datos Descuento 2")
+    } */
     setVenta({
       ...venta,
       fecha: fechaCorta,
@@ -634,7 +630,7 @@ useEffect(() => {
       cod_sucursal:codSucursal,
       id_pos:idPos,
       secuencia_enc: parseInt(enc),
-      detalle: detalles,
+      detalle: (porcDescuento.length > 0? newDetalles : detalles),
       detalle_pago: detallesPago,
       detalle_promo: detallesPromo,
       detalle_desc: detallesDesc,
