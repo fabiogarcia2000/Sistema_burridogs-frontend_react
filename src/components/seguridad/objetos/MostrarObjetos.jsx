@@ -77,9 +77,9 @@ const MostrarObjetos = () => {
    switch (alerta){
      case 'eliminado':
        Swal.fire({
-         title: '¡Eliminado!',
-         text: "El objeto se eliminó con éxito",
-         icon: 'success',
+         title: '¡No Eliminado!',
+         text: "El objeto no se eliminó, posee dependencia con los permisos",
+         icon: 'error',
          confirmButtonColor: '#3085d6',
          confirmButtonText: 'Ok',
        });

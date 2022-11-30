@@ -95,47 +95,11 @@ const userdata = JSON.parse(localStorage.getItem('data'))
 
         }}
         onSubmit={async (valores) => {
-          try {
-            const res = await axios.get(`${UrlMostrar}${valores.rol}`
-            );
-             console.log(res);
-             if (res.data === "") {
-              //procedimineto para guardar el nuevo registro en el caso de que no exista
-              const res = await axios.put(`${URLCrear}`, valores);
-      
-              if (res.status === 200) {
-                mostrarAlertas("guardado");
-                navigate("/admin/roles");
-              } else {
-                mostrarAlertas("error");
-              }
-            } else {
-              mostrarAlertas("duplicado");
-            }
-          } catch (error) {
-            console.log(error);
-            mostrarAlertas("error");
-            navigate("/admin/roles");
-          }
-        }}
-
-
-
-
-
-
-
-
-
-
-
           //validar si existe un registro con el codigo ingresado  
-          /*try {
-            const res = await axios.get(`${UrlMostrar}${valores.rol}`);
-            console.log(res)
-            if (res.data === ""){
+          try {
+            
             //procedimineto para guardar el nuevo registro en el caso de que no exista
-            const res = await axios.put(`${URLCrear}${valores.id_rol}`, valores);
+            const res = await axios.put(`${URLCrear}`, valores);
             //await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
             mostrarAlertas("guardado");
@@ -144,15 +108,15 @@ const userdata = JSON.parse(localStorage.getItem('data'))
           } else {
             mostrarAlertas("error");
           }
-        }else{ 
-          mostrarAlertas("duplicado");
-        }
+        //}else{ 
+         // mostrarAlertas("duplicado");
+        //}
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/roles");
           }
-        }}*/
+        }}
       >
         {({ errors, values }) => (
           <Form>

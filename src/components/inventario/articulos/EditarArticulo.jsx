@@ -132,8 +132,9 @@ const FormularioEditar = () => {
           id_impuesto: edit.id_impuesto,
           id_categoria: edit.id_categoria,
           precio: edit.precio,
+          inventario_minimo: edit.inventario_minimo,
+          inventario_maximo: edit.inventario_maximo,
           //id_unidad_venta: edit.id_unidad_venta,
-          id_socio_negocio: edit.id_socio_negocio,
           //id_unidad_compra: edit.id_unidad_compra,
           codigo_barra: edit.codigo_barra,
           id_unidad_medida: edit.id_unidad_medida,
@@ -184,12 +185,14 @@ const FormularioEditar = () => {
             errores.precio = "El precio solo puede contener números";
           }
 
-          // Validacion código de barra
-          if (!valores.codigo_barra) {
-            errores.codigo_barra = "Por favor ingresa el código de barra";
-          } else if (!/^^[0-9]+$/.test(valores.codigo_barra)) {
-            errores.codigo_barra =
-              "El código de barra solo puede contener números";
+          // Validacion inventario minimo
+          if (!valores.inventario_minimo) {
+            errores.inventario_minimo = "Por favor ingrese el precio";
+          }
+
+          // Validacion inventario maximo
+          if (!valores.inventario_maximo) {
+            errores.inventario_maximo = "Por favor ingrese el precio";
           }
 
           // Validacion unidad medida
@@ -403,6 +406,51 @@ const FormularioEditar = () => {
 
               <div className="col-sm-4">
                 <div className="mb-3">
+                  <label htmlFor="invMinArticulo" className="form-label">
+                    Inventario Mínimo:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="invMinArticulo"
+                    name="inventario_minimo"
+                    placeholder="Unidades mínimas..."
+                  />
+
+                  <ErrorMessage
+                    name="inventario_minimo"
+                    component={() => (
+                      <div className="error">{errors.inventario_minimo}</div>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="invMaxArticulo" className="form-label">
+                    Inventario Máximo:
+                  </label>
+                  <Field
+                    type="text"
+                    className="form-control"
+                    id="invMaxArticulo"
+                    name="inventario_maximo"
+                    placeholder="Unidades máximas..."
+                  />
+
+                  <ErrorMessage
+                    name="inventario_maximo"
+                    component={() => (
+                      <div className="error">{errors.inventario_maximo}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-sm-4">
+                <div className="mb-3">
                   <label htmlFor="codigobarraArticulo" className="form-label">
                     Código de Barra:
                   </label>
@@ -449,9 +497,7 @@ const FormularioEditar = () => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="estadoArticulo" className="form-label">
@@ -490,6 +536,10 @@ const FormularioEditar = () => {
           </Form>
         )}
       </Formik>
+      <br />
+      <hr />
+      <h3>Agregar Receta</h3>
+      <br />
     </div>
   );
 };

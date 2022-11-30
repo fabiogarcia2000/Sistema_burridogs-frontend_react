@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
@@ -7,17 +8,43 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel_RC } from "../articulos/generarExcel_RC/Export_Excel_RC";
+import { Export_PDF_RC } from "../articulos/generarPDF_RC/Export_PDF_RC";
 
 const UrlMostrar = "http://190.53.243.69:3001/articulo/getall/";
-const UrlEliminar = "http://190.53.243.69:3001/articulo/eliminar/";
+const UrlMostrarReceta =
+  "http://190.53.243.69:3001/lista_materiales/padregetone/";
+const UrlEliminarArt = "http://190.53.243.69:3001/articulo/eliminar/";
+const UrlEliminarReceta =
+  "http://190.53.243.69:3001/lista_materiales/eliminar/";
 
 const MostrarArticulos = () => {
   //Configurar los hooks
+  const [encabezado, setEncabezado] = useState([]);
   const [registroDelete, setRegistroDelete] = useState("");
+  const [recetaDelete, setRecetaDelete] = useState("");
   const [registros, setRegistros] = useState([]);
+  const [recetas, setRecetas] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);
+
+  //procedimineto para obtener los artículos
+  const [articulos, setArticulos] = useState([]);
+  useEffect(() => {
+    getArticulos();
+  }, []);
+
+  //petición a api
+  const getArticulos = async () => {
+    try {
+      const res = await axios.get(UrlMostrar);
+      setArticulos(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //procedimineto para mostrar todos los registros
   const getRegistros = async () => {
@@ -29,6 +56,17 @@ const MostrarArticulos = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+  //procedimineto para mostrar las recetas
+  /* const getRecetas = async () => {
+    try {
+      const res = await axios.get(UrlMostrarReceta); 
+      setRecetas(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };*/
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -71,11 +109,11 @@ const MostrarArticulos = () => {
     }
   };
 
-  //procedimineto para eliminar un registro
+  //procedimineto para eliminar artículo
   const deleteRegistro = async () => {
     try {
       console.log(registroDelete);
-      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      const res = await axios.delete(`${UrlEliminarArt}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
@@ -87,14 +125,37 @@ const MostrarArticulos = () => {
       mostrarAlertas("error");
     }
   };
+
+  //procedimineto para eliminar receta
+  const deleteReceta = async () => {
+    try {
+      console.log(recetaDelete);
+      const res = await axios.delete(`${UrlEliminarReceta}${recetaDelete}`);
+      getRegistros();
+      if (res.status === 200) {
+        mostrarAlertas("eliminado");
+      } else {
+        mostrarAlertas("error");
+      }
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("error");
+    }
+  };
+
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
-  //Ventana modal para mostrar mas
+  //Ventana modal para mostrar más articulos
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
   const [registroVerMas, setRegistroVerMas] = useState({});
+
+  //Ventana modal para mostrar más recetas
+  const [modalVerMas2, setVerMas2] = useState(false);
+  const abrirModalVerMas2 = () => setVerMas2(!modalVerMas2);
+  const [registroVerMas2, setRegistroVerMas2] = useState({});
 
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
@@ -116,6 +177,9 @@ const MostrarArticulos = () => {
           .includes(busqueda.toLocaleLowerCase())
     );
   }
+
+  let results2 = [];
+  results2 = recetas;
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -212,7 +276,7 @@ const MostrarArticulos = () => {
               setRegistroVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
           <Link
@@ -222,7 +286,17 @@ const MostrarArticulos = () => {
             title="Editar"
             onClick={() => setGlobalState("registroEdit", row)}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i class="bi bi-pencil-square"></i>
+          </Link>
+          &nbsp;
+          <Link
+            to="/admin/crearmaterial"
+            type="button"
+            className="btn btn-light"
+            title="Añadir Receta"
+            onClick={() => setGlobalState("registroEdit", row)}
+          >
+            <i className="bi bi-book"></i>
           </Link>
           &nbsp;
           <button
@@ -233,7 +307,81 @@ const MostrarArticulos = () => {
               abrirModalEliminar();
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
+          </button>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+
+  //Configuramos las columnas de la tabla
+  const columns2 = [
+    {
+      name: "CÓDIGO ARTÍCULO",
+      selector: (row) => row.cod_articulo_padre,
+      sortable: true,
+      maxWidth: "260px", //ancho de la columna
+    },
+
+    {
+      name: "NOMBRE ARTICULO",
+      selector: (row) => row.descripcion_articulo_padre,
+      sortable: true,
+      maxWidth: "450px",
+    },
+    {
+      name: "CÓDIGO MATERIAL",
+      selector: (row) => row.cod_articulo_hijo,
+      sortable: true,
+      maxWidth: "150px",
+    },
+    {
+      name: "NOMBRE MATERIAL",
+      selector: (row) => row.descripcion_articulo_hijo,
+      sortable: true,
+      maxWidth: "150px",
+    },
+    {
+      name: "CANTIDAD",
+      selector: (row) => row.cantidad,
+      sortable: true,
+      maxWidth: "150px",
+    },
+    {
+      name: "COMENTARIO",
+      selector: (row) => row.comentario,
+      sortable: true,
+      maxWidth: "150px",
+    },
+
+    {
+      name: "ACCIONES",
+      cell: (row) => (
+        <>
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas2();
+              setRegistroVerMas2(row);
+            }}
+          >
+            <i className="bi bi-eye-fill"></i>
+          </Link>
+          &nbsp;
+          <button
+            className="btn btn-light"
+            title="Eliminar"
+            onClick={() => {
+              setRecetaDelete(row.id_articulo_padre);
+              abrirModalEliminar();
+            }}
+          >
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -274,7 +422,7 @@ const MostrarArticulos = () => {
                 className="btn btn-primary"
                 title="Agregar Nuevo"
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
+                <i className="bi bi-plus-lg"></i> Nuevo
               </Link>
             </div>
             <div
@@ -290,7 +438,7 @@ const MostrarArticulos = () => {
                   Export_Excel(results);
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i class="bi bi-file-earmark-excel-fill"></i>
               </Link>
               <Link
                 type="button"
@@ -300,7 +448,7 @@ const MostrarArticulos = () => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Link>
             </div>
           </div>
@@ -310,7 +458,7 @@ const MostrarArticulos = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -336,6 +484,120 @@ const MostrarArticulos = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+      </div>
+
+      {/*Sección de La Receta*/}
+      <br />
+      <hr />
+      <h3>Consultar Receta de Artículo</h3>
+      <br />
+      <div className="row">
+        <Formik
+          //valores iniciales
+          initialValues={{
+            id_articulo_padre: "",
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
+
+            // Validacion de artículo
+            if (!valores.id_articulo_padre) {
+              errores.id_articulo_padre = "Seleccione una campo";
+            }
+
+            return errores;
+          }}
+          onSubmit={async (valores) => {
+            try {
+              console.log(valores);
+              const res = await axios.get(
+                `${UrlMostrarReceta}${valores.id_articulo_padre}`
+              );
+              setRecetas(res.data);
+              console.log(res);
+            } catch (error) {
+              console.log(error);
+              mostrarAlertas("errormostrar");
+            }
+          }}
+        >
+          {({ errors }) => (
+            <Form>
+              <div className="row g-3">
+                <div className="col-sm-4">
+                  <div className="mb-3">
+                    <label htmlFor="idArticulo" className="form-label">
+                      Artículo:
+                    </label>
+                    <Field
+                      as="select"
+                      className="form-select"
+                      id="idArticulo"
+                      name="id_articulo_padre"
+                    >
+                      <option value="">Seleccionar...</option>
+                      {articulos.map((item, i) => (
+                        <option key={i} value={item.id_articulo}>
+                          {item.descripcion_articulo}
+                        </option>
+                      ))}
+                    </Field>
+
+                    <ErrorMessage
+                      name="id_articulo_padre"
+                      component={() => (
+                        <div className="error">{errors.id_articulo}</div>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 bottom-aligned">
+                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                    Consultar
+                  </button>
+                  <Link
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                    onClick={() => {
+                      Export_Excel_RC(results2);
+                    }}
+                  >
+                    <i class="bi bi-file-earmark-excel-fill"></i>
+                  </Link>
+                  <Link
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                    onClick={() => {
+                      Export_PDF_RC(results2);
+                    }}
+                  >
+                    <i class="bi bi-filetype-pdf"></i>
+                  </Link>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+      {/*Mostramos la segunda tabla con los datos*/}
+      <div className="row">
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns2}
+            data={results2}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="400px"
+          />
+        ) : (
+          <p className="text-center">No hay registros que mostrar</p>
+        )}
       </div>
 
       {/* Ventana Modal de ver más*/}
@@ -443,6 +705,98 @@ const MostrarArticulos = () => {
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Ventana Modal de ver más receta*/}
+      <Modal isOpen={modalVerMas2} toggle={abrirModalVerMas2} centered>
+        <ModalHeader toggle={abrirModalVerMas2}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CÓDIGO ARTÍCULO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.cod_articulo_padre} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">NOMBRE ARTÍCULO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.descripcion_articulo_padre} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CODIGO MATERIAL: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.cod_articulo_hijo} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CANTIDAD: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.cantidad} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">COMENTARIO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.comentario} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CREADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.creado_por} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.fecha_creacion} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MODIFICADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.modificado_por} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas2.fecha_modificacion} </p>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas2}>
             Cerrar
           </Button>
         </ModalFooter>

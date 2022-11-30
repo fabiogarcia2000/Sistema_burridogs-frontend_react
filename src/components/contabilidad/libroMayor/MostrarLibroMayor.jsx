@@ -23,10 +23,12 @@ const UrlMostrarTotalPatrimonio = "http://190.53.243.69:3001/mc_total_patrimonio
 
 //ESTADO DE RESULTADOS
 const UrlMostrarResultado = "http://190.53.243.69:3001/mc_estado_resultado/getall";
-const UrlMostrarTotalIngresosGastos = "http://190.53.243.69:3001/mc_total_ingresos_gastos/getall";
 
-//INGRESOGASTO
-const UrlMostrarIngresoGasto = "http://190.53.243.69:3001/mc_ingresos/getall";
+
+//INGRESOS Y GASTOS
+const UrlMostrarIngresos = "http://190.53.243.69:3001/mc_ingresos/getall";
+const UrlMostrarGastos = "http://localhost:3001/mc_gastos/getall";
+//const UrlMostrarTotalIngresos = "http://190.53.243.69:3001/mc_total_ingresos_gastos/getall";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
@@ -86,10 +88,16 @@ useEffect(() => {
   getRegistrosResultado();
 }, []);
 
-//Configurar los hooks INGRESOS Y GASTOS
-const [registrosIngresoGasto, setRegistrosIngresoGasto] = useState([]);
+//Configurar los hooks INGRESOS
+const [registrosIngreso, setRegistrosIngreso] = useState([]);
 useEffect(() => {
-  getRegistrosIngresoGasto();
+  getRegistrosIngreso();
+}, []);
+
+//Configurar los hooks GASTOS
+const [registrosGasto, setRegistrosGasto] = useState([]);
+useEffect(() => {
+  getRegistrosGasto();
 }, []);
 
   //procedimineto para obtener todos los registros
@@ -181,17 +189,27 @@ const getRegistrosResultado = async () => {
   }
 };
 
-//procedimineto para obtener todos los registros INGRESOS Y GASTOS
-const getRegistrosIngresoGasto = async () => {
+//procedimineto para obtener todos los registros INGRESOS
+const getRegistrosIngreso = async () => {
   try {
-    const res = await axios.get(UrlMostrarIngresoGasto);
-    setRegistrosIngresoGasto(res.data);
+    const res = await axios.get(UrlMostrarIngresos);
+    setRegistrosIngreso(res.data);
   } catch (error) {
     console.log(error);
     mostrarAlertas("errormostrar");
   }
 };
 
+//procedimineto para obtener todos los registros INGRESOS
+const getRegistrosGasto = async () => {
+  try {
+    const res = await axios.get(UrlMostrarGastos);
+    setRegistrosGasto(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
 
   const [sucursal, setperiodo] = useState([]);
   useEffect(() => {
@@ -553,7 +571,7 @@ const getRegistrosIngresoGasto = async () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
-                  Export_PDF_IngresoGasto(registrosIngresoGasto);
+                  Export_PDF_IngresoGasto(registrosIngreso, registrosGasto);
                 }}
               >
                 <i className="fa-solid fa-file-pdf"></i>Ingresos y Gastos

@@ -6,14 +6,54 @@ import { useGlobalState } from "../../../globalStates/globalStates";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCAI } from "../../../utils/cambiarAMayusculas";
+import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 
 const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
 const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
+
+const objeto = "FORM_DESCUENTO_PDV";
 
  const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+/*******************/
+
 
   //procedimineto para obtener todos los pos y mostrarlas en select
   const [pos, setpos] = useState([]);
@@ -163,6 +203,7 @@ const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
                 const res = await axios.put(`${URLEditar}${valores.id_correlativo}`, valores);
                 if (res.status === 200) {
                   mostrarAlertas("guardado");
+                  InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CORRELATIVO");
                   navigate("/admin/mostrartalonarioSAR");
               } else {
                 mostrarAlertas("error");
