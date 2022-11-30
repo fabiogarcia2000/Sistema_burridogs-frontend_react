@@ -13,6 +13,7 @@ import LoginPos from "../components/ventas/loginPOS/LoginPos";
 import PuntoDeVentas from "../components/ventas/PuntoVentas/PuntoDeVentas";
 import VentasRealizadas from "../components/ventas/listaVentas/ListaVentas";
 import FacturaA4 from "../components/ventas/facturaA4/Factura"
+import Corte from "../components/ventas/corte/Corte"
 
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
 import CrearSucursal from "../components/administracion_pos/sucursales/CrearSucursal";
@@ -263,10 +264,11 @@ function Rutas() {
             <Route path="punto-de-ventas" element={<PuntoDeVentas />} />
             <Route path="ventas-realizadas" element={<VentasRealizadas />} />
             <Route path="factura-generada" element={<FacturaA4 />} />
+            <Route path="corte-caja/:id" element={<Corte />} />
 
           {/*Rutas Administración POS*/}
           <Route path="login-pos" element={<LoginPos />} />
-          <Route path="punto-de-ventas" element={<PuntoDeVentas />} />
+          <Route path="punto-de-ventas/:idPos" element={<PuntoDeVentas />} />
           <Route path="ventas-realizadas" element={<VentasRealizadas />} />
 
 
