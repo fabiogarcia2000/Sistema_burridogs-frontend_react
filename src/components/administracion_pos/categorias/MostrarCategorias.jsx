@@ -197,7 +197,7 @@ const MostrarCategorias = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
-              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS");
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS CATEGORIA");
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -297,7 +297,7 @@ const MostrarCategorias = () => {
            title="Exportar a Excel"
            onClick={()=>{
              Export_Excel(results);
-             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL CATEGORIA");
            }}
          >
            <i className="bi bi-file-earmark-excel-fill"></i>
@@ -308,7 +308,7 @@ const MostrarCategorias = () => {
            title="Exportar a PDF"
            onClick={() =>{
              Export_PDF(results);
-             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF");
+             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF CATEGORIA");
            }}
          >
           <i className="bi bi-filetype-pdf"></i>
