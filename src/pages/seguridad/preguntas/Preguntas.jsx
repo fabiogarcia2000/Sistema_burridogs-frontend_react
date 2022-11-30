@@ -8,6 +8,7 @@ import axios from "axios";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 // const urlapi = "http://localhost:3001";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta/getall/";
@@ -329,6 +330,9 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>

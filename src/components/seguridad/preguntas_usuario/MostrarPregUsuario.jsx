@@ -6,6 +6,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF_pregusuario/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/ms_pregunta_usuario/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/ms_pregunta_usuario/eliminar/";
@@ -266,6 +268,10 @@ const MostrarPregUsuario = () => {
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+                }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>

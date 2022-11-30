@@ -7,6 +7,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { useNavigate } from "react-router-dom";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/mc_catalogo/eliminar/";
@@ -309,9 +310,9 @@ const MostrarCuentas = () => {
                     type="button"
                     className="btn btn-success"
                     title="Exportar a Excel"
-                    /*onClick={() => {
+                    onClick={()=>{
                       Export_Excel(results);
-                    }}*/
+                    }}
                   >
                     <i className="bi bi-file-earmark-excel-fill"></i>
                   </Button>

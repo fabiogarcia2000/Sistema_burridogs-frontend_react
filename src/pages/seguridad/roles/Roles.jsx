@@ -8,6 +8,7 @@ import axios from "axios";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 import { Export_PDF } from "./generarPDF_rol/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlEliminar = "http://190.53.243.69:3001/ms_rol/eliminar/";
 
@@ -326,6 +327,9 @@ export default function Roles(props) {
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>
