@@ -31,12 +31,8 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-            <li>
-              <Link to="/admin/editarusuario">
-                <i className="bi bi-circle"></i>
-                <span>Editar mi usuario</span>
-              </Link>
-            </li>
+
+
             <li>
               <Link to="/admin/cambiocontrasena">
                 <i className="bi bi-circle"></i>

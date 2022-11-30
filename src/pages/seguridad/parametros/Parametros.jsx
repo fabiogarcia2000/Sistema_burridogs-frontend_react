@@ -9,6 +9,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; import '../preguntas/preguntas.css';
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../../components/seguridad/bitacora/RegistroBitacora";
 
 // const urlapi = "http://localhost:3001";
 
@@ -133,6 +134,7 @@ const deleteRegistro = async () => {
     getRegistros();
     if (res.status === 200) {
       mostrarAlertas("eliminado");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PARÁMETRO");
     } else {
       mostrarAlertas("error");
     }
@@ -315,6 +317,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                  title="Exportar a Excel"
                  onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL PARÁMETROS");
                 }}
                >
                  <i className="bi bi-file-earmark-excel-fill"></i>
@@ -325,6 +328,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF PARÁMETROS");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

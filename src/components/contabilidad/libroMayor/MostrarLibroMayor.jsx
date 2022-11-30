@@ -476,11 +476,6 @@ const getRegistrosGasto = async () => {
       {permitido ? (
 
         <div>
-          {/*Mostrar los botones: Nuevo, Excel y PDF */}
-          <div className="row">
-            
-          </div>
-          <br />
 
       {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
       <div className="row">

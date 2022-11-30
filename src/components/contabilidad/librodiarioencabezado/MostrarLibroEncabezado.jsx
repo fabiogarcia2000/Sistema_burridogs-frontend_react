@@ -7,6 +7,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
@@ -232,11 +234,6 @@ const TienePermisos = () =>{
       sortable: true,
     },
     {
-      name: "DESCRIPCION",
-      selector: (row) => row.descripcion,
-      sortable: true,
-    },
-    {
       name: "FECHA INICIAL",
       selector: (row) => row.fecha_inicial,
       sortable: true,
@@ -247,8 +244,13 @@ const TienePermisos = () =>{
       sortable: true,
     },
     {
-      name: "DESCRIPCION",
-      selector: (row) => row.descripcion_estado_periodo,
+      name: "MONTO DEBE",
+      selector: (row) => row.monto_debe,
+      sortable: true,
+    },
+    {
+      name: "MONTO HABER",
+      selector: (row) => row.monto_haber,
       sortable: true,
     },
 
@@ -284,7 +286,7 @@ const TienePermisos = () =>{
                 setGlobalState("registroEdit", row);
                 navigate("/admin/editarestado")
               }else{
-                mostrarAlertas("/admin/mostrarlibrodetalle");
+                mostrarAlertas("/admin/CrearLibroEncabezado");
               } 
             }}
           >
@@ -350,7 +352,7 @@ const TienePermisos = () =>{
                 title="Agregar Nuevo"
                 onClick={() => {
                   if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearencabezado..........") //NO HAY RUTA
+                    navigate("/admin/CrearLibroEncabezado") 
                   }else{
                    mostrarAlertas("permisos");
                   }              
@@ -364,22 +366,29 @@ const TienePermisos = () =>{
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LIBRO DIARIO ENCABEZADO");
+                }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
-              </Link>
-              <Link
-                to="/"
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LIBRO DIARIO ENCABEZADO");
+                }}
               >
                 <i className="bi bi-filetype-pdf"></i>
-              </Link>
+              </Button>
               
             </div>
           </div>
@@ -450,19 +459,19 @@ const TienePermisos = () =>{
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">MONTO DEBE: </p>
+              <p className="colorText">DESCRIPCION: </p>
             </div>
             <div className="col-sm-6">
-              <p> {encabezadoVerMas.monto_debe} </p>
+              <p> {encabezadoVerMas.descripcion} </p>
             </div>
           </div>
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">MONTO HABER: </p>
+              <p className="colorText">DESCRIPCION ESTADO PERIODO: </p>
             </div>
             <div className="col-sm-6">
-              <p> {encabezadoVerMas.monto_haber} </p>
+              <p> {encabezadoVerMas.descripcion_estado_periodo} </p>
             </div>
           </div>
 
