@@ -1,9 +1,32 @@
 import React from 'react'
+import { useGlobalState } from "../../../globalStates/globalStates";
 import { Link } from "react-router-dom";
 import logoEmpresa from "../../../assets/img/logo1.png";
 import "./styles.css";
+import { useState, useEffect } from 'react';
 
 export default function Factura() {
+    const [totalDesc, setTotalDesc] = useState(0);
+    const [subTotal, setSubTotal] = useState(0);
+
+    const [venta] = useGlobalState('dataVenta')
+    const detalles = venta.detalle;
+
+
+    useEffect(() => {
+        if(detalles){
+            
+            detalles.map((list) =>
+            setTotalDesc((prevValores) => prevValores + (parseFloat(list.monto_descuento || 0)))
+            );
+
+            detalles.map((item) =>
+            setSubTotal((prevValores) => prevValores + ((parseFloat(item.cantidad)*parseFloat(item.precio))-(parseFloat(item.monto_descuento)||0)))
+            );
+        }
+    }, [detalles]);
+    
+
   return (
     <div className='print2 text'>
         <div className='row'>
@@ -38,7 +61,7 @@ export default function Factura() {
                 </div>
                 <br /> <br />
                 <div className='row text-center'>
-                    <h6>Fecha: 24/11/2022</h6>
+                    <h6>{"Fecha: "+venta.fecha}</h6>
                 </div>
             </div>
 
@@ -47,9 +70,9 @@ export default function Factura() {
         <div className='row'>
             <div class="input-group input-group-sm mb-3">
                 <span class="input-group-text color1" id="basic-addon1"><strong>CLIENTE: </strong></span>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" value="NOMBRE APELLIDO"/>
+                <input type="text" class="form-control" placeholder="Username" aria-label="Username" value={venta.nombre_cliente}/>
                 <span class="input-group-text color1"><strong>R.T.N: </strong></span>
-                <input type="text" class="form-control" placeholder="Server" aria-label="Server" value="0000-0000-00000"/>
+                <input type="text" class="form-control" placeholder="Server" aria-label="Server" value={venta.rtn}/>
             </div>
         </div>
 
@@ -65,116 +88,24 @@ export default function Factura() {
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    
+                    {detalles && 
+                        detalles.map((item, i) =>(
+                            <tr key={i}>
+                                <td>{item.cantidad}</td>
+                                <td>{item.descripcion_articulo}</td>
+                                <td>{"L. "+item.precio}</td>
+                                <td>{"L. "+(item.monto_descuento ||0)}</td>
+                                <td>{"L. "+((parseFloat(item.precio)*parseFloat(item.cantidad))-(parseFloat(item.monto_descuento)||0))}</td>
+                             </tr>
+                        ))
+
+                    }
+
+
+                <tr>                    
                     <td  className='text-end' colspan="3"><strong>TOTAL</strong></td>
-                    <td><strong>L. 0.0</strong></td>
-                    <td><strong>L. 0.0</strong></td>
+                    <td><strong>{"L. "+totalDesc}</strong></td>
+                    <td><strong>{"L. "+subTotal}</strong></td>
                 </tr>
                 </tbody>
             </table>
@@ -193,15 +124,15 @@ export default function Factura() {
                     <tbody>
                         <tr>
                             <td>N° Correlativo de orden de compra exenta</td>
-                            <td className='color1'>###</td>
+                            <td className='color1'>   </td>
                         </tr>
                         <tr>
                             <td>N° Correlativo de constancia de registro exonerado</td>
-                            <td className='color1'>###</td>
+                            <td className='color1'><span> </span></td>
                         </tr>
                         <tr>
                             <td>N° identificativo del registro de la SAG</td>
-                            <td className='color1'>###</td>
+                            <td className='color1'>   </td>
                         </tr>
                         </tbody>
                     </table>
@@ -235,7 +166,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td>IMPORTE GRAVADO 15%</td>
-                                    <td className='color1'>L. 0.0</td>
+                                    <td className='color1'>{"L. "+subTotal}</td>
                                 </tr>
                                 <tr>
                                     <td>IMPORTE GRAVADO 18%</td>
@@ -243,7 +174,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td>I.S.V 15%</td>
-                                    <td className='color1'>L. 0.0</td>
+                                    <td className='color1'>{"L. "+(subTotal)}</td>
                                 </tr>
                                 <tr>
                                     <td>I.S.V 18%</td>

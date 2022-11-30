@@ -9,9 +9,11 @@ export function getCurrentDate () {
 
  // obtener la fecha formato corto
 export function getCurrentDateShort () {
-  // crea un nuevo objeto `Date`
   var today = new Date();
- var data = today.toLocaleDateString();
+  var day = today.getDate();
+  var month = today.getMonth() + 1;
+  var year = today.getFullYear();
+  var data = `${year}-${month}-${day}`;
  return data;
 }
  
