@@ -279,7 +279,7 @@ const TienePermisos = () =>{
               
               if(permisos[0].permiso_actualizacion){
                 setGlobalState("registroEdit", row);
-                navigate("/admin/editarestado")
+                navigate("/admin/editarlibrodetalle")
               }else{
                 mostrarAlertas("/admin/mostrarlibrodetalle");
               } 
