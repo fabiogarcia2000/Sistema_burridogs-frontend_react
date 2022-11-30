@@ -8,9 +8,14 @@ import React, { useEffect, useRef, useState } from "react";
 import md5 from "md5";
 import { getOneParam } from "../../../utils/utils";
 import { collectErrors } from "yup/lib/util/runValidations";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const userdata = JSON.parse(localStorage.getItem("data"));
 const URLEditar = "http://190.53.243.69:3001/validatecurrentpassword/";
+
+//Identificador del formulario
+const objeto = "FORM_CAMBIO_CONTRASENA"
 
 const URL_API_ENV = process.env.REACT_APP_URL_API;
 
@@ -98,6 +103,44 @@ export default function CambioContra(props) {
     setPasswordShown(!passwordShown);
   };
 
+  //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -182,6 +225,7 @@ export default function CambioContra(props) {
           })
             mostrarAlertas("guardado");
               navigate("/admin/home");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CAMBIO CONTRASEÑA"); //Insertar bitacora
         } 
       })
         mostrarAlertas("completar");

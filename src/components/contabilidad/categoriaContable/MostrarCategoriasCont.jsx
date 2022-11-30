@@ -295,6 +295,7 @@ const MostrarCategoriasCont = () => {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL CATEGORIA CONTABLE");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
