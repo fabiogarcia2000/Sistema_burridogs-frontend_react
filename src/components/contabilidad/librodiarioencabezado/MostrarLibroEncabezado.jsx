@@ -7,11 +7,11 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 
-
-
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 const fechaHoy = "2022-02-01"
+
+const objeto = "FORM_LIBRO_ENCABEZADO"
 
 const MostrarLibroDetalle = () => {
   const navigate = useNavigate();
@@ -70,6 +70,47 @@ useEffect(() => {
 
 //************************************************/
 
+
+/*****Obtener y corroborar Permisos*****/
+const [temp, setTemp] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [permitido, setPermitido] = useState(true)
+
+const Permisos = () =>{
+  const newData = temp.filter(
+    (item) => item.objeto === objeto
+  );
+  setPermisos(newData);
+}
+
+useEffect(() => {
+  let data = localStorage.getItem('permisos')
+  if(data){
+    setTemp(JSON.parse(data))
+  }
+}, []);
+
+useEffect(() => {
+  Permisos();
+}, [temp]);
+
+
+useEffect(() => {
+  if(permisos.length > 0){
+    TienePermisos();
+  }
+}, [permisos]);
+
+
+const TienePermisos = () =>{
+  setPermitido(permisos[0].permiso_consultar)
+}
+
+/*******************/
+
+
+
+
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -114,6 +155,16 @@ useEffect(() => {
         });
 
         break;
+
+        case "permisos":
+      Swal.fire({
+        title: "Lo siento, no tienes permisos para realizar esta acción.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+      });
+
+      break;
       default: break;
     }
   };
@@ -212,7 +263,7 @@ useEffect(() => {
               setEncabezadoVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
           <button
@@ -226,20 +277,31 @@ useEffect(() => {
                 navigate(`/admin/mostrarlibrodetalle/${row.id_libro_diario_enca}`)
               }
               
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarestado")
+              }else{
+                mostrarAlertas("/admin/mostrarlibrodetalle");
+              } 
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_subcuenta);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_libro_diario_enca);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -261,6 +323,10 @@ useEffect(() => {
     <div className="container">
       <h3>Encabezado Libro Diario</h3>
       <br />
+
+      {permitido? (
+     
+     <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -279,9 +345,15 @@ useEffect(() => {
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
-                
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/crearencabezado..........") //NO HAY RUTA
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
+                <i className="bi bi-plus-lg"></i> Nuevo
               </button>
             </div>
             <div
@@ -295,7 +367,7 @@ useEffect(() => {
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Link>
               <Link
                 to="/"
@@ -303,7 +375,7 @@ useEffect(() => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Link>
               
             </div>
@@ -314,7 +386,7 @@ useEffect(() => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -331,6 +403,7 @@ useEffect(() => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -340,7 +413,15 @@ useEffect(() => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ninguna Categoría</p>
+        )}
       </div>
+         </div>
+     
+     ) : (
+       <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+     )}
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>

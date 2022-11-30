@@ -1,17 +1,15 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasCodigo, cambiarAMayusculasDescripArticulo } from "../../../utils/cambiarAMayusculas";
-import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
-import { useState } from "react";
 import { cambiarAMayusculasRol } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 
 
 const URLCrear = "http://190.53.243.69:3001/ms_rol/actualizar-insertar/0";
-const UrlMostrar = "http://190.53.243.69:3001/ms_rol/getall/";
+const UrlMostrar = "http://190.53.243.69:3001/ms_rol/getone/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
 let date = new Date()
@@ -99,12 +97,20 @@ const userdata = JSON.parse(localStorage.getItem('data'))
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado  
           try {
+            
             //procedimineto para guardar el nuevo registro en el caso de que no exista
-            await axios.put(`${URLCrear}`, valores);
-            //if (res.status === 200) {
+            const res = await axios.put(`${URLCrear}`, valores);
+            //await axios.put(`${URLCrear}`, valores);
+            if (res.status === 200) {
             mostrarAlertas("guardado");
             navigate("/admin/roles");
 
+          } else {
+            mostrarAlertas("error");
+          }
+        //}else{ 
+         // mostrarAlertas("duplicado");
+        //}
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");

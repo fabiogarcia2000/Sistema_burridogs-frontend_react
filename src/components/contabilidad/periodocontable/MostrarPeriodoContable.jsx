@@ -6,12 +6,15 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 import { Export_PDF } from "./generarPDF/Export_PDF";
-
+import { useNavigate } from "react-router-dom";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_periodo/eliminar/";
 
+const objeto = "FORM_PERIODO_CONTABLE"
+
 const MostrarPeriodoContable= () => {
+  const navigate = useNavigate();
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -30,6 +33,44 @@ const MostrarPeriodoContable= () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+  
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+/*******************/
 
 
 //Alertas de éxito o error al eliminar
@@ -67,7 +108,15 @@ const mostrarAlertas = (alerta) =>{
       });
 
     break;
+    case "permisos":
+      Swal.fire({
+        title: "Lo siento, no tienes permisos para realizar esta acción.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+      });
 
+      break;
 
     default: break;
   }
@@ -171,8 +220,26 @@ const mostrarAlertas = (alerta) =>{
               setPeriodoVerMas(row);
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+             <i className="bi bi-eye-fill"></i>
           </Link>
+          &nbsp;
+            <button
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarperiodo")
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
+          >
+            <i className="bi bi-pencil-square"></i>
+          </button>
+         
+          {/*</Link>
           &nbsp;          
           <Link
             to="/admin/editarperiodo"
@@ -182,17 +249,22 @@ const mostrarAlertas = (alerta) =>{
             onClick={() => setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+          </Link>*/}
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_periodo_contable);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.cod_categoria);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -214,6 +286,10 @@ const mostrarAlertas = (alerta) =>{
     <div className="container">
       <h3>Periodo Contable</h3>
       <br />
+
+      {permitido? (
+     
+     <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -227,14 +303,29 @@ const mostrarAlertas = (alerta) =>{
               role="group"
               aria-label="First group"
             >
-              <Link
+              <button
+           type="button"
+           className="btn btn-primary"
+           title="Agregar Nuevo"
+           onClick={() => {
+             if(permisos[0].permiso_insercion){
+               navigate("/admin/crearperiodo")
+             }else{
+              mostrarAlertas("permisos");
+             }              
+           }}
+         >
+           <i className="bi bi-plus-lg"></i> Nuevo
+         </button>
+             
+             {/*} <Link
                 to="/admin/crearperiodo"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+      </Link>*/}
             </div>
             <div
               className="btn-group me-2"
@@ -247,7 +338,7 @@ const mostrarAlertas = (alerta) =>{
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Link>
               <Button
                 type="button"
@@ -257,7 +348,7 @@ const mostrarAlertas = (alerta) =>{
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -267,7 +358,7 @@ const mostrarAlertas = (alerta) =>{
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -284,6 +375,7 @@ const mostrarAlertas = (alerta) =>{
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -293,7 +385,17 @@ const mostrarAlertas = (alerta) =>{
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ninguna Categoría</p>
+        )}
       </div>
+         </div>
+     
+     ) : (
+       <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+     )}
+     
+     
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>

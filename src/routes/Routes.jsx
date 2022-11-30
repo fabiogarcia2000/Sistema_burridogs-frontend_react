@@ -90,7 +90,7 @@ import EditarUsuario from "../components/seguridad/usuario/EditarUsuario";
 import Login from "../pages/seguridad/login/Login";
 import Parametros from "../pages/seguridad/parametros/Parametros";
 
-import Logs from "../pages/seguridad/logs/Logs";
+//import Logs from "../pages/seguridad/logs/Logs";
 import Pregunta from "../pages/seguridad/preguntas/Preguntas";
 import Layout from "../Layout/Layout";
 import Registro from "../pages/seguridad/registro/Registro";
@@ -156,11 +156,6 @@ import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibr
 import EditarLibroMayor from "../components/contabilidad/libroMayor/EditarLibroMayor";
 import Mayorizar from "../components/contabilidad/libroMayor/Mayorizar"; //AGREGADO
 
-//INFORMES
-import MostrarBalance from "../components/contabilidad/informes/MostrarBalance";
-import MostrarResultado from "../components/contabilidad/informes/MostrarResultado";
-import MostrarIngresoGasto from "../components/contabilidad/informes/MostrarIngresoGasto";
-
 //SUBCUENTA
 import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
 import CrearSubCuenta from "../components/contabilidad/subcuenta/CrearSubcuenta";
@@ -192,6 +187,7 @@ import ReporteLibroMayor from "../components/reports/LibroMayor";
 import EditarMiUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
 import CambioContrasena from "../components/seguridad/mi_perfil/CambioContrasena";
 import MostrarObjetos from "../components/seguridad/objetos/MostrarObjetos";
+import DesbloqueoUsuario from "../pages/seguridad/desbloqueo_usuario/desbloqueo_usuario";
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -204,6 +200,7 @@ function Rutas() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/Preguntas" element={<Pregunta />} />
+        <Route path="/desbloqueo_usuario" element={<DesbloqueoUsuario />} />
         <Route
           path="/cambio_contrasena/:id/:token"
           element={<CambioContra />}
@@ -229,7 +226,7 @@ function Rutas() {
           <Route path="createUser" element={<CreateUser />} />
           <Route path="editUser/:id" element={<EditarUsuario />} />
 
-          <Route path="logs" element={<Logs />} />
+          {/*<Route path="logs" element={<Logs />} />*/}
 
           {/*PARÁMETROS*/}
           <Route path="params" element={<Parametros />} />
@@ -379,14 +376,6 @@ function Rutas() {
           <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
           <Route path="editarlibromayor" element={<EditarLibroMayor />} />
           <Route path="mayorizar" element={<Mayorizar />} />
-
-          {/*INFORMES*/}
-          <Route path="mostrarbalance" element={<MostrarBalance />} />
-          <Route path="mostrarresultado" element={<MostrarResultado />} />
-          <Route
-            path="mostraringresosgasto"
-            element={<MostrarIngresoGasto />}
-          />
 
           {/*SUBCUENTA*/}
           <Route path="mostrarsubcuenta" element={<MostrarSubCuentas />} />

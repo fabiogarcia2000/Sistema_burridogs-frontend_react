@@ -9,6 +9,7 @@ import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusc
 
 const URLCrear = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/0";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_subcuenta/getone/";
 
 const CrearSubCuenta = () => {
 
@@ -86,25 +87,23 @@ const CrearSubCuenta = () => {
 
           // Validacion nombre cuenta
           if (!valores.id_cuenta) {
-            errores.id_cuenta = "Por favor ingresa un nombre de cuenta";
+            errores.id_cuenta = "Por favor seleccionar una cuenta";
           }
 
           // Validacion nombre subcuenta
           if (!valores.nombre_subcuenta) {
             errores.nombre_subcuenta = "Por favor ingresa un nombre de subcuenta";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_subcuenta)) {
-            errores.nombre_subcuenta = "Escribir solo en MAYÚSCULAS";
           }
 
           return errores;
 
         }}
         onSubmit={async (valores) => {
-          //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
+          //validar si existe un registro con el codigo ingresado
           try {
-            /* const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);
-             console.log(res)*/
-            // if (res.data === ""){
+            const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);
+             console.log(res)
+            if (res.data === ""){
             //procedimineto para guardar el nuevo registro en el caso de que no exista
             const res = await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
@@ -114,9 +113,9 @@ const CrearSubCuenta = () => {
               mostrarAlertas("error");
             }
 
-            //}else{ 
-            //   mostrarAlertas("duplicado");
-            //  }
+            }else{ 
+              mostrarAlertas("duplicado");
+            }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");

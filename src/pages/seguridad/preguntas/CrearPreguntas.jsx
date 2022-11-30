@@ -96,17 +96,17 @@ const CrearPregunta = () => {
             console.log(res)
             if (res.data === "") {
               //procedimineto para guardar el nuevo registro en el caso de que no exista*/
-              const res = await axios.put(`${URLCrear}${valores.id_pregunta}`, valores);
+              const res = await axios.put(`${URLCrear}`, valores);
               if (res.status === 200) {
                 mostrarAlertas("guardado");
                 navigate("/admin/questions");
               } else {
                 mostrarAlertas("error");
               }
-            } /*else {
+            /*} else {
               mostrarAlertas("duplicado");
-            }
-          }*/ catch (error) {
+            }*/
+          } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/questions");

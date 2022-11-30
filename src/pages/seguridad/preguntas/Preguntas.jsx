@@ -28,34 +28,7 @@ export default function Pregunta(props) {
   var urlApiParam = getOneParam(dataPar, "URL_API")
   const urlapi = urlApiParam.valor
 
-  /** 
-     ** Creando bitacora  
-     * enviado infromacion de bitacora a la BD
-     * */
-  const saveLog = async () => {
-    const userdata = JSON.parse(localStorage.getItem('data'))
-    let log = {
-      fecha: new Date(),
-      id_usuario: userdata.data.id || 0,
-      accion: 'LECTURA',
-      descripcion: 'Ingreso a pantalla ROLES',
-    }
-    fetch(urlapi + "/logs/save"
-      , {
-        method: 'POST',
-        body: JSON.stringify(log),
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(responseJson => {
-        // console.log("responseJson",responseJson)
-      })
-      .catch(error => {
-        // console.log(error)   
-      })
-  };
+  
   
   const [registros, setRegistros] = useState([]);
   const getRegistros = async () => {
@@ -79,7 +52,7 @@ export default function Pregunta(props) {
   };
 
   useEffect(() => {
-    saveLog()
+    //saveLog()
     getRegistros();
   }, []);
 
@@ -228,7 +201,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
               }              
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -244,7 +217,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
               
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -310,13 +283,13 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                 title="Agregar Nuevo"
                 onClick={() => {
                   if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearpregunta")
+                    navigate("/admin/crearpregunta") //
                   }else{
                    mostrarAlertas("permisos");
                   }              
                 }}
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
+                <i className="bi bi-plus-lg"></i> Nuevo
               </button>
             </div>
             <div
@@ -330,7 +303,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>
               <Button
                 type="button"
@@ -340,7 +313,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -350,7 +323,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"

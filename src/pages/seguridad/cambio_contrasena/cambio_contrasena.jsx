@@ -106,7 +106,7 @@ export default function CambioContra(props) {
       confirmPassword: md5(refConfirmContrasena.current.value),
     };
     setIsValid(false);
-    fetch(urlAPi + "/changePass", {
+    fetch(URL_API_ENV + "/changePass", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -124,9 +124,11 @@ export default function CambioContra(props) {
         setColor("success");
         setIsValid(true);
         setMesagge(responseJson.message);
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+        if (responseJson.status === true) {
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+        }
       })
       .catch((error) => {
         setIsValid(false);
@@ -154,7 +156,7 @@ export default function CambioContra(props) {
             <h1>Cambio de contraseña</h1>
 
             <form onSubmit={handleSubmit}>
-              <div className="inputs">
+              <div className="inputs mb-3">
                 <label>Contraseña:</label>
                 <div className="username">
                   <input
@@ -163,7 +165,7 @@ export default function CambioContra(props) {
                     ref={refContrasena}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <span className="showPass" onClick={togglePassword}>
+                  <span className="show-pass" onClick={togglePassword}>
                     Ver
                   </span>
                 </div>
@@ -177,7 +179,7 @@ export default function CambioContra(props) {
                     ref={refConfirmContrasena}
                     onChange={(e) => setPasswordAgain(e.target.value)}
                   />
-                  <span className="showPass" onClick={togglePassword}>
+                  <span className="show-pass" onClick={togglePassword}>
                     Ver
                   </span>
                 </div>
@@ -202,9 +204,9 @@ export default function CambioContra(props) {
                   }}
                 />
               </div>
-              <button type="submit" className="btn">
+              <Button type="submit" color="primary" size="lg" block>
                 Cambiar Contrase&ntilde;a
-              </button>
+              </Button>
             </form>
 
             {/* <div className="inputs">

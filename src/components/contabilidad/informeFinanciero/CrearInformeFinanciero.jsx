@@ -41,7 +41,7 @@ const CrearInformeFinanciero = () => {
 
       case 'duplicado':
         Swal.fire({
-          text:  'Ya existe un informe financiero con el código ingresado',
+          text:  'Ya existe ese informe financiero',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -77,11 +77,11 @@ const CrearInformeFinanciero = () => {
           
         }}
         onSubmit={async (valores) => {
-          //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
+          //validar si existe un registro con el codigo ingresado 
               try {
-                /*const res = await axios.get(`${URLMostrarUno}${valores.descripcion}`);
+                const res = await axios.get(`${URLMostrarUno}${valores.descripcion}`);
                 console.log(res)
-                if (res.data === ""){*/
+                if (res.data === ""){
                   //procedimineto para guardar el nuevo registro en el caso de que no exista
                       const res = await axios.put(`${URLCrear}${valores.id_informe_financiero}`, valores);
                       if (res.status === 200) {
@@ -91,10 +91,10 @@ const CrearInformeFinanciero = () => {
                       mostrarAlertas("error");
                     }
                     
-                }/*else{ 
+                }else{ 
                   mostrarAlertas("duplicado");
                 }
-              } */catch (error) {
+              } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
                 navigate("/admin/mostrarinformefinanciero");

@@ -206,7 +206,7 @@ const MostrarPregUsuario = () => {
               }              
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -222,7 +222,7 @@ const MostrarPregUsuario = () => {
               
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -267,7 +267,7 @@ const MostrarPregUsuario = () => {
                 className="btn btn-success"
                 title="Exportar a Excel"
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i className="bi bi-file-earmark-excel-fill"></i>
               </Button>
               <Button
                 type="button"
@@ -277,7 +277,7 @@ const MostrarPregUsuario = () => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -287,7 +287,7 @@ const MostrarPregUsuario = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"

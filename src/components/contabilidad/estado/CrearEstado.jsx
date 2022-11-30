@@ -15,8 +15,8 @@ const CrearEstado = () => {
 
 
   //Alertas de éxito o error
-  const mostrarAlertas = (alerta) =>{
-    switch (alerta){
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
       case 'guardado':
         Swal.fire({
           title: '¡Guardado!',
@@ -26,27 +26,27 @@ const CrearEstado = () => {
           confirmButtonText: 'Ok'
         });
 
-      break;
+        break;
 
-      case 'error': 
-      Swal.fire({
-        title: 'Error',
-        text:  'No se pudo crear el nuevo estado',
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-      break;
+      case 'error':
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo crear el nuevo estado',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+        break;
 
       case 'duplicado':
         Swal.fire({
-          text:  'Ya existe un estado con el mismo nombre',
+          text: 'Ya existe un estado con el mismo nombre',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
         });
 
-      break;
+        break;
 
       default: break;
     }
@@ -58,58 +58,52 @@ const CrearEstado = () => {
       <Formik
         //valores iniciales
         initialValues={{
-            id_estado: "",
-            tipo_estado: ""       
+          id_estado: "",
+          tipo_estado: ""
         }}
         //Funcion para validar
         validate={(valores) => {
-            let errores = {};
+          let errores = {};
 
-       
+          // Validacion tipo estado
+          if (!valores.tipo_estado) {
+            errores.tipo_estado = "Por favor ingresa un nombre de tipo estado";
+          }
+          return errores;
 
-        // Validacion tipo estado
-        if (!valores.tipo_estado) {
-          errores.tipo_estado = "Por favor ingresa un nombre de tipo estado";
-        } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.tipo_estado)) {
-          errores.tipo_estado = "Escribir solo en MAYÚSCULAS";
-        }
-
-  
-            return errores;
-          
         }}
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
-              try {
-                /*const res = await axios.get(`${URLMostrarUno}${valores.tipo_estado}`);
-                console.log(res)
-                if (res.data === ""){*/
-                  //procedimineto para guardar el nuevo registro en el caso de que no exista
-                      const res = await axios.put(`${URLCrear}${valores.id_estado}`, valores);
-                      if (res.status === 200) {
-                        mostrarAlertas("guardado");
-                        navigate("/admin/mostrarestado");
-                    } else {
-                      mostrarAlertas("error");
-                    }
-                    
-                }/*else{ 
-                  mostrarAlertas("duplicado");
-                }
-              } */catch (error) {
-                console.log(error);
-                mostrarAlertas("error");
+          try {
+            const res = await axios.get(`${URLMostrarUno}${valores.tipo_estado}`);
+            console.log(res)
+            if (res.data === "") {
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(`${URLCrear}${valores.id_estado}`, valores);
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
                 navigate("/admin/mostrarestado");
+              } else {
+                mostrarAlertas("error");
               }
+
+            } else {
+              mostrarAlertas("duplicado");
+            }
+          } catch (error) {
+            console.log(error);
+            mostrarAlertas("error");
+            navigate("/admin/mostrarestado");
+          }
         }}
       >
-       {({ errors, values }) => (
+        {({ errors, values }) => (
           <Form>
             <h3 className="mb-3">Nuevo Estado Libro Diario</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                <label htmlFor="TipoEstado" className="form-label">
+                  <label htmlFor="TipoEstado" className="form-label">
                     Tipo Estado:
                   </label>
                   <Field

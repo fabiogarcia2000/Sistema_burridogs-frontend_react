@@ -21,7 +21,7 @@ const UrlArticulosCategoria =
 const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
 const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
 const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
-const isv = 0.15;
+
 
 const PuntoDeVentas = () => {
   const componenteRef = useRef();
@@ -63,6 +63,7 @@ const PuntoDeVentas = () => {
 
   //***************Data de venta para insertar y factura*****************/
   const [detalles, setDetalles] = useState([]);
+  const [newDetalles, setNewDetalles] = useState([]);
 
   const [detallesPago, setDetallesPago] = useState([]);
 
@@ -231,7 +232,9 @@ const PuntoDeVentas = () => {
     } catch (error) {
       console.log(error);
     }
+    
   };
+
 
     //guardar el cliente si no existe
 //petición a api
@@ -241,6 +244,7 @@ const getGuardarCliente = async () => {
       //procedimineto para guardar el los cambios
     try {
       await axios.put(urlGuardarCliente, cliente);
+      
     } catch (error) {
       console.log(error);
 
@@ -250,6 +254,10 @@ const getGuardarCliente = async () => {
 
 useEffect(() => {
   getGuardarCliente();
+
+  if(detalles.length > 0){
+    PrepararData();
+  }
 }, [cliente]);
 
 
@@ -515,7 +523,6 @@ const handlePrint = useReactToPrint({
 //resetea el valores
   const dataCliente = (valores) => {
     setCliente({...cliente, descripcion: valores.nombre});
-    
   };
 
   //resetea el valores
@@ -544,18 +551,37 @@ const handlePrint = useReactToPrint({
     ]);
   };
 
+
   //detalles de desc
-  const detalles_Desc2 = () => {
-    setDetallesDesc([
-      ...detallesDesc,
+  const Detalles_Desc = () => {
+    let dato = detalles.map((item) => (
       {
-        secuencia_det: parseInt(det),
-        id_articulo: 31,
-        id_descuento: 1,
-        monto: 3,
-      },
-    ]);
+        secuencia_det: item.secuencia_det,
+        id_articulo: item.id_articulo,
+        id_descuento: porcDescuento[0].id_descuento,
+        monto: (parseFloat(porcDescuento[0].porcentaje))*(parseFloat(item.precio)*parseFloat(item.cantidad))
+      }
+    ));
+    setDetallesDesc(...detallesDesc, dato)
+
+    let newData = detalles.map((items) => (
+      {
+        secuencia_det: items.secuencia_det,
+        secuencia_enc: items.secuencia_enc,
+        id_articulo: items.id_articulo,
+        id_modo_pedido: items.id_modo_pedido,
+        precio: items.precio,
+        cantidad: items.cantidad,
+        id_impuesto: items.id_impuesto,
+        total_impuesto: ((parseFloat(items.precio)*parseFloat(items.cantidad))-((parseFloat(items.precio)*parseFloat(items.cantidad))*(parseFloat(porcDescuento[0].porcentaje))))*(parseFloat(items.total_impuesto)/((parseFloat(items.precio)*parseFloat(items.cantidad)))),
+        total: ((parseFloat(items.precio)*parseFloat(items.cantidad))-((parseFloat(items.precio)*parseFloat(items.cantidad))*(parseFloat(porcDescuento[0].porcentaje)))+((parseFloat(items.precio)*parseFloat(items.cantidad))-((parseFloat(items.precio)*parseFloat(items.cantidad))*(parseFloat(porcDescuento[0].porcentaje))))*(parseFloat(items.total_impuesto)/((parseFloat(items.precio)*parseFloat(items.cantidad)))))
+      }
+    ));
+    setNewDetalles(...newDetalles, newData)
+
   };
+
+
 
   const Calc_Desc = () => {
     setMontoDesc(subTotal * porcDescuento[0].porcentaje)
@@ -571,6 +597,9 @@ const handlePrint = useReactToPrint({
 
   //preparar data de la venta
   const PrepararData = () => {
+    if(porcDescuento.length > 0){
+      setDetalles(newDetalles)
+    }
     setVenta({
       ...venta,
       fecha: fechaCorta,
@@ -587,7 +616,11 @@ const handlePrint = useReactToPrint({
 
 
   useEffect(() => {
-    InsertVenta(venta);
+    if(venta.detalle.length > 0){
+     InsertVenta(venta);
+     console.log("DATA VENTA:")
+     console.log(venta)
+    } 
   }, [venta]);
 
 
@@ -879,9 +912,13 @@ const handlePrint = useReactToPrint({
                 } else {
                   //procedimineto para guardar el los cambios
                   abrirModalVenta();
+                  setDetallesPago([]);
                   Detalles_Pago();
                   setTipoPedido(valores.id_modo_pedido);
                   setTotalEnLetras(numeroALetras(parseFloat(total)));
+                  setDetallesDesc([])
+                  setNewDetalles([])
+                  Detalles_Desc()
                 }
               }}
             >
@@ -1015,6 +1052,11 @@ const handlePrint = useReactToPrint({
 
         onSubmit={async (valores) => {
           getCliente(valores.id_cliente);
+
+          setTimeout(function(){
+            //PrepararData()
+          }, 3000);
+          
         }}
       >
 
@@ -1079,6 +1121,7 @@ const handlePrint = useReactToPrint({
             color="primary"
             onClick={() => {
               abrirModalCliente();
+              
               //InsertVenta(venta);
               handlePrint();              
             }}
@@ -1116,11 +1159,9 @@ const handlePrint = useReactToPrint({
         }}
 
         onSubmit={ (valores) => {
-          dataCliente(valores)
-          console.log("Nombre: "+valores.nombre)
           abrirModalCliente2();
           abrirModalCliente();
-          PrepararData();
+          dataCliente(valores)
         }}
       >
 

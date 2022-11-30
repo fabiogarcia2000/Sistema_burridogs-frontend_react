@@ -75,9 +75,9 @@ const MostrarObjetos = () => {
    switch (alerta){
      case 'eliminado':
        Swal.fire({
-         title: '¡Eliminado!',
-         text: "El objeto se eliminó con éxito",
-         icon: 'success',
+         title: '¡No Eliminado!',
+         text: "El objeto no se eliminó, posee dependencia con los permisos",
+         icon: 'error',
          confirmButtonColor: '#3085d6',
          confirmButtonText: 'Ok',
        });
@@ -203,7 +203,7 @@ const MostrarObjetos = () => {
               }
               }}
            >
-             <i className="fa-solid fa-pen-to-square"></i>
+             <i className="bi bi-pencil-square"></i>
            </button>
            &nbsp;
            <button
@@ -219,7 +219,7 @@ const MostrarObjetos = () => {
 
               }}
             >
-             <i className="fa-solid fa-trash"></i>
+             <i className="bi bi-trash3-fill"></i>
            </button>
          </>
        ),
@@ -270,7 +270,7 @@ const MostrarObjetos = () => {
                   }
                   }}
                >
-                 <i className="fa-solid fa-plus"></i> Nuevo
+                 <i className="bi bi-plus-lg"></i> Nuevo
                </button>
              </div>
              <div
@@ -284,7 +284,7 @@ const MostrarObjetos = () => {
                  className="btn btn-success"
                  title="Exportar a Excel"
                >
-                 <i className="fa-solid fa-file-excel"></i>
+                 <i className="bi bi-file-earmark-excel-fill"></i>
                </Button>
                <Button
                 type="button"
@@ -294,7 +294,7 @@ const MostrarObjetos = () => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
              </div>
            </div>
@@ -304,7 +304,7 @@ const MostrarObjetos = () => {
          <div className="col-4">
            <div className="input-group flex-nowrap">
              <span className="input-group-text" id="addon-wrapping">
-               <i className="fa-solid fa-magnifying-glass"></i>
+               <i className="bi bi-search"></i>
              </span>
              <input
                className="form-control me-2"
