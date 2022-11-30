@@ -30,8 +30,8 @@ const UrlMostrarResultado = "http://190.53.243.69:3001/mc_estado_resultado/getal
 const UrlMostrarIngresos = "http://190.53.243.69:3001/mc_ingresos/getall";
 const UrlMostrarGastos = "http://190.53.243.69:3001/mc_gastos/getall";
 const UrlMostrarTotalIngresos = "http://190.53.243.69:3001/mc_total_ingresos/getall";
-const UrlMostrarTotalGastos = "http://localhost:3001/mc_total_gastos/getall";
-const UrlMostrarTotalIngresosGastos = "http://localhost:3001/mc_total_ingresos_gastos/getall";
+const UrlMostrarTotalGastos = "http://190.53.243.69:3001/mc_total_gastos/getall";
+const UrlMostrarTotalIngresosGastos = "http://190.53.243.69:3001/mc_total_ingresos_gastos/getall";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
