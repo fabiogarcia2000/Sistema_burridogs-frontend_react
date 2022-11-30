@@ -286,7 +286,7 @@ const TienePermisos = () =>{
                 setGlobalState("registroEdit", row);
                 navigate("/admin/editarestado")
               }else{
-                mostrarAlertas("/admin/mostrarlibrodetalle");
+                mostrarAlertas("/admin/CrearLibroEncabezado");
               } 
             }}
           >
@@ -352,7 +352,7 @@ const TienePermisos = () =>{
                 title="Agregar Nuevo"
                 onClick={() => {
                   if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearencabezado..........") //NO HAY RUTA
+                    navigate("/admin/CrearLibroEncabezado") 
                   }else{
                    mostrarAlertas("permisos");
                   }              
