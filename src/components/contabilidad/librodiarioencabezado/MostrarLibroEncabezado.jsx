@@ -373,7 +373,7 @@ const TienePermisos = () =>{
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL INFORME FINANCIERO");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LIBRO DIARIO ENCABEZADO");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -384,7 +384,7 @@ const TienePermisos = () =>{
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF INFORME FINANCIERO");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LIBRO DIARIO ENCABEZADO");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>
