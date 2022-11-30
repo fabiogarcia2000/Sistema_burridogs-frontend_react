@@ -6,6 +6,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 
@@ -13,8 +15,48 @@ const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
+const objeto = "FORM_PERMISOS"
+
 const PermisoEditar = () => {
   const [edit] = useGlobalState('registroEdit')
+
+  //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
   const navigate = useNavigate();
    //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
@@ -89,6 +131,7 @@ const PermisoEditar = () => {
             if (res.status === 200) {
               console.log(valores)
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR PERMISO"); //Insertar bitacora
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");

@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { useNavigate } from "react-router-dom";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/mc_catalogo/eliminar/";
@@ -16,6 +18,7 @@ const objeto = "FORM_CATEGORIA_CONTABLE"
 
 const MostrarCuentas = () => {
   const navigate = useNavigate();
+
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -128,6 +131,8 @@ const MostrarCuentas = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR CATALOGO CUENTA");
+
       } else {
         mostrarAlertas("error");
       }
@@ -208,6 +213,7 @@ const MostrarCuentas = () => {
             onClick={() => {
               abrirModalVerMas();
               setCuentaVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS CATALOGO CUENTAS");
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -322,6 +328,7 @@ const MostrarCuentas = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF(results);
+                      RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF CATALOGO CUENTAS");
                     }}
                   >
                     <i className="bi bi-filetype-pdf"></i>

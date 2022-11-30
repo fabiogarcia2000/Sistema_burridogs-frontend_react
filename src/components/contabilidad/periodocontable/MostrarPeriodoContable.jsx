@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { useNavigate } from "react-router-dom";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_periodo/getall";
@@ -133,6 +134,7 @@ const mostrarAlertas = (alerta) =>{
       getRegistros();
       if (res.status === 200) {
          mostrarAlertas("eliminado"); 
+         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PERIODO CONTABLE");
       } else {
         mostrarAlertas("error");
       }
@@ -220,6 +222,7 @@ const mostrarAlertas = (alerta) =>{
             onClick={() => {
               abrirModalVerMas();
               setPeriodoVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS PERIODO CONTABLE");
             }}
           >
              <i className="bi bi-eye-fill"></i>
@@ -351,6 +354,7 @@ const mostrarAlertas = (alerta) =>{
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF PERIODO CONTABLE");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>
