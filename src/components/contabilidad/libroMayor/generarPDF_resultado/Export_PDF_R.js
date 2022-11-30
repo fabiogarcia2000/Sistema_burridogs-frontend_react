@@ -29,7 +29,7 @@ export function Export_PDF_R (data) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Estado de Resultados";
     let sucursal = "Principal";
-    let usuario = "jperez"
+    let usuario = "SYSTEMUSER"
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
 

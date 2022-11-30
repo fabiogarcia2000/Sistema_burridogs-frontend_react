@@ -99,7 +99,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Balance general";
     let sucursal = "Principal";
-    let usuario = "jperez"
+    let usuario = "SYSTEMUSER"
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
     //let total = datos4;

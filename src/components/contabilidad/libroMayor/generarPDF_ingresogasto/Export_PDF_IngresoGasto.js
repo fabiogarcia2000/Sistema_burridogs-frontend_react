@@ -42,7 +42,7 @@ export function Export_PDF_IngresoGasto (data, data2) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Ingresos y Gastos";
     let sucursal = "Principal";
-    let usuario = "jperez"
+    let usuario = "SYSTEMUSER"
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
 

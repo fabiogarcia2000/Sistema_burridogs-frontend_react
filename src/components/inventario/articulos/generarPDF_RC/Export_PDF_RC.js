@@ -41,7 +41,7 @@ export function Export_PDF_RC(data) {
   //Parametros que se deben obtener
   var artículo = data.descripcion_articulo_padre;
   var sucursal = "Principal";
-  var usuario = "jperez";
+  var usuario = "SYSTEMUSER";
   var fecha = "22-11-2022";
 
   var width = doc.internal.pageSize.getWidth(); //Para centrar el texto
