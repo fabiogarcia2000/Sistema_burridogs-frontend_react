@@ -156,11 +156,6 @@ import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibr
 import EditarLibroMayor from "../components/contabilidad/libroMayor/EditarLibroMayor";
 import Mayorizar from "../components/contabilidad/libroMayor/Mayorizar"; //AGREGADO
 
-//INFORMES
-import MostrarBalance from "../components/contabilidad/informes/MostrarBalance";
-import MostrarResultado from "../components/contabilidad/informes/MostrarResultado";
-import MostrarIngresoGasto from "../components/contabilidad/informes/MostrarIngresoGasto";
-
 //SUBCUENTA
 import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
 import CrearSubCuenta from "../components/contabilidad/subcuenta/CrearSubcuenta";
@@ -382,14 +377,7 @@ function Rutas() {
           <Route path="mostrarlibromayor" element={<MostrarLibroMayor />} />
           <Route path="editarlibromayor" element={<EditarLibroMayor />} />
           <Route path="mayorizar" element={<Mayorizar />} />
-
-          {/*INFORMES*/}
-          <Route path="mostrarbalance" element={<MostrarBalance />} />
-          <Route path="mostrarresultado" element={<MostrarResultado />} />
-          <Route
-            path="mostraringresosgasto"
-            element={<MostrarIngresoGasto />}
-          />
+        
 
           {/*SUBCUENTA*/}
           <Route path="mostrarsubcuenta" element={<MostrarSubCuentas />} />

@@ -5,10 +5,30 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
+import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_PDF_R } from "./generarPDF_resultado/Export_PDF_R";
+import { Export_PDF_IngresoGasto } from "./generarPDF_ingresogasto/Export_PDF_IngresoGasto";
 import { useNavigate } from "react-router-dom";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
+
+//BALANCE GENERAL
+const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
+const UrlMostrarPasivos = "http://190.53.243.69:3001/mc_pasivos/getall/";
+const UrlMostrarPatrimonio = "http://190.53.243.69:3001/mc_patrimonios/getall/";
+const UrlMostrarTotal = "http://190.53.243.69:3001/mc_total_activo/getall";
+const UrlMostrarTotalPasivo = "http://190.53.243.69:3001/mc_total_pasivo/getall";
+const UrlMostrarTotalPatrimonio = "http://190.53.243.69:3001/mc_total_patrimonio/getall";
+
+//ESTADO DE RESULTADOS
+const UrlMostrarResultado = "http://190.53.243.69:3001/mc_estado_resultado/getall";
+
+
+//INGRESOS Y GASTOS
+const UrlMostrarIngresos = "http://190.53.243.69:3001/mc_ingresos/getall";
+const UrlMostrarGastos = "http://localhost:3001/mc_gastos/getall";
+//const UrlMostrarTotalIngresos = "http://190.53.243.69:3001/mc_total_ingresos_gastos/getall";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
@@ -25,6 +45,61 @@ const MostrarLibroMayor = () => {
   const [registros, setRegistros] = useState([]);
 
 
+//Configurar los hooks ACTIVO
+const [registrosActivos, setRegistrosActivos] = useState([]);
+useEffect(() => {
+  getRegistrosActivos();
+}, []);
+
+
+//Configurar los hooks PASIVOS
+const [registrosPasivos, setRegistrosPasivos] = useState([]);
+useEffect(() => {
+ getRegistrosPasivos();
+}, []);
+
+//Configurar los hooks PATRIMONIO
+const [registrosPatrimonio, setRegistrosPatrimonio] = useState([]);
+useEffect(() => {
+ getRegistrosPatrimonio();
+}, []);
+
+//Configurar los hooks TOTAL ACTIVO
+const [registrosTotal, setRegistrosTotal] = useState([]);
+useEffect(() => {
+ getRegistrosTotal();
+}, []);
+
+//Configurar los hooks TOTAL PASIVO
+const [registrosTotalPasivo, setRegistrosTotalPasivo] = useState([]);
+useEffect(() => {
+ getRegistrosTotalPasivo();
+}, []);
+
+//Configurar los hooks TOTAL PATRIMONIO
+const [registrosTotalPatrimonio, setRegistrosTotalPatrimonio] = useState([]);
+useEffect(() => {
+ getRegistrosTotalPatrimonio();
+}, []);
+
+//Configurar los hooks ESTADO DE RESULTADOS
+const [registrosResultado, setRegistrosResultado] = useState([]);
+useEffect(() => {
+  getRegistrosResultado();
+}, []);
+
+//Configurar los hooks INGRESOS
+const [registrosIngreso, setRegistrosIngreso] = useState([]);
+useEffect(() => {
+  getRegistrosIngreso();
+}, []);
+
+//Configurar los hooks GASTOS
+const [registrosGasto, setRegistrosGasto] = useState([]);
+useEffect(() => {
+  getRegistrosGasto();
+}, []);
+
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
@@ -35,6 +110,106 @@ const MostrarLibroMayor = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+ //procedimineto para obtener todos los registros ACTIVOS
+ const getRegistrosActivos = async () => {
+  try {
+    const res = await axios.get(UrlMostrarActivos);
+    setRegistrosActivos(res.data); //--
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+  //procedimineto para obtener todos los registros PASIVOS
+  const getRegistrosPasivos = async () => {
+    try {
+      const res = await axios.get(UrlMostrarPasivos);
+      setRegistrosPasivos(res.data); //--
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+ //procedimineto para obtener todos los registros de PATRIMONIO
+ const getRegistrosPatrimonio = async () => {
+  try {
+    const res = await axios.get(UrlMostrarPatrimonio);
+    setRegistrosPatrimonio(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//procedimineto para obtener todos los registros de TOTAL
+const getRegistrosTotal = async () => {
+  try {
+    const res = await axios.get(UrlMostrarTotal);
+    setRegistrosTotal(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//procedimineto para obtener todos los registros de TOTAL PASIVO
+const getRegistrosTotalPasivo = async () => {
+  try {
+    const res = await axios.get(UrlMostrarTotalPasivo);
+    setRegistrosTotalPasivo(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+
+//procedimineto para obtener todos los registros de TOTAL PATRIMONIO
+const getRegistrosTotalPatrimonio = async () => {
+  try {
+    const res = await axios.get(UrlMostrarTotalPatrimonio);
+    setRegistrosTotalPatrimonio(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//procedimineto para obtener todos los registros ESTADO DE RESULTADOS
+const getRegistrosResultado = async () => {
+  try {
+    const res = await axios.get(UrlMostrarResultado);
+    setRegistrosResultado(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//procedimineto para obtener todos los registros INGRESOS
+const getRegistrosIngreso = async () => {
+  try {
+    const res = await axios.get(UrlMostrarIngresos);
+    setRegistrosIngreso(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+//procedimineto para obtener todos los registros INGRESOS
+const getRegistrosGasto = async () => {
+  try {
+    const res = await axios.get(UrlMostrarGastos);
+    setRegistrosGasto(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
 
   const [sucursal, setperiodo] = useState([]);
   useEffect(() => {
@@ -353,54 +528,59 @@ const MostrarLibroMayor = () => {
           </div>
           <br />
 
-          {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
-          <div className="row">
-            <div className="col">
-              <div
-                className="btn-toolbar"
-                role="toolbar"
-              >
-                <div
-                  className="btn-group me-2"
-                >
-
-                  <Link
-                to="/admin/mostrarbalance"
+      {/*Mostrar los botones: Balance, Estado de resultados y Ingresos/egresos */}
+      <div className="row">
+        <div className="col">
+          <div
+            className="btn-toolbar"
+            role="toolbar"
+          >
+            <div
+              className="btn-group me-2"
+            >
+              <Button
                 type="button"
                 className="btn btn-danger"
-                title="Agregar Nuevo"
+                title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(registrosActivos, registrosPasivos, registrosPatrimonio, registrosTotal, registrosTotalPasivo, registrosTotalPatrimonio);
+                }}
               >
-                <i className="fa-solid fa-file"></i> Balance general
-              </Link>
-                </div>
-                <div
-                  className="btn-group me-2"
-                >
-                  <Link
-                    to="/admin/mostrarresultado"
-                    type="button"
-                    className="btn btn-danger"
-                    title="Exportar a Excel"
-                  >
-                    <i className="fa-solid fa-file"></i> Estado de resultados
-                  </Link>
-                </div>
-                <div
-                  className="btn-group me-2"
-                >
-                  <Link
-                    to="/admin/mostraringresosgasto"
-                    type="button"
-                    className="btn btn-danger"
-                    title="Exportar a PDF"
-                  >
-                    <i className="fa-solid fa-file"></i> Ingresos y egresos
-                  </Link>
-                </div>
-                <div
-                  className="btn-group me-2"
-                >
-                </div>
+                <i className="fa-solid fa-file-pdf"></i> Balance General
+              </Button>
+            </div>
+            <div
+              className="btn-group me-2"
+            >
+               <Button
+                type="button"
+                className="btn btn-danger"
+                title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF_R(registrosResultado);
+                }}
+              >
+                <i className="fa-solid fa-file-pdf"></i> Estado de Resultados
+              </Button>
+            </div>
+            <div
+              className="btn-group me-2"
+            >
+              <Button
+                type="button"
+                className="btn btn-danger"
+                title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF_IngresoGasto(registrosIngreso, registrosGasto);
+                }}
+              >
+                <i className="fa-solid fa-file-pdf"></i>Ingresos y Gastos
+              </Button>
+            </div>
+            <div
+              className="btn-group me-2"
+            >
+            </div>
 
               </div>
             </div>
