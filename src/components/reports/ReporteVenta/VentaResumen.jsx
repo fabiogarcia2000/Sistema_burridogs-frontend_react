@@ -257,6 +257,7 @@ const ReporteVentaResumen = () => {
                 title="Exportar a PDF"
                 onClick={()=>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE RESUMEN DE VENTAS");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>
