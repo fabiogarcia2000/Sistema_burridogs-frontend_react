@@ -9,8 +9,13 @@ import { useReactToPrint } from "react-to-print";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcell/Export_Excel";
 import Swal from "sweetalert2";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useNavigate } from "react-router-dom";
 
 const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventas/";
+
+const objeto = "RPT_RESUMEN_VENTAS"
+
 
 const ReporteVentaResumen = () => {
   var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
@@ -19,6 +24,8 @@ const ReporteVentaResumen = () => {
   var sucursal = dataPar[0].descripcion_sucursal;
 
   const [encabezado, setEncabezado] = useState([]);
+  const navigate = useNavigate();
+
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
   //capturar valor a buscar
@@ -42,6 +49,42 @@ const ReporteVentaResumen = () => {
     );
   } 
   
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+/*******************/
 
   
   //Configuramos las columnas de la tabla
@@ -88,6 +131,9 @@ const ReporteVentaResumen = () => {
     <div className="container">
       <h3>Consultar el Total de las Ventas</h3>
       <br />
+      {permitido? (
+     
+     <div>
 
       <div className="row">
         <Formik
@@ -200,6 +246,7 @@ const ReporteVentaResumen = () => {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL RPT DE RESUMEN DE VENTAS");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -209,7 +256,8 @@ const ReporteVentaResumen = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results, sucursal);
+                  Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE RESUMEN DE VENTAS");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>
@@ -236,7 +284,11 @@ const ReporteVentaResumen = () => {
           <p className="text-center">No hay registros que mostrar</p>
         )}
       </div>
+      </div>
 
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
 
     </div>
   );
