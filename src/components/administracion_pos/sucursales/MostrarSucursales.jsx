@@ -373,6 +373,7 @@ const MostrarSucursales = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -382,6 +383,9 @@ const MostrarSucursales = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ningún Registro</p>
+        )}
       </div>
   </div>
 

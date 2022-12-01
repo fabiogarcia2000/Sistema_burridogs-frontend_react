@@ -331,7 +331,7 @@ const mostrarAlertas = (alerta) =>{
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+            <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -348,6 +348,7 @@ const mostrarAlertas = (alerta) =>{
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -357,6 +358,9 @@ const mostrarAlertas = (alerta) =>{
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ningún Registro</p>
+        )}
       </div>
       </div>
 ) : (

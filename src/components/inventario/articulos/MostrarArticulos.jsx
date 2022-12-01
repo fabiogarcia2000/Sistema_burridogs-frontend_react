@@ -526,6 +526,7 @@ const MostrarArticulos = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -535,6 +536,9 @@ const MostrarArticulos = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+           ) : (
+     <p className="text-center">Ningún Registro</p>
+   )}
       </div>
 
       {/*Sección de La Receta*/}
