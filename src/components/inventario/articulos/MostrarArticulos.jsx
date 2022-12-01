@@ -84,7 +84,8 @@ const MostrarArticulos = () => {
    }, [permisos]);
  
    const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
+     setPermitido(permisos[0].permiso_consultar);
+     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR ARTICULOS")
    }
  /*******************/ 
 

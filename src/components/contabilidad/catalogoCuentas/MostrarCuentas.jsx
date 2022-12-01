@@ -158,7 +158,7 @@ const MostrarCuentas = () => {
   } else {
     results = registros.filter((dato) =>
       dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+      dato.nombre_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase())
     )
   };
 

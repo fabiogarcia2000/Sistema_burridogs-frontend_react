@@ -158,7 +158,7 @@ const mostrarAlertas = (alerta) =>{
        results = registros
    }else{
         results = registros.filter( (dato) =>
-        dato.descripcion.toString().includes(busqueda.toLocaleLowerCase())
+        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
         )
    };
 
