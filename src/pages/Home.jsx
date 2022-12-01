@@ -68,6 +68,7 @@ const getDatos = async () => {
     const res = await axios.get(UrlDatosEmpresa);
     if(res.status === 200){
       setDatosEmpresa(res.data);
+      localStorage.setItem("dataEmpresa", JSON.stringify(res.data));
       console.log(res.data)
     }
     

@@ -14,6 +14,6 @@ export const InsertVenta = async (valores) => {
     
   } catch (error) {
     console.log(error);
-
+    setGlobalState("dataVenta", {});
   }
   };

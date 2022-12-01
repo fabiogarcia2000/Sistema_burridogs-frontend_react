@@ -385,11 +385,11 @@ useEffect(() => {
                 </tr>
                 <tr>                    
                     <td  className='text-end' colspan="4"><strong>I.S.V</strong></td>
-                    <td><strong>{"L. "+totalIsv}</strong></td>
+                    <td><strong>{"L. "+datosEncabezado.impuesto_15}</strong></td>
                 </tr>
                 <tr>                    
                     <td  className='text-end' colspan="4"><strong>TOTAL PAGADO: </strong></td>
-                    <td><strong>{"L. "+totalPagar}</strong></td>
+                    <td><strong>{"L. "+datosEncabezado.venta_total}</strong></td>
                 </tr>
                 </tbody>
             </table>

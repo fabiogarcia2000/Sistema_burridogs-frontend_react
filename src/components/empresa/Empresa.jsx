@@ -15,7 +15,8 @@ const URLGuardar = "http://190.53.243.69:3001/empresa/actualizar-insertar/";
 const objeto = "FORM_ARTICULO";
 
 const FormularioEmpresa = () => {
-  const [DatosEmpresa] = useGlobalState('datosEmpresa');
+  //const [DatosEmpresa] = useGlobalState('datosEmpresa');
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"))
 
   console.log(DatosEmpresa)
 
@@ -141,10 +142,10 @@ const FormularioEmpresa = () => {
             errores.rtn = "Requerido";
           }
 
-          // Validacion logo1
+          /**   // Validacion logo1
           if (!valores.logo1) {
             errores.logo1 = "Requerido";
-          } 
+          }  */
              
           return errores;
         }}
