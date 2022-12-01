@@ -53,6 +53,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Impuestos.pdf")
+    //doc.save("Impuestos.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

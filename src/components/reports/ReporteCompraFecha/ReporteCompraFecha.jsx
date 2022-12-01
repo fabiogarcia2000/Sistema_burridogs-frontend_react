@@ -142,7 +142,7 @@ const ReporteCompraFecha = () => {
               abrirModalEliminar();
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
           </>
         ),
@@ -329,7 +329,7 @@ const ReporteCompraFecha = () => {
               value={busqueda}
               onChange={valorBuscar}
             />
-            <Link
+            <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
@@ -337,9 +337,9 @@ const ReporteCompraFecha = () => {
                   Export_Excel(results);
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Link
+               <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
@@ -347,8 +347,8 @@ const ReporteCompraFecha = () => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
           </div>
         </div>
       </div>

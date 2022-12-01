@@ -52,6 +52,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Unidad de Medida.pdf")
+    //doc.save("Unidad de Medida.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };
