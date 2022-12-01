@@ -51,6 +51,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Reporte de Ventas por Fecha.pdf")
+    //doc.save("Reporte de Ventas por Fecha.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

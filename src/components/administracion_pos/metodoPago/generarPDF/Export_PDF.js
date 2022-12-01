@@ -52,6 +52,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Metodos de Pago.pdf")
+    //doc.save("Metodos de Pago.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

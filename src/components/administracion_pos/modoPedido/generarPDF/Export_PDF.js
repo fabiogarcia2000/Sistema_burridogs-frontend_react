@@ -52,6 +52,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Modo de Pedido.pdf")
+    //doc.save("Modo de Pedido.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

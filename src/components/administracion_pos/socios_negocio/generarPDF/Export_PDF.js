@@ -54,6 +54,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Socio de Negocio.pdf")
+    //doc.save("Socio de Negocio.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

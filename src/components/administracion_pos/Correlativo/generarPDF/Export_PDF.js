@@ -56,6 +56,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Correlativos.pdf")
+    //doc.save("Correlativos.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

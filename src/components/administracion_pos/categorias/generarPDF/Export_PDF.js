@@ -58,6 +58,6 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Categorias.pdf")
-
+    //doc.save("Categorias.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 };
