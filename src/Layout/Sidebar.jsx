@@ -31,8 +31,6 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-
-
             <li>
               <Link to="/admin/cambiocontrasena">
                 <i className="bi bi-circle"></i>
@@ -183,12 +181,6 @@ function Sidebar() {
               </Link>
             </li>
 
-            <li>
-              <Link to="/admin/mostrarmateriales">
-                <i className="bi bi-circle"></i>
-                <span>Materiales</span>
-              </Link>
-            </li>
             <li>
               <Link to="/admin/mostrarunidadesmedida">
                 <i className="bi bi-circle"></i>
