@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["ID SUBCUENTA", "NOMBRE CUENTA", "NOMBRE SUBCUENTA", "SALDO"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_subcuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.saldo]);
+    const datos = data.map((elt,i) => [(i+1), elt.nombre_cuenta, elt.nombre_subcuenta, elt.saldo]);
     
     //Tabla
     const tabla = {

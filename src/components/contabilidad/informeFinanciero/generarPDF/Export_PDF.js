@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["ID", "INFORME FINANCIERO"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_informe_financiero, elt.descripcion]);
+    const datos = data.map((elt,i) => [(i+1), elt.descripcion]);
     
     //Tabla
     const tabla = {

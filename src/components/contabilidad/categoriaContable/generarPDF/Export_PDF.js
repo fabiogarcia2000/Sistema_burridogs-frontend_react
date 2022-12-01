@@ -15,8 +15,8 @@ export function Export_PDF (data) {
     const encabezado = [["ID", "CATEGORIA"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_categoria  , elt.nombre_categoria]);
-    
+    const datos = data.map((elt,i) => [(i+1),elt.nombre_categoria]);
+
     //Tabla
     const tabla = {
       theme: 'striped', // 'striped', 'grid' or 'plain'

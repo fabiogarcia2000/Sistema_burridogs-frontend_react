@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["ID PERIODO", "DESCRIPCIÓN", "FECHA INICIAL", "FECHA FINAL", "NOMBRE USUARIO", "FECHA CREACIÓN"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_periodo_contable, elt.descripcion_periodo, elt.fecha_inicial, elt.fecha_final, elt.nombre_usuario, elt.fecha_creacion]);
+    const datos = data.map((elt,i) => [(i+1), elt.descripcion_periodo, elt.fecha_inicial, elt.fecha_final, elt.nombre_usuario, elt.fecha_creacion]);
     
     //Tabla
     const tabla = {
