@@ -12,10 +12,10 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     const doc = new jsPDF(orientation, unit, size);
     
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO", "TOTAL"]];
+    const encabezado = [["CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
     //const encabezadoActivo = [["ACTIVOS"]];
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo, elt.sumtotal]);
+    const datos = data.map(elt=> [elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
     
     //Tabla
     const tabla = {
@@ -98,8 +98,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Balance general";
-    let sucursal = "Principal";
-    let usuario = "jperez"
+    let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
     //let total = datos4;
@@ -109,7 +108,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 38, 20, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+  doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
    // doc.text(`ACTIVOS:`);
     doc.autoTable(tabla);
    // doc.addPage();
@@ -137,7 +136,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    //Se guarda el documento
-    doc.save("Balance general.pdf")
+    //Abre el documento en una nueva pestaña
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 
 };

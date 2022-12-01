@@ -38,6 +38,8 @@ const PuntoDeVentas = () => {
 
   const userdata = JSON.parse(localStorage.getItem("data"));
 
+ 
+
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
   const [articulosMostrar, setArticulosMostrar] = useState([]);
@@ -62,12 +64,19 @@ const PuntoDeVentas = () => {
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
+  const [ImpDesc, setImpDesc] = useState(0.0);
+  const [grabada15, setGrabada15] = useState(0.0);
   const [montoDesc, setMontoDesc] = useState(0.0);
   const [total, setTotal] = useState(0.0);
 
+  /***temp***/
+  const [tempTotal, setTempTotal] = useState(0.0);
+  const [tempIsv, setTempIsv] = useState(0.0);
+  /***temp***/
+
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoPedido, setTipoPedido] = useState(2);
-  const [porcDescuento, setPorcDescuento] = useState({});
+  const [porcDescuento, setPorcDescuento] = useState([]);
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
   const [cambio, setCambio] = useState(0);
@@ -82,24 +91,27 @@ const PuntoDeVentas = () => {
 
   const [detallesDesc, setDetallesDesc] = useState([]);
 
+ const [listo, setListo] = useState(false);
+ const [preparar, setPreparar] = useState(false);
+
   const valuesInicial = {
     secuencia_enc: undefined,
-    id_sucursal: 1,
-    cod_sucursal: "BD01",
-    fecha: "2022-11-23",
+    id_sucursal: 0,
+    cod_sucursal: "",
+    fecha: "",
     numero_cuenta: 10002,
-    venta_grabada_15: 100,
+    venta_grabada_15: 0,
     venta_grabada_18: 0,
     venta_exenta: 0,
-    impuesto_15: 15,
+    impuesto_15: 0,
     impuesto_18: 0,
-    venta_total: 115,
-    cai: "ABCDF-GHIJK-LMNOP-QRST",
-    correlativo: 1,
-    rtn: "0801-1900-1234",
-    nombre_cliente: "Fabio",
-    id_usuario: 157,
-    id_pos: 1,
+    venta_total: 0,
+    cai: "",
+    correlativo: undefined,
+    rtn: "",
+    nombre_cliente: "",
+    id_usuario: 0,
+    id_pos: 0,
     detalle: [],
     detalle_pago: [],
     detalle_promo: [],
@@ -233,7 +245,7 @@ const PuntoDeVentas = () => {
           rtn: id,
           descripcion: "",
           creado_por: "Fabio",
-          fecha_creacion: "2022-11-23",
+          fecha_creacion: "2022/11/30",
           modificado_por: "",
           fecha_modificacion: "",
         });
@@ -270,7 +282,7 @@ const PuntoDeVentas = () => {
     if (detalles.length > 0) {
       PrepararData();
     }
-  }, [cliente]);
+  }, [preparar]);
 
   useEffect(() => {
     listaCompras.map((list) =>
@@ -278,13 +290,23 @@ const PuntoDeVentas = () => {
     );
   }, [listaCompras]);
 
-  /**
-useEffect(() => {
-    setImpuesto(subTotal * isv);
-  }, [subTotal]);
+  /**********temp*********/
+  useEffect(() => {
+    setTempIsv(((subTotal||0)-(montoDesc||0))*(0.15));
+  }, [subTotal, montoDesc]);
 
-* 
- */
+  useEffect(() => {
+    setTempTotal((subTotal-montoDesc)+(tempIsv));
+  }, [tempIsv, montoDesc]);
+
+  /**********temp*********/
+
+
+useEffect(() => {
+  setGrabada15(subTotal-montoDesc);
+}, [subTotal, montoDesc]);
+
+
 
   useEffect(() => {
     setTotal(subTotal + Impuesto - montoDesc);
@@ -305,8 +327,9 @@ useEffect(() => {
 
     for (let index = 0; index < limite; index++) {
       const buscarEn = quitarTildes(articulos[index].descripcion.toLowerCase());
+      const buscarEn2 = (articulos[index].cod_articulo.toLowerCase());
       const patt = new RegExp(buscar);
-      const res = patt.test(buscarEn);
+      const res = patt.test(buscarEn, buscarEn2);
 
       if (res) {
         tmpArray.push(articulos[index]);
@@ -518,15 +541,28 @@ useEffect(() => {
 
   //resetea el valores
   const resetValores = () => {
-    setSubTotal(0);
+    /**setSubTotal(0);
     setImpuesto(0);
+    setImpDesc(0);
     setTotal(0);
     setListaCompras([]);
     setCantidad(1);
     Enc();
     setDetalles([]);
     setDetallesPromo([]);
-    setTipoPedido(0);
+    setCliente([])
+    setGrabada15(0)
+    setMontoDesc(0)
+    setTempTotal(0)
+    setTempIsv(0)
+    setDetalles([])
+    setNewDetalles([])
+    setDetallesPago([])
+    setDetallesPromo([])
+    setDetallesDesc([])
+    setListo(false)
+    setPreparar(false)
+    setVenta(valuesInicial) */
     Refrescar();
   };
 
@@ -537,12 +573,13 @@ useEffect(() => {
 
   //resetea el valores
   const Refrescar = () => {
-    //window.location.reload();
+    window.location.reload();
   };
 
   //calcular el cambio a entregar
   const Calcular_Cambio = (monto) => {
-    let cambio = monto - total;
+    let cambio = monto - tempTotal;
+    cambio = cambio.toFixed(2)
 
     if (cambio < 0) {
       setCambio(0);
@@ -567,9 +604,7 @@ useEffect(() => {
       secuencia_det: item.secuencia_det,
       id_articulo: item.id_articulo,
       id_descuento: porcDescuento[0].id_descuento,
-      monto:
-        parseFloat(porcDescuento[0].porcentaje) *
-        (parseFloat(item.precio) * parseFloat(item.cantidad)),
+      monto:parseFloat(porcDescuento[0].porcentaje) *(parseFloat(item.precio) * parseFloat(item.cantidad)),
     }));
     setDetallesDesc(...detallesDesc, dato);
 
@@ -581,27 +616,34 @@ useEffect(() => {
       precio: items.precio,
       cantidad: items.cantidad,
       id_impuesto: items.id_impuesto,
-      total_impuesto:
-        (parseFloat(items.precio) * parseFloat(items.cantidad) -
-          parseFloat(items.precio) *
-            parseFloat(items.cantidad) *
-            parseFloat(porcDescuento[0].porcentaje)) *
+      total_impuesto:(parseFloat(items.precio) * parseFloat(items.cantidad)-parseFloat(items.precio) *parseFloat(items.cantidad) *parseFloat(porcDescuento[0].porcentaje)) *
         (parseFloat(items.total_impuesto) /
           (parseFloat(items.precio) * parseFloat(items.cantidad))),
       total:
-        parseFloat(items.precio) * parseFloat(items.cantidad) -
+      parseFloat(items.precio) * parseFloat(items.cantidad) -
+      parseFloat(items.precio) *
+        parseFloat(items.cantidad) *
+        parseFloat(porcDescuento[0].porcentaje) +
+      (parseFloat(items.precio) * parseFloat(items.cantidad) -
         parseFloat(items.precio) *
           parseFloat(items.cantidad) *
-          parseFloat(porcDescuento[0].porcentaje) +
-        (parseFloat(items.precio) * parseFloat(items.cantidad) -
-          parseFloat(items.precio) *
-            parseFloat(items.cantidad) *
-            parseFloat(porcDescuento[0].porcentaje)) *
-          (parseFloat(items.total_impuesto) /
-            (parseFloat(items.precio) * parseFloat(items.cantidad))),
+          parseFloat(porcDescuento[0].porcentaje)) *
+        (parseFloat(items.total_impuesto) /
+          (parseFloat(items.precio) * parseFloat(items.cantidad))),
     }));
     setNewDetalles(...newDetalles, newData);
+
+    
   };
+
+  useEffect(() => {
+    setImpDesc(0);
+    newDetalles.map((val) =>
+    setImpDesc((prevValores) => prevValores + val.total_impuesto)
+    );
+    console.log(ImpDesc)
+  }, [newDetalles]);
+
 
   const Calc_Desc = () => {
     setMontoDesc(subTotal * porcDescuento[0].porcentaje);
@@ -617,9 +659,11 @@ useEffect(() => {
 
   //preparar data de la venta
   const PrepararData = () => {
-    if (porcDescuento.length > 0) {
+    /**if (!porcDescuento === []) {
       setDetalles(newDetalles);
-    }
+      console.log(porcDescuento)
+      console.log("datos Descuento 2")
+    } */
     setVenta({
       ...venta,
       fecha: fechaCorta,
@@ -630,18 +674,20 @@ useEffect(() => {
       cod_sucursal:codSucursal,
       id_pos:idPos,
       secuencia_enc: parseInt(enc),
-      detalle: detalles,
+      detalle: (porcDescuento.length > 0? newDetalles : detalles),
       detalle_pago: detallesPago,
       detalle_promo: detallesPromo,
       detalle_desc: detallesDesc,
+      venta_grabada_15:grabada15,
+      impuesto_15: tempIsv,
+      venta_total:tempTotal
     });
   };
 
   useEffect(() => {
     if (venta.detalle.length > 0) {
       InsertVenta(venta);
-      console.log("DATA VENTA:");
-      console.log(venta);
+      setListo(true)
     }
   }, [venta]);
 
@@ -713,7 +759,7 @@ useEffect(() => {
               abrirModalCantidadEdit();
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -724,7 +770,7 @@ useEffect(() => {
               abrirModalEliminarArticulo();
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -798,9 +844,9 @@ useEffect(() => {
                     <li>
                       <Link
                         className="dropdown-item"
-                        to={"/admin/cierre-caja/" + 10}
+                        to={"/admin/login-pos"}
                       >
-                        Corte de Caja
+                        Salir
                       </Link>
                     </li>
                     <li>
@@ -939,9 +985,10 @@ useEffect(() => {
                   setDetallesPago([]);
                   Detalles_Pago();
                   setTipoPedido(valores.id_modo_pedido);
-                  setTotalEnLetras(numeroALetras(parseFloat(total)));
+                  setTotalEnLetras(numeroALetras(parseFloat(tempTotal)));
                   setDetallesDesc([]);
                   setNewDetalles([]);
+                  setImpDesc(0);
                   Detalles_Desc();
                 }
               }}
@@ -1016,12 +1063,12 @@ useEffect(() => {
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
-                          <span className="">{"L. " + Impuesto}</span>
+                          <span className="">{"L. " + (tempIsv || 0)}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           <h4>Total</h4>
                           <span className="">
-                            <h4>{"L. " + parseFloat(total)}</h4>
+                            <h4>{"L. " + parseFloat(tempTotal)}</h4>
                           </span>
                         </li>
                       </ul>
@@ -1077,6 +1124,7 @@ useEffect(() => {
               setTimeout(function () {
                 //PrepararData()
               }, 3000);
+          
             }}
           >
             {({ errors, values }) => (
@@ -1120,7 +1168,7 @@ useEffect(() => {
             <div className="alert alert-primary" role="alert">
               {cliente.descripcion ? (
                 <>
-                  <p>{"ID: " + cliente.rtn}</p>
+                  <p>{"ID: " + (cliente.rtn || "")}</p>
                   <p>{" Nombre: " + cliente.descripcion}</p>
                 </>
               ) : (
@@ -1139,10 +1187,19 @@ useEffect(() => {
           <Button
             color="primary"
             onClick={() => {
-              abrirModalCliente();
-
               //InsertVenta(venta);
-              handlePrint();
+
+              if(cliente.descripcion === undefined){
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+                //setListo(true)
+              }
+
+              setPreparar(true)
+              if(listo === true){
+                handlePrint();
+                abrirModalCliente();
+              }
+             
             }}
           >
             Aceptar
@@ -1173,9 +1230,10 @@ useEffect(() => {
             return errores;
           }}
           onSubmit={(valores) => {
+            setCliente({ ...cliente, descripcion: valores.nombre });
+            //dataCliente(valores);
             abrirModalCliente2();
-            abrirModalCliente();
-            dataCliente(valores);
+            abrirModalCliente();            
           }}
         >
           {({ errors, values }) => (
@@ -1246,7 +1304,7 @@ useEffect(() => {
             // Validacion de monto
             if (!valores.monto_recibido) {
               errores.monto_recibido = "Requerido";
-            } else if (valores.monto_recibido < total) {
+            } else if (valores.monto_recibido < tempTotal) {
               errores.monto_recibido =
                 "El monto recibido debe ser mayor o igual al total";
             } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_recibido)) {
@@ -1268,7 +1326,7 @@ useEffect(() => {
                 <div className="container">
                   <div className="row text-center">
                     <h5>Total a Pagar:</h5>
-                    <h1>{"L. " + parseFloat(total)}</h1>
+                    <h1>{"L. " + parseFloat(tempTotal)}</h1>
                     <p>{"(" + totalEnLetras + ")"}</p>
                   </div>
                   <hr />
@@ -1325,7 +1383,6 @@ useEffect(() => {
                         />
                       </div>
                   </div>
-
                   <div className="col">
                     <div className="form-floating">
                       <select
@@ -1450,7 +1507,18 @@ useEffect(() => {
           <Button
             color="secondary"
             onClick={() => {
-              abrirModalFactura();
+              if(cliente.descripcion === undefined){
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+                //setListo(true)
+              }
+              setPreparar(true)
+              if(listo === true){
+                //handlePrint();
+                resetValores();
+                //abrirModalCliente();
+                abrirModalFactura()
+              }
+              //abrirModalFactura();
             }}
           >
             No

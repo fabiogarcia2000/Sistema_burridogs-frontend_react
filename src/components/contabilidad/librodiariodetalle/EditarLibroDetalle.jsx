@@ -156,13 +156,14 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                    id="idLibroEncabezado"
                    name="id_libro_diario_enca"
                    placeholder="Id del encabezado de libro diario..."
-                   
+                   disabled
                  />
                  <ErrorMessage
                    name="id_libro_diario_enca"
                    component={() => (
                      <div className="error">{errors.id_libro_diario_enca}</div>
                    )}
+                   
                  />
                </div>
              </div>
@@ -178,7 +179,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                    id="idSubcuenta"
                    name="id_subcuenta"
                    placeholder="Id de la subcuenta..."
-                   
+                   disabled
                  />
                  <ErrorMessage
                    name="id_subcuenta"
@@ -202,7 +203,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        id="idEstado"
                        name="id_estado"
                        placeholder="Id del estado..."
-                       
+                       disabled
                        />
                        <ErrorMessage
                        name="id_estado"
@@ -224,7 +225,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        id="parcial"
                        name="parcial"
                        placeholder="Parcial..."
-                       
+                       disabled
                        />
                        <ErrorMessage
                        name="parcial"
@@ -249,7 +250,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        id="montoDebe"
                        name="monto_debe"
                        placeholder="Monto debe..."
-                       
+                       disabled
                        />
                        <ErrorMessage
                        name="monto_debe"
@@ -271,7 +272,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        id="montoHaber"
                        name="monto_haber"
                        placeholder="Monto haber..."
-                       
+                       disabled
                        />
                        <ErrorMessage
                        name="montoHaber"
@@ -297,6 +298,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        name="sinopsis"
                        placeholder="Sinopsis..."
                        onKeyUp={cambiarAMayusculasSinopsis(values)}
+                       disabled
                        />
                        <ErrorMessage
                        name="sinopsis"
@@ -319,6 +321,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        name="sucursal"
                        placeholder="Sucursal..."
                        onKeyUp={cambiarAMayusculasSucursal(values)}
+                       disabled
                        />
                        <ErrorMessage
                        name="sucursal"
@@ -344,6 +347,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
                        name="centro_costo"
                        placeholder="centroCosto..."
                        onKeyUp={cambiarAMayusculasCentroCosto(values)}
+                       disabled
                        />
                        <ErrorMessage
                        name="centro_costo"
@@ -360,7 +364,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
               Guardar
             </button>
             <Link
-              to="/admin/mostrarlibrodetalle"
+              to="/admin/mostrarlibroencabezado"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >

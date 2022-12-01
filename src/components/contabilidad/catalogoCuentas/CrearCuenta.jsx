@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCodigo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/0";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getone/";
@@ -13,6 +14,8 @@ const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getone/";
 //const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
+
+const objeto = "FORM_CAT_CUENTAS"
 
 const CrearCuenta = () => {
 
@@ -54,6 +57,45 @@ const CrearCuenta = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -133,14 +175,14 @@ const CrearCuenta = () => {
 
           // Validacion de id categoria
           if (!valores.id_categoria) {
-            errores.id_categoria = "Por favor ingresa un id de categoria";
+            errores.id_categoria = "Por favor seleccione una categoria";
           } else if (!/^[0-9]+$/.test(valores.id_categoria)) {
             errores.id_categoria = "Escribir solo números";
           }
 
           // Validacion de id destino cuenta
           if (!valores.id_destino_cuenta) {
-            errores.id_destino_cuenta = "Por favor ingresa un id de destino cuenta";
+            errores.id_destino_cuenta = "Por favor seleccione un destino cuenta";
           } else if (!/^[0-9]+$/.test(valores.id_destino_cuenta)) {
             errores.id_destino_cuenta = "Escribir solo números";
           }
@@ -167,6 +209,7 @@ const CrearCuenta = () => {
       
               if (res.status === 200) {
                 mostrarAlertas("guardado");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR CATALOGO CUENTAS"); //Insertar bitacora
                 navigate("/admin/mostrarcatalogo");
               } else {
                 mostrarAlertas("error");

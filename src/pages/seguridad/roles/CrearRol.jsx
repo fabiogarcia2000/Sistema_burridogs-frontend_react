@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasRol } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../../components/seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 
 const URLCrear = "http://190.53.243.69:3001/ms_rol/actualizar-insertar/0";
@@ -20,6 +21,8 @@ let anio = date.getFullYear();
 //Parametros que se deben obtener
 var fecha = (`${anio}/${mes}/${dia}`);
 
+const objeto = "FORM_ROLES"
+
 const CrearRol = () => {
 
   const navigate = useNavigate();
@@ -27,6 +30,44 @@ const CrearRol = () => {
 
 //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
 const userdata = JSON.parse(localStorage.getItem('data'))
+
+ //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -103,6 +144,7 @@ const userdata = JSON.parse(localStorage.getItem('data'))
             //await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
             mostrarAlertas("guardado");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR ROL"); //Insertar bitacora
             navigate("/admin/roles");
 
           } else {

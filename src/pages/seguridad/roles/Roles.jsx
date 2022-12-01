@@ -9,6 +9,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 import { Export_PDF } from "./generarPDF_rol/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../../components/seguridad/bitacora/RegistroBitacora";
 
 const UrlEliminar = "http://190.53.243.69:3001/ms_rol/eliminar/";
 
@@ -144,6 +145,7 @@ export default function Roles(props) {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR ROL");
       } else {
         mostrarAlertas("error");
       }
@@ -207,6 +209,7 @@ export default function Roles(props) {
             onClick={() => {
               abrirModalVerMas();
               setCuentaVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS ROL");
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -329,6 +332,7 @@ export default function Roles(props) {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL ROLES");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -339,6 +343,7 @@ export default function Roles(props) {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF ROLES");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

@@ -31,12 +31,8 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-            <li>
-              <Link to="/admin/editarusuario">
-                <i className="bi bi-circle"></i>
-                <span>Editar mi usuario</span>
-              </Link>
-            </li>
+
+
             <li>
               <Link to="/admin/cambiocontrasena">
                 <i className="bi bi-circle"></i>
@@ -71,7 +67,7 @@ function Sidebar() {
             <li>
               <Link to="/admin/ventas-realizadas">
                 <i className="bi bi-circle"></i>
-                <span>Consultar Ventas</span>
+                <span>Consultar Facturas</span>
               </Link>
             </li>
           </ul>
@@ -317,33 +313,21 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/reporte-venta-fecha">
+              <Link to="/admin/reporte-compra-fecha">
                 <i className="bi bi-circle"></i>
-                <span>Reporte de Venta por Fecha</span>
+                <span>Reporte de Compra por Fecha</span>
               </Link>
             </li>
             <li>
-              <Link to="/admin/home">
+              <Link to="/admin/reporte-producto">
                 <i className="bi bi-circle"></i>
-                <span>Reporte 4</span>
+                <span>Reporte por Producto</span>
               </Link>
             </li>
             <li>
-              <Link to="/admin/home">
+              <Link to="/admin/reporte-cajero">
                 <i className="bi bi-circle"></i>
-                <span>Reporte 5</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/home">
-                <i className="bi bi-circle"></i>
-                <span>Reporte 6</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/home">
-                <i className="bi bi-circle"></i>
-                <span>Reporte 7</span>
+                <span>Reporte Venta por Cajero</span>
               </Link>
             </li>
           </ul>
@@ -411,6 +395,12 @@ function Sidebar() {
               </Link>
             </li>
           </ul>
+        </li>
+        <li className="nav-heading">Más</li>
+        <li className="nav-item">
+          <Link className="nav-link collapsed" to="/admin/datos-empresa">
+            <i class="bi bi-person"></i> <span>Empresa</span>
+          </Link>
         </li>
       </ul>
     </aside>

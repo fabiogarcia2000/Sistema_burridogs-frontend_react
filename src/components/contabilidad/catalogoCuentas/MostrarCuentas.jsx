@@ -14,9 +14,12 @@ import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/mc_catalogo/eliminar/";
 
-const objeto = "FORM_CATEGORIA_CONTABLE"
+const objeto = "FORM_CAT_CUENTAS"
+
 
 const MostrarCuentas = () => {
+
+
   const navigate = useNavigate();
 
   //Configurar los hooks
@@ -271,7 +274,9 @@ const MostrarCuentas = () => {
     selectAllRowsItemText: "Todos",
   };
 
+
   return (
+
     <div className="container">
       <h3>Catálogo de cuentas</h3>
       <br />
@@ -318,6 +323,7 @@ const MostrarCuentas = () => {
                     title="Exportar a Excel"
                     onClick={()=>{
                       Export_Excel(results);
+                      RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL CATALOGO CUENTAS");
                     }}
                   >
                     <i className="bi bi-file-earmark-excel-fill"></i>

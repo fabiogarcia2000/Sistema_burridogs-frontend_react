@@ -318,7 +318,7 @@ const MostrarPermiso = () => {
                                 title="Exportar a Excel"
                                 onClick={()=>{
                                     Export_Excel(results);
-                                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+                                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL PERMISOS");
                                   }}
                             >
                                 <i className="bi bi-file-earmark-excel-fill"></i>

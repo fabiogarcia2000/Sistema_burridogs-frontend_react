@@ -344,6 +344,7 @@ const mostrarAlertas = (alerta) =>{
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL PERIODO CONTABLE");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>

@@ -20,10 +20,6 @@ const ReporteVentaFecha = () => {
   const [encabezado, setEncabezado] = useState([]);
   const [detalles, setDetalles] = useState([]);
 
-  //Ventana modal para mostrar mas
-  const [modalVerMas, setVerMas] = useState(false);
-  const abrirModalVerMas = () => setVerMas(!modalVerMas);
-
   //procedimineto para obtener los detalles
   const getDetalles = async (id) => {
     try {
@@ -58,104 +54,62 @@ const ReporteVentaFecha = () => {
     );
   }
 
-  //Para generar factura/imprimir
-  const handlePrint = useReactToPrint({
-    content: () => componenteRef.current,
-    documentTitle: "Factura",
-    onAfterPrint: () => console.log("Listo"),
-  });
-
   //Configuramos las columnas de la tabla
   const columns = [
     {
+      name: "FECHA",
+      selector: (row) => row.fecha,
+      sortable: true,
+      },
+      {
+        name: "RTN",
+        selector: (row) => row.rtn,
+        sortable: true,
+      },
+      {
         name: "SUCURSAL",
         selector: (row) => row.cod_sucursal,
         sortable: true,
       },
       {
-          name: "FECHA",
-          selector: (row) => row.fecha,
-          sortable: true,
+        name: "NÚMERO DE CUENTA",
+        selector: (row) => row.numero_cuenta,
+        sortable: true,
       },
       {
-          name: "NÚMERO DE CUENTA",
-          selector: (row) => row.numero_cuenta,
-          sortable: true,
+        name: "CORRELATIVO",
+        selector: (row) => row.correlativo,
+        sortable: true,
       },
       {
-          name: "VENTA GRABADA 15",
-          selector: (row) => row.venta_grabada_15,
-          sortable: true,
+        name: "POS",
+        selector: (row) => row.cod_pos,
+        sortable: true,
+    },
+    {
+        name: "DESCRIPCION",
+        selector: (row) => row.descripcion_pos,
+        sortable: true,
+    },
+      {
+        name: "VENTA 15%",
+        selector: (row) => row.venta_grabada_15,
+        sortable: true,
       },
       {
-          name: "VENTA GRABADA 18",
-          selector: (row) => row.venta_grabada_18,
-          sortable: true,
+        name: "VENTA 18%",
+        selector: (row) => row.venta_grabada_18,
+        sortable: true,
       },
       {
-          name: "VENTA EXENTA",
-          selector: (row) => row.venta_exenta,
-          sortable: true,
-      },
-      {
-          name: "15%",
-          selector: (row) => row.impuesto_15,
-          sortable: true,
-      },
-      {
-          name: "18%",
-          selector: (row) => row.impuesto_18,
-          sortable: true,
-      },
-      {
-          name: "VENTAL TOTAL",
-          selector: (row) => row.venta_total,
-          sortable: true,
-      },
-      {
-          name: "CAI",
-          selector: (row) => row.cai,
-          sortable: true,
-      },
-      {
-          name: "CORRELATIVO",
-          selector: (row) => row.correlativo,
-          sortable: true,
-      },
-      {
-          name: "RTN",
-          selector: (row) => row.rtn,
-          sortable: true,
-      },
-      {
-          name: "NOMBRE DEL CLIENTE",
-          selector: (row) => row.nombre_cliente,
-          sortable: true,
-      },
-      {
-          name: "CODIGO DE USUARIO",
-          selector: (row) => row.id_usuario,
-          sortable: true,
-      },
-      {
-          name: "USUARIO",
+          name: "VENDEDOR",
           selector: (row) => row.usuario,
           sortable: true,
       },
       {
-          name: "NOMBRE",
-          selector: (row) => row.nombre_usuario,
-          sortable: true,
-      },
-      {
-          name: "POS",
-          selector: (row) => row.cod_pos,
-          sortable: true,
-      },
-      {
-          name: "DESCRIPCION",
-          selector: (row) => row.descripcion_pos,
-          sortable: true,
+        name: "VENTAL TOTAL",
+        selector: (row) => row.venta_total,
+        sortable: true,
       },
       {
           name: "ESTADO",
@@ -192,7 +146,7 @@ const ReporteVentaFecha = () => {
 
   return (
     <div className="container">
-      <h3>Reporte de Ventas por Fecha</h3>
+      <h3>Reporte de Facturas por Fecha</h3>
       <br />
 
       <div className="row">
@@ -206,12 +160,12 @@ const ReporteVentaFecha = () => {
           validate={(valores) => {
             let errores = {};
 
-            // Validacion de código
+            // Validacion 
             if (!valores.fecha_inicial) {
               errores.fecha_inicial = "Seleccione una fecha";
             }
 
-            // Validacion descripción
+            // Validacion 
             if (!valores.fecha_final) {
               errores.fecha_final = "Seleccione una fecha";
             }

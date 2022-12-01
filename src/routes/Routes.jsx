@@ -82,9 +82,11 @@ import MostrarSalidaMds from "../components/inventario/salida_mds/MostrarSalidaM
 import CrearSalidaMds from "../components/inventario/salida_mds/CrearSalidaMds";
 import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds";
 
-import ReporteVentaResumen from "../components/reports/pos/VentaResumen";
+import ReporteVentaResumen from "../components/reports/ReporteVenta/VentaResumen";
 import ReporteVentaFecha from "../components/reports/ReporteVentaFecha/ReporteVentaFecha";
-
+import ReporteCompraFecha from "../components/reports/ReporteCompraFecha/ReporteCompraFecha";
+import ReporteProducto from "../components/reports/ReporteProducto/ReporteProducto";
+import ReporteVentaCajero from "../components/reports/ReporteVentaCajero/ReporteVentaCajero";
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------
 //USUARIOS
 import MostrarUsuarios from "../pages/seguridad/usuarios/Usuarios";
@@ -174,9 +176,9 @@ import MostrarLibroDetalle from "../components/contabilidad/librodiariodetalle/M
 import CrearLibroDetalle from "../components/contabilidad/librodiariodetalle/CrearLibroDetalle";
 import EditarLibroDetalle from "../components/contabilidad/librodiariodetalle/EditarLibroDetalle";
 
-//ENCABEZADO LIBRO DIARIO
+//ENCABEZADO LIBRO encabezado
 import MostrarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/MostrarLibroEncabezado";
-import CrearLibroEncabezado from "../components/contabilidad/";
+import CrearLibroEncabezado from "../components/contabilidad/librodiarioencabezado/CrearLibroEncabezado";
 import EditarLibroEncabezado from "../components/contabilidad/";
 
 //PERIODO CONTABLE
@@ -404,7 +406,7 @@ function Rutas() {
             element={<MostrarLibroEncabezado />}
           />
           <Route path="/admin/home" element={<EditarLibroEncabezado />} />
-          <Route path="/admin/home" element={<CrearLibroEncabezado />} />
+          <Route path="/admin/CrearLibroEncabezado" element={<CrearLibroEncabezado />} />
 
           {/*PERIODO CONTABLE*/}
           <Route path="mostrarperiodo" element={<MostrarPeriodoContable />} />
@@ -419,6 +421,9 @@ function Rutas() {
           {/*--------------------------------------Rutas reportes--------------------------------------------*/}
           {/*reportes POS*/}
           <Route path="reporte-venta-fecha" element={<ReporteVentaFecha />} />
+          <Route path="reporte-compra-fecha" element={<ReporteCompraFecha />} />
+          <Route path="reporte-producto" element={<ReporteProducto />} />
+          <Route path="reporte-cajero" element={<ReporteVentaCajero />} />
           <Route
             path="reporte-venta-resumen"
             element={<ReporteVentaResumen />}

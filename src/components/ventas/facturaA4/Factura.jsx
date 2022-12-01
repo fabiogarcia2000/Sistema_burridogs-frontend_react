@@ -4,16 +4,22 @@ import { Link } from "react-router-dom";
 import logoEmpresa from "../../../assets/img/logo1.png";
 import "./styles.css";
 import { useState, useEffect } from 'react';
+import { numeroALetras } from "../PuntoVentas/utils/num_a_letras";
 
 export default function Factura() {
     const [totalDesc, setTotalDesc] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
+    const [totalEnLetras, setTotalEnLetras] = useState("");
 
     const [venta] = useGlobalState('dataVenta')
     const detalles = venta.detalle;
 
+    //const [DatosEmpresa] = useGlobalState('datosEmpresa');
+    const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"))
 
     useEffect(() => {
+        setTotalDesc(0)
+        setSubTotal(0)
         if(detalles){
             
             detalles.map((list) =>
@@ -25,6 +31,10 @@ export default function Factura() {
             );
         }
     }, [detalles]);
+
+    useEffect(() => {
+        setTotalEnLetras(numeroALetras(parseFloat(venta.venta_total||0)));
+    }, [venta]);
     
 
   return (
@@ -38,18 +48,16 @@ export default function Factura() {
                 </div>
                 <div className='row'>
                     <div>
-                        <strong className='h6 fw-bold'>RAZON SOCIAL DEL CLIENTE</strong><br />
-                        <strong>R.T.N.: 0101010101010101</strong>
+                        <strong className='h6 fw-bold'>{(DatosEmpresa.descripcion || "NO HAY NOMBRE DEFINIDO")}</strong><br />
+                        <strong>{"R.T.N.: "+(DatosEmpresa.rtn ||"")}</strong>
                     </div>
                     <div>
-                        <span>DIRECCION</span><br />
-                        <span>TEL: 2222-2222</span><br />
-                        <span>DIRECCION</span><br />
-                        <span>TEL: 2222-2222</span><br />
-                        <span>Correo electronico: xxxxxxxx@xxxx.com</span><br />
-                        <span>C.A.I.:000000-000000-00000-000000-000000-00</span><br />
-                        <strong>RANGO AUTORIZADO DEL: 0000-0000-000-0000000000 AL 0000-0000-000-0000000000 </strong><br />
-                        <span>Fecha Limite de Emisión: XX/XX/XXXX</span><br />
+                        <span>{"DIRECCIÓN: "+(DatosEmpresa.direccion || "")}</span><br />
+                        <span>{"TEL: "+(DatosEmpresa.telefono || "")}</span><br />
+                        <span>{"Correo: "+(DatosEmpresa.correo || "")}</span><br />
+                        <span>{"C.A.I: "+(venta.cai || "")}</span><br />
+                        <strong>{"RANGO AUTORIZADO DEL: "+(venta.rango||"")}</strong><br />
+                        <span>{"Fecha Limite de Emisión: "+(venta.fecha_limite_emision||"")}</span><br />
                     </div>
                 </div>
             </div>
@@ -57,11 +65,11 @@ export default function Factura() {
             <div className='col'>
                 <div className='row text-center'>
                     <h5><strong>FACTURA</strong></h5>
-                    <h5><strong className='h6 fw-bold'>No.</strong>000-001-01-<strong>000000</strong></h5>
+                    <h5><strong className='h6 fw-bold'>No.</strong><strong>{(venta.no_factura||"")}</strong></h5>
                 </div>
                 <br /> <br />
                 <div className='row text-center'>
-                    <h6>{"Fecha: "+venta.fecha}</h6>
+                    <h6>{"Fecha: "+(venta.fecha||"")}</h6>
                 </div>
             </div>
 
@@ -70,9 +78,9 @@ export default function Factura() {
         <div className='row'>
             <div class="input-group input-group-sm mb-3">
                 <span class="input-group-text color1" id="basic-addon1"><strong>CLIENTE: </strong></span>
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" value={venta.nombre_cliente}/>
+                <input type="text" class="form-control" placeholder="" aria-label="Username" value={(venta.nombre_cliente||"")}/>
                 <span class="input-group-text color1"><strong>R.T.N: </strong></span>
-                <input type="text" class="form-control" placeholder="Server" aria-label="Server" value={venta.rtn}/>
+                <input type="text" class="form-control" placeholder="" aria-label="Server" value={(venta.rtn||"")}/>
             </div>
         </div>
 
@@ -103,7 +111,7 @@ export default function Factura() {
 
 
                 <tr>                    
-                    <td  className='text-end' colspan="3"><strong>TOTAL</strong></td>
+                    <td  className='text-end' colspan="3"><strong>SUBTOTAL</strong></td>
                     <td><strong>{"L. "+totalDesc}</strong></td>
                     <td><strong>{"L. "+subTotal}</strong></td>
                 </tr>
@@ -115,8 +123,8 @@ export default function Factura() {
             <div className='col-md-6'>
 
                 <div class="row color1 regul">
-                    <label className='fw-bolder' for="floatingInputGrid">VALOR EN LETRAS:</label>
-                    <span className='fw-bolder' for="floatingInputGrid">######### ####### ########## ###########</span>
+                    <label className='fw-bolder' for="floatingInputGrid"><strong>VALOR EN LETRAS:</strong></label>
+                    <span className='fw-bolder' for="floatingInputGrid">{(totalEnLetras||"")}</span>
                 </div>
             <br />
                 <div className='row regul'>
@@ -124,15 +132,15 @@ export default function Factura() {
                     <tbody>
                         <tr>
                             <td>N° Correlativo de orden de compra exenta</td>
-                            <td className='color1'>   </td>
+                            <td className='color1 colortext'>#########</td>
                         </tr>
                         <tr>
                             <td>N° Correlativo de constancia de registro exonerado</td>
-                            <td className='color1'><span> </span></td>
+                            <td className='color1 colortext'>#########</td>
                         </tr>
                         <tr>
                             <td>N° identificativo del registro de la SAG</td>
-                            <td className='color1'>   </td>
+                            <td className='color1 colortext'>#########</td>
                         </tr>
                         </tbody>
                     </table>
@@ -166,7 +174,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td>IMPORTE GRAVADO 15%</td>
-                                    <td className='color1'>{"L. "+subTotal}</td>
+                                    <td className='color1'>{"L. "+(venta.venta_grabada_15||0)}</td>
                                 </tr>
                                 <tr>
                                     <td>IMPORTE GRAVADO 18%</td>
@@ -174,7 +182,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td>I.S.V 15%</td>
-                                    <td className='color1'>{"L. "+(subTotal)}</td>
+                                    <td className='color1'>{"L. "+(venta.impuesto_15||0)}</td>
                                 </tr>
                                 <tr>
                                     <td>I.S.V 18%</td>
@@ -182,7 +190,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td><strong>TOTAL A PAGAR L.</strong></td>
-                                    <td><strong>L. 0.0</strong></td>
+                                    <td><strong>{"L. "+(venta.venta_total||0)}</strong></td>
                                 </tr>
                             </tbody>
                         </table>

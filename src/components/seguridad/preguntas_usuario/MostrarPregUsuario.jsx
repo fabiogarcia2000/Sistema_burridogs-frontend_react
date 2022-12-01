@@ -130,6 +130,7 @@ const MostrarPregUsuario = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PREGUNTA USUARIO");
       } else {
         mostrarAlertas("error");
       }
@@ -270,7 +271,7 @@ const MostrarPregUsuario = () => {
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL PREGUNTAS USUARIO");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -281,6 +282,7 @@ const MostrarPregUsuario = () => {
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF PREGUNTAS USUARIO");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

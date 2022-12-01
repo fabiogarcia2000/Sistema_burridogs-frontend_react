@@ -2,41 +2,40 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useGlobalState } from "../../globalStates/globalStates"; 
 import axios from "axios";
 import Swal from "sweetalert2";
 
 
 import { InsertarBitacora } from "../seguridad/bitacora/InsertarBitacora";
 
-const URLEditar = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
+const URLGuardar = "http://190.53.243.69:3001/empresa/actualizar-insertar/";
 
-const UrlMostrarUnidades = "http://190.53.243.69:3001/unidad_medida/getall/";
-const UrlMostrarCategorias = "http://190.53.243.69:3001/categoria/getall/";
-const UrlMostrarImpuestos = "http://190.53.243.69:3001/impuesto/getall/";
-const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
 
 const objeto = "FORM_ARTICULO";
 
 const FormularioEmpresa = () => {
-  //const [edit] = useGlobalState("registroEdit");
-  const edit = [];
+  //const [DatosEmpresa] = useGlobalState('datosEmpresa');
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"))
 
-  const navigate = useNavigate();
+      const navigate = useNavigate();
 
+  
 
+    /*****Obtener y corroborar Permisos*****/
+    const [img, setImg]=useState();
+    console.log(img)
 
+    const [temp, setTemp] = useState([]);
+    const [permisos, setPermisos] = useState([]);
+    const [permitido, setPermitido] = useState(true)
 
- /*****Obtener y corroborar Permisos*****/
- const [temp, setTemp] = useState([]);
- const [permisos, setPermisos] = useState([]);
- const [permitido, setPermitido] = useState(true)
-
- const Permisos = () =>{
-   const newData = temp.filter(
-     (item) => item.objeto === objeto
-   );
-   setPermisos(newData);
- }
+    const Permisos = () =>{
+      const newData = temp.filter(
+        (item) => item.objeto === objeto
+      );
+      setPermisos(newData);
+    }
 
  useEffect(() => {
    let data = localStorage.getItem('permisos')
@@ -61,80 +60,7 @@ const FormularioEmpresa = () => {
  }
 /*******************/
 
-
-
-
-
-
-
-  //procedimineto para obtener las unidades de medida
-  const [unidades, setUnidades] = useState([]);
-  useEffect(() => {
-    getUnidades();
-  }, []);
-
-  //petición a api
-  const getUnidades = async () => {
-    try {
-      const res = await axios.get(UrlMostrarUnidades);
-      setUnidades(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
-
-  //procedimineto para obtener las categorias
-  const [categorias, setCategorias] = useState([]);
-  useEffect(() => {
-    getCategorias();
-  }, []);
-
-  //petición a api
-  const getCategorias = async () => {
-    try {
-      const res = await axios.get(UrlMostrarCategorias);
-      setCategorias(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
-
-  //procedimineto para obtener las categorias
-  const [impuestos, setImpuestos] = useState([]);
-  useEffect(() => {
-    getImpuestos();
-  }, []);
-
-  //petición a api
-  const getImpuestos = async () => {
-    try {
-      const res = await axios.get(UrlMostrarImpuestos);
-      setImpuestos(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
-
-  //procedimineto para obtener los socios de negocio
-  const [socios, setSocios] = useState([]);
-  useEffect(() => {
-    getSocios();
-  }, []);
-
-  //petición a api
-  const getSocios = async () => {
-    try {
-      const res = await axios.get(UrlMostrarSocios);
-      setSocios(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
-
+  
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -165,22 +91,24 @@ const FormularioEmpresa = () => {
   };
 
   return (
+  <>
+
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          cod_articulo: edit.cod_articulo,
-          tipo: edit.tipo,
-          descripcion_articulo: edit.descripcion_articulo,
-          descripcion_corta: edit.descripcion_corta,
-          id_impuesto: edit.id_impuesto,
-          id_categoria: edit.id_categoria,
-          precio: edit.precio,
-          inventario_minimo: edit.inventario_minimo,
-          inventario_maximo: edit.inventario_maximo,
-          codigo_barra: edit.codigo_barra,
-          id_unidad_medida: edit.id_unidad_medida,
-          activo: edit.activo,
+          id_empresa: DatosEmpresa.id_empresa,
+          descripcion: DatosEmpresa.descripcion,
+          direccion: DatosEmpresa.direccion,
+          telefono: DatosEmpresa.telefono,
+          correo: DatosEmpresa.correo,
+          rtn: DatosEmpresa.rtn,
+          //logo1: DatosEmpresa.logo1,
+          logo2: DatosEmpresa.logo2,
+          logo3: DatosEmpresa.logo3,
+          logo4: DatosEmpresa.logo4,
+          creado_por: "autorPrueba",
+          fecha_creacion: "2022/10/27",
           modificado_por: "autorPrueba",
           fecha_modificacion: "2022/10/27",
         }}
@@ -189,84 +117,58 @@ const FormularioEmpresa = () => {
           let errores = {};
 
           // Validacion codigo
-          if (!valores.cod_articulo) {
-            errores.cod_articulo = "Por favor ingrese un código";
-          }
-
-          // Validacion tipo
-          if (!valores.tipo) {
-            errores.tipo = "Por favor seleccione una opción";
+          if (!valores.descripcion) {
+            errores.descripcion = "Requerido";
           }
 
           // Validacion descripción articulo
-          if (!valores.descripcion_articulo) {
-            errores.descripcion_articulo =
-              "Por favor ingrese una descripción para el artículo";
+          if (!valores.direccion) {
+            errores.direccion =
+              "Requerido";
           }
 
           // Validacion descripción corta
-          if (!valores.descripcion_corta) {
-            errores.descripcion_corta =
-              "Por favor ingrese una descripción corta";
+          if (!valores.telefono) {
+            errores.telefono =
+              "Requerido";
           }
 
           // Validacion impuesto
-          if (!valores.id_impuesto) {
-            errores.id_impuesto = "Por favor seleccione una opción";
+          if (!valores.correo) {
+            errores.correo = "Requerido";
           }
 
           // Validacion categoria
-          if (!valores.id_categoria) {
-            errores.id_categoria = "Por favor seleccione una opción";
+          if (!valores.rtn) {
+            errores.rtn = "Requerido";
           }
 
-          // Validacion precio
-          if (!valores.precio) {
-            errores.precio = "Por favor ingrese el precio";
-          } else if (!/^^[0-9]+$/.test(valores.precio)) {
-            errores.precio = "El precio solo puede contener números";
-          }
-
-          // Validacion inventario minimo
-          if (!valores.inventario_minimo) {
-            errores.inventario_minimo = "Por favor ingrese el precio";
-          }
-
-          // Validacion inventario maximo
-          if (!valores.inventario_maximo) {
-            errores.inventario_maximo = "Por favor ingrese el precio";
-          }
-
-          // Validacion unidad medida
-          if (!valores.id_unidad_medida) {
-            errores.id_unidad_medida = "Por favor seleccione una opción";
-          }
-
-          // Validacion estado
-          if (!valores.activo) {
-            errores.activo = "Por favor seleccione una opción";
-          }
+          /**   // Validacion logo1
+          if (!valores.logo1) {
+            errores.logo1 = "Requerido";
+          }  */
+             
           return errores;
         }}
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
+        
           try {
             const res = await axios.put(
-              `${URLEditar}${valores.cod_articulo}`,
+              `${URLGuardar}${valores.id_empresa}`,
               valores
             );
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR ARTICULO");
-              navigate("/admin/mostrararticulos");
+              //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS EMPRESA");
+              navigate("/admin/home");
             } else {
               mostrarAlertas("error");
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            navigate("/admin/mostrararticulos");
           }
         }}
       >
@@ -277,20 +179,20 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="codArticulo" className="form-label">
-                    Código:
+                    Nombre:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="codArticulo"
-                    name="cod_articulo"
-                    placeholder="Código del Artículo..."
+                    name="descripcion"
+                    placeholder="Nombre o descripción..."
                   />
 
                   <ErrorMessage
-                    name="cod_articulo"
+                    name="descripcion"
                     component={() => (
-                      <div className="error">{errors.cod_articulo}</div>
+                      <div className="error">{errors.descripcion}</div>
                     )}
                   />
                 </div>
@@ -299,22 +201,19 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="tipoArticulo" className="form-label">
-                    Tipo:
+                    Dirección:
                   </label>
                   <Field
-                    as="select"
-                    className="form-select"
-                    id="tipoArticulo"
-                    name="tipo"
-                  >
-                    <option value="">Seleccionar...</option>
-                    <option value="V">Venta</option>
-                    <option value="I">Inventario</option>
-                  </Field>
+                    type="text"
+                    className="form-control"
+                    id="codArticulo"
+                    name="direccion"
+                    placeholder="Dirección de la empresa..."
+                  />
 
                   <ErrorMessage
-                    name="tipo"
-                    component={() => <div className="error">{errors.tipo}</div>}
+                    name="direccion"
+                    component={() => <div className="error">{errors.direccion}</div>}
                   />
                 </div>
               </div>
@@ -322,20 +221,20 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="descripcionArticulo" className="form-label">
-                    Descripción del Articulo:
+                   Telefono:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="descripcionArticulo"
-                    name="descripcion_articulo"
-                    placeholder="Descripción..."
+                    name="telefono"
+                    placeholder="Telefono de la empresa..."
                   />
 
                   <ErrorMessage
-                    name="descripcion_articulo"
+                    name="telefono"
                     component={() => (
-                      <div className="error">{errors.descripcion_articulo}</div>
+                      <div className="error">{errors.telefono}</div>
                     )}
                   />
                 </div>
@@ -346,20 +245,20 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="descripcortaArticulo" className="form-label">
-                    Descripción corta:
+                    R.T.N:
                   </label>
                   <Field
                     type="text"
                     className="form-control"
                     id="descripcortaArticulo"
-                    name="descripcion_corta"
-                    placeholder="Descripción corta..."
+                    name="rtn"
+                    placeholder="R.T.N..."
                   />
 
                   <ErrorMessage
-                    name="descripcion_corta"
+                    name="rtn"
                     component={() => (
-                      <div className="error">{errors.descripcion_corta}</div>
+                      <div className="error">{errors.rtn}</div>
                     )}
                   />
                 </div>
@@ -368,100 +267,54 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="impuestoArticulo" className="form-label">
-                    Impuesto:
+                    Correo:
                   </label>
                   <Field
-                    as="select"
-                    className="form-select"
-                    id="impuestoArticulo"
-                    name="id_impuesto"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {impuestos.map((item, i) => (
-                      <option key={i} value={item.id_impuesto}>
-                        {item.descripcion}
-                      </option>
-                    ))}
-                  </Field>
+                    type="text"
+                    className="form-control"
+                    id="descripcortaArticulo"
+                    name="correo"
+                    placeholder="Correo de la empresa..."
+                  />
 
                   <ErrorMessage
-                    name="id_impuesto"
+                    name="correo"
                     component={() => (
-                      <div className="error">{errors.id_impuesto}</div>
+                      <div className="error">{errors.correo}</div>
                     )}
                   />
                 </div>
               </div>
 
-              <div className="col-sm-4">
-                <div className="mb-3">
-                  <label htmlFor="categoriaArticulo" className="form-label">
-                    Categoría:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="categoriaArticulo"
-                    name="id_categoria"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {categorias.map((item, i) => (
-                      <option key={i} value={item.id_categoria}>
-                        {item.descripcion}
-                      </option>
-                    ))}
-                  </Field>
-
-                  <ErrorMessage
-                    name="id_categoria"
-                    component={() => (
-                      <div className="error">{errors.id_categoria}</div>
-                    )}
-                  />
-                </div>
-              </div>
+              {/**AQUI OTRA */}
             </div>
 
             <div className="row g-3">
               <div className="col-sm-4">
                 <div className="mb-3">
-                  <label htmlFor="precioArticulo" className="form-label">
-                    Precio:
+                  <label htmlFor="logo1Articulo" className="form-label">
+                    Logo 1 (Principal):
                   </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="precioArticulo"
-                    name="precio"
-                    placeholder="Precio de venta..."
-                  />
-
-                  <ErrorMessage
-                    name="precio"
-                    component={() => (
-                      <div className="error">{errors.precio}</div>
-                    )}
-                  />
+                  <input id="imgs" type="file" className="form-control" name="logo1" accept="image/png, image/jpeg" onChange={(e)=>setImg(e.target.files)} />
                 </div>
               </div>
 
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="invMinArticulo" className="form-label">
-                    Inventario Mínimo:
+                    Logo 2:
                   </label>
                   <Field
-                    type="text"
+                    type="file"
                     className="form-control"
                     id="invMinArticulo"
-                    name="inventario_minimo"
-                    placeholder="Unidades mínimas..."
+                    name="logo2"
                   />
 
                   <ErrorMessage
-                    name="inventario_minimo"
+                    name="logo2"
                     component={() => (
-                      <div className="error">{errors.inventario_minimo}</div>
+                      <div className="error">{errors.logo2}</div>
                     )}
                   />
                 </div>
@@ -469,20 +322,19 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="invMaxArticulo" className="form-label">
-                    Inventario Máximo:
+                    Logo 3:
                   </label>
                   <Field
-                    type="text"
+                    type="file"
                     className="form-control"
                     id="invMaxArticulo"
-                    name="inventario_maximo"
-                    placeholder="Unidades máximas..."
+                    name="logo3"
                   />
 
                   <ErrorMessage
-                    name="inventario_maximo"
+                    name="logo3"
                     component={() => (
-                      <div className="error">{errors.inventario_maximo}</div>
+                      <div className="error">{errors.logo3}</div>
                     )}
                   />
                 </div>
@@ -493,82 +345,31 @@ const FormularioEmpresa = () => {
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="codigobarraArticulo" className="form-label">
-                    Código de Barra:
+                    Logo 4:
                   </label>
                   <Field
-                    type="text"
+                    type="file"
                     className="form-control"
                     id="codigobarraArticulo"
-                    name="codigo_barra"
-                    placeholder="Código de Barra..."
+                    name="logo4"
+  
                   />
 
                   <ErrorMessage
-                    name="codigo_barra"
+                    name="logo4"
                     component={() => (
-                      <div className="error">{errors.codigo_barra}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-4">
-                <div className="mb-3">
-                  <label htmlFor="unidadmedidaArticulo" className="form-label">
-                    ID Unidad Medida:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="unidadmedidaArticulo"
-                    name="id_unidad_medida"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {unidades.map((item, i) => (
-                      <option key={i} value={item.id_unidad_medida}>
-                        {item.descripcion}
-                      </option>
-                    ))}
-                  </Field>
-
-                  <ErrorMessage
-                    name="id_unidad_medida"
-                    component={() => (
-                      <div className="error">{errors.id_unidad_medida}</div>
+                      <div className="error">{errors.logo4}</div>
                     )}
                   />
                 </div>
               </div>
 
-              <div className="col-sm-4">
-                <div className="mb-3">
-                  <label htmlFor="estadoArticulo" className="form-label">
-                    Estado:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="estadoArticulo"
-                    name="activo"
-                  >
-                    <option value="">Seleccionar...</option>
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                  </Field>
-
-                  <ErrorMessage
-                    name="activo"
-                    component={() => (
-                      <div className="error">{errors.activo}</div>
-                    )}
-                  />
-                </div>
-              </div>
             </div>
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar
             </button>
             <Link
-              to="/admin/mostrararticulos"
+              to="/admin/home"
               type="button"
               className="btn btn-danger mb-3 me-2"
             >
@@ -577,11 +378,10 @@ const FormularioEmpresa = () => {
           </Form>
         )}
       </Formik>
-      <br />
-      <hr />
-      <h3>Agregar Receta</h3>
-      <br />
+
     </div>
+
+  </>
   );
 };
 
