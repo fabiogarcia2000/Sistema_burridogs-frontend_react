@@ -12,6 +12,8 @@ import {
   cambiarAMayusculasDescripCorta,
   cambiarAMayusculasDescripArticulo,
 } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
@@ -22,6 +24,9 @@ const UrlArticulosCategoria =
   "http://190.53.243.69:3001/articulo/getallbycategoria/";
 const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
 const isv = 0.15;
+
+const objeto = "FORM_COMPRAS"
+
 const Formulario = () => {
   const navigate = useNavigate();
 
@@ -61,6 +66,43 @@ const Formulario = () => {
     getCategorias();
     getArticulos();
   }, []);
+
+/*****Obtener y corroborar Permisos*****/
+const [temp, setTemp] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [permitido, setPermitido] = useState(true)
+
+const Permisos = () =>{
+  const newData = temp.filter(
+    (item) => item.objeto === objeto
+  );
+  setPermisos(newData);
+}
+
+useEffect(() => {
+  let data = localStorage.getItem('permisos')
+  if(data){
+    setTemp(JSON.parse(data))
+  }
+}, []);
+
+useEffect(() => {
+  Permisos();
+}, [temp]);
+
+
+useEffect(() => {
+  if(permisos.length > 0){
+    TienePermisos();
+  }
+}, [permisos]);
+
+
+const TienePermisos = () =>{
+  setPermitido(permisos[0].permiso_consultar)
+}
+
+/*******************/
 
   //detalles de pago
   const Detalles_Pago = () => {
@@ -547,6 +589,10 @@ const Formulario = () => {
 
   return (
     <div className="container">
+
+      {permitido? (
+     
+     <div>
       <Formik
         //valores iniciales
         initialValues={{
@@ -615,6 +661,7 @@ const Formulario = () => {
             console.log(res);
             if (res.status === 200) {
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR COMPRA"); //Insertar bitacora
               navigate("/admin/mostrarmateriales");
             } else {
               mostrarAlertas("error");
@@ -1012,7 +1059,11 @@ const Formulario = () => {
           </Form>
         )}
       </Formik>
+      </div>
 
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
       {/* Ventana Modal de cancelar la venta*/}
       <Modal isOpen={modalCancelar} toggle={abrirModalCancelar} centered>
         <ModalHeader toggle={abrirModalCancelar}>
