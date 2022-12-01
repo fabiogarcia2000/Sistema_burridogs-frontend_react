@@ -41,8 +41,7 @@ export function Export_PDF_R (data, data2) {
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Estado de Resultados";
-    let sucursal = "Principal";
-    let usuario = "SYSTEMUSER"
+    let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
 
@@ -51,7 +50,7 @@ export function Export_PDF_R (data, data2) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+  doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
     doc.autoTable(tabla2);
 
@@ -67,7 +66,7 @@ export function Export_PDF_R (data, data2) {
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    //Se guarda el documento
-    doc.save("Estado de Resultados.pdf")
+    //Abre el documento en una nueva pestaña
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 
 };

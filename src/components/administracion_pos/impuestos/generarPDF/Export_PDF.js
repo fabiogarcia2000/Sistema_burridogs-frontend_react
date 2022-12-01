@@ -28,8 +28,7 @@ export function Export_PDF (data) {
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Impuestos";
-    let sucursal = "Principal";
-    let usuario = "SYSTEMUSER";
+    let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
 
@@ -38,7 +37,7 @@ export function Export_PDF (data) {
     //Preparacion del documento
     doc.setFontSize(14);
     doc.addImage(logo, 1000, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+  doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas

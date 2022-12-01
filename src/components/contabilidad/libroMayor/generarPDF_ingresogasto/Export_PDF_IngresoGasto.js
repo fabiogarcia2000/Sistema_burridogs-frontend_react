@@ -71,8 +71,7 @@ export function Export_PDF_IngresoGasto (data, data2, data3, data4) {
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Ingresos y Gastos";
-    let sucursal = "Principal";
-    let usuario = "SYSTEMUSER"
+    let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
 
@@ -81,7 +80,7 @@ export function Export_PDF_IngresoGasto (data, data2, data3, data4) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
     doc.autoTable(tabla3);
     doc.addPage();
@@ -100,7 +99,7 @@ export function Export_PDF_IngresoGasto (data, data2, data3, data4) {
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    //Se guarda el documento
-    doc.save("Ingresos y Gastos.pdf")
+    //Abre el documento en una nueva pestaña
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 
 };

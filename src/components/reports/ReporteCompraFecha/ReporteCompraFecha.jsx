@@ -5,20 +5,25 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-//import Factura from "../facturaA4/Factura";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcell/Export_Excel";
-
+import Factura from "./facturaA4/Factura";
 import Swal from "sweetalert2";
 
-const UrlEncabezado = "http://190.53.243.69:3001/venta/venta_por_fecha/";
-const UrlDetalles = "http://190.53.243.69:3001/venta/detalle_por_encabezado/";
+const UrlEncabezado = "http://190.53.243.69:3001/compras/compras_por_fecha/";
+const UrlDetalles = "http://190.53.243.69:3001/compras/detalle_por_encabezado/";
+const UrlEliminar ="http://190.53.243.69:3001/compras/detalle_por_encabezado/";
 
-const ReporteVentaFecha = () => {
+const ReporteCompraFecha = () => {
   const componenteRef = useRef();
 
+  const [registroDelete, setRegistroDelete] = useState('');
   const [encabezado, setEncabezado] = useState([]);
   const [detalles, setDetalles] = useState([]);
+
+  //Ventana modal para mostrar mas
+  const [modalVerMas, setVerMas] = useState(false);
+  const abrirModalVerMas = () => setVerMas(!modalVerMas);
 
   //procedimineto para obtener los detalles
   const getDetalles = async (id) => {
@@ -30,6 +35,14 @@ const ReporteVentaFecha = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+    //Para generar factura/imprimir
+    const handlePrint = useReactToPrint({
+      content: () => componenteRef.current,
+      documentTitle: "Factura",
+      onAfterPrint: () => console.log("Listo"),
+    });
+  
 
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
@@ -48,67 +61,50 @@ const ReporteVentaFecha = () => {
         dato.nombre_cliente
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase()) ||
-        dato.rtn.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.venta_total.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
+        dato.cod_socio_negocio.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.descripcion_socio_negocio.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.monto_total.toString().includes(busqueda.toLocaleLowerCase())
     );
   }
 
+   //Ventana modal de confirmación de eliminar
+   const [modalEliminar, setModalEliminar] = useState(false);
+   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
   //Configuramos las columnas de la tabla
   const columns = [
     {
       name: "FECHA",
       selector: (row) => row.fecha,
       sortable: true,
-      },
-      {
-        name: "RTN",
-        selector: (row) => row.rtn,
-        sortable: true,
-      },
-      {
-        name: "SUCURSAL",
-        selector: (row) => row.cod_sucursal,
-        sortable: true,
-      },
-      {
-        name: "NÚMERO DE CUENTA",
-        selector: (row) => row.numero_cuenta,
-        sortable: true,
-      },
-      {
-        name: "CORRELATIVO",
-        selector: (row) => row.correlativo,
-        sortable: true,
-      },
-      {
-        name: "POS",
-        selector: (row) => row.cod_pos,
-        sortable: true,
     },
     {
-        name: "DESCRIPCION",
-        selector: (row) => row.descripcion_pos,
-        sortable: true,
+      name: "BODEGA",
+      selector: (row) => row.cod_centro_costo,
+      sortable: true,
+    },
+   {
+      name: "CODIGO",
+      selector: (row) => row.cod_socio_negocio,
+      sortable: true,
+    },
+    {
+      name: "TIPO",
+      selector: (row) => row.referencia,
+      sortable: true,
     },
       {
-        name: "VENTA 15%",
-        selector: (row) => row.venta_grabada_15,
-        sortable: true,
-      },
-      {
-        name: "VENTA 18%",
-        selector: (row) => row.venta_grabada_18,
-        sortable: true,
-      },
-      {
-          name: "VENDEDOR",
-          selector: (row) => row.usuario,
+          name: "DESCRIPCIÓN",
+          selector: (row) => row.descripcion_centro_costo,
           sortable: true,
       },
       {
-        name: "VENTAL TOTAL",
-        selector: (row) => row.venta_total,
+        name: "MONTO IMPUESTO",
+        selector: (row) => row.monto_impuesto_total,
+        sortable: true,
+      },
+      {
+        name: "MONTO TOTAL",
+        selector: (row) => row.monto_total,
         sortable: true,
       },
       {
@@ -116,6 +112,40 @@ const ReporteVentaFecha = () => {
           selector: (row) => row.descripcion_estado,
           sortable: true,
       },
+      {
+        name: "VER MÁS...",
+        cell: (row) => (
+          <>
+            <Link
+              to="#"
+              type="button"
+              className="btn btn-light"
+              title="Ver Más..."
+              onClick={() => {
+                getDetalles(row.secuencia_enc);
+                abrirModalVerMas();
+              }}
+            >
+              <i className="bi bi-eye-fill"></i>
+            </Link>
+            &nbsp;
+            <button
+              className="btn btn-light"
+              title="Anular"
+              onClick={() => {
+              setRegistroDelete(row.id_pos);
+              abrirModalEliminar();
+            }}
+          >
+            <i className="fa-solid fa-trash"></i>
+          </button>
+          </>
+        ),
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true,
+      },
+      
   ];
 
   //Configurar la paginación de la tabla
@@ -139,14 +169,51 @@ const ReporteVentaFecha = () => {
         });
         break;
 
+      case 'anulado':
+      Swal.fire({
+        title: '¡anulado!',
+        text: "Se anulo con éxito",
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+    case 'error':
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo anular',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+
+    break;
+
       default:
         break;
+    }
+  };
+  //procedimineto para eliminar un registro
+  const deleteRegistro = async () => {
+    try {
+      console.log(registroDelete)
+      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      getDetalles();
+      if (res.status === 200) {
+         mostrarAlertas("eliminado"); 
+      } else {
+        mostrarAlertas("error");
+      }
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("error");
     }
   };
 
   return (
     <div className="container">
-      <h3>Reporte de Ventas por Fecha</h3>
+      <h3>Reporte de Compra por Fecha</h3>
       <br />
 
       <div className="row">
@@ -160,12 +227,12 @@ const ReporteVentaFecha = () => {
           validate={(valores) => {
             let errores = {};
 
-            // Validacion 
+            // Validacion de código
             if (!valores.fecha_inicial) {
               errores.fecha_inicial = "Seleccione una fecha";
             }
 
-            // Validacion 
+            // Validacion descripción
             if (!valores.fecha_final) {
               errores.fecha_final = "Seleccione una fecha";
             }
@@ -299,9 +366,101 @@ const ReporteVentaFecha = () => {
           <p className="text-center">No hay registros que mostrar</p>
         )}
       </div>
+       {/* Ventana Modal de ver más*/}
+       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FACTURA: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.referencia} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">CODIGO: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.cod_socio_negocio} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE CREACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.fecha_creacion} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">MODIFICADO POR: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.modificado_por} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {detalles.fecha_modificacion} </p>
+            </div>
+            </div>
+
+          {/**FACTURA**/}
+          <div ref={componenteRef} className="imprimir">
+          <Factura />
+          </div>
+          
+          </ModalBody>
+          <ModalFooter>
+          <Button
+            color="primary"
+            onClick={() => {
+              handlePrint();
+              abrirModalVerMas();
+            }}
+          >
+            Imprimir Factura
+          </Button>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
+          </Button>
+        </ModalFooter>
+          </Modal>
+          {/* Ventana Modal de Eliminar*/}
+          <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
+          <ModalHeader toggle={abrirModalEliminar}>Anular Registro</ModalHeader>
+          <ModalBody>
+            <p>¿Está seguro de Anular este Registro?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="danger"
+              onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+            >
+              Eliminar
+            </Button>
+            <Button color="secondary" onClick={abrirModalEliminar}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+          </Modal>
+         
 
     </div>
   );
 };
 
-export default ReporteVentaFecha;
+export default ReporteCompraFecha;
