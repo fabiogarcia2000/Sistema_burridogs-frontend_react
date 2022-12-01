@@ -130,7 +130,9 @@ const MostrarInvArticulos = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_articulo
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion_articulo
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())
@@ -283,19 +285,19 @@ const MostrarInvArticulos = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
-      {results.length > 0 ? (
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
-          ) : (
-     <p className="text-center">Ningún Registro</p>
-   )}
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={results}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="550px"
+          />
+        ) : (
+          <p className="text-center">Ningún Registro</p>
+        )}
       </div>
       <br />
       <hr />
@@ -427,7 +429,7 @@ const MostrarInvArticulos = () => {
       {/*Mostramos la segunda tabla con los datos*/}
       <div className="row">
         <div className="col-8">
-          {results.length > 0 ? (
+          {results2.length > 0 ? (
             <DataTable
               columns={columns2}
               data={results2}

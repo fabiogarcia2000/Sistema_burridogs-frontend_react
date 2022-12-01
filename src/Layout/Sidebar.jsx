@@ -193,12 +193,6 @@ function Sidebar() {
                 <span>Compras</span>
               </Link>
             </li>
-            <li>
-              <Link to="/admin/crearsalidamds">
-                <i className="bi bi-circle"></i>
-                <span>Salida de Mercadería</span>
-              </Link>
-            </li>
           </ul>
         </li>
 
