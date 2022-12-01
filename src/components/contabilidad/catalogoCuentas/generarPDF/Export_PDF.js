@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["ID", "USUARIO","CODIGO DE CUENTA","NOMBRE", "CATEGORIA", "DESTINO"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_cuenta, elt.nombre_usuario, elt.codigo_cuenta, elt.nombre_cuenta, elt.nombre_categoria, elt.descripcion]);
+    const datos = data.map((elt,i) => [(i+1), elt.nombre_usuario, elt.codigo_cuenta, elt.nombre_cuenta, elt.nombre_categoria, elt.descripcion]);
     
     //Tabla
     const tabla = {

@@ -11,15 +11,14 @@ export function Export_PDF (data) {
 
     const doc = new jsPDF(orientation, unit, size);
 
-    //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["ID", "CATEGORIA"]];
+    //Encabezado de las columnas
+  const encabezado = [["FECHA", "BODEGA", "CODIGO", "TIPO", "DESCRIPCIÓN", "MONTO IMPUESTO", "MONTO TOTAL","ESTADO"]];
    
-    //Registros de la tabla
-    const datos = data.map((elt,i) => [(i+1),elt.nombre_categoria]);
-
+  //Registros de la tabla
+  const datos = data.map(elt=> [elt.fecha,elt.cod_centro_costo,elt.cod_socio_negocio,elt.referencia,elt.descripcion_centro_costo,elt.monto_impuesto_total,elt.monto_total,elt.descripcion_estado]);
+     
     //Tabla
     const tabla = {
-      theme: 'striped', // 'striped', 'grid' or 'plain'
       startY: 100,
       head: encabezado,
       body: datos
@@ -27,17 +26,18 @@ export function Export_PDF (data) {
 
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
-    let reporte = "Categorías Contables";
-    let espacio = " ";
+    let reporte = "Reporte de Ventas por Fecha";
+    let sucursal = "Principal";
+    let usuario = "jperez";
     let fecha = getCurrentDateShort(data);
-    let hora = getCurrentTime(data)
+    let hora = getCurrentTime(data);
 
-    var width = doc.internal.pageSize.getWidth() //Para centrar el texto
+    var width = doc.internal.pageSize.getWidth(); //Para centrar el texto
 
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-  doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
@@ -52,7 +52,7 @@ export function Export_PDF (data) {
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    //Abre el documento en una nueva pestaña
-    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
+    //Se guarda el documento
+    doc.save("Reporte de Ventas por Fecha.pdf")
 
 };
