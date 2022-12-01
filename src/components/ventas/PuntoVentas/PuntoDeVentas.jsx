@@ -1055,20 +1055,20 @@ useEffect(() => {
                       <ul className="list-group">
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Sub Total
-                          <span className="">{"L. " + subTotal}</span>
+                          <span className="">{"L. " + ((subTotal||0).toFixed(2))}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Descuento
-                          <span className="">{"L. " + montoDesc}</span>
+                          <span className="">{"L. " + ((montoDesc||0).toFixed(2))}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
-                          <span className="">{"L. " + (tempIsv || 0)}</span>
+                          <span className="">{"L. " + (tempIsv || 0).toFixed(2)}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           <h4>Total</h4>
                           <span className="">
-                            <h4>{"L. " + parseFloat(tempTotal)}</h4>
+                            <h4>{"L. " + (parseFloat(tempTotal).toFixed(2))}</h4>
                           </span>
                         </li>
                       </ul>
