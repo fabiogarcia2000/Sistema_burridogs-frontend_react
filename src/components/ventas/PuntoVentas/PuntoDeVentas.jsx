@@ -759,7 +759,7 @@ useEffect(() => {
               abrirModalCantidadEdit();
             }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
           &nbsp;
           <button
@@ -770,7 +770,7 @@ useEffect(() => {
               abrirModalEliminarArticulo();
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
