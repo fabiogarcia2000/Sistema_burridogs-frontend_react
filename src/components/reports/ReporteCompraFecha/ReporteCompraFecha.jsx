@@ -272,7 +272,7 @@ const ReporteCompraFecha = () => {
           {({ errors, values }) => (
             <Form>
               <div className="row g-3">
-                <div className="col-sm-3">
+                <div className="col-sm-4">
                   <div className="mb-3">
                     <label htmlFor="inicio" className="form-label">
                       Fecha Inicio:
@@ -293,7 +293,7 @@ const ReporteCompraFecha = () => {
                   </div>
                 </div>
 
-                <div className="col-sm-3">
+                <div className="col-sm-4">
                   <div className="mb-3">
                     <label htmlFor="final" className="form-label">
                       Fecha Final:

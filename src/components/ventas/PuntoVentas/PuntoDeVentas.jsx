@@ -7,6 +7,7 @@ import "./style.css";
 import { Link, useParams } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { quitarTildes } from "./utils/textoSinTildes";
+import { cambiarAMayusculasNombreCliente } from "../../../utils/cambiarAMayusculas";
 import { MostrarAlertas } from "./utils/Alertas";
 import { InsertVenta } from "./insertVenta";
 import { numeroALetras } from "./utils/num_a_letras";
@@ -1111,9 +1112,9 @@ useEffect(() => {
 
               // Validacion id
               if (!valores.id_cliente) {
-                errores.id_cliente = "Ingrese un ID o RTN Correcto";
+                errores.id_cliente = "Ingrese un ID o RTN";
               } else if (!/^[0-9]+$/.test(valores.id_cliente)) {
-                errores.id_cliente = "ID o RTN Incorrecto";
+                errores.id_cliente = "ID o RTN Inválido";
               }
 
               return errores;
@@ -1135,7 +1136,7 @@ useEffect(() => {
                     <Field
                       type="text"
                       className="form-control"
-                      placeholder="escriba el ID o RTN..."
+                      placeholder="Escriba el ID o RTN..."
                       aria-label="Recipient's username"
                       //aria-describedby="button-addon2"
                       name="id_cliente"
@@ -1225,6 +1226,8 @@ useEffect(() => {
             // Validacion id
             if (!valores.nombre) {
               errores.nombre = "Nombre requerido";
+            }else if (!/^[A-Z, ]+$/.test(valores.nombre)) {
+              errores.nombre = "Ingrese un nombre válido";
             }
 
             return errores;
@@ -1259,6 +1262,7 @@ useEffect(() => {
                       aria-label="Recipient's username"
                       //aria-describedby="button-addon2"
                       name="nombre"
+                      onKeyUp={cambiarAMayusculasNombreCliente(values)}
                     />
                   </div>
                   <div className="row">

@@ -128,7 +128,6 @@ useEffect(() => {
     results = encabezado.filter(
       (dato) =>
         dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.rtn.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -229,7 +228,7 @@ useEffect(() => {
 
   return (
     <div className="container">
-      <h3>Consultar Ventas</h3>
+      <h3>Consultar Facturas</h3>
       <br />
       {permitido? (
      
@@ -337,7 +336,7 @@ useEffect(() => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por cliente, R.T.N, factura..."
+              placeholder="Buscar por cliente o factura..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -457,7 +456,7 @@ useEffect(() => {
               abrirModalVerMas();
             }}
           >
-            Imprimir Factura
+            Reimprimir Factura
           </Button>
           <Button color="secondary" onClick={abrirModalVerMas}>
             Cerrar

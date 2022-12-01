@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useGlobalState } from "../../globalStates/globalStates"; 
+import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../utils/cambiarAMayusculas";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -187,6 +188,7 @@ const FormularioEmpresa = () => {
                     id="codArticulo"
                     name="descripcion"
                     placeholder="Nombre o descripción..."
+                    onKeyUp={cambiarAMayusculasDescripcion(values)}
                   />
 
                   <ErrorMessage
@@ -209,6 +211,7 @@ const FormularioEmpresa = () => {
                     id="codArticulo"
                     name="direccion"
                     placeholder="Dirección de la empresa..."
+                    onKeyUp={cambiarAMayusculasDirección(values)}
                   />
 
                   <ErrorMessage
