@@ -18,13 +18,14 @@ const FormularioEmpresa = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"))
 
-  console.log(DatosEmpresa)
-
       const navigate = useNavigate();
 
   
 
     /*****Obtener y corroborar Permisos*****/
+    const [img, setImg]=useState();
+    console.log(img)
+
     const [temp, setTemp] = useState([]);
     const [permisos, setPermisos] = useState([]);
     const [permitido, setPermitido] = useState(true)
@@ -102,7 +103,7 @@ const FormularioEmpresa = () => {
           telefono: DatosEmpresa.telefono,
           correo: DatosEmpresa.correo,
           rtn: DatosEmpresa.rtn,
-          logo1: DatosEmpresa.logo1,
+          //logo1: DatosEmpresa.logo1,
           logo2: DatosEmpresa.logo2,
           logo3: DatosEmpresa.logo3,
           logo4: DatosEmpresa.logo4,
@@ -151,8 +152,8 @@ const FormularioEmpresa = () => {
         }}
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
+        
           try {
-            console.log(valores)
             const res = await axios.put(
               `${URLGuardar}${valores.id_empresa}`,
               valores
@@ -294,20 +295,7 @@ const FormularioEmpresa = () => {
                   <label htmlFor="logo1Articulo" className="form-label">
                     Logo 1 (Principal):
                   </label>
-                  <Field
-                    type="file"
-                    className="form-control"
-                    id="logo1Articulo"
-                    name="logo1"
-  
-                  />
-
-                  <ErrorMessage
-                    name="logo1"
-                    component={() => (
-                      <div className="error">{errors.logo1}</div>
-                    )}
-                  />
+                  <input id="imgs" type="file" className="form-control" name="logo1" accept="image/png, image/jpeg" onChange={(e)=>setImg(e.target.files)} />
                 </div>
               </div>
 

@@ -85,11 +85,8 @@ useEffect(() => {
   } else {
     results = encabezado.filter(
       (dato) =>
-        dato.nombre_cliente
-          .toLowerCase()
-          .includes(busqueda.toLocaleLowerCase()) ||
-        dato.rtn.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.venta_total.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.rtn.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -296,7 +293,7 @@ useEffect(() => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar por cliente, R.T.N, factura..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
