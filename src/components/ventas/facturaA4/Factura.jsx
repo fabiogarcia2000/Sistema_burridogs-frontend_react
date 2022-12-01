@@ -55,9 +55,9 @@ export default function Factura() {
                         <span>{"DIRECCIÓN: "+(DatosEmpresa.direccion || "")}</span><br />
                         <span>{"TEL: "+(DatosEmpresa.telefono || "")}</span><br />
                         <span>{"Correo: "+(DatosEmpresa.correo || "")}</span><br />
-                        <span>C.A.I.:000000-000000-00000-000000-000000-00</span><br />
-                        <strong>RANGO AUTORIZADO DEL: 0000-0000-000-0000000000 AL 0000-0000-000-0000000000 </strong><br />
-                        <span>Fecha Limite de Emisión: XX/XX/XXXX</span><br />
+                        <span>{"C.A.I: "+(venta.cai || "")}</span><br />
+                        <strong>{"RANGO AUTORIZADO DEL: "+(venta.rango||"")}</strong><br />
+                        <span>{"Fecha Limite de Emisión: "+(venta.fecha_limite_emision||"")}</span><br />
                     </div>
                 </div>
             </div>
@@ -65,11 +65,11 @@ export default function Factura() {
             <div className='col'>
                 <div className='row text-center'>
                     <h5><strong>FACTURA</strong></h5>
-                    <h5><strong className='h6 fw-bold'>No.</strong>000-001-01-<strong>000000</strong></h5>
+                    <h5><strong className='h6 fw-bold'>No.</strong><strong>{(venta.no_factura||"")}</strong></h5>
                 </div>
                 <br /> <br />
                 <div className='row text-center'>
-                    <h6>{"Fecha: "+venta.fecha}</h6>
+                    <h6>{"Fecha: "+(venta.fecha||"")}</h6>
                 </div>
             </div>
 

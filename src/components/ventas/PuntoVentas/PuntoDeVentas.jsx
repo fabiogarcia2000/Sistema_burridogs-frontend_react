@@ -96,9 +96,9 @@ const PuntoDeVentas = () => {
 
   const valuesInicial = {
     secuencia_enc: undefined,
-    id_sucursal: 1,
-    cod_sucursal: "BD01",
-    fecha: "2022-11-23",
+    id_sucursal: 0,
+    cod_sucursal: "",
+    fecha: "",
     numero_cuenta: 10002,
     venta_grabada_15: 0,
     venta_grabada_18: 0,
@@ -106,12 +106,12 @@ const PuntoDeVentas = () => {
     impuesto_15: 0,
     impuesto_18: 0,
     venta_total: 0,
-    cai: "ABCDF-GHIJK-LMNOP-QRST",
-    correlativo: 1,
-    rtn: "0801-1900-1234",
-    nombre_cliente: "Fabio",
-    id_usuario: 157,
-    id_pos: 1,
+    cai: "",
+    correlativo: undefined,
+    rtn: "",
+    nombre_cliente: "",
+    id_usuario: 0,
+    id_pos: 0,
     detalle: [],
     detalle_pago: [],
     detalle_promo: [],
@@ -327,8 +327,9 @@ useEffect(() => {
 
     for (let index = 0; index < limite; index++) {
       const buscarEn = quitarTildes(articulos[index].descripcion.toLowerCase());
+      const buscarEn2 = (articulos[index].cod_articulo.toLowerCase());
       const patt = new RegExp(buscar);
-      const res = patt.test(buscarEn);
+      const res = patt.test(buscarEn, buscarEn2);
 
       if (res) {
         tmpArray.push(articulos[index]);
@@ -578,6 +579,7 @@ useEffect(() => {
   //calcular el cambio a entregar
   const Calcular_Cambio = (monto) => {
     let cambio = monto - tempTotal;
+    cambio = cambio.toFixed(2)
 
     if (cambio < 0) {
       setCambio(0);
@@ -685,8 +687,6 @@ useEffect(() => {
   useEffect(() => {
     if (venta.detalle.length > 0) {
       InsertVenta(venta);
-      console.log("DATA VENTA:");
-      console.log(venta);
       setListo(true)
     }
   }, [venta]);
@@ -844,9 +844,9 @@ useEffect(() => {
                     <li>
                       <Link
                         className="dropdown-item"
-                        to={"/admin/cierre-caja/" + 10}
+                        to={"/admin/login-pos"}
                       >
-                        Corte de Caja
+                        Salir
                       </Link>
                     </li>
                     <li>
