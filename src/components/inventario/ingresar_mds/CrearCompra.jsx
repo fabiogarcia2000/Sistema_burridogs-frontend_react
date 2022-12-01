@@ -80,6 +80,25 @@ const Formulario = () => {
     getArticulos();
   }, []);
 
+  const valuesInicial = {
+    secuencia_enc: undefined,
+    id_socio_negocio: 0,
+    fecha: "",
+    referencia:"",
+    monto_total: 0,
+    monto_impuesto_total: 0,
+    creado_por:"",
+    fecha_creacion: "",
+    modificado_por:"",
+    fecha_modificacion:"",
+    id_usuario:undefined,
+    id_centro_costo: 1,
+    detalle: []
+  };
+  const [compra, setCompra] = useState(valuesInicial);
+
+
+
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
@@ -308,14 +327,15 @@ const Formulario = () => {
           secuencia_det: parseInt(det),
           secuencia_enc: parseInt(enc),
           id_articulo: articuloClick.id_articulo,
-          precio: parseFloat(articuloClick.precio),
+          precio_unit: parseFloat(articuloClick.precio),
           cantidad: cantidad,
           id_impuesto: articuloClick.id_impuesto,
-          total_impuesto:
+          id_unidad_medida:1,
+          monto_impuesto:
             parseFloat(articuloClick.precio) *
             parseFloat(cantidad) *
             parseFloat(articuloClick.porcentaje),
-          total:
+            monto_total:
             parseFloat(articuloClick.precio) *
               cantidad *
               parseFloat(articuloClick.porcentaje) +
@@ -645,7 +665,7 @@ const Formulario = () => {
               modificado_por: "eaplicano",
               fecha_modificacion: "2022-11-21",
               id_usuario: id_usuario,
-              id_centro_costo: sucursal,
+              id_centro_costo: sucursal
             }}
             //Funcion para validar
             validate={(valores) => {
@@ -693,6 +713,7 @@ const Formulario = () => {
               return errores;
             }}
             onSubmit={async (valores) => {
+              console.log("onSubmit")
               //validar si existe un registro con el codigo ingresado
               try {
                 const res = await axios.put(`${URLCrear}`, valores);
@@ -957,6 +978,9 @@ const Formulario = () => {
                   return errores;
                 }}
                 onSubmit={async (valores) => {
+                  console.log("Hola")
+                  console.log(detalles)
+
                   // Validacion de modo pedido
                   if (!listaCompras.length > 0) {
                     MostrarAlertas("agregar");
