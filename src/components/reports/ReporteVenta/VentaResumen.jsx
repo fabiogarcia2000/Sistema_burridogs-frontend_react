@@ -18,9 +18,11 @@ const objeto = "RPT_RESUMEN_VENTAS"
 
 
 const ReporteVentaResumen = () => {
-  var dataPar = JSON.parse(localStorage.getItem("bodsuc"))
+  var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
+  var id_sucursal= dataPar[0].id_sucursal;
 
-  var id_sucursal= dataPar[0].id_sucursal
+  var sucursal = dataPar[0].descripcion_sucursal;
+
   const [encabezado, setEncabezado] = useState([]);
   const navigate = useNavigate();
 
@@ -255,7 +257,6 @@ const ReporteVentaResumen = () => {
                 title="Exportar a PDF"
                 onClick={()=>{
                   Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE RESUMEN DE VENTAS");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

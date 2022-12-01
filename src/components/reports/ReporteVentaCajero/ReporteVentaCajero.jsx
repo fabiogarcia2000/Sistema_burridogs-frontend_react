@@ -13,10 +13,13 @@ import Swal from "sweetalert2";
 const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventasusuario/";
 
 const ReporteVentaCajero = () => {
-  var dataPar = JSON.parse(localStorage.getItem("bodsuc"))
-  var datausuario = JSON.parse(localStorage.getItem("data"))
+  var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
+  var datausuario = JSON.parse(localStorage.getItem("data"));
 
-  var id_usuario= datausuario.id
+  var sucursal = dataPar[0].descripcion_sucursal;
+
+  var id_usuario= 157;
+  
   var id_sucursal= dataPar[0].id_sucursal
   const [encabezado, setEncabezado] = useState([]);
   //Barra de busqueda
@@ -86,7 +89,7 @@ const ReporteVentaCajero = () => {
 
   return (
     <div className="container">
-      <h3>Consultar las Ventas por Producto</h3>
+      <h3>Consultar las Ventas por Cajero</h3>
       <br />
 
       <div className="row">
@@ -210,7 +213,7 @@ const ReporteVentaCajero = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results);
+                  Export_PDF(results, sucursal);
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

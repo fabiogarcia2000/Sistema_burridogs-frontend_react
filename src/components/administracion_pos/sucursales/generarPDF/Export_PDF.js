@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["CODIGO", "DESCRIPCION", "DIRECCION", "TELEFONO", "RTN", "CENTRO DE COSTO", "ESTADO", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"]];
 
     //Se establecen los campos que se desean exportar
-    const datos = data.map(elt=> [elt.cod_sucursal, elt.descripcion, elt.direccion, elt.telefono, elt.rtn, elt.id_centro_costo, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+    const datos = data.map(elt=> [elt.cod_sucursal, elt.descripcion_sucursal, elt.direccion, elt.telefono, elt.rtn, elt.descripcion_centro_costo, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
   
     //Tabla
     const tabla = {
