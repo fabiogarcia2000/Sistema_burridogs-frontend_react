@@ -326,9 +326,9 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/home">
+              <Link to="/admin/reporte-compra-fecha">
                 <i className="bi bi-circle"></i>
-                <span>Reporte 4</span>
+                <span>Reporte de Compra por Fecha</span>
               </Link>
             </li>
             <li>

@@ -6,16 +6,17 @@ import { getCurrentTime } from '../../../../utils/fechaYhora';
 
 export function Export_PDF (data) {
     const unit = "pt";
-    const size = "A2"; // Use A1, A2, A3 or A4
+    const size = "Letter"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
 
     const doc = new jsPDF(orientation, unit, size);
 
-    const encabezado = [["FECHA", "RTN", "SUCURSAL", "NÚMERO DE CUENTA", "CORRELATIVO", "POS", "DESCRIPCION", "VENTA 15%","VENTA 18%","VENDEDOR","VENTAL TOTAL","ESTADO"]];
+    //Encabezado de las columnas
+  const encabezado = [["FECHA", "BODEGA", "CODIGO", "TIPO", "DESCRIPCIÓN", "MONTO IMPUESTO", "MONTO TOTAL","ESTADO"]];
    
   //Registros de la tabla
-  const datos = data.map(elt=> [elt.fecha,elt.rtn,elt.cod_sucursal,elt.numero_cuenta,elt.correlativo,elt.cod_pos,elt.descripcion_pos,elt.venta_grabada_15,elt.venta_grabada_18,elt.usuario,elt.venta_total,elt.descripcion_estado]);
-       
+  const datos = data.map(elt=> [elt.fecha,elt.cod_centro_costo,elt.cod_socio_negocio,elt.referencia,elt.descripcion_centro_costo,elt.monto_impuesto_total,elt.monto_total,elt.descripcion_estado]);
+     
     //Tabla
     const tabla = {
       startY: 100,
@@ -35,7 +36,7 @@ export function Export_PDF (data) {
 
     //Preparacion del documento
     doc.setFontSize(12);
-    doc.addImage(logo, 590, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
     doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
