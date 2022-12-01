@@ -14,21 +14,29 @@ import {
 } from "../../../utils/cambiarAMayusculas";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
-
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
 const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
+const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
 const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactiveinv/";
 const UrlArticulosCategoria =
   "http://190.53.243.69:3001/articulo/getallbycategoria/";
 const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
 const isv = 0.15;
 
-const objeto = "FORM_COMPRAS"
+const objeto = "FORM_COMPRAS";
 
 const Formulario = () => {
   const navigate = useNavigate();
+
+  var datausuario = JSON.parse(localStorage.getItem("data"));
+  var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
+
+  var id_usuario = datausuario.id;
+  var sucursal = dataPar[0].descripcion_sucursal;
+
+  console.log(localStorage);
 
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -50,6 +58,11 @@ const Formulario = () => {
   const [detallesPago, setDetallesPago] = useState([]);
   const [detallesDesc, setDetallesDesc] = useState([]);
 
+  /***temp***/
+  const [tempTotal, setTempTotal] = useState(0.0);
+  const [tempIsv, setTempIsv] = useState(0.0);
+  /***temp***/
+
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
   const [montoDesc, setMontoDesc] = useState(0.0);
@@ -67,42 +80,38 @@ const Formulario = () => {
     getArticulos();
   }, []);
 
-/*****Obtener y corroborar Permisos*****/
-const [temp, setTemp] = useState([]);
-const [permisos, setPermisos] = useState([]);
-const [permitido, setPermitido] = useState(true)
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true);
 
-const Permisos = () =>{
-  const newData = temp.filter(
-    (item) => item.objeto === objeto
-  );
-  setPermisos(newData);
-}
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
+    setPermisos(newData);
+  };
 
-useEffect(() => {
-  let data = localStorage.getItem('permisos')
-  if(data){
-    setTemp(JSON.parse(data))
-  }
-}, []);
+  useEffect(() => {
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
+    }
+  }, []);
 
-useEffect(() => {
-  Permisos();
-}, [temp]);
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
 
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
 
-useEffect(() => {
-  if(permisos.length > 0){
-    TienePermisos();
-  }
-}, [permisos]);
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
 
-
-const TienePermisos = () =>{
-  setPermitido(permisos[0].permiso_consultar)
-}
-
-/*******************/
+  /*******************/
 
   //detalles de pago
   const Detalles_Pago = () => {
@@ -158,6 +167,19 @@ const TienePermisos = () =>{
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los metodos de pago y mostrarlas en select
+  const [metodosPago, setMetodosPago] = useState([]);
+
+  //petición a api
+  const getMetodosPago = async () => {
+    try {
+      const res = await axios.get(UrlMostrarMetodosPago);
+      setMetodosPago(res.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -495,6 +517,20 @@ const TienePermisos = () =>{
     //window.location.reload();
   };
 
+  //calcular el cambio a entregar
+  const Calcular_Cambio = (monto) => {
+    let cambio = monto - tempTotal;
+    cambio = cambio.toFixed(2);
+
+    if (cambio < 0) {
+      setCambio(0);
+    } else if (isNaN(cambio)) {
+      setCambio(0);
+    } else {
+      setCambio(parseFloat(cambio));
+    }
+  };
+
   //Ventana modal cantidad
   const [modalCantidad, setModalCantidad] = useState(false);
   const abrirModalCantidad = () => setModalCantidad(!modalCantidad);
@@ -512,9 +548,13 @@ const TienePermisos = () =>{
   const abrirModalEliminarArticulo = () =>
     setModalEliminarArticulo(!modalEliminarArticulo);
 
-  //Ventana modal procesar venta
+  //Ventana modal procesar compra
   const [modalVenta, setModalVenta] = useState(false);
   const abrirModalVenta = () => setModalVenta(!modalVenta);
+
+  //Ventana modal confirmación de imprimir factura
+  const [modalFactura, setModalFactura] = useState(false);
+  const abrirModalFactura = () => setModalFactura(!modalFactura);
 
   const columns = [
     {
@@ -589,232 +629,239 @@ const TienePermisos = () =>{
 
   return (
     <div className="container">
+      {permitido ? (
+        <div>
+          <Formik
+            //valores iniciales
+            initialValues={{
+              secuencia_enc: "",
+              id_socio_negocio: "",
+              fecha: "",
+              referencia: "",
+              monto_total: "",
+              monto_impuesto_total: "",
+              creado_por: "eaplicano",
+              fecha_creacion: "2022-11-21",
+              modificado_por: "eaplicano",
+              fecha_modificacion: "2022-11-21",
+              id_usuario: id_usuario,
+              id_centro_costo: sucursal,
+            }}
+            //Funcion para validar
+            validate={(valores) => {
+              let errores = {};
 
-      {permitido? (
-     
-     <div>
-      <Formik
-        //valores iniciales
-        initialValues={{
-          secuencia_enc: "",
-          id_socio_negocio: "",
-          fecha: "",
-          referencia: "",
-          monto_total: "",
-          monto_impuesto_total: "",
-          creado_por: "eaplicano",
-          fecha_creacion: "2022-11-21",
-          modificado_por: "eaplicano",
-          fecha_modificacion: "2022-11-21",
-          id_usuario: "",
-          id_centro_costo: "",
-        }}
-        //Funcion para validar
-        validate={(valores) => {
-          let errores = {};
+              // Validacion socio
+              if (!valores.id_socio_negocio) {
+                errores.id_socio_negocio = "Por favor seleccione una opción";
+              }
 
-          // Validacion socio
-          if (!valores.id_socio_negocio) {
-            errores.id_socio_negocio = "Por favor seleccione una opción";
-          }
+              // Validacion referencia
+              if (!valores.referencia) {
+                errores.referencia = "Por favor ingrese una referencia";
+              }
 
-          // Validacion referencia
-          if (!valores.referencia) {
-            errores.referencia = "Por favor ingrese una referencia";
-          }
+              // Validacion monto
+              if (!valores.monto_total) {
+                errores.monto_total = "Por favor ingrese un monto";
+              } else if (!/^^[0-9]+$/.test(valores.monto_total)) {
+                errores.monto_total = "El monto solo pueden contener números";
+              }
 
-          // Validacion monto
-          if (!valores.monto_total) {
-            errores.monto_total = "Por favor ingrese un monto";
-          } else if (!/^^[0-9]+$/.test(valores.monto_total)) {
-            errores.monto_total = "El monto solo pueden contener números";
-          }
+              // Validacion unidad
+              if (!valores.unidad) {
+                errores.unidad = "Por favor ingrese una unidad";
+              }
+              // Validacion cantidad
+              if (!valores.cantidad) {
+                errores.cantidad = "Por favor ingrese la cantidad";
+              } else if (!/^^[0-9]+$/.test(valores.id)) {
+                errores.cantidad = "La cantidad solo puede contener números";
+              }
+              // Validacion precio unitario
+              if (!valores.preciou) {
+                errores.preciou = "Por favor ingrese un precio";
+              }
 
-          // Validacion unidad
-          if (!valores.unidad) {
-            errores.unidad = "Por favor ingrese una unidad";
-          }
-          // Validacion cantidad
-          if (!valores.cantidad) {
-            errores.cantidad = "Por favor ingrese la cantidad";
-          } else if (!/^^[0-9]+$/.test(valores.id)) {
-            errores.cantidad = "La cantidad solo puede contener números";
-          }
-          // Validacion precio unitario
-          if (!valores.preciou) {
-            errores.preciou = "Por favor ingrese un precio";
-          }
+              // Validacion total
+              if (!valores.total) {
+                errores.total = "Por favor ingrese el total";
+              } else if (!/^^[0-9]+$/.test(valores.total)) {
+                errores.id = "El total solo puede contener números";
+              }
 
-          // Validacion total
-          if (!valores.total) {
-            errores.total = "Por favor ingrese el total";
-          } else if (!/^^[0-9]+$/.test(valores.total)) {
-            errores.id = "El total solo puede contener números";
-          }
+              return errores;
+            }}
+            onSubmit={async (valores) => {
+              //validar si existe un registro con el codigo ingresado
+              try {
+                const res = await axios.put(`${URLCrear}`, valores);
+                console.log(res);
+                if (res.status === 200) {
+                  mostrarAlertas("guardado");
+                  RegistroEnVitacora(
+                    permisos[0].id_objeto,
+                    "CREAR",
+                    "CREAR COMPRA"
+                  ); //Insertar bitacora
+                  navigate("/admin/mostrarmateriales");
+                } else {
+                  mostrarAlertas("error");
+                }
+              } catch (error) {
+                console.log(error);
+                mostrarAlertas("error");
+                navigate("/admin/mostrarmateriales");
+              }
+            }}
+          >
+            {({ errors }) => (
+              <Form>
+                <h3 className="mb-3">Nueva orden de compra</h3>
+                <hr />
+                <div className="row g-3">
+                  <div className="col-sm-3">
+                    <div className="mb-3">
+                      <label htmlFor="socioCompra" className="form-label">
+                        Socio de Negocio:
+                      </label>
+                      <Field
+                        as="select"
+                        className="form-select"
+                        id="socioCompra"
+                        name="id_socio_negocio"
+                      >
+                        <option value="">Seleccionar...</option>
+                        {socios.map((item, i) => (
+                          <option key={i} value={item.id_socio_negocio}>
+                            {item.descripcion}
+                          </option>
+                        ))}
+                      </Field>
 
-          return errores;
-        }}
-        onSubmit={async (valores) => {
-          //validar si existe un registro con el codigo ingresado
-          try {
-            const res = await axios.put(`${URLCrear}`, valores);
-            console.log(res);
-            if (res.status === 200) {
-              mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR COMPRA"); //Insertar bitacora
-              navigate("/admin/mostrarmateriales");
-            } else {
-              mostrarAlertas("error");
-            }
-          } catch (error) {
-            console.log(error);
-            mostrarAlertas("error");
-            navigate("/admin/mostrarmateriales");
-          }
-        }}
-      >
-        {({ errors }) => (
-          <Form>
-            <h3 className="mb-3">Nueva orden de compra</h3>
-            <hr />
-            <div className="row g-3">
-              <div className="col-sm-3">
-                <div className="mb-3">
-                  <label htmlFor="socioCompra" className="form-label">
-                    Socio de Negocio:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="socioCompra"
-                    name="id_socio_negocio"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {socios.map((item, i) => (
-                      <option key={i} value={item.id_socio_negocio}>
-                        {item.descripcion}
-                      </option>
-                    ))}
-                  </Field>
+                      <ErrorMessage
+                        name="id"
+                        component={() => (
+                          <div className="error">{errors.id}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
 
-                  <ErrorMessage
-                    name="id"
-                    component={() => <div className="error">{errors.id}</div>}
-                  />
+                  <div className="col-sm-3">
+                    <div className="mb-3">
+                      <label htmlFor="fechaCompra" className="form-label">
+                        Fecha:
+                      </label>
+                      <Field
+                        type="date"
+                        className="form-control"
+                        id="fechaCompra"
+                        name="fecha"
+                        placeholder="Descripcion del Artículo..."
+                      />
+
+                      <ErrorMessage
+                        name="fecha"
+                        component={() => (
+                          <div className="error">{errors.fecha}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-3">
+                    <div className="mb-3">
+                      <label htmlFor="RefCompra" className="form-label">
+                        Referencia:
+                      </label>
+                      <Field
+                        type="text"
+                        className="form-control"
+                        id="RefCompra"
+                        name="referencia"
+                        placeholder="Referencia..."
+                      />
+
+                      <ErrorMessage
+                        name="referencia"
+                        component={() => (
+                          <div className="error">{errors.referencia}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div className="col-sm-3">
-                <div className="mb-3">
-                  <label htmlFor="fechaCompra" className="form-label">
-                    Fecha:
-                  </label>
-                  <Field
-                    type="date"
-                    className="form-control"
-                    id="fechaCompra"
-                    name="fecha"
-                    placeholder="Descripcion del Artículo..."
-                  />
+                <div className="row g-3">
+                  <div className="col-sm-3">
+                    <div className="mb-3">
+                      <label htmlFor="rtnSucursal" className="form-label">
+                        Impuesto Total:
+                      </label>
+                      <Field
+                        type="text"
+                        className="form-control"
+                        id="rtnSucursal"
+                        name="preciou"
+                        disabled
+                      />
 
-                  <ErrorMessage
-                    name="fecha"
-                    component={() => (
-                      <div className="error">{errors.fecha}</div>
-                    )}
-                  />
+                      <ErrorMessage
+                        name="preciou"
+                        component={() => (
+                          <div className="error">{errors.precio}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-3">
+                    <div className="mb-3">
+                      <label htmlFor="idUsuario" className="form-label">
+                        Id Usuario:
+                      </label>
+                      <Field
+                        type="text"
+                        className="form-control"
+                        id="idUsuario"
+                        name="id_usuario"
+                        disabled
+                      />
+
+                      <ErrorMessage
+                        name="id_usuario"
+                        component={() => (
+                          <div className="error">{errors.id_usuario}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-3">
+                    <div className="mb-3">
+                      <label
+                        htmlFor="centroCostoSucursal"
+                        className="form-label"
+                      >
+                        Centro de Costo:
+                      </label>
+                      <Field
+                        type="text"
+                        className="form-control"
+                        id="centroCostoSucursal"
+                        name="descripcion_sucursal"
+                        disabled
+                      />
+
+                      <ErrorMessage
+                        name="descripcion_sucursal"
+                        component={() => (
+                          <div className="error">{errors.id_centro_costo}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="col-sm-3">
-                <div className="mb-3">
-                  <label htmlFor="RefCompra" className="form-label">
-                    Referencia:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="RefCompra"
-                    name="referencia"
-                    placeholder="Referencia..."
-                  />
 
-                  <ErrorMessage
-                    name="referencia"
-                    component={() => (
-                      <div className="error">{errors.referencia}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="row g-3">
-              <div className="col-sm-3">
-                <div className="mb-3">
-                  <label htmlFor="rtnSucursal" className="form-label">
-                    Impuesto Total:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="rtnSucursal"
-                    name="preciou"
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="preciou"
-                    component={() => (
-                      <div className="error">{errors.precio}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-3">
-                <div className="mb-3">
-                  <label htmlFor="centroCostoSucursal" className="form-label">
-                    Id Usuario:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="centroCostoSucursal"
-                    name="total"
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="total"
-                    component={() => (
-                      <div className="error">{errors.total}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-3">
-                <div className="mb-3">
-                  <label htmlFor="centroCostoSucursal" className="form-label">
-                    Centro de Costo:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="centroCostoSucursal"
-                    name="total"
-                    disabled
-                  />
-
-                  <ErrorMessage
-                    name="total"
-                    component={() => (
-                      <div className="error">{errors.total}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/*Mostrar categorias
+                {/*Mostrar categorias
             <div className="row colorcategorias">
               <div className="col d-grid gap-2 col-3 mx-auto">
                 <button
@@ -840,230 +887,142 @@ const TienePermisos = () =>{
                   </div>
                 ))}
             </div>*/}
-            <hr />
-            {/*Mostrar productos*/}
-            <div className="row divCards">
-              <br />
-              {articulosMostrar &&
-                articulosMostrar.map((artic, i) => (
-                  <div className="col-sm-3 mb-2" key={i}>
-                    <div
-                      className="card colorCards"
-                      type="button"
-                      onClick={() => {
-                        abrirModalCantidad();
-                        setArticuloClick(artic);
-                        Det();
-                      }}
-                    >
-                      <div className="card-body">
-                        <h5 className="card-title">{artic.descripcion}</h5>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                          {"Código: " + artic.cod_articulo}
-                        </h6>
-                        <p className="card-text">
-                          <span className="badge bg-success rounded-pill">
-                            {"Precio: " + artic.precio}
+                <hr />
+                {/*Mostrar productos*/}
+                <div className="row divCards">
+                  <br />
+                  {articulosMostrar &&
+                    articulosMostrar.map((artic, i) => (
+                      <div className="col-sm-3 mb-2" key={i}>
+                        <div
+                          className="card colorCards"
+                          type="button"
+                          onClick={() => {
+                            abrirModalCantidad();
+                            setArticuloClick(artic);
+                            Det();
+                          }}
+                        >
+                          <div className="card-body">
+                            <h5 className="card-title">{artic.descripcion}</h5>
+                            <h6 className="card-subtitle mb-2 text-muted">
+                              {"Código: " + artic.cod_articulo}
+                            </h6>
+                            <p className="card-text">
+                              <span className="badge bg-success rounded-pill">
+                                {"Precio: " + artic.precio}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <hr />
+              </Form>
+            )}
+          </Formik>
+          <div className="row">
+            <div className="col-8">
+              <div className="row divDetalles">
+                {listaCompras.length > 0 ? (
+                  <DataTable
+                    columns={columns}
+                    data={listaCompras}
+                    highlightOnHover
+                    fixedHeader
+                    fixedHeaderScrollHeight="200px"
+                  />
+                ) : (
+                  <p className="text-center">Ningún Material en Lista</p>
+                )}
+              </div>
+            </div>
+
+            <div className="col-4">
+              <Formik
+                //valores iniciales
+                initialValues={{
+                  id_modo_pedido: "",
+                }}
+                //Funcion para validar
+                validate={(valores) => {
+                  let errores = {};
+
+                  // Validacion de modo pedido
+                  if (!valores.id_modo_pedido) {
+                    errores.id_modo_pedido = "Requerido";
+                  }
+
+                  return errores;
+                }}
+                onSubmit={async (valores) => {
+                  // Validacion de modo pedido
+                  if (!listaCompras.length > 0) {
+                    MostrarAlertas("agregar");
+                  } else {
+                    //procedimineto para guardar el los cambios
+                    abrirModalVenta();
+                    setDetallesPago([]);
+                    Detalles_Pago();
+                    setTipoPedido(valores.id_modo_pedido);
+                    setTotalEnLetras(numeroALetras(parseFloat(total)));
+                    setDetallesDesc([]);
+                    setNewDetalles([]);
+                    Detalles_Desc();
+                  }
+                }}
+              >
+                <Form>
+                  <div className="container">
+                    <div className="row">
+                      <ul className="list-group">
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Sub Total
+                          <span className="">{"L. " + subTotal}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Descuento
+                          <span className="">{"L. " + montoDesc}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          Impuesto
+                          <span className="">{"L. " + Impuesto}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                          <h4>Total</h4>
+                          <span className="">
+                            <h4>{"L. " + parseFloat(total)}</h4>
                           </span>
-                        </p>
+                        </li>
+                      </ul>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="d-grid gap-2 col-12 mx-auto">
+                        <button className="btn btn-primary" type="submit">
+                          Realizar Compra
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          type="button"
+                          onClick={abrirModalCancelar}
+                        >
+                          Cancelar
+                        </button>
                       </div>
                     </div>
                   </div>
-                ))}
+                </Form>
+              </Formik>
             </div>
-            <hr />
-
-            <div className="row">
-              <div className="col-8">
-                <div className="row divDetalles">
-                  {listaCompras.length > 0 ? (
-                    <DataTable
-                      columns={columns}
-                      data={listaCompras}
-                      highlightOnHover
-                      fixedHeader
-                      fixedHeaderScrollHeight="200px"
-                    />
-                  ) : (
-                    <p className="text-center">Ningún Material en Lista</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="col-4">
-                <Formik
-                  //valores iniciales
-                  initialValues={{
-                    id_modo_pedido: "",
-                  }}
-                  //Funcion para validar
-                  validate={(valores) => {
-                    let errores = {};
-
-                    // Validacion de modo pedido
-                    if (!valores.id_modo_pedido) {
-                      errores.id_modo_pedido = "Requerido";
-                    }
-
-                    return errores;
-                  }}
-                  onSubmit={async (valores) => {
-                    // Validacion de modo pedido
-                    if (!listaCompras.length > 0) {
-                      MostrarAlertas("agregar");
-                    } else {
-                      //procedimineto para guardar el los cambios
-                      abrirModalVenta();
-                      setDetallesPago([]);
-                      Detalles_Pago();
-                      setTipoPedido(valores.id_modo_pedido);
-                      setTotalEnLetras(numeroALetras(parseFloat(total)));
-                      setDetallesDesc([]);
-                      setNewDetalles([]);
-                      Detalles_Desc();
-                    }
-                  }}
-                >
-                  {({ errors, values }) => (
-                    <Form>
-                      <div className="container">
-                        <div className="row">
-                          {/*<div className="col">
-                            <div className="form-floating">
-                              <Field
-                                as="select"
-                                className="form-select"
-                                id="floatingSelectGrid"
-                                aria-label="Floating label select example"
-                                name="id_descuento"
-                                onClick={handlerDescuento}
-                              >
-                                <option value="">Ninguno</option>
-                                {tiposDescuentos.map((item, i) => (
-                                  <option key={i} value={item.id_descuento}>
-                                    {item.descripcion}
-                                  </option>
-                                ))}
-                              </Field>
-                              <label htmlFor="floatingSelectGrid">
-                                Descuento:
-                              </label>
-                            </div>
-                          </div>*/}
-
-                          <div className="col">
-                            <div className="form-floating">
-                              <Field
-                                as="select"
-                                className="form-select"
-                                id="floatingSelectGrid"
-                                aria-label="Floating label select example"
-                                name="id_modo_pedido"
-                              >
-                                <option value="">Seleccionar...</option>
-                                <option value="1">Contado</option>
-                                <option value="2">Crédito</option>
-                              </Field>
-                              <label htmlFor="floatingSelectGrid">
-                                Modo de Compra:
-                              </label>
-
-                              <ErrorMessage
-                                name="id_modo_pedido"
-                                component={() => (
-                                  <div className="error">
-                                    {errors.id_modo_pedido}
-                                  </div>
-                                )}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <hr />
-
-                        <div className="row">
-                          <ul className="list-group">
-                            <li className="list-group-item d-flex justify-content-between align-items-center">
-                              Sub Total
-                              <span className="">{"L. " + subTotal}</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center">
-                              Descuento
-                              <span className="">{"L. " + montoDesc}</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center">
-                              Impuesto
-                              <span className="">{"L. " + Impuesto}</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center">
-                              <h4>Total</h4>
-                              <span className="">
-                                <h4>{"L. " + parseFloat(total)}</h4>
-                              </span>
-                            </li>
-                          </ul>
-                        </div>
-                        <hr />
-                        <div className="row">
-                          <div className="d-grid gap-2 col-12 mx-auto">
-                            <button className="btn btn-primary" type="submit">
-                              Realizar Compra
-                            </button>
-                            <button
-                              className="btn btn-danger"
-                              type="button"
-                              onClick={abrirModalCancelar}
-                            >
-                              Cancelar
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-              </div>
-            </div>
-
-            <div className="col-sm-3">
-              <div className="mb-3">
-                <label htmlFor="montoCompra" className="form-label">
-                  Monto Total:
-                </label>
-                <Field
-                  type="text"
-                  className="form-control"
-                  id="montoCompra"
-                  name="monto_total"
-                  disabled
-                />
-
-                <ErrorMessage
-                  name="monto_total"
-                  component={() => (
-                    <div className="error">{errors.monto_total}</div>
-                  )}
-                />
-              </div>
-            </div>
-            <button className="btn btn-success mb-3 me-2" type="submit">
-              Guardar
-            </button>
-            <Link
-              to="/admin/mostraringresomds"
-              type="button"
-              className="btn btn-danger mb-3 me-2"
-            >
-              Cancelar
-            </Link>
-          </Form>
-        )}
-      </Formik>
-      </div>
-
-) : (
-  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
-)}
+          </div>
+        </div>
+      ) : (
+        <p className="text-center text-danger">
+          Lo siento, no tienes permisos para realizar esta acción.
+        </p>
+      )}
       {/* Ventana Modal de cancelar la venta*/}
       <Modal isOpen={modalCancelar} toggle={abrirModalCancelar} centered>
         <ModalHeader toggle={abrirModalCancelar}>
@@ -1086,6 +1045,133 @@ const TienePermisos = () =>{
             No
           </Button>
         </ModalFooter>
+      </Modal>
+
+      {/* Ventana Modal de Procesar ventas*/}
+      <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
+        <Formik
+          //valores iniciales
+          initialValues={{
+            metodo_pago: "",
+            monto_recibido: "",
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
+
+            // Validacion tipo de pago
+            if (!valores.metodo_pago) {
+              errores.metodo_pago = "Requerido";
+            }
+
+            // Validacion de monto
+            if (!valores.monto_recibido) {
+              errores.monto_recibido = "Requerido";
+            } else if (valores.monto_recibido < tempTotal) {
+              errores.monto_recibido =
+                "El monto recibido debe ser mayor o igual al total";
+            } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_recibido)) {
+              errores.monto_recibido = "Monto Incorrecto";
+            }
+
+            return errores;
+          }}
+          onSubmit={async (valores) => {
+            setTipoPago(valores.metodo_pago);
+            abrirModalVenta();
+            abrirModalFactura();
+          }}
+        >
+          {({ errors, values }) => (
+            <Form>
+              <ModalHeader toggle={abrirModalVenta}>Caja</ModalHeader>
+              <ModalBody>
+                <div className="container">
+                  <div className="row text-center">
+                    <h5>Total a Pagar:</h5>
+                    <h1>{"L. " + parseFloat(tempTotal)}</h1>
+                    <p>{"(" + totalEnLetras + ")"}</p>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <h5>Método de Pago:</h5>
+                  </div>
+                  <div className="row">
+                    <Field
+                      className="form-select"
+                      id="country"
+                      as="select"
+                      name="metodo_pago"
+                    >
+                      <option value="">Seleccionar...</option>
+                      {metodosPago.map((item, i) => (
+                        <option key={i} value={item.id_metodo_pago}>
+                          {item.descripcion}
+                        </option>
+                      ))}
+                      {/** <option value="">COMPARTIDO</option> */}
+                    </Field>
+
+                    <ErrorMessage
+                      name="metodo_pago"
+                      component={() => (
+                        <div className="error">{errors.metodo_pago}</div>
+                      )}
+                    />
+                  </div>
+                  <hr />
+
+                  <div className="row">
+                    <div className="col">
+                      <div className="row">
+                        <h5>Monto Recibido:</h5>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm-8">
+                          <Field
+                            type="text"
+                            className="form-control"
+                            id="monto"
+                            name="monto_recibido"
+                            placeholder="L.0.0"
+                            onKeyUp={Calcular_Cambio(values.monto_recibido)}
+                          />
+                          <ErrorMessage
+                            name="monto_recibido"
+                            component={() => (
+                              <div className="error">
+                                {errors.monto_recibido}
+                              </div>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col">
+                      <div className="row">
+                        <h5>Cambio:</h5>
+                      </div>
+                      <div className="row">
+                        <h2>{"L." + cambio}</h2>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr />
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" type="submit" onClick={() => {}}>
+                  Aceptar
+                </Button>
+                <Button color="secondary" onClick={abrirModalVenta}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </Form>
+          )}
+        </Formik>
       </Modal>
 
       {/* Ventana Modal de cantidad de articulos a agregar*/}
