@@ -9,6 +9,7 @@ import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayuscula
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { useState, useEffect } from "react";
 
+
 const URLEditar = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/";
 
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
@@ -21,43 +22,6 @@ const EditarCuenta = () => {
 
 
   const navigate = useNavigate();
-
-  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
-  const userdata = JSON.parse(localStorage.getItem('data'))
-
-  //procedimineto para obtener todos las sucursales y mostrarlas en select
-  const [destino, setdestino] = useState([]);
-  useEffect(() => {
-    getdestino();
-  }, []);
-
-  //petición a api
-  const getdestino = async () => {
-    try {
-      const res = await axios.get(Urldestino);
-      setdestino(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
-
-  //procedimineto para obtener todos las sucursales y mostrarlas en select
-  const [categoria, setcategoria] = useState([]);
-  useEffect(() => {
-    getcategoria();
-  }, []);
-
-  //petición a api
-  const getcategoria = async () => {
-    try {
-      const res = await axios.get(Urlcategoria);
-      setcategoria(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
 
 //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
@@ -96,6 +60,45 @@ const EditarCuenta = () => {
   }
 //================================================================
 
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
+
+  
+  //procedimineto para obtener todos las sucursales y mostrarlas en select
+  const [destino, setdestino] = useState([]);
+  useEffect(() => {
+    getdestino();
+  }, []);
+
+  //petición a api
+  const getdestino = async () => {
+    try {
+      const res = await axios.get(Urldestino);
+      setdestino(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos las sucursales y mostrarlas en select
+  const [categoria, setcategoria] = useState([]);
+  useEffect(() => {
+    getcategoria();
+  }, []);
+
+  //petición a api
+  const getcategoria = async () => {
+    try {
+      const res = await axios.get(Urlcategoria);
+      setcategoria(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -131,11 +134,11 @@ const EditarCuenta = () => {
         //valores iniciales
         initialValues={{
           id_cuenta: edit.id_cuenta,
-          id_usuario: userdata.data.id,
+          id_usuario: userdata.data.nameUser,
           codigo_cuenta: edit.codigo_cuenta,
           nombre_cuenta: edit.nombre_cuenta,
-          id_categoria: edit.nombre_categoria,
-          id_destino_cuenta: "",
+          id_categoria: edit.id_categoria,
+          id_destino_cuenta: edit.id_destino_cuenta,
         }}
 
         //Funcion para validar
@@ -145,9 +148,7 @@ const EditarCuenta = () => {
           // Validacion de usuario
           if (!valores.id_usuario) {
             errores.id_usuario = "Por favor ingresa un id de usuario";
-          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
-            errores.id_usuario = "Escribir solo números";
-          }
+          } 
 
           // Validacion de código cuenta
           if (!valores.codigo_cuenta) {
@@ -163,9 +164,7 @@ const EditarCuenta = () => {
           // Validacion de id categoria
           if (!valores.id_categoria) {
             errores.id_categoria = "Por favor seleccione una opcion";
-          } else if (!/^[0-9]+$/.test(valores.id_categoria)) {
-            errores.id_categoria = "Escribir solo números";
-          }
+          } 
 
           // Validacion de id destino cuenta
           if (!valores.id_destino_cuenta) {
@@ -315,6 +314,7 @@ const EditarCuenta = () => {
                     {categoria.map((item, i) => (
                       <option key={i} value={item.id_categoria}>{item.nombre_categoria}</option>
                     ))}
+                   
                   </Field>
                   <ErrorMessage
                     name="id_categoria"
@@ -344,6 +344,7 @@ const EditarCuenta = () => {
                       <option key={i} value={item.id_destino_cuenta}>{item.descripcion_informe_financiero}</option>
                     ))}
                   </Field>
+            
                   <ErrorMessage
                     name="id_destino_cuenta"
                     component={() => (

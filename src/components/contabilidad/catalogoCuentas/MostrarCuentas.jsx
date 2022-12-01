@@ -442,14 +442,7 @@ const MostrarCuentas = () => {
             </div>
           </div>
 
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">SALDO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {cuentaVerMas.saldo} </p>
-            </div>
-          </div>
+        
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={abrirModalVerMas}>

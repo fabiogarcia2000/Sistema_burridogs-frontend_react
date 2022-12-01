@@ -183,11 +183,11 @@ const MostrarSubCuentas = () => {
       selector: (row) => row.nombre_subcuenta,
       sortable: true,
     },
-    {
+    /*{
       name: "SALDO",
       selector: (row) => row.saldo,
       sortable: true,
-    },
+    },*/
 
 
     {
