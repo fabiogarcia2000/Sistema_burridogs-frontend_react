@@ -363,7 +363,9 @@ const ReporteCompraFecha = () => {
                 </div>
 
                 <div className="col-sm-4 bottom-aligned">
-                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                  <button className="btn btn-primary mb-3 me-2" type="submit"
+                    onClick={ () => (
+                      RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR REPORTE DE COMPRAS POR FECHA"))}>
                     Consultar
                   </button>
                 </div>
