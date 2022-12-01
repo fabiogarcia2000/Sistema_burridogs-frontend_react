@@ -146,7 +146,7 @@ const ReporteVentaFecha = () => {
 
   return (
     <div className="container">
-      <h3>Reporte de Ventas por Fecha</h3>
+      <h3>Reporte de Facturas por Fecha</h3>
       <br />
 
       <div className="row">

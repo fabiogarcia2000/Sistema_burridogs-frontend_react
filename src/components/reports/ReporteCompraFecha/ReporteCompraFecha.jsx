@@ -83,8 +83,13 @@ const ReporteCompraFecha = () => {
       sortable: true,
     },
    {
-      name: "CODIGO",
+      name: "CODIGO PROVEEDOR",
       selector: (row) => row.cod_socio_negocio,
+      sortable: true,
+    },
+    {
+      name: "PROVEEDOR",
+      selector: (row) => row.descripcion_socio_negocio,
       sortable: true,
     },
     {

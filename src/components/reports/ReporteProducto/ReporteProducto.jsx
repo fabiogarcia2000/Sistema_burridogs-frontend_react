@@ -10,7 +10,7 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcell/Export_Excel";
 import Swal from "sweetalert2";
 
-const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventas/";
+const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventasporarticulo/";
 
 const ReporteVentaResumen = () => {
   var dataPar = JSON.parse(localStorage.getItem("bodsuc"))
@@ -31,12 +31,10 @@ const ReporteVentaResumen = () => {
   } else {
     results = encabezado.filter(
       (dato) =>
-        dato.nombre_cliente
+        dato.cod_articulo
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase()) ||
-        dato.rtn.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.venta_total.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
+        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase()) 
     );
   } 
   
@@ -46,14 +44,44 @@ const ReporteVentaResumen = () => {
   const columns = [
     {
       name: "DESCRIPCION",
-      selector: (row) => row.descripcion,
+      selector: (row) => row.cod_sucursal,
       sortable: true,
     },
     {
       name: "MONTO",
-      selector: (row) => row.monto,
+      selector: (row) => row.categoria,
       sortable: true,
     },
+    {
+        name: "MONTO",
+        selector: (row) => row.cod_articulo,
+        sortable: true,
+      },
+      {
+        name: "MONTO",
+        selector: (row) => row.descripcion,
+        sortable: true,
+      },
+      {
+        name: "MONTO",
+        selector: (row) => row.precio,
+        sortable: true,
+      },
+      {
+        name: "MONTO",
+        selector: (row) => row.cantidad,
+        sortable: true,
+      },
+      {
+        name: "MONTO",
+        selector: (row) => row.venta_neta,
+        sortable: true,
+      },
+      {
+        name: "MONTO",
+        selector: (row) => row.venta_total,
+        sortable: true,
+      },
   ];
 
   //Configurar la paginación de la tabla
@@ -84,7 +112,7 @@ const ReporteVentaResumen = () => {
 
   return (
     <div className="container">
-      <h3>Consultar el Total de las Ventas</h3>
+      <h3>Consultar las Ventas por Producto</h3>
       <br />
 
       <div className="row">
@@ -192,6 +220,17 @@ const ReporteVentaResumen = () => {
         {/*Mostrar la barra de busqueda*/}
         <div className="col-6">
           <div className="input-group flex-nowrap">
+            <span className="input-group-text" id="addon-wrapping">
+              <i className="bi bi-search"></i>
+            </span>
+            <input
+              className="form-control me-2"
+              type="text"
+              placeholder="Buscar..."
+              aria-label="Search"
+              value={busqueda}
+              onChange={valorBuscar}
+            />
             <Link
                 type="button"
                 className="btn btn-success"

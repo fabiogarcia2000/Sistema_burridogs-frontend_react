@@ -10,11 +10,13 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcell/Export_Excel";
 import Swal from "sweetalert2";
 
-const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventas/";
+const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventasusuario/";
 
-const ReporteVentaResumen = () => {
+const ReporteVentaCajero = () => {
   var dataPar = JSON.parse(localStorage.getItem("bodsuc"))
+  var datausuario = JSON.parse(localStorage.getItem("data"))
 
+  var id_usuario= datausuario.id
   var id_sucursal= dataPar[0].id_sucursal
   const [encabezado, setEncabezado] = useState([]);
   //Barra de busqueda
@@ -50,10 +52,10 @@ const ReporteVentaResumen = () => {
       sortable: true,
     },
     {
-      name: "MONTO",
-      selector: (row) => row.monto,
-      sortable: true,
-    },
+        name: "MONTO",
+        selector: (row) => row.monto,
+        sortable: true,
+      },
   ];
 
   //Configurar la paginación de la tabla
@@ -84,7 +86,7 @@ const ReporteVentaResumen = () => {
 
   return (
     <div className="container">
-      <h3>Consultar el Total de las Ventas</h3>
+      <h3>Consultar las Ventas por Producto</h3>
       <br />
 
       <div className="row">
@@ -94,6 +96,7 @@ const ReporteVentaResumen = () => {
             id_sucursal:id_sucursal,
             fecha_inicial: "",
             fecha_final: "",
+            id_usuario:id_usuario
           }}
           //Funcion para validar
           validate={(valores) => {
@@ -241,4 +244,4 @@ const ReporteVentaResumen = () => {
 };
   
 
-export default ReporteVentaResumen;
+export default ReporteVentaCajero;
