@@ -130,7 +130,7 @@ const MostrarInvArticulos = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_articulo.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion_articulo
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())

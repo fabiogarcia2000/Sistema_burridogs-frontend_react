@@ -219,7 +219,7 @@ const MostrarArticulos = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_articulo.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion_corta
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())

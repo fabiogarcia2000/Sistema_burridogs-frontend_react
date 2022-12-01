@@ -172,9 +172,7 @@ const MostrarMateriales = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.id_articulo_padre
-          .toString()
-          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.id_articulo_padre.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.comentario.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -349,7 +347,7 @@ const MostrarMateriales = () => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por código o descripción..."
+              placeholder="Buscar por artículo o comentario..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}

@@ -158,7 +158,7 @@ const mostrarAlertas = (alerta) =>{
        results = registros
    }else{
         results = registros.filter( (dato) =>
-        dato.id_pos.toString().includes(busqueda.toLocaleLowerCase()) || 
+        dato.descripcion_pos.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
         dato.cai.toLowerCase().includes(busqueda.toLocaleLowerCase())        
         )
    };
@@ -371,7 +371,7 @@ const mostrarAlertas = (alerta) =>{
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por código o descripción..."
+              placeholder="Buscar por CAI O POS..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}

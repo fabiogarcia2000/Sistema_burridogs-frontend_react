@@ -163,9 +163,7 @@ const MostrarSocios = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_socio_negocio
-          .toString()
-          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_socio_negocio.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }

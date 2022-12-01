@@ -163,7 +163,7 @@ const mostrarAlertas = (alerta) =>{
        results = registros
    }else{
         results = registros.filter( (dato) =>
-        dato.cod_pos.toString().includes(busqueda.toLocaleLowerCase()) || 
+        dato.cod_pos.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
         dato.descripcion_pos.toLowerCase().includes(busqueda.toLocaleLowerCase())        
         )
    };

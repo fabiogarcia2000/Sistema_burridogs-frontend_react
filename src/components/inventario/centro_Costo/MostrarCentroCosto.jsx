@@ -164,7 +164,7 @@ const mostrarAlertas = (alerta) =>{
        results = registros
    }else{
         results = registros.filter( (dato) =>
-        dato.cod_centro_costo.toString().includes(busqueda.toLocaleLowerCase()) || 
+        dato.cod_centro_costo.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
         dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())        
         )
    };

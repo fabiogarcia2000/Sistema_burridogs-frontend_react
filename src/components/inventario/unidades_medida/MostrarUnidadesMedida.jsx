@@ -177,7 +177,7 @@ const MostrarUnidadesMedida = () => {
     results = registros.filter(
       (dato) =>
         dato.cod_unidad_medida
-          .toString()
+          .toLowerCase()
           .includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
