@@ -206,7 +206,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/mostrarsalidamds">
+              <Link to="/admin/crearsalidamds">
                 <i className="bi bi-circle"></i>
                 <span>Salida de Mercadería</span>
               </Link>
@@ -230,19 +230,19 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-             <li>
+            <li>
               <Link to="/admin/mostrarinformefinanciero">
                 <i className="bi bi-circle"></i>
                 <span>Informe Financiero</span>
               </Link>
             </li>
             <li>
-            <li>
-              <Link to="/admin/mostrarcategoriacont">
-                <i className="bi bi-circle"></i>
-                <span>Categoria contable</span>
-              </Link>
-            </li>
+              <li>
+                <Link to="/admin/mostrarcategoriacont">
+                  <i className="bi bi-circle"></i>
+                  <span>Categoria contable</span>
+                </Link>
+              </li>
               <Link to="/admin/mostrarcatalogo">
                 <i className="bi bi-circle"></i>
                 <span>Catalogo de cuentas</span>
@@ -278,16 +278,13 @@ function Sidebar() {
                 <span>Libro Mayor</span>
               </Link>
             </li>
-         
-            
+
             {/*<li>
               <Link to="/admin/mostrarlibrodetalle">
                 <i className="bi bi-circle"></i>
                 <span>Libro Diario Detalle</span>
               </Link>
               </li>*/}
-            
-            
           </ul>
         </li>
 

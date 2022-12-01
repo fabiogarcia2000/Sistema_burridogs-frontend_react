@@ -246,7 +246,7 @@ const MostrarInvArticulos = () => {
                   Export_Excel(results);
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
+                <i class="bi bi-file-earmark-excel"></i>
               </Link>
               <Link
                 type="button"
@@ -256,7 +256,7 @@ const MostrarInvArticulos = () => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i class="bi bi-filetype-pdf"></i>
               </Link>
             </div>
           </div>
@@ -266,7 +266,7 @@ const MostrarInvArticulos = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i class="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -402,7 +402,7 @@ const MostrarInvArticulos = () => {
                       Export_Excel_MV(results2);
                     }}
                   >
-                    <i className="fa-solid fa-file-excel"></i>
+                    <i class="bi bi-file-earmark-excel"></i>
                   </Link>
                   <Link
                     type="button"
@@ -412,7 +412,7 @@ const MostrarInvArticulos = () => {
                       Export_PDF_MV(results2);
                     }}
                   >
-                    <i className="fa-solid fa-file-pdf"></i>
+                    <i class="bi bi-filetype-pdf"></i>
                   </Link>
                 </div>
               </div>
@@ -422,19 +422,21 @@ const MostrarInvArticulos = () => {
       </div>
       {/*Mostramos la segunda tabla con los datos*/}
       <div className="row">
-        {results.length > 0 ? (
-          <DataTable
-            columns={columns2}
-            data={results2}
-            pagination
-            paginationComponentOptions={paginationComponentOptions}
-            highlightOnHover
-            fixedHeader
-            fixedHeaderScrollHeight="400px"
-          />
-        ) : (
-          <p className="text-center">No hay registros que mostrar</p>
-        )}
+        <div className="col-8">
+          {results.length > 0 ? (
+            <DataTable
+              columns={columns2}
+              data={results2}
+              pagination
+              paginationComponentOptions={paginationComponentOptions}
+              highlightOnHover
+              fixedHeader
+              fixedHeaderScrollHeight="400px"
+            />
+          ) : (
+            <p className="text-center">No hay registros que mostrar</p>
+          )}
+        </div>
       </div>
 
       {/* Ventana Modal de ver más*/}
