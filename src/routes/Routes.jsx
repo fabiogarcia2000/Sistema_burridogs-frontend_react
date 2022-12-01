@@ -82,7 +82,7 @@ import MostrarSalidaMds from "../components/inventario/salida_mds/MostrarSalidaM
 import CrearSalidaMds from "../components/inventario/salida_mds/CrearSalidaMds";
 import EditarSalidaMds from "../components/inventario/salida_mds/EditarSalidaMds";
 
-import ReporteVentaResumen from "../components/reports/pos/VentaResumen";
+import ReporteVentaResumen from "../components/reports/ReporteVenta/VentaResumen";
 import ReporteVentaFecha from "../components/reports/ReporteVentaFecha/ReporteVentaFecha";
 import ReporteCompraFecha from "../components/reports/ReporteCompraFecha/ReporteCompraFecha";
 //---------------------------------------------------- MÓDULO DE SEGURIDAD -----------------------------------------------------------------

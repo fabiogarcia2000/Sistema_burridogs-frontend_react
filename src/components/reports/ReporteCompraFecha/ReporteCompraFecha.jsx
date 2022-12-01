@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 
 const UrlEncabezado = "http://190.53.243.69:3001/compras/compras_por_fecha/";
 const UrlDetalles = "http://190.53.243.69:3001/compras/detalle_por_encabezado/";
-const UrlEliminar ="http://190.53.243.69:3001/compras/detalle_por_encabezado/";
+const UrlAnular ="http://190.53.243.69:3001/compras/anular/";
 
 const ReporteCompraFecha = () => {
   const componenteRef = useRef();
@@ -133,7 +133,7 @@ const ReporteCompraFecha = () => {
               className="btn btn-light"
               title="Anular"
               onClick={() => {
-              setRegistroDelete(row.id_pos);
+              setRegistroDelete(row.secuencia_enc);
               abrirModalEliminar();
             }}
           >
@@ -198,7 +198,7 @@ const ReporteCompraFecha = () => {
   const deleteRegistro = async () => {
     try {
       console.log(registroDelete)
-      const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      const res = await axios.post(`${UrlAnular}${registroDelete}`);
       getDetalles();
       if (res.status === 200) {
          mostrarAlertas("eliminado"); 
@@ -450,7 +450,7 @@ const ReporteCompraFecha = () => {
               abrirModalEliminar();
             }}
             >
-              Eliminar
+              Anular
             </Button>
             <Button color="secondary" onClick={abrirModalEliminar}>
               Cancelar
