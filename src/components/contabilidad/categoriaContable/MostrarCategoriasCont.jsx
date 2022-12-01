@@ -160,7 +160,8 @@ const MostrarCategoriasCont = () => {
     results = registros
   } else {
     results = registros.filter((dato) =>
-      dato.nombre_categoria.toString().includes(busqueda.toLocaleLowerCase())
+      dato.id_categoria.toString().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_categoria.toLowerCase().includes(busqueda.toLocaleLowerCase())
     )
   };
 
