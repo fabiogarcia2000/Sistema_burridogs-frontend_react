@@ -224,7 +224,9 @@ const ReporteVentaResumen = () => {
                 </div>
 
                 <div className="col-sm-4 bottom-aligned">
-                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                  <button className="btn btn-primary mb-3 me-2" type="submit" 
+                    onClick={ () => (
+                      RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR RESUMEN DE VENTAS"))}>
                     Consultar
                   </button>
                 </div>
@@ -256,7 +258,7 @@ const ReporteVentaResumen = () => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results);
+                  Export_PDF(results, sucursal);
                   RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE RESUMEN DE VENTAS");
                 }}
               >

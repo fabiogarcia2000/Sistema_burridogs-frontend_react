@@ -23,7 +23,7 @@ const ReporteVentaCajero = () => {
 
   var sucursal = dataPar[0].descripcion_sucursal;
 
-  var id_usuario= 157;
+  var id_usuario= datausuario.id;
   
   var id_sucursal= dataPar[0].id_sucursal
   const [encabezado, setEncabezado] = useState([]);
@@ -226,7 +226,9 @@ const TienePermisos = () =>{
                 </div>
 
                 <div className="col-sm-4 bottom-aligned">
-                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                  <button className="btn btn-primary mb-3 me-2" type="submit"
+                    onClick={ () => (
+                      RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR REPORTE DE VENTAS POR CAJERO"))}>
                     Consultar
                   </button>
                 </div>
