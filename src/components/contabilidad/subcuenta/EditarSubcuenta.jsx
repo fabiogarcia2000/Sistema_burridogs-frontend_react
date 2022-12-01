@@ -121,7 +121,7 @@ const EditarSubCuenta = () => {
 
           // Validacion nombre cuenta
           if (!valores.id_cuenta) {
-            errores.id_cuenta = "Por favor ingresa un id de cuenta";
+            errores.id_cuenta = "Por favor seleccione una cuenta";
           } 
 
           // Validacion nombre subcuenta

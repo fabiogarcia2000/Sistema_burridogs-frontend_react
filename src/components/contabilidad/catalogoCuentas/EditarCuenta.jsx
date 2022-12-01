@@ -162,7 +162,7 @@ const EditarCuenta = () => {
 
           // Validacion de id categoria
           if (!valores.id_categoria) {
-            errores.id_categoria = "Por favor ingresa un id de categoria";
+            errores.id_categoria = "Por favor seleccione una opcion";
           } else if (!/^[0-9]+$/.test(valores.id_categoria)) {
             errores.id_categoria = "Escribir solo números";
           }

@@ -12,10 +12,10 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     const doc = new jsPDF(orientation, unit, size);
     
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO", "TOTAL"]];
+    const encabezado = [["CUENTA", "SUBCUENTA", "CATEGORIA", "SALDO"]];
     //const encabezadoActivo = [["ACTIVOS"]];
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo, elt.sumtotal]);
+    const datos = data.map(elt=> [elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.saldo]);
     
     //Tabla
     const tabla = {
@@ -99,7 +99,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Balance general";
     let sucursal = "Principal";
-    let usuario = "jperez"
+    let usuario = "SYSTEMUSER"
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
     //let total = datos4;

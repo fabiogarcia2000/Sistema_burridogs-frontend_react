@@ -16,7 +16,10 @@ const UrlEliminar = "http://190.53.243.69:3001/mc_catalogo/eliminar/";
 
 const objeto = "FORM_CAT_CUENTAS"
 
+
 const MostrarCuentas = () => {
+
+
   const navigate = useNavigate();
 
   //Configurar los hooks
@@ -271,7 +274,9 @@ const MostrarCuentas = () => {
     selectAllRowsItemText: "Todos",
   };
 
+
   return (
+
     <div className="container">
       <h3>Catálogo de cuentas</h3>
       <br />
