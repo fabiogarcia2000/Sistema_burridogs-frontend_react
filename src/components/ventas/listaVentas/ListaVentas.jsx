@@ -1,9 +1,10 @@
 import DataTable from "react-data-table-component";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { setGlobalState } from "../../../globalStates/globalStates";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Factura from "../facturaA4/Factura";
 
@@ -16,7 +17,14 @@ const VentaResumen = () => {
   const componenteRef = useRef();
 
   const [encabezado, setEncabezado] = useState([]);
+  const [datosEncabezado, setDatosEncabezado] = useState([]);
   const [detalles, setDetalles] = useState([]);
+
+
+    const [totalDesc, setTotalDesc] = useState(0);
+    const [subTotal, setSubTotal] = useState(0);
+    const [totalIsv, setTotalIsv] = useState(0);
+    const [totalPagar, setTotalPagar] = useState(0);
 
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
@@ -26,12 +34,42 @@ const VentaResumen = () => {
   const getDetalles = async (id) => {
     try {
       const res = await axios.get(UrlDetalles + id);
-      setDetalles(res.data);
+      setDetalles(res.data.detalle);
+      setDatosEncabezado(res.data)
+      setGlobalState("dataVenta", res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
     }
   };
+
+  useEffect(() => {
+    setTotalDesc(0)
+    setSubTotal(0)
+    setTotalIsv(0)
+    
+
+    if(detalles){
+        
+        detalles.map((list) =>
+        setTotalDesc((prevValores) => prevValores + (parseFloat(list.monto_descuento || 0)))
+        );
+
+        detalles.map((item) =>
+        setSubTotal((prevValores) => prevValores + ((parseFloat(item.cantidad)*parseFloat(item.precio))-(parseFloat(item.monto_descuento)||0)))
+        );
+
+        detalles.map((list) =>
+        setTotalIsv((prevValores) => prevValores + (parseFloat(list.total_impuesto || 0)))
+        );
+
+      
+    }
+}, [detalles]);
+
+useEffect(() => {
+  setTotalPagar(subTotal+totalIsv)
+}, [totalIsv]);
 
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
@@ -287,54 +325,78 @@ const VentaResumen = () => {
       </div>
 
       {/* Ventana Modal de ver más*/}
-      <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+      <Modal size="lg" isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
         <ModalBody>
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">CLIENTE: </p>
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                  <p><strong>FECHA: </strong>{(datosEncabezado.fecha || "")}</p>
+                </div>
             </div>
-            <div className="col-sm-6">
-              <p> {detalles.nombre_cliente} </p>
+            <div className="row">
+              <div className="col">
+                  <p><strong>TERMINAL: </strong>{(datosEncabezado.descripcion_pos || "")}</p>
+                </div>
+                <div className="col">
+                  <p><strong>USUARIO: </strong>{(datosEncabezado.nombre_usuario || "")}</p>
+                </div>
             </div>
-          </div>
+            <hr />
+            <div className="row">
+              <div className="col">
+                <p><strong>CLIENTE: </strong>{(datosEncabezado.nombre_cliente || "")}</p>
+              </div>
+              <div className="col">
+                <p><strong>R.T.N: </strong>{(datosEncabezado.rtn || "")}</p>
+              </div>
+            </div>
 
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">R.T.N: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {detalles.rtn} </p>
-            </div>
-          </div>
+            <div className='row regul'>
+            <table class="table table-sm table-bordered border-dark table-responsive">
+                <thead class="color1 border-dark">
+                <tr>
+                    <th scope="col">CANT.</th>
+                    <th scope="col">DESC.</th>
+                    <th scope="col">PRECIO</th>
+                    <th scope="col">DESCUENTOS</th>
+                    <th scope="col">TOTAL</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {detalles && 
+                        detalles.map((item, i) =>(
+                            <tr key={i}>
+                                <td>{item.cantidad}</td>
+                                <td>{item.descripcion_articulo}</td>
+                                <td>{"L. "+item.precio}</td>
+                                <td>{"L. "+(item.monto_descuento ||0)}</td>
+                                <td>{"L. "+((parseFloat(item.precio)*parseFloat(item.cantidad))-(parseFloat(item.monto_descuento)||0))}</td>
+                             </tr>
+                        ))
 
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">FECHA DE CREACIÓN: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {} </p>
-            </div>
-          </div>
+                    }
 
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">MODIFICADO POR: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {} </p>
-            </div>
-          </div>
 
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">FECHA DE MODIFICACIÓN: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {} </p>
-            </div>
-          </div>
+                <tr>                    
+                    <td  className='text-end' colspan="3"><strong>SubTotal</strong></td>
+                    <td><strong>{"L. "+totalDesc}</strong></td>
+                    <td><strong>{"L. "+subTotal}</strong></td>
+                </tr>
+                <tr>                    
+                    <td  className='text-end' colspan="4"><strong>I.S.V</strong></td>
+                    <td><strong>{"L. "+totalIsv}</strong></td>
+                </tr>
+                <tr>                    
+                    <td  className='text-end' colspan="4"><strong>TOTAL PAGADO: </strong></td>
+                    <td><strong>{"L. "+totalPagar}</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
+
+          </div>
           {/**FACTURA**/}
           <div ref={componenteRef} className="imprimir">
             <Factura />

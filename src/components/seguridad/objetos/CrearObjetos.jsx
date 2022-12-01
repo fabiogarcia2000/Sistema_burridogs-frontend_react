@@ -6,16 +6,58 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasTipoObjeto } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasObjeto } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
-
-
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/ms_objetos/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/ms_objetos/getone/";
 
-const CrearObjeto = () => {
+//Identificador del formulario
+const objeto = "FORM_OBJETO"
 
+const CrearObjeto = () => {
     const navigate = useNavigate();
     
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
+
 
     //Alertas de éxito o error
     const mostrarAlertas = (alerta) => {
@@ -96,29 +138,24 @@ const CrearObjeto = () => {
                 onSubmit={async (valores) => {
                     //validar si existe un registro con el codigo ingresado
                     try {
-                      /*const res = await axios.get(
-                        `${URLMostrarUno}${valores.objeto}`
-                      );
-                      console.log(res);
-                      if (res.data === "") {*/
+                        
                         //procedimineto para guardar el nuevo registro en el caso de que no exista
-                        const res = await axios.put(`${URLCrear}${valores.id_objeto}`,valores
-                        );
+                        const res = await axios.put(`${URLCrear}`, valores);
                         if (res.status === 200) {
                           mostrarAlertas("guardado");
+                          RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR OBJETO"); //Insertar bitacora
                           navigate("/admin/mostrarobjetos");
                         } else {
                           mostrarAlertas("error");
                         }
-                      } /*else {
-                        mostrarAlertas("duplicado");
+            
+            
+                      } catch (error) {
+                        console.log(error);
+                        mostrarAlertas("error");
+                        navigate("/admin/mostrarobjetos");
                       }
-                    } */catch (error) {
-                      console.log(error);
-                      mostrarAlertas("error");
-                      navigate("/admin/mostrarobjetos");
-                    }
-                  }}
+                    }}
             >
                 {({ errors, values }) => (
                     <Form>

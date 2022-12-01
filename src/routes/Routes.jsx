@@ -13,6 +13,9 @@ import LoginPos from "../components/ventas/loginPOS/LoginPos";
 import PuntoDeVentas from "../components/ventas/PuntoVentas/PuntoDeVentas";
 import VentasRealizadas from "../components/ventas/listaVentas/ListaVentas";
 import FacturaA4 from "../components/ventas/facturaA4/Factura"
+import Corte from "../components/ventas/corte/Corte"
+
+import DatosEmpresa from "../components/empresa/Empresa"
 
 import MostrarSucursales from "../components/administracion_pos/sucursales/MostrarSucursales";
 import CrearSucursal from "../components/administracion_pos/sucursales/CrearSucursal";
@@ -64,7 +67,7 @@ import EditarCentroCosto from "../components/inventario/centro_Costo/EditarCentr
 import MostrarCentroCosto from "../components/inventario/centro_Costo/MostrarCentroCosto";
 
 import MostrarMateriales from "../components/inventario/materiales/MostrarMateriales";
-import CrearMaterial from "../components/inventario/materiales/CrearMaterial";
+import CrearMaterial from "../components/inventario/articulos/CrearMaterial";
 import EditarMaterial from "../components/inventario/materiales/EditarMateriales";
 
 import MostrarUnidadesMedida from "../components/inventario/unidades_medida/MostrarUnidadesMedida";
@@ -90,7 +93,7 @@ import EditarUsuario from "../components/seguridad/usuario/EditarUsuario";
 import Login from "../pages/seguridad/login/Login";
 import Parametros from "../pages/seguridad/parametros/Parametros";
 
-import Logs from "../pages/seguridad/logs/Logs";
+//import Logs from "../pages/seguridad/logs/Logs";
 import Pregunta from "../pages/seguridad/preguntas/Preguntas";
 import Layout from "../Layout/Layout";
 import Registro from "../pages/seguridad/registro/Registro";
@@ -156,11 +159,6 @@ import MostrarLibroMayor from "../components/contabilidad/libroMayor/MostrarLibr
 import EditarLibroMayor from "../components/contabilidad/libroMayor/EditarLibroMayor";
 import Mayorizar from "../components/contabilidad/libroMayor/Mayorizar"; //AGREGADO
 
-//INFORMES
-import MostrarBalance from "../components/contabilidad/informes/MostrarBalance";
-import MostrarResultado from "../components/contabilidad/informes/MostrarResultado";
-import MostrarIngresoGasto from "../components/contabilidad/informes/MostrarIngresoGasto";
-
 //SUBCUENTA
 import MostrarSubCuentas from "../components/contabilidad/subcuenta/MostrarSubcuenta";
 import CrearSubCuenta from "../components/contabilidad/subcuenta/CrearSubcuenta";
@@ -176,9 +174,9 @@ import MostrarLibroDetalle from "../components/contabilidad/librodiariodetalle/M
 import CrearLibroDetalle from "../components/contabilidad/librodiariodetalle/CrearLibroDetalle";
 import EditarLibroDetalle from "../components/contabilidad/librodiariodetalle/EditarLibroDetalle";
 
-//ENCABEZADO LIBRO DIARIO
+//ENCABEZADO LIBRO encabezado
 import MostrarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/MostrarLibroEncabezado";
-import CrearLibroEncabezado from "../components/contabilidad/";
+import CrearLibroEncabezado from "../components/contabilidad/librodiarioencabezado/CrearLibroEncabezado";
 import EditarLibroEncabezado from "../components/contabilidad/";
 
 //PERIODO CONTABLE
@@ -192,6 +190,7 @@ import ReporteLibroMayor from "../components/reports/LibroMayor";
 import EditarMiUsuario from "../components/seguridad/mi_perfil/EditarUsuario";
 import CambioContrasena from "../components/seguridad/mi_perfil/CambioContrasena";
 import MostrarObjetos from "../components/seguridad/objetos/MostrarObjetos";
+import DesbloqueoUsuario from "../pages/seguridad/desbloqueo_usuario/desbloqueo_usuario";
 
 function Rutas() {
   const [main_class] = useGlobalState("main_class");
@@ -204,6 +203,7 @@ function Rutas() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/Preguntas" element={<Pregunta />} />
+        <Route path="/desbloqueo_usuario" element={<DesbloqueoUsuario />} />
         <Route
           path="/cambio_contrasena/:id/:token"
           element={<CambioContra />}
@@ -229,8 +229,8 @@ function Rutas() {
           <Route path="createUser" element={<CreateUser />} />
           <Route path="editUser/:id" element={<EditarUsuario />} />
 
-          <Route path="logs" element={<Logs />} />
-          
+          {/*<Route path="logs" element={<Logs />} />*/}
+
           {/*PARÁMETROS*/}
           <Route path="params" element={<Parametros />} />
           <Route path="crearparametro" element={<CrearParametro />} />
@@ -260,18 +260,17 @@ function Rutas() {
           <Route path="crearrol" element={<CrearRol />} />
           <Route path="editarrol" element={<EditarRol />} />
           {/*------------------------------Rutas Administración POS----------------------------------*/}
+         
 
-            {/*Rutas Administración POS*/}
-            <Route path="login-pos" element={<LoginPos />} />
-            <Route path="punto-de-ventas" element={<PuntoDeVentas />} />
-            <Route path="ventas-realizadas" element={<VentasRealizadas />} />
-            <Route path="factura-generada" element={<FacturaA4 />} />
+          {/*Ruta Datos de Empresa*/}
+          <Route path="datos-empresa" element={<DatosEmpresa />} />
 
           {/*Rutas Administración POS*/}
           <Route path="login-pos" element={<LoginPos />} />
-          <Route path="punto-de-ventas" element={<PuntoDeVentas />} />
+          <Route path="punto-de-ventas/:idPos" element={<PuntoDeVentas />} />
           <Route path="ventas-realizadas" element={<VentasRealizadas />} />
-
+          <Route path="factura-generada" element={<FacturaA4 />} />
+            <Route path="corte-caja/:id" element={<Corte />} />
 
           <Route path="mostrarsucursales" element={<MostrarSucursales />} />
           <Route path="crearsucursal" element={<CrearSucursal />} />
@@ -381,14 +380,6 @@ function Rutas() {
           <Route path="editarlibromayor" element={<EditarLibroMayor />} />
           <Route path="mayorizar" element={<Mayorizar />} />
 
-          {/*INFORMES*/}
-          <Route path="mostrarbalance" element={<MostrarBalance />} />
-          <Route path="mostrarresultado" element={<MostrarResultado />} />
-          <Route
-            path="mostraringresosgasto"
-            element={<MostrarIngresoGasto />}
-          />
-
           {/*SUBCUENTA*/}
           <Route path="mostrarsubcuenta" element={<MostrarSubCuentas />} />
           <Route path="editarsubcuenta" element={<EditarSubCuenta />} />
@@ -400,7 +391,10 @@ function Rutas() {
           <Route path="crearestado" element={<CrearEstado />} />
 
           {/*DETALLE LIBRO DIARIO*/}
-          <Route path="mostrarlibrodetalle" element={<MostrarLibroDetalle />} />
+          <Route
+            path="mostrarlibrodetalle/:id"
+            element={<MostrarLibroDetalle />}
+          />
           <Route path="editarlibrodetalle" element={<EditarLibroDetalle />} />
           <Route path="crearlibrodetalle" element={<CrearLibroDetalle />} />
 
@@ -410,7 +404,7 @@ function Rutas() {
             element={<MostrarLibroEncabezado />}
           />
           <Route path="/admin/home" element={<EditarLibroEncabezado />} />
-          <Route path="/admin/home" element={<CrearLibroEncabezado />} />
+          <Route path="/admin/CrearLibroEncabezado" element={<CrearLibroEncabezado />} />
 
           {/*PERIODO CONTABLE*/}
           <Route path="mostrarperiodo" element={<MostrarPeriodoContable />} />

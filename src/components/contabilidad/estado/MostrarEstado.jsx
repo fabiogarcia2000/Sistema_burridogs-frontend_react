@@ -6,11 +6,19 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { useNavigate } from "react-router-dom";
+import { Export_Excel } from "./generarExcel/Export_Excel";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlEliminar = "http://190.53.243.69:3001/mc_estado/eliminar/";
 
+const objeto = "FORM_EST_DIARIO"
+
 const MostrarEstado= () => {
+  const navigate = useNavigate();
+
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -29,6 +37,43 @@ const MostrarEstado= () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+/*****Obtener y corroborar Permisos*****/
+const [temp, setTemp] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [permitido, setPermitido] = useState(true)
+
+const Permisos = () =>{
+  const newData = temp.filter(
+    (item) => item.objeto === objeto
+  );
+  setPermisos(newData);
+}
+
+useEffect(() => {
+  let data = localStorage.getItem('permisos')
+  if(data){
+    setTemp(JSON.parse(data))
+  }
+}, []);
+
+useEffect(() => {
+  Permisos();
+}, [temp]);
+
+
+useEffect(() => {
+  if(permisos.length > 0){
+    TienePermisos();
+  }
+}, [permisos]);
+
+
+const TienePermisos = () =>{
+  setPermitido(permisos[0].permiso_consultar)
+}
+
+/*******************/
 
 
 //Alertas de éxito o error al eliminar
@@ -66,7 +111,15 @@ const mostrarAlertas = (alerta) =>{
       });
 
     break;
+    case "permisos":
+      Swal.fire({
+        title: "Lo siento, no tienes permisos para realizar esta acción.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+      });
 
+      break;
 
     default: break;
   }
@@ -81,6 +134,7 @@ const mostrarAlertas = (alerta) =>{
       getRegistros();
       if (res.status === 200) {
          mostrarAlertas("eliminado"); 
+         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR ESTADO DIARIO");
       } else {
         mostrarAlertas("error");
       }
@@ -129,8 +183,22 @@ const mostrarAlertas = (alerta) =>{
       name: "ACCIONES",
       cell: (row) => (
         <>
-          
-          <Link
+          <button
+            type="button"
+            className="btn btn-light"
+            title="Editar"
+            onClick={() => {
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarestado")
+              }else{
+                mostrarAlertas("permisos");
+              }              
+            }}
+          >
+            <i className="bi bi-pencil-square"></i>
+          </button>
+          {/*<Link
             to="/admin/editarestado"
             type="button"
             className="btn btn-light"
@@ -138,17 +206,22 @@ const mostrarAlertas = (alerta) =>{
             onClick={() => setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+      </Link>*/}
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_estado);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_estado);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -170,6 +243,10 @@ const mostrarAlertas = (alerta) =>{
     <div className="container">
       <h3>Estado Libro Diario</h3>
       <br />
+
+      {permitido? (
+     
+     <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -183,37 +260,58 @@ const mostrarAlertas = (alerta) =>{
               role="group"
               aria-label="First group"
             >
-              <Link
+             
+             <button
+           type="button"
+           className="btn btn-primary"
+           title="Agregar Nuevo"
+           onClick={() => {
+             if(permisos[0].permiso_insercion){
+               navigate("/admin/crearestado")
+             }else{
+              mostrarAlertas("permisos");
+             }              
+           }}
+         >
+           <i className="bi bi-plus-lg"></i> Nuevo
+         </button>             
+             
+              {/*<Link
                 to="/admin/crearestado"
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
               >
                 <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+      </Link>*/}
             </div>
             <div
               className="btn-group me-2"
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL ESTADO DIARIO");
+                }}
               >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
               <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF ESTADO DIARIO");
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
+                <i className="bi bi-filetype-pdf"></i>
               </Button>
             </div>
           </div>
@@ -223,7 +321,7 @@ const mostrarAlertas = (alerta) =>{
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -240,6 +338,7 @@ const mostrarAlertas = (alerta) =>{
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -249,7 +348,15 @@ const mostrarAlertas = (alerta) =>{
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ninguna Categoría</p>
+        )}
       </div>
+         </div>
+     
+     ) : (
+       <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+     )}
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>

@@ -133,6 +133,7 @@ export default function Login(props) {
         console.log("Ants del fetcj");
         localStorage.setItem("data", JSON.stringify(dataUser));
         traerPermisos(urlAPi, data);
+        traerBodSuc(urlAPi, data);
         navigate("/admin/home");
 
         // }
@@ -149,11 +150,10 @@ export default function Login(props) {
         });
       });
   };
+  // Inicio get permisos
   const traerPermisos = (url, data) => {
-    console.log(data);
     setColor("danger");
 
-    // Inicio get permisos
     console.log(data.nombre_usuario);
     fetch(url + "/ms_permisos/getallporusuario/" + data.nombre_usuario, {
       method: "GET",
@@ -164,7 +164,7 @@ export default function Login(props) {
       .then((response) => response.json())
       .then((responseJson) => {
         setIsValid(true);
-        console.log("linea 145", responseJson);
+
         localStorage.setItem("permisos", JSON.stringify(responseJson));
         if (!responseJson.status) {
           setColor("danger");
@@ -174,10 +174,6 @@ export default function Login(props) {
           });
           return;
         }
-        let dataPermisos = {
-          data: responseJson.data,
-        };
-        console.log("Lines 158");
       })
       .catch((error) => {
         setColor("danger");
@@ -190,9 +186,45 @@ export default function Login(props) {
           setIsValid(false);
         });
       });
-
-    //Fin get permisos
   };
+  //Fin get permisos
+  // Inicio get permisos
+  const traerBodSuc = (url, data) => {
+    setColor("danger");
+
+    fetch(url + "/ms_parametros/getsucbod/" + data.nombre_usuario, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setIsValid(true);
+
+        localStorage.setItem("bodsuc", JSON.stringify(responseJson));
+        if (!responseJson.status) {
+          setColor("danger");
+          setMesagge(responseJson.message);
+          setTimeout(1000, () => {
+            setIsValid(false);
+          });
+          return;
+        }
+      })
+      .catch((error) => {
+        setColor("danger");
+        setTimeout(1000, () => {
+          setIsValid(false);
+        });
+      })
+      .finally(() => {
+        setTimeout(1000, () => {
+          setIsValid(false);
+        });
+      });
+  };
+  //Fin get permisos
   //capturar los datos ingresados
   // const refNombreUsuario = useRef(null);
   // const RefContrasena = useRef(null);
@@ -361,7 +393,7 @@ export default function Login(props) {
                     ¿Olvidaste tu contraseña?
                   </Link>
                   {/* DESBLOQUEAR USUARIO*/}
-                  <Link to="/desbloquearUsuario">Desbloquear usuario</Link>
+                  <Link to="/desbloqueo_usuario">Desbloquear usuario</Link>
                   {/* <Link to="/unlockuser">Desbloquea tu usuario</Link> */}
                   <Link to="/registro">Crear cuenta</Link>
                 </div>

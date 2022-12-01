@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates"; 
 import { cambiarAMayusculasCreadoPor, cambiarAMayusculasParametro, cambiarAMayusculasValor } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../../components/seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 
 const URLCrear = "http://190.53.243.69:3001/ms_parametros/actualizar-insertar/0";
-const URLMostrarUno = "http://190.53.243.69:3001/";
+const URLMostrarUno = "http://190.53.243.69:3001/ms_parametros/getone/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
 let date = new Date()
@@ -20,10 +21,50 @@ let anio = date.getFullYear();
 //Parametros que se deben obtener
 var fecha = (`${anio}/${mes}/${dia}`);
 
-const CrearParametro = () => {
+//Identificador del formulario
+const objeto = "FORM_PARAMETROS"
 
+const CrearParametro = () => {
   const navigate = useNavigate();
   const userdata = JSON.parse(localStorage.getItem('data'))
+
+ //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -112,25 +153,26 @@ const CrearParametro = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado
           try {
-            /*const res = await axios.get(${URLMostrarUno}${valores.id_permiso});
+            /*const res = await axios.get(`${URLMostrarUno}${valores.parametro}`);
             console.log(res)
-            if (res.data === "") {
+            if (res.data === "") {*/
               //procedimineto para guardar el nuevo registro en el caso de que no exista*/
               const res = await axios.put(`${URLCrear}`, valores);
               if (res.status === 200) {
                 mostrarAlertas("guardado");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR PARÁMETRO"); //Insertar bitacora
                 navigate("/admin/params");
               } else {
                 mostrarAlertas("error");
               }
-            } /*else {
+            /*} else {
               mostrarAlertas("duplicado");
-            }
-          }*/ catch (error) {
+            }*/
+          } catch (error) {
             console.log(error);
             mostrarAlertas("error");
             navigate("/admin/params");
-          };
+          }
         }}
         >
           {({ errors, values }) => (

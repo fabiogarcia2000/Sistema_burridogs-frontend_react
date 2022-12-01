@@ -6,4 +6,6 @@ export const { setGlobalState, useGlobalState } = createGlobalState({
     main_class: 'main',
     footer_class:'footer',
     registroEdit: {},
+    dataVenta:{},
+    datosEmpresa:{}
 });

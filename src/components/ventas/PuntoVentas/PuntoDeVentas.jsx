@@ -4,13 +4,17 @@ import { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import "./style.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { quitarTildes } from "./utils/textoSinTildes";
 import { MostrarAlertas } from "./utils/Alertas";
 import { InsertVenta } from "./insertVenta";
 import { numeroALetras } from "./utils/num_a_letras";
-import { getCurrentDate, getCurrentTime, getCurrentDateShort } from "../../../utils/fechaYhora";
+import {
+  getCurrentDate,
+  getCurrentTime,
+  getCurrentDateShort,
+} from "../../../utils/fechaYhora";
 import { useReactToPrint } from "react-to-print";
 import Factura from "../facturaA4/Factura";
 
@@ -21,10 +25,20 @@ const UrlArticulosCategoria =
 const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
 const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
 const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
-const isv = 0.15;
 
 const PuntoDeVentas = () => {
+  const { idPos } = useParams();  
   const componenteRef = useRef();
+  const dataSec = JSON.parse(localStorage.getItem("bodsuc"));
+  const idSucursal = dataSec[0].id_sucursal;
+  const DescSucursal = dataSec[0].descripcion_sucursal;
+  const codSucursal = dataSec[0].cod_sucursal;
+  const DataTerminal = JSON.parse(localStorage.getItem("terminal"));
+  const descTerminal = DataTerminal[0].descripcion;
+
+  const userdata = JSON.parse(localStorage.getItem("data"));
+
+ 
 
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -35,6 +49,7 @@ const PuntoDeVentas = () => {
 
   /**************Fecha y Hora*************************/
   const [fecha, setFecha] = useState("--/--/--");
+  const [fechaCorta, setFechaCorta] = useState("--/--/----");
   const [hora, setHora] = useState("--:--:--");
   /***************************************************/
 
@@ -49,22 +64,28 @@ const PuntoDeVentas = () => {
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
+  const [montoDesc, setMontoDesc] = useState(0.0);
   const [total, setTotal] = useState(0.0);
 
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoPedido, setTipoPedido] = useState(2);
+  const [porcDescuento, setPorcDescuento] = useState([]);
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
   const [cambio, setCambio] = useState(0);
 
   //***************Data de venta para insertar y factura*****************/
   const [detalles, setDetalles] = useState([]);
+  const [newDetalles, setNewDetalles] = useState([]);
 
   const [detallesPago, setDetallesPago] = useState([]);
 
   const [detallesPromo, setDetallesPromo] = useState([]);
 
   const [detallesDesc, setDetallesDesc] = useState([]);
+
+ const [listo, setListo] = useState(false);
+ const [preparar, setPreparar] = useState(false);
 
   const valuesInicial = {
     secuencia_enc: undefined,
@@ -100,7 +121,7 @@ const PuntoDeVentas = () => {
     getMetodosPago();
     getDescuentos();
     getPedidos();
-    //Enc();
+    Enc();
     Fecha();
     Hora();
   }, []);
@@ -109,6 +130,7 @@ const PuntoDeVentas = () => {
   //obtener fecha
   const Fecha = () => {
     setFecha(getCurrentDate());
+    setFechaCorta(getCurrentDateShort());
   };
 
   //obtener hora
@@ -165,16 +187,27 @@ const PuntoDeVentas = () => {
   };
 
   //procedimineto para obtener todos los descuentos y mostrarlas en select
-  const [descuentos, setDescuentos] = useState([]);
+  const [tiposDescuentos, setTiposDescuentos] = useState([]);
 
   //petición a api
   const getDescuentos = async () => {
     try {
       const res = await axios.get(UrlDescuentos);
-      setDescuentos(res.data);
+      setTiposDescuentos(res.data);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const Desc = (id) => {
+    const desc = tiposDescuentos.filter((item) => item.id_descuento == id);
+    setPorcDescuento(desc);
+  };
+
+  //Descuento
+  const handlerDescuento = function (e) {
+    let id = e.target.value;
+    Desc(id);
   };
 
   //procedimineto para obtener todos los modos de pedido y mostrarlas en select
@@ -199,13 +232,21 @@ const PuntoDeVentas = () => {
   const getCliente = async (id) => {
     try {
       const res = await axios.get(urlCliente + id);
-      if (res.data.descripcion === undefined){
-        setCliente({...cliente, rtn: id, descripcion:"", creado_por: "Fabio", fecha_creacion:"2022-11-23", modificado_por:"", fecha_modificacion:""});
+      if (res.data.descripcion === undefined) {
+        setCliente({
+          ...cliente,
+          rtn: id,
+          descripcion: "",
+          creado_por: "Fabio",
+          fecha_creacion: "2022/11/30",
+          modificado_por: "",
+          fecha_modificacion: "",
+        });
         setGuardarCliente(true);
         abrirModalCliente2();
         abrirModalCliente();
-      }else{
-        setCliente({...cliente, descripcion:res.data.descripcion, rtn: id});
+      } else {
+        setCliente({ ...cliente, descripcion: res.data.descripcion, rtn: id });
         setGuardarCliente(false);
       }
     } catch (error) {
@@ -213,25 +254,28 @@ const PuntoDeVentas = () => {
     }
   };
 
-    //guardar el cliente si no existe
-//petición a api
-const urlGuardarCliente = "http://190.53.243.69:3001/socio_negocio/actualizar-insertar_por_rtn/";
-const getGuardarCliente = async () => {
-  if (guardarcliente === true && cliente.descripcion !== ""){
+  //guardar el cliente si no existe
+  //petición a api
+  const urlGuardarCliente =
+    "http://190.53.243.69:3001/socio_negocio/actualizar-insertar_por_rtn/";
+  const getGuardarCliente = async () => {
+    if (guardarcliente === true && cliente.descripcion !== "") {
       //procedimineto para guardar el los cambios
-    try {
-      await axios.put(urlGuardarCliente, cliente);
-    } catch (error) {
-      console.log(error);
-
+      try {
+        await axios.put(urlGuardarCliente, cliente);
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
-};
+  };
 
-useEffect(() => {
-  getGuardarCliente();
-}, [cliente]);
+  useEffect(() => {
+    getGuardarCliente();
 
+    if (detalles.length > 0) {
+      PrepararData();
+    }
+  }, [preparar]);
 
   useEffect(() => {
     listaCompras.map((list) =>
@@ -239,13 +283,23 @@ useEffect(() => {
     );
   }, [listaCompras]);
 
-  useEffect(() => {
+  /**
+useEffect(() => {
     setImpuesto(subTotal * isv);
   }, [subTotal]);
+* 
+ */
 
   useEffect(() => {
-    setTotal(subTotal + Impuesto);
-  }, [Impuesto, subTotal]);
+    setTotal(subTotal + Impuesto - montoDesc);
+  }, [Impuesto, subTotal, montoDesc]);
+
+  useEffect(() => {
+    setImpuesto(0);
+    detalles.map((item) =>
+      setImpuesto((prevValor) => prevValor + item.total_impuesto)
+    );
+  }, [detalles]);
 
   //Buscador --con expresiones regulares js
   const handleBuscador = (e) => {
@@ -459,12 +513,12 @@ useEffect(() => {
     setSubTotal(0);
   };
 
-//Para generar factura/imprimir
-const handlePrint = useReactToPrint({
-  content: () => componenteRef.current,
-  documentTitle: 'Factura',
-  onAfterPrint: () => resetValores()
-});
+  //Para generar factura/imprimir
+  const handlePrint = useReactToPrint({
+    content: () => componenteRef.current,
+    documentTitle: "Factura",
+    onAfterPrint: () => resetValores(),
+  });
 
   //resetea el valores
   const resetValores = () => {
@@ -480,10 +534,9 @@ const handlePrint = useReactToPrint({
     Refrescar();
   };
 
-//resetea el valores
+  //resetea el valores
   const dataCliente = (valores) => {
-    setCliente({...cliente, descripcion: valores.nombre});
-    
+    setCliente({ ...cliente, descripcion: valores.nombre });
   };
 
   //resetea el valores
@@ -513,29 +566,85 @@ const handlePrint = useReactToPrint({
   };
 
   //detalles de desc
-  const detalles_Desc = () => {
-    setDetallesDesc([
-      ...detallesDesc,
-      {
-        secuencia_det: parseInt(det),
-        id_articulo: 31,
-        id_descuento: 1,
-        monto: 3,
-      },
-    ]);
+  const Detalles_Desc = () => {
+    let dato = detalles.map((item) => ({
+      secuencia_det: item.secuencia_det,
+      id_articulo: item.id_articulo,
+      id_descuento: porcDescuento[0].id_descuento,
+      monto:parseFloat(porcDescuento[0].porcentaje) *(parseFloat(item.precio) * parseFloat(item.cantidad)),
+    }));
+    setDetallesDesc(...detallesDesc, dato);
+
+    let newData = detalles.map((items) => ({
+      secuencia_det: items.secuencia_det,
+      secuencia_enc: items.secuencia_enc,
+      id_articulo: items.id_articulo,
+      id_modo_pedido: items.id_modo_pedido,
+      precio: items.precio,
+      cantidad: items.cantidad,
+      id_impuesto: items.id_impuesto,
+      total_impuesto:(parseFloat(items.precio) * parseFloat(items.cantidad)-parseFloat(items.precio) *parseFloat(items.cantidad) *parseFloat(porcDescuento[0].porcentaje)) *
+        (parseFloat(items.total_impuesto) /
+          (parseFloat(items.precio) * parseFloat(items.cantidad))),
+      total:
+      parseFloat(items.precio) * parseFloat(items.cantidad) -
+      parseFloat(items.precio) *
+        parseFloat(items.cantidad) *
+        parseFloat(porcDescuento[0].porcentaje) +
+      (parseFloat(items.precio) * parseFloat(items.cantidad) -
+        parseFloat(items.precio) *
+          parseFloat(items.cantidad) *
+          parseFloat(porcDescuento[0].porcentaje)) *
+        (parseFloat(items.total_impuesto) /
+          (parseFloat(items.precio) * parseFloat(items.cantidad))),
+    }));
+    setNewDetalles(...newDetalles, newData);
   };
+
+  const Calc_Desc = () => {
+    setMontoDesc(subTotal * porcDescuento[0].porcentaje);
+  };
+
+  useEffect(() => {
+    if (porcDescuento.length > 0) {
+      Calc_Desc();
+    } else if (porcDescuento.length === 0) {
+      setMontoDesc(0);
+    }
+  }, [porcDescuento, detalles]);
 
   //preparar data de la venta
   const PrepararData = () => {
+    /**if (!porcDescuento === []) {
+      setDetalles(newDetalles);
+      console.log(porcDescuento)
+      console.log("datos Descuento 2")
+    } */
     setVenta({
       ...venta,
+      fecha: fechaCorta,
+      nombre_cliente: cliente.descripcion,
+      rtn: cliente.rtn,
+      id_usuario: userdata.data.id,
+      id_sucursal:idSucursal,
+      cod_sucursal:codSucursal,
+      id_pos:idPos,
       secuencia_enc: parseInt(enc),
-      detalle: detalles,
+      detalle: (porcDescuento.length > 0? newDetalles : detalles),
       detalle_pago: detallesPago,
       detalle_promo: detallesPromo,
       detalle_desc: detallesDesc,
     });
   };
+
+  useEffect(() => {
+    if (venta.detalle.length > 0) {
+      InsertVenta(venta);
+      console.log("DATA VENTA:");
+      console.log(venta);
+      setListo(true)
+    }
+  }, [venta]);
 
   //Ventana modal cliente
   const [modalCliente2, setModalCliente2] = useState(false);
@@ -631,7 +740,7 @@ const handlePrint = useReactToPrint({
       <div className="row">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <div className="container-fluid">
-            <div className="col-4">
+            <div className="col-3">
               <h3>Punto de Ventas</h3>
             </div>
             <button
@@ -646,16 +755,16 @@ const handlePrint = useReactToPrint({
               <span className="navbar-toggler-icon"></span>
             </button>
 
-            <div className="col-4">
+            <div className="col-5">
               <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">
                   <li className="nav-item">
                     <p className="nav-link" aria-current="page">
-                      Sucursal #1
+                      {DescSucursal}
                     </p>
                   </li>
                   <li className="nav-item">
-                    <p className="nav-link">Terminal #1</p>
+                    <p className="nav-link">{descTerminal}</p>
                   </li>
                 </ul>
               </div>
@@ -688,14 +797,17 @@ const handlePrint = useReactToPrint({
                     aria-labelledby="navbarDropdown"
                   >
                     <li>
-                      <Link className="dropdown-item" to="#">
+                      <Link
+                        className="dropdown-item"
+                        to={"/admin/cierre-caja/" + 10}
+                      >
                         Corte de Caja
                       </Link>
                     </li>
                     <li>
-                      <Link className="dropdown-item" to="#">
+                      {/**<Link className="dropdown-item" to="#">
                         Información
-                      </Link>
+                      </Link> */}
                     </li>
                   </ul>
                 </li>
@@ -713,7 +825,7 @@ const handlePrint = useReactToPrint({
             <div className="row">
               <div className="input-group flex-nowrap">
                 <span className="input-group-text" id="addon-wrapping">
-                  <i className="fa-solid fa-magnifying-glass"></i>
+                <i className="bi bi-search"></i>
                 </span>
                 <input
                   className="form-control me-2"
@@ -825,10 +937,13 @@ const handlePrint = useReactToPrint({
                 } else {
                   //procedimineto para guardar el los cambios
                   abrirModalVenta();
-                  detalles_Desc();
+                  setDetallesPago([]);
                   Detalles_Pago();
                   setTipoPedido(valores.id_modo_pedido);
                   setTotalEnLetras(numeroALetras(parseFloat(total)));
+                  setDetallesDesc([]);
+                  setNewDetalles([]);
+                  Detalles_Desc();
                 }
               }}
             >
@@ -844,9 +959,10 @@ const handlePrint = useReactToPrint({
                             id="floatingSelectGrid"
                             aria-label="Floating label select example"
                             name="id_descuento"
+                            onClick={handlerDescuento}
                           >
                             <option value="">Ninguno</option>
-                            {descuentos.map((item, i) => (
+                            {tiposDescuentos.map((item, i) => (
                               <option key={i} value={item.id_descuento}>
                                 {item.descripcion}
                               </option>
@@ -897,7 +1013,7 @@ const handlePrint = useReactToPrint({
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Descuento
-                          <span className="">L. 0</span>
+                          <span className="">{"L. " + montoDesc}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
@@ -936,195 +1052,191 @@ const handlePrint = useReactToPrint({
 
       {/* Ventana Modal de cliente*/}
       <Modal isOpen={modalCliente} toggle={abrirModalCliente} centered>
-      
         <ModalHeader toggle={abrirModalCliente}>Datos del Cliente</ModalHeader>
         <ModalBody>
-       
-        <Formik
-        //valores iniciales
-        initialValues={{
-          id_cliente: "",
-        }}
-        //Funcion para validar
-        validate={(valores) => {
-          let errores = {};
+          <Formik
+            //valores iniciales
+            initialValues={{
+              id_cliente: "",
+            }}
+            //Funcion para validar
+            validate={(valores) => {
+              let errores = {};
 
-          // Validacion id
-          if (!valores.id_cliente) {
-            errores.id_cliente = "Ingrese un ID o RTN Correcto";
-          } else if (!/^[0-9]+$/.test(valores.id_cliente)) {
-            errores.id_cliente = "ID o RTN Incorrecto";
-          }
+              // Validacion id
+              if (!valores.id_cliente) {
+                errores.id_cliente = "Ingrese un ID o RTN Correcto";
+              } else if (!/^[0-9]+$/.test(valores.id_cliente)) {
+                errores.id_cliente = "ID o RTN Incorrecto";
+              }
 
-          return errores;
-        }}
+              return errores;
+            }}
+            onSubmit={async (valores) => {
+              getCliente(valores.id_cliente);
 
-        onSubmit={async (valores) => {
-          getCliente(valores.id_cliente);
-        }}
-      >
-
-    {({ errors, values }) => (
-      <Form>
-              <div className="row">
-                <div className="input-group mb-2">
-                  <span className="input-group-text">ID</span>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    placeholder="escriba el ID o RTN..."
-                    aria-label="Recipient's username"
-                    //aria-describedby="button-addon2"
-                    name="id_cliente"
-                  />
-                  
-                  <button
-                    className="btn btn-success"
-                    type="submit"
-                    id="button-addon2"
-                  >
-                    Buscar
-                  </button>
-                </div>
+              setTimeout(function () {
+                //PrepararData()
+              }, 3000);
+          
+            }}
+          >
+            {({ errors, values }) => (
+              <Form>
                 <div className="row">
-                  <ErrorMessage
-                        name="id_cliente"
-                        component={() => (
-                          <div className="error">{errors.id_cliente}</div>
-                        )}
-                  />
+                  <div className="input-group mb-2">
+                    <span className="input-group-text">ID</span>
+                    <Field
+                      type="text"
+                      className="form-control"
+                      placeholder="escriba el ID o RTN..."
+                      aria-label="Recipient's username"
+                      //aria-describedby="button-addon2"
+                      name="id_cliente"
+                    />
+
+                    <button
+                      className="btn btn-success"
+                      type="submit"
+                      id="button-addon2"
+                    >
+                      Buscar
+                    </button>
+                  </div>
+                  <div className="row">
+                    <ErrorMessage
+                      name="id_cliente"
+                      component={() => (
+                        <div className="error">{errors.id_cliente}</div>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
               </Form>
-    )}
-            
+            )}
           </Formik>
 
-              <hr />
+          <hr />
 
-              <div className="row">
-                <div className="alert alert-primary" role="alert">
-                  {cliente.descripcion ? (
-                    <>
-                    <p>{"ID: "+cliente.rtn}</p>
-                    <p>{" Nombre: " +cliente.descripcion}</p>
-                    </>
-                  ):""}
-                </div>
-              </div>
-              <hr />
+          <div className="row">
+            <div className="alert alert-primary" role="alert">
+              {cliente.descripcion ? (
+                <>
+                  <p>{"ID: " + (cliente.rtn || "")}</p>
+                  <p>{" Nombre: " + cliente.descripcion}</p>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+          <hr />
 
-              {/**FACTURA**/}
-              <div ref={componenteRef} className="imprimir">
-                <Factura/>          
-              </div>
-
+          {/**FACTURA**/}
+          <div ref={componenteRef} className="imprimir">
+            <Factura />
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button
             color="primary"
             onClick={() => {
-              abrirModalCliente();
               //InsertVenta(venta);
-              handlePrint();              
+
+              if(cliente.descripcion === undefined){
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+                //setListo(true)
+              }
+
+              setPreparar(true)
+              if(listo === true){
+                handlePrint();
+                abrirModalCliente();
+              }
+             
             }}
           >
             Aceptar
           </Button>
 
-          
           <Button color="secondary" onClick={abrirModalCliente}>
             Cancelar
           </Button>
         </ModalFooter>
-        
       </Modal>
-
 
       {/* Ventana Modal de Datos cliente*/}
       <Modal isOpen={modalCliente2} toggle={abrirModalCliente2} centered>
- 
         <Formik
-        //valores iniciales
-        initialValues={{
-          nombre: "",
-        }}
-        //Funcion para validar
-        validate={(valores) => {
-          let errores = {};
+          //valores iniciales
+          initialValues={{
+            nombre: "",
+          }}
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
 
-          // Validacion id
-          if (!valores.nombre) {
-            errores.nombre = "Nombre requerido";
-          } 
+            // Validacion id
+            if (!valores.nombre) {
+              errores.nombre = "Nombre requerido";
+            }
 
-          return errores;
-        }}
-
-        onSubmit={ (valores) => {
-          dataCliente(valores)
-          console.log("Nombre: "+valores.nombre)
-          abrirModalCliente2();
-          abrirModalCliente();
-          
-        }}
-      >
-
-    {({ errors, values }) => (
-      <Form>
-             
-             <ModalHeader toggle={abrirModalCliente2}>Nombre del Cliente</ModalHeader>
+            return errores;
+          }}
+          onSubmit={(valores) => {
+            setCliente({ ...cliente, descripcion: valores.nombre });
+            //dataCliente(valores);
+            abrirModalCliente2();
+            abrirModalCliente();            
+          }}
+        >
+          {({ errors, values }) => (
+            <Form>
+              <ModalHeader toggle={abrirModalCliente2}>
+                Nombre del Cliente
+              </ModalHeader>
               <ModalBody>
-       
-              <div className="row">
-                <div className="alert alert-danger" role="alert">
-                  Cliente no encontrado
-                </div>
-              </div>
-              <hr />
-
-              <div className="row">
-                <div className="input-group mb-2">
-                  <span className="input-group-text">Nombre: </span>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    placeholder="Nombre del Cliente..."
-                    aria-label="Recipient's username"
-                    //aria-describedby="button-addon2"
-                    name="nombre"
-                  />
-                </div>
                 <div className="row">
-                  <ErrorMessage
-                        name="nombre"
-                        component={() => (
-                          <div className="error">{errors.nombre}</div>
-                        )}
-                  />
+                  <div className="alert alert-danger" role="alert">
+                    Cliente no encontrado
+                  </div>
                 </div>
-              </div>
- 
+                <hr />
 
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="primary"
-            type="submit"
-          >
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={abrirModalCliente2}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Form>
-    )}
-            
-      </Formik>
+                <div className="row">
+                  <div className="input-group mb-2">
+                    <span className="input-group-text">Nombre: </span>
+                    <Field
+                      type="text"
+                      className="form-control"
+                      placeholder="Nombre del Cliente..."
+                      aria-label="Recipient's username"
+                      //aria-describedby="button-addon2"
+                      name="nombre"
+                    />
+                  </div>
+                  <div className="row">
+                    <ErrorMessage
+                      name="nombre"
+                      component={() => (
+                        <div className="error">{errors.nombre}</div>
+                      )}
+                    />
+                  </div>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" type="submit">
+                  Guardar
+                </Button>
+                <Button color="secondary" onClick={abrirModalCliente2}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </Form>
+          )}
+        </Formik>
       </Modal>
-
-
 
       {/* Ventana Modal de Procesar ventas*/}
       <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
@@ -1155,12 +1267,10 @@ const handlePrint = useReactToPrint({
 
             return errores;
           }}
-
           onSubmit={async (valores) => {
-            setTipoPago(valores.metodo_pago)
+            setTipoPago(valores.metodo_pago);
             abrirModalVenta();
             abrirModalFactura();
-            PrepararData();
           }}
         >
           {({ errors, values }) => (
@@ -1227,7 +1337,6 @@ const handlePrint = useReactToPrint({
                         />
                       </div>
                   </div>
-
                   <div className="col">
                     <div className="form-floating">
                       <select
@@ -1345,7 +1454,6 @@ const handlePrint = useReactToPrint({
             onClick={() => {
               abrirModalFactura();
               abrirModalCliente();
-              
             }}
           >
             Imprimir
@@ -1354,8 +1462,6 @@ const handlePrint = useReactToPrint({
             color="secondary"
             onClick={() => {
               abrirModalFactura();
-              InsertVenta(venta);
-              resetValores();
             }}
           >
             No

@@ -1,20 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
-
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { Export_PDF } from "./generarPDF/Export_PDF";
+import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
+const fechaHoy = "2022-02-01"
+
+const objeto = "FORM_LIBRO_ENCABEZADO"
 
 const MostrarLibroDetalle = () => {
+  const navigate = useNavigate();
+
   const [opcionSelect, setOpcionSelect] = useState('');
 
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
+  const [fechaFinal, setFechaFinal] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
@@ -26,11 +35,17 @@ const MostrarLibroDetalle = () => {
     try {
       const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
+
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
     }
   };
+
+  const ValidarFecha = () => {
+
+  }
+
 
 //************************************************/
 //petición a api con la opción del select
@@ -57,6 +72,47 @@ useEffect(() => {
 }, [opcionSelect]);
 
 //************************************************/
+
+
+/*****Obtener y corroborar Permisos*****/
+const [temp, setTemp] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [permitido, setPermitido] = useState(true)
+
+const Permisos = () =>{
+  const newData = temp.filter(
+    (item) => item.objeto === objeto
+  );
+  setPermisos(newData);
+}
+
+useEffect(() => {
+  let data = localStorage.getItem('permisos')
+  if(data){
+    setTemp(JSON.parse(data))
+  }
+}, []);
+
+useEffect(() => {
+  Permisos();
+}, [temp]);
+
+
+useEffect(() => {
+  if(permisos.length > 0){
+    TienePermisos();
+  }
+}, [permisos]);
+
+
+const TienePermisos = () =>{
+  setPermitido(permisos[0].permiso_consultar)
+}
+
+/*******************/
+
+
+
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -93,6 +149,25 @@ useEffect(() => {
         });
 
         break;
+        case 'periodocerrado':
+        Swal.fire({
+          text: 'Periodo Cerrado',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        });
+
+        break;
+
+        case "permisos":
+      Swal.fire({
+        title: "Lo siento, no tienes permisos para realizar esta acción.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Ok",
+      });
+
+      break;
       default: break;
     }
   };
@@ -105,6 +180,7 @@ useEffect(() => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO DIARIO ENCABEZADO");
       } else {
         mostrarAlertas("error");
       }
@@ -158,11 +234,6 @@ useEffect(() => {
       sortable: true,
     },
     {
-      name: "DESCRIPCION",
-      selector: (row) => row.descripcion,
-      sortable: true,
-    },
-    {
       name: "FECHA INICIAL",
       selector: (row) => row.fecha_inicial,
       sortable: true,
@@ -173,8 +244,13 @@ useEffect(() => {
       sortable: true,
     },
     {
-      name: "DESCRIPCION",
-      selector: (row) => row.descripcion_estado_periodo,
+      name: "MONTO DEBE",
+      selector: (row) => row.monto_debe,
+      sortable: true,
+    },
+    {
+      name: "MONTO HABER",
+      selector: (row) => row.monto_haber,
       sortable: true,
     },
 
@@ -189,30 +265,48 @@ useEffect(() => {
             onClick={() => {
               abrirModalVerMas();
               setEncabezadoVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS LIBRO DIARIO ENCABEZADO");
             }}
           >
-            <i className="fa-solid fa-eye"></i>
+            <i className="bi bi-eye-fill"></i>
           </Link>
           &nbsp;
-          <Link
-            to="/admin/mostrarlibrodetalle" //AQUI
+          <button
             type="button"
             className="btn btn-light"
             title="Editar"
-            onClick={() => setGlobalState('registroEdit', row.id_libro_diario_enca)}
+            onClick={() => {
+              if(row.fecha_final < fechaHoy){
+                mostrarAlertas("periodocerrado");
+              }else{
+                navigate(`/admin/mostrarlibrodetalle/${row.id_libro_diario_enca}`)
+              }
+              
+              if(permisos[0].permiso_actualizacion){
+                setGlobalState("registroEdit", row);
+                navigate("/admin/editarlibrodetalle")
+              }else{
+                mostrarAlertas("/admin/CrearLibroEncabezado");
+              } 
+            }}
           >
-            <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
+            <i className="bi bi-pencil-square"></i>
+          </button>
           &nbsp;
           <button
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRegistroDelete(row.id_subcuenta);
-              abrirModalEliminar();
+              if(permisos[0].permiso_eliminacion){
+                setRegistroDelete(row.id_libro_diario_enca);
+                abrirModalEliminar();
+              }else{
+                mostrarAlertas("permisos");
+              }
+              
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
         </>
       ),
@@ -234,6 +328,10 @@ useEffect(() => {
     <div className="container">
       <h3>Encabezado Libro Diario</h3>
       <br />
+
+      {permitido? (
+     
+     <div>
       {/*Mostrar los botones: Nuevo, Excel y PDF */}
       <div className="row">
         <div className="col">
@@ -247,36 +345,50 @@ useEffect(() => {
               role="group"
               aria-label="First group"
             >
-              <Link
-                to="/"  //AQUI
+              <button
+                //AQUI
                 type="button"
                 className="btn btn-primary"
                 title="Agregar Nuevo"
+                onClick={() => {
+                  if(permisos[0].permiso_insercion){
+                    navigate("/admin/CrearLibroEncabezado") 
+                  }else{
+                   mostrarAlertas("permisos");
+                  }              
+                }}
               >
-                <i className="fa-solid fa-plus"></i> Nuevo
-              </Link>
+                <i className="bi bi-plus-lg"></i> Nuevo
+              </button>
             </div>
             <div
               className="btn-group me-2"
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 to="/"
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
+                onClick={()=>{
+                  Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LIBRO DIARIO ENCABEZADO");
+                }}
               >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Link
-                to="/"
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
+                onClick={() =>{
+                  Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LIBRO DIARIO ENCABEZADO");
+                }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
               
             </div>
           </div>
@@ -286,7 +398,7 @@ useEffect(() => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -303,6 +415,7 @@ useEffect(() => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -312,7 +425,15 @@ useEffect(() => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ninguna Categoría</p>
+        )}
       </div>
+         </div>
+     
+     ) : (
+       <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+     )}
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
@@ -338,19 +459,19 @@ useEffect(() => {
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">MONTO DEBE: </p>
+              <p className="colorText">DESCRIPCION: </p>
             </div>
             <div className="col-sm-6">
-              <p> {encabezadoVerMas.monto_debe} </p>
+              <p> {encabezadoVerMas.descripcion} </p>
             </div>
           </div>
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <p className="colorText">MONTO HABER: </p>
+              <p className="colorText">DESCRIPCION ESTADO PERIODO: </p>
             </div>
             <div className="col-sm-6">
-              <p> {encabezadoVerMas.monto_haber} </p>
+              <p> {encabezadoVerMas.descripcion_estado_periodo} </p>
             </div>
           </div>
 

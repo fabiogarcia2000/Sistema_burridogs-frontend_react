@@ -1,22 +1,28 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCodigo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/0";
-const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getone/";
 
 //const Urldestino = "http://190.53.243.69:3001/mc_informefinanciero/getall";
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
 
+const objeto = "FORM_CAT_CUENTAS"
+
 const CrearCuenta = () => {
 
   const navigate = useNavigate();
+
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [destino, setdestino] = useState([]);
@@ -52,6 +58,45 @@ const CrearCuenta = () => {
     }
   };
 
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
+
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -78,7 +123,7 @@ const CrearCuenta = () => {
 
       case 'duplicado':
         Swal.fire({
-          text: 'Ya existe una cuenta con el código ingresado',
+          text: 'Ya existe cuenta contable con ese código',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -97,7 +142,7 @@ const CrearCuenta = () => {
         //valores iniciales
         initialValues={{
           id_cuenta: "",
-          id_usuario: "",
+          id_usuario: userdata.data.id,
           codigo_cuenta: "",
           nombre_cuenta: "",
           id_categoria: "",
@@ -115,12 +160,7 @@ const CrearCuenta = () => {
              errores.id_cuenta = "Escribir solo números";
            }  */
 
-          // Validacion de usuario
-          if (!valores.id_usuario) {
-            errores.id_usuario = "Por favor ingresa un id de usuario";
-          } else if (!/^[0-9]+$/.test(valores.id_usuario)) {
-            errores.id_usuario = "Escribir solo números";
-          }
+         
 
           // Validacion de código cuenta
           if (!valores.codigo_cuenta) {
@@ -135,14 +175,14 @@ const CrearCuenta = () => {
 
           // Validacion de id categoria
           if (!valores.id_categoria) {
-            errores.id_categoria = "Por favor ingresa un id de categoria";
+            errores.id_categoria = "Por favor seleccione una categoria";
           } else if (!/^[0-9]+$/.test(valores.id_categoria)) {
             errores.id_categoria = "Escribir solo números";
           }
 
           // Validacion de id destino cuenta
           if (!valores.id_destino_cuenta) {
-            errores.id_destino_cuenta = "Por favor ingresa un id de destino cuenta";
+            errores.id_destino_cuenta = "Por favor seleccione un destino cuenta";
           } else if (!/^[0-9]+$/.test(valores.id_destino_cuenta)) {
             errores.id_destino_cuenta = "Escribir solo números";
           }
@@ -160,25 +200,23 @@ const CrearCuenta = () => {
         onSubmit={async (valores) => {
           //validar si existe un registro con el codigo ingresado  
           try {
-            /*const res = await axios.get(`${UrlMostrar}`);
-            setCuenta(res.data)
-            console.log(cuenta) 
-            cuenta &&
-            cuenta.map(async (item) =>{
-              if(item.nombre_cuenta === valores.nombre_cuenta){
-                mostrarAlertas("duplicado");
-              }else{
+            const res = await axios.get(`${UrlMostrar}${valores.codigo_cuenta}`
+            );
+             console.log(res);
+             if (res.data === "") {
+              //procedimineto para guardar el nuevo registro en el caso de que no exista
+              const res = await axios.put(`${URLCrear}`, valores);
+      
+              if (res.status === 200) {
+                mostrarAlertas("guardado");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR CATALOGO CUENTAS"); //Insertar bitacora
+                navigate("/admin/mostrarcatalogo");
+              } else {
+                mostrarAlertas("error");
               }
-        });*/
-            //procedimineto para guardar el nuevo registro en el caso de que no exista
-            await axios.put(`${URLCrear}`, valores);
-            //if (res.status === 200) {
-            mostrarAlertas("guardado");
-            navigate("/admin/mostrarcatalogo");
-            /*} else {
-              mostrarAlertas("error");
-            }       */
-
+            } else {
+              mostrarAlertas("duplicado");
+            }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
@@ -202,6 +240,7 @@ const CrearCuenta = () => {
                     id="idUsuario"
                     name="id_usuario"
                     placeholder="ID del usuario..."
+                    disabled
                   />
 
                   <ErrorMessage

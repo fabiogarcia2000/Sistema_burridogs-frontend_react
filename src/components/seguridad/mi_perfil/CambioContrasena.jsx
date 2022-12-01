@@ -8,9 +8,14 @@ import React, { useEffect, useRef, useState } from "react";
 import md5 from "md5";
 import { getOneParam } from "../../../utils/utils";
 import { collectErrors } from "yup/lib/util/runValidations";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const userdata = JSON.parse(localStorage.getItem("data"));
 const URLEditar = "http://190.53.243.69:3001/validatecurrentpassword/";
+
+//Identificador del formulario
+const objeto = "FORM_CAMBIO_CONTRASENA"
 
 const URL_API_ENV = process.env.REACT_APP_URL_API;
 
@@ -98,6 +103,44 @@ export default function CambioContra(props) {
     setPasswordShown(!passwordShown);
   };
 
+  //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -115,7 +158,17 @@ export default function CambioContra(props) {
       case "error":
         Swal.fire({
           title: "Error",
-          text: "No se pudieron guardar los cambios",
+          text: "La contraseña actual no es correcta",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
+      case "completar":
+        Swal.fire({
+          title: "Error",
+          text: "Asegurese de completar correctamente todos los campos",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -145,6 +198,7 @@ export default function CambioContra(props) {
     console.log(data);
     console.log(currentpassword);
     setIsValid(false);
+
     //inicia valida password actual
     fetch(urlAPi + "/validatecurrentpassword", {
       method: "POST",
@@ -160,8 +214,8 @@ export default function CambioContra(props) {
         if (!responseJson.status) {
           setMesagge(responseJson.message);
           setIsValid(false);
-          mostrarAlertas("error");
-        } else {
+          
+        } else if (data.newPassword === data.confirmPassword){
           fetch(urlAPi + "/changePass", {
             method: "POST",
             body: JSON.stringify(data),
@@ -169,38 +223,14 @@ export default function CambioContra(props) {
               "Content-type": "application/json",
             },
           })
-            .then((response) => response.json())
-            .then((responseJson) => {
-              // console.log("responseJson", responseJson);
-              // console.log("responseJson.status", responseJson.status);
-              if (!responseJson.status) {
-                setMesagge(responseJson.message);
-                setIsValid(false);
-              }
-              setColor("success");
-              setIsValid(true);
-              setMesagge(responseJson.message);
-              setTimeout(() => {
-                navigate("/admin/home");
-              }, 2000);
-            })
-            .catch((error) => {
-              setIsValid(false);
-              setMesagge("ha ocurrido un error al actualizar datos");
-              navigate("/admin/home");
-            });
             mostrarAlertas("guardado");
-        }
-        setColor("success");
-        setIsValid(true);
-        setMesagge(responseJson.message);
+              navigate("/admin/home");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CAMBIO CONTRASEÑA"); //Insertar bitacora
+        } 
       })
-      .catch((error) => {
-        setIsValid(false);
-        setMesagge("ha ocurrido un error al actualizar datos");
-        navigate("/admin/home");
-      });
-
+        mostrarAlertas("completar");
+          navigate("/admin/cambiocontrasena");
+      
     //fin valida password actual
 
     //inicio cambia contrasena

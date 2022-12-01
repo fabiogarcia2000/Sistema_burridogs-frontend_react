@@ -6,19 +6,61 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
-const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
+const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/";
 
 
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
+const objeto = "FORM_PERMISOS"
+
 const PermisoEditar = () => {
   const [edit] = useGlobalState('registroEdit')
 
+  //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () => {
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if (data) {
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar)
+  }
+  //================================================================
+
+
   const navigate = useNavigate();
-   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
-   const userdata = JSON.parse(localStorage.getItem('data'))
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -47,13 +89,13 @@ const PermisoEditar = () => {
       default: break;
     }
   };
-  
+
   return (
     <div className="container">
       <Formik
         //valores iniciales
         initialValues={{
-          id_permiso: edit.id_permiso,
+         id_permiso: edit.id_permiso,
           id_rol: edit.rol,
           id_objeto: edit.objeto,
           permiso_insercion: "1",
@@ -84,10 +126,12 @@ const PermisoEditar = () => {
         onSubmit={async (valores) => {
           //procedimineto para guardar el nuevo registro
           try {
-            const res = await axios.put(`${URLEditar}`, valores);
+            const res = await axios.put(`${URLEditar}${valores.id_permiso}`, valores);
 
             if (res.status === 200) {
+              console.log(valores)
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR PERMISO"); //Insertar bitacora
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");
@@ -176,9 +220,9 @@ const PermisoEditar = () => {
                     as="select"
                     className="form-select"
                     id="permisoinsercion"
-                    name="permiso_insercion"
+                    name="permisoinsercion"
                   >
-
+                    <option value="">Seleccionar...</option>
                     <option value="1">Permitir</option>
                     <option value="0">No permitir</option>
                   </Field>
@@ -195,16 +239,16 @@ const PermisoEditar = () => {
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="permisoeliminacion" className="form-label">
+                  <label htmlFor="permiso_eliminacion" className="form-label">
                     Permiso Eliminacion:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoeliminacion"
+                    id="permiso_eliminacion"
                     name="permiso_eliminacion"
                   >
-
+                    <option value="">Seleccionar...</option>
                     <option value="1">Permitir</option>
                     <option value="0">No permitir</option>
                   </Field>
@@ -220,16 +264,16 @@ const PermisoEditar = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="permisoactualizacion" className="form-label">
+                  <label htmlFor="permiso_actualizacion" className="form-label">
                     Permiso Actualizacion:
                   </label>
                   <Field
                     as="select"
                     className="form-select"
-                    id="permisoactualizacion"
+                    id="permiso_actualizacion"
                     name="permiso_actualizacion"
                   >
-
+                    <option value="">Seleccionar...</option>
                     <option value="1">Permitir</option>
                     <option value="0">No permitir</option>
                   </Field>
@@ -245,7 +289,7 @@ const PermisoEditar = () => {
             </div>
 
             <div className="row g-3">
-              <div className="col-sm-6">
+               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="permisoconsultar" className="form-label">
                     Permiso Consultar:
@@ -256,19 +300,19 @@ const PermisoEditar = () => {
                     id="permisoconsultar"
                     name="permiso_consultar"
                   >
-
+                    <option value="">Seleccionar...</option>
                     <option value="1">Permitir</option>
                     <option value="0">No permitir</option>
                   </Field>
 
                   <ErrorMessage
-                    name="permiso_consulta"
+                    name="permiso_consultar"
                     component={() => (
                       <div className="error">{errors.permiso_consultar}</div>
                     )}
                   />
                 </div>
-              </div>
+              </div> 
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="modificado_por" className="form-label">

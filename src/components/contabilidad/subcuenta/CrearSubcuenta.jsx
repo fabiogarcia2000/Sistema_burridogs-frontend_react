@@ -1,18 +1,60 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasNombreSubcuenta } from "../../../utils/cambiarAMayusculas";
-//import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/0";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
+const URLMostrarUno = "http://190.53.243.69:3001/mc_subcuenta/getone/";
+
+//Identificador del formulario
+const objeto = "FORM_SUBCUENTA"
 
 const CrearSubCuenta = () => {
-
   const navigate = useNavigate();
+
+
+  //===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [cuenta, setcuenta] = useState([]);
@@ -86,37 +128,36 @@ const CrearSubCuenta = () => {
 
           // Validacion nombre cuenta
           if (!valores.id_cuenta) {
-            errores.id_cuenta = "Por favor ingresa un nombre de cuenta";
+            errores.id_cuenta = "Por favor seleccionar una cuenta";
           }
 
           // Validacion nombre subcuenta
           if (!valores.nombre_subcuenta) {
             errores.nombre_subcuenta = "Por favor ingresa un nombre de subcuenta";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_subcuenta)) {
-            errores.nombre_subcuenta = "Escribir solo en MAYÚSCULAS";
           }
 
           return errores;
 
         }}
         onSubmit={async (valores) => {
-          //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
+          //validar si existe un registro con el codigo ingresado
           try {
-            /* const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);
-             console.log(res)*/
-            // if (res.data === ""){
+            const res = await axios.get(`${URLMostrarUno}${valores.nombre_subcuenta}`);
+             console.log(res)
+            if (res.data === ""){
             //procedimineto para guardar el nuevo registro en el caso de que no exista
             const res = await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR SUBCUENTA"); //Insertar bitacora
               navigate("/admin/mostrarsubcuenta");
             } else {
               mostrarAlertas("error");
             }
 
-            //}else{ 
-            //   mostrarAlertas("duplicado");
-            //  }
+            }else{ 
+              mostrarAlertas("duplicado");
+            }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");

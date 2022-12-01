@@ -8,18 +8,19 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const UrlMostrar = "http://190.53.243.69:3001/categoria/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/categoria/eliminar/";
 
-const objeto = "FORM_SUBCUENTA"
+const objeto = "FORM_CATEGORIA_PDV"
 
 const MostrarCategorias = () => {
   const navigate = useNavigate();
 
   //Configurar los hooks
-  const [registros, setRegistros] = useState([]);
   const [registroDelete, setRegistroDelete] = useState("");
+  const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
   }, []);
@@ -131,6 +132,7 @@ const MostrarCategorias = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR CATEGORIA");
       } else {
         mostrarAlertas("error");
       }
@@ -195,6 +197,7 @@ const MostrarCategorias = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS CATEGORIA");
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -207,7 +210,7 @@ const MostrarCategorias = () => {
             onClick={() => {
               if(permisos[0].permiso_actualizacion){
                 setGlobalState("registroEdit", row);
-                navigate("/admin/editarcategoria")
+                navigate("/admin/editarcategoria");
               }else{
                 mostrarAlertas("permisos");
               }              
@@ -294,6 +297,7 @@ const MostrarCategorias = () => {
            title="Exportar a Excel"
            onClick={()=>{
              Export_Excel(results);
+             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL CATEGORIA");
            }}
          >
            <i className="bi bi-file-earmark-excel-fill"></i>
@@ -304,6 +308,7 @@ const MostrarCategorias = () => {
            title="Exportar a PDF"
            onClick={() =>{
              Export_PDF(results);
+             RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF CATEGORIA");
            }}
          >
           <i className="bi bi-filetype-pdf"></i>

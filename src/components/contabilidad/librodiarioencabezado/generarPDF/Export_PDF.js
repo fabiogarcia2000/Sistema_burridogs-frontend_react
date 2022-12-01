@@ -12,14 +12,13 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["ID", "NOMBRE CUENTA", "NOMBRE SUBCUENTA", "DESCRIPCION", "CATEGORIA", "SALDO"]];
+    const encabezado = [["ID", "PERIODO CONTABLE","ESTADO","FECHA INCIAL", "FECHA FINAL","MONTO DEBE","MONTO HABER"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.nombre_cuenta, elt.nombre_subcuenta, elt.descripcion, elt.nombre_categoria, elt.saldo]);
+    const datos = data.map(elt=> [elt.id_libro_diario_enca, elt.id_periodo_contable, elt.tipo_estado, elt.fecha_inicial, elt.fecha_final,elt.monto_debe,elt.monto_haber]);
     
     //Tabla
     const tabla = {
-      theme: 'striped', // 'striped', 'grid' or 'plain'
       startY: 100,
       head: encabezado,
       body: datos
@@ -27,9 +26,9 @@ export function Export_PDF (data) {
 
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
-    let reporte = "Estado de Resultados";
+    let reporte = "Libro Diario Encabezado";
     let sucursal = "Principal";
-    let usuario = "jperez"
+    let usuario = "SYSTEMUSER"
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
 
@@ -50,10 +49,9 @@ export function Export_PDF (data) {
       doc.setFontSize(12);
       doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 10, doc.internal.pageSize.height - 10);
       doc.text(`Fecha y hora: ${fecha}, ${hora}`, width - 10, doc.internal.pageSize.height - 10, { align: 'right' });
-      //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
     //Se guarda el documento
-    doc.save("Estado de Resultados.pdf")
+    doc.save("Libro Diario Encabezado.pdf")
 
 };

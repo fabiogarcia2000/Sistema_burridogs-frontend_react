@@ -2,22 +2,28 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../../../globalStates/globalStates";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCodigo } from "../../../utils/cambiarAMayusculas";
 import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayusculas";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLEditar = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/";
 
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
 
+const objeto = "FORM_CAT_CUENTAS"
+
 const EditarCuenta = () => {
   const [edit] = useGlobalState('registroEdit')
 
 
   const navigate = useNavigate();
+
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
+  const userdata = JSON.parse(localStorage.getItem('data'))
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [destino, setdestino] = useState([]);
@@ -53,6 +59,44 @@ const EditarCuenta = () => {
     }
   };
 
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
@@ -87,7 +131,7 @@ const EditarCuenta = () => {
         //valores iniciales
         initialValues={{
           id_cuenta: edit.id_cuenta,
-          id_usuario: "",
+          id_usuario: userdata.data.id,
           codigo_cuenta: edit.codigo_cuenta,
           nombre_cuenta: edit.nombre_cuenta,
           id_categoria: edit.nombre_categoria,
@@ -118,7 +162,7 @@ const EditarCuenta = () => {
 
           // Validacion de id categoria
           if (!valores.id_categoria) {
-            errores.id_categoria = "Por favor ingresa un id de categoria";
+            errores.id_categoria = "Por favor seleccione una opcion";
           } else if (!/^[0-9]+$/.test(valores.id_categoria)) {
             errores.id_categoria = "Escribir solo números";
           }
@@ -137,6 +181,7 @@ const EditarCuenta = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CATALOGO CUENTA"); //Insertar bitacora
               navigate("/admin/mostrarcatalogo");
             } else {
               mostrarAlertas("error");
@@ -156,7 +201,7 @@ const EditarCuenta = () => {
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="idCuenta" className="form-label">
-                    ID Cuenta:
+                    Id Cuenta:
                   </label>
                   <Field
                     type="text"
@@ -189,6 +234,7 @@ const EditarCuenta = () => {
                     id="idUsuario"
                     name="id_usuario"
                     placeholder="ID del usuario..."
+                    disabled
                   />
 
                   <ErrorMessage

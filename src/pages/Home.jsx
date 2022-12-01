@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { setGlobalState } from "../globalStates/globalStates";
 import logoEmpresa from "../assets/img/logo1.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOneParam } from "../utils/utils";
+
+const UrlDatosEmpresa = "http://190.53.243.69:3001/empresa/getone/"
 
 function Home() {
   var dataPar = JSON.parse(localStorage.getItem("params")) || [];
@@ -50,6 +54,33 @@ function Home() {
     //saveLog();
     validateUserState();
   }, []);
+
+  /***********DATOS DE EMPRESA**************/
+//procedimineto para obtener los valores de la empresa
+const [DatosEmpresa, setDatosEmpresa] = useState([]);
+useEffect(() => {
+  getDatos();
+}, []);
+
+//petición a api
+const getDatos = async () => {
+  try {
+    const res = await axios.get(UrlDatosEmpresa);
+    if(res.status === 200){
+      setDatosEmpresa(res.data);
+      console.log(res.data)
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+useEffect(() => {
+  setGlobalState("datosEmpresa", DatosEmpresa);
+}, [DatosEmpresa]);
+
+  /***********DATOS DE EMPRESA**************/
 
   return (
     <div>

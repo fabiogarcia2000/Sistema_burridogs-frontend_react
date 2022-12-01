@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -7,21 +7,23 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getDetPorI/44";
+const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getDetPorI/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const MostrarLibroDetalle= () => {
+  const { id } = useParams();  
+
   //Configurar los hooks
   const [registroDelete, setRegistroDelete] = useState('');
   const [registros, setRegistros] = useState([]);
   useEffect(() => {
     getRegistros();
-  }, []);
+  }, [id]);
   
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
-      const res = await axios.get(UrlMostrar);
+      const res = await axios.get(UrlMostrar+id);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);

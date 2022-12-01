@@ -17,6 +17,7 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
 
   //TRAER INFORMACI[ON DEL USUARIO]
   const userdata = JSON.parse(localStorage.getItem('data'))
+  
   const [registro, setRegistro] = useState({});
 
   
@@ -54,9 +55,9 @@ const URLEditar = "https://jsonplaceholder.typicode.com/comments";
         //valores iniciales
         initialValues={{
             id_usuario: userdata.data.id,
-            usuario: edit.usuario,
+            usuario: userdata.data.username,
             nombre_usuario: userdata.data.nameUser.replace('"', "").replace('"', ""),
-            correo_electronico: edit.correo_electronico 
+            correo_electronico: userdata.data.correo_electronico,
         }}
 
         //Funcion para validar

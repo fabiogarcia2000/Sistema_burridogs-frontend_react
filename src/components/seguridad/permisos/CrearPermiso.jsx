@@ -1,42 +1,85 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useGlobalState } from "../../../globalStates/globalStates";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useState, useEffect } from "react";
 
 const URLCrear = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/0";
 
-const Urlrol = "http://190.53.243.69:3001/ms_rol/getall/";
+const Urlrol = "http://190.53.243.69:3001/ms_rol/traerrol/";
 const Urlobjetos = "http://190.53.243.69:3001/ms_objetos/getall/";
 
 //Para mostrar la fecha en formato DD/MM/AAAA
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
-const CrearPermiso = () => {
+//Identificador del formulario
+const objeto = "FORM_PERMISOS"
 
+const CrearPermiso = () => {
   const navigate = useNavigate();
+
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
+
   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
   const userdata = JSON.parse(localStorage.getItem('data'))
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
-  /* const [roles, setrol] = useState([]);
-   useEffect(() => {
-     getrol();
-   }, []);
-  
-   //petición a api
-   const getrol = async () => {
-     try {
-       const res = await axios.get(Urlrol);
-       setrol(res.data);
-     } catch (error) {
-       console.log(error);
-       mostrarAlertas("errormostrar");
-     }
-   };*/
+  const [roles, setroles] = useState([]);
+  useEffect(() => {
+    getroles();
+  }, []);
+
+  //petición a api
+  const getroles = async () => {
+    try {
+      const res = await axios.get(Urlrol);
+      setroles(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [objeto, setobjeto] = useState([]);
@@ -55,6 +98,7 @@ const CrearPermiso = () => {
     }
   };
 
+  
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -157,6 +201,7 @@ const CrearPermiso = () => {
             const res = await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
               mostrarAlertas("guardado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR PERMISO"); //Insertar bitacora
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");
@@ -174,6 +219,59 @@ const CrearPermiso = () => {
         {({ errors, values }) => (
           <Form >
             <h3 className="mb-3">Nuevo permiso</h3>
+
+            <div className="row g-3">
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="id_objeto" className="form-label">
+                    Objeto:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="id_objeto"
+                    name="id_objeto"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {objeto.map((item, i) => (
+                      <option key={i} value={item.id_objeto}>{item.objeto}</option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="id_objeto"
+                    component={() => (
+                      <div className="error">{errors.id_objeto}</div>
+                    )}
+                  />
+                </div>
+              </div>
+              
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="id_rol" className="form-label">
+                    Rol:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="id_rol"
+                    name="id_rol"
+                  >
+                    <option value="">Seleccionar...</option>
+                    {roles.map((item, i) => (
+                      <option key={i} value={item.id_rol}>{item.rol}</option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="id_rol"
+                    component={() => (
+                      <div className="error">{errors.id_rol}</div>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -321,56 +419,7 @@ const CrearPermiso = () => {
               </div>
             </div>
 
-            <div className="row g-3">
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="id_objeto" className="form-label">
-                    Objeto:
-                  </label>
-                  <Field
-                    as="select"
-                    className="form-select"
-                    id="id_objeto"
-                    name="id_objeto"
-                  >
-                    <option value="">Seleccionar...</option>
-                    {objeto.map((item, i) => (
-                      <option key={i} value={item.id_objeto}>{item.objeto}</option>
-                    ))}
-                  </Field>
-                  <ErrorMessage
-                    name="id_objeto"
-                    component={() => (
-                      <div className="error">{errors.id_objeto}</div>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="mb-3">
-                  <label htmlFor="id_rol" className="form-label">
-                    Rol:
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="id_rol"
-                    name="id_rol"
-                  />
-                  {/*<option value="">Seleccionar...</option>
-                    {roles.map((item, i) => (
-                      <option key={i} value={item.id_rol}>{item.rol}</option>
-                    ))}
-                    </Field>*/}
-                  <ErrorMessage
-                    name="id_objeto"
-                    component={() => (
-                      <div className="error">{errors.id_objeto}</div>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
+            
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar

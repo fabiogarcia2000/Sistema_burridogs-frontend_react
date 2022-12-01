@@ -102,7 +102,7 @@ export default function RecuperacionContra(props) {
         setIsValid(true);
         setTimeout(() => {
           setIsValid(false);
-          navigate("/login");
+          // navigate("/login");
         }, 3000);
       })
       .catch((error) => {
@@ -112,14 +112,11 @@ export default function RecuperacionContra(props) {
       })
       .finally(() => {
         // console.log("asdasda");
-        setIsValid(false);
+        // setIsValid(false);
       });
   };
 
- 
   return (
- 
-
     <div className="background">
       <img src={burridogs} alt="burridogs" />
       <div className="formulario">
@@ -211,21 +208,16 @@ export default function RecuperacionContra(props) {
                 >
                   Restablecer v&iacute;a correo
                 </Button>
-                
+
                 <div className="buttom-container">
                   {/* <Link to="/recuperacion_preguntas" disabled={!responseUser} color="secondary" size="lg" block>Restablecer v&iacute;a preguntas</Link> */}
                   {/* <Button color="secondary" size="lg" block >Restablecer v&iacute;a preguntas</Button> */}
                   <Link to="/login">Cancelar</Link>
                 </div>
               </form>
-
-
-
-     
             </div>
           )}
         />
-
       </div>
     </div>
   );

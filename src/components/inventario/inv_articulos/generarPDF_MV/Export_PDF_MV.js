@@ -4,7 +4,7 @@ import logo from "./logo1.png"; //Logo de la empresa
 
 export function Export_PDF_MV(data) {
   const unit = "pt";
-  const size = "A2"; // Use A1, A2, A3 or A4
+  const size = "A4"; // Use A1, A2, A3 or A4
   const orientation = "landscape"; // portrait or landscape
 
   const doc = new jsPDF(orientation, unit, size);
@@ -24,7 +24,7 @@ export function Export_PDF_MV(data) {
 
   //Parametros que se deben obtener
   var sucursal = "Principal";
-  var usuario = "jperez";
+  var usuario = "SYSTEMUSER";
   var fecha = "22-11-2022";
 
   var width = doc.internal.pageSize.getWidth(); //Para centrar el texto
