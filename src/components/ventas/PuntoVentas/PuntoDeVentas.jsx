@@ -7,6 +7,7 @@ import "./style.css";
 import { Link, useParams } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { quitarTildes } from "./utils/textoSinTildes";
+import { cambiarAMayusculasNombreCliente } from "../../../utils/cambiarAMayusculas";
 import { MostrarAlertas } from "./utils/Alertas";
 import { InsertVenta } from "./insertVenta";
 import { numeroALetras } from "./utils/num_a_letras";
@@ -1055,20 +1056,20 @@ useEffect(() => {
                       <ul className="list-group">
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Sub Total
-                          <span className="">{"L. " + subTotal}</span>
+                          <span className="">{"L. " + ((subTotal||0).toFixed(2))}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Descuento
-                          <span className="">{"L. " + montoDesc}</span>
+                          <span className="">{"L. " + ((montoDesc||0).toFixed(2))}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
-                          <span className="">{"L. " + (tempIsv || 0)}</span>
+                          <span className="">{"L. " + (tempIsv || 0).toFixed(2)}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           <h4>Total</h4>
                           <span className="">
-                            <h4>{"L. " + parseFloat(tempTotal)}</h4>
+                            <h4>{"L. " + (parseFloat(tempTotal).toFixed(2))}</h4>
                           </span>
                         </li>
                       </ul>
@@ -1111,9 +1112,9 @@ useEffect(() => {
 
               // Validacion id
               if (!valores.id_cliente) {
-                errores.id_cliente = "Ingrese un ID o RTN Correcto";
+                errores.id_cliente = "Ingrese un ID o RTN";
               } else if (!/^[0-9]+$/.test(valores.id_cliente)) {
-                errores.id_cliente = "ID o RTN Incorrecto";
+                errores.id_cliente = "ID o RTN Inválido";
               }
 
               return errores;
@@ -1135,7 +1136,7 @@ useEffect(() => {
                     <Field
                       type="text"
                       className="form-control"
-                      placeholder="escriba el ID o RTN..."
+                      placeholder="Escriba el ID o RTN..."
                       aria-label="Recipient's username"
                       //aria-describedby="button-addon2"
                       name="id_cliente"
@@ -1225,6 +1226,8 @@ useEffect(() => {
             // Validacion id
             if (!valores.nombre) {
               errores.nombre = "Nombre requerido";
+            }else if (!/^[A-Z, ]+$/.test(valores.nombre)) {
+              errores.nombre = "Ingrese un nombre válido";
             }
 
             return errores;
@@ -1259,6 +1262,7 @@ useEffect(() => {
                       aria-label="Recipient's username"
                       //aria-describedby="button-addon2"
                       name="nombre"
+                      onKeyUp={cambiarAMayusculasNombreCliente(values)}
                     />
                   </div>
                   <div className="row">

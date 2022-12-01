@@ -84,7 +84,8 @@ const MostrarArticulos = () => {
    }, [permisos]);
  
    const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
+     setPermitido(permisos[0].permiso_consultar);
+     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR ARTICULOS")
    }
  /*******************/ 
 
@@ -218,7 +219,7 @@ const MostrarArticulos = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_articulo.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion_corta
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())
@@ -525,6 +526,7 @@ const MostrarArticulos = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -534,6 +536,9 @@ const MostrarArticulos = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+           ) : (
+     <p className="text-center">Ningún Registro</p>
+   )}
       </div>
 
       {/*Sección de La Receta*/}

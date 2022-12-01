@@ -164,7 +164,7 @@ const MostrarSalidaMds = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+            <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"

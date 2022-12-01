@@ -154,8 +154,8 @@ const MostrarSubCuentas = () => {
     results = registros
   } else {
     results = registros.filter((dato) =>
-      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase()) ||
-      dato.nombre_subcuenta.toString().includes(busqueda.toLocaleLowerCase())
+      dato.nombre_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+      dato.nombre_subcuenta.toLowerCase().includes(busqueda.toLocaleLowerCase())
     )
   };
 

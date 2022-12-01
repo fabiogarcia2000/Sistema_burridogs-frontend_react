@@ -306,12 +306,12 @@ function Sidebar() {
                 <span>Resumen de Ventas</span>
               </Link>
             </li>
-            <li>
+            {/**<li>
               <Link to="/admin/reporte-libro-mayor">
                 <i className="bi bi-circle"></i>
                 <span>Libro Mayor</span>
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/admin/reporte-compra-fecha">
                 <i className="bi bi-circle"></i>

@@ -6,6 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 import { useState, useEffect } from "react";
 
 const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
@@ -17,6 +18,10 @@ const objeto = "FORM_CATEGORIA_PDV"
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser
 
 
   //===================Obtener datos del localstorage=====================
@@ -95,8 +100,8 @@ const objeto = "FORM_CATEGORIA_PDV"
           cod_categoria: edit.cod_categoria,
           descripcion: edit.descripcion,
           activo: edit.activo,
-          modificado_por: "autorPrueba",
-          fecha_modificacion: "2022/10/27"
+          modificado_por: usuario,
+          fecha_modificacion: fecha
         }}
 
         //Funcion para validar

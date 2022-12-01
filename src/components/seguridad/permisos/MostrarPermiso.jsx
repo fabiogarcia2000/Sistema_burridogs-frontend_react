@@ -347,7 +347,7 @@ const MostrarPermiso = () => {
                         <input
                             className="form-control me-2"
                             type="text"
-                            placeholder="Buscar por id permiso/rol/objeto..."
+                            placeholder="Buscar por objeto, permiso o rol..."
                             aria-label="Search"
                             value={busqueda}
                             onChange={valorBuscar}

@@ -130,7 +130,7 @@ const MostrarInvArticulos = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_articulo.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_articulo.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion_articulo
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())
@@ -283,6 +283,7 @@ const MostrarInvArticulos = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -292,6 +293,9 @@ const MostrarInvArticulos = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+          ) : (
+     <p className="text-center">Ningún Registro</p>
+   )}
       </div>
       <br />
       <hr />
