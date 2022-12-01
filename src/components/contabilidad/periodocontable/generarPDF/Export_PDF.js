@@ -52,7 +52,7 @@ export function Export_PDF (data) {
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    //Se guarda el documento
-    doc.save("Periodo contable.pdf")
+    //Abre el documento en una nueva pestaña
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 
 };

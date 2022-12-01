@@ -52,6 +52,5 @@ export function Export_PDF (data) {
     }
 
     //Abre el documento en una nueva pestaña
-    window.open(
-    URL.createObjectURL(doc.output("blob")), "_blank");
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 };

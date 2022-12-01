@@ -51,7 +51,7 @@ export function Export_PDF (data) {
       doc.text(`Fecha y hora: ${fecha}, ${hora}`, width - 10, doc.internal.pageSize.height - 10, { align: 'right' });
     }
 
-    //Se guarda el documento
-    doc.save("Usuarios.pdf")
+    //Abre el documento en una nueva pestaña
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 
 };

@@ -67,7 +67,7 @@ export function Export_PDF_R (data, data2) {
       //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
     }
 
-    //Se guarda el documento
-    doc.save("Estado de Resultados.pdf")
+    //Abre el documento en una nueva pestaña
+    window.open(URL.createObjectURL(doc.output("blob")), "_blank");
 
 };
