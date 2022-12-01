@@ -70,7 +70,8 @@ const MostrarRegistros = () => {
    }, [permisos]);
  
    const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
+     setPermitido(permisos[0].permiso_consultar);
+     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR METODOS DE PAGO")
    }
  /*******************/
 
