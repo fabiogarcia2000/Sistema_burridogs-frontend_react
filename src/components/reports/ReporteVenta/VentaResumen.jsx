@@ -192,7 +192,7 @@ const ReporteVentaResumen = () => {
         {/*Mostrar la barra de busqueda*/}
         <div className="col-6">
           <div className="input-group flex-nowrap">
-            <Link
+            <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
@@ -200,9 +200,9 @@ const ReporteVentaResumen = () => {
                   Export_Excel(results);
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Link
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
@@ -210,8 +210,8 @@ const ReporteVentaResumen = () => {
                   Export_PDF(results);
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
           </div>
         </div>
       </div>

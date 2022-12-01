@@ -238,7 +238,7 @@ const MostrarInvArticulos = () => {
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
@@ -246,9 +246,9 @@ const MostrarInvArticulos = () => {
                   Export_Excel(results);
                 }}
               >
-                <i class="bi bi-file-earmark-excel"></i>
-              </Link>
-              <Link
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
@@ -256,8 +256,8 @@ const MostrarInvArticulos = () => {
                   Export_PDF(results);
                 }}
               >
-                <i class="bi bi-filetype-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
             </div>
           </div>
         </div>
@@ -394,7 +394,7 @@ const MostrarInvArticulos = () => {
                   <button className="btn btn-primary mb-3 me-2" type="submit">
                     Consultar
                   </button>
-                  <Link
+                  <Button
                     type="button"
                     className="btn btn-success"
                     title="Exportar a Excel"
@@ -402,9 +402,9 @@ const MostrarInvArticulos = () => {
                       Export_Excel_MV(results2);
                     }}
                   >
-                    <i class="bi bi-file-earmark-excel"></i>
-                  </Link>
-                  <Link
+                    <i className="bi bi-file-earmark-excel-fill"></i>
+                  </Button>
+                  <Button
                     type="button"
                     className="btn btn-danger"
                     title="Exportar a PDF"
@@ -412,8 +412,8 @@ const MostrarInvArticulos = () => {
                       Export_PDF_MV(results2);
                     }}
                   >
-                    <i class="bi bi-filetype-pdf"></i>
-                  </Link>
+                    <i className="bi bi-filetype-pdf"></i>
+                  </Button>
                 </div>
               </div>
             </Form>
