@@ -4,16 +4,18 @@ import { Link } from "react-router-dom";
 import logoEmpresa from "../../../assets/img/logo1.png";
 import "./styles.css";
 import { useState, useEffect } from 'react';
+import { numeroALetras } from "../PuntoVentas/utils/num_a_letras";
 
 export default function Factura() {
     const [totalDesc, setTotalDesc] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
+    const [totalEnLetras, setTotalEnLetras] = useState("");
 
     const [venta] = useGlobalState('dataVenta')
     const detalles = venta.detalle;
 
-    const [DatosEmpresa] = useGlobalState('datosEmpresa');
-    console.log(DatosEmpresa)
+    //const [DatosEmpresa] = useGlobalState('datosEmpresa');
+    const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"))
 
     useEffect(() => {
         setTotalDesc(0)
@@ -29,6 +31,10 @@ export default function Factura() {
             );
         }
     }, [detalles]);
+
+    useEffect(() => {
+        setTotalEnLetras(numeroALetras(parseFloat(venta.venta_total||0)));
+    }, [venta]);
     
 
   return (
@@ -105,7 +111,7 @@ export default function Factura() {
 
 
                 <tr>                    
-                    <td  className='text-end' colspan="3"><strong>TOTAL</strong></td>
+                    <td  className='text-end' colspan="3"><strong>SUBTOTAL</strong></td>
                     <td><strong>{"L. "+totalDesc}</strong></td>
                     <td><strong>{"L. "+subTotal}</strong></td>
                 </tr>
@@ -117,8 +123,8 @@ export default function Factura() {
             <div className='col-md-6'>
 
                 <div class="row color1 regul">
-                    <label className='fw-bolder' for="floatingInputGrid">VALOR EN LETRAS:</label>
-                    <span className='fw-bolder' for="floatingInputGrid">######### ####### ########## ###########</span>
+                    <label className='fw-bolder' for="floatingInputGrid"><strong>VALOR EN LETRAS:</strong></label>
+                    <span className='fw-bolder' for="floatingInputGrid">{(totalEnLetras||"")}</span>
                 </div>
             <br />
                 <div className='row regul'>
@@ -126,15 +132,15 @@ export default function Factura() {
                     <tbody>
                         <tr>
                             <td>N° Correlativo de orden de compra exenta</td>
-                            <td className='color1'>   </td>
+                            <td className='color1 colortext'>#########</td>
                         </tr>
                         <tr>
                             <td>N° Correlativo de constancia de registro exonerado</td>
-                            <td className='color1'><span> </span></td>
+                            <td className='color1 colortext'>#########</td>
                         </tr>
                         <tr>
                             <td>N° identificativo del registro de la SAG</td>
-                            <td className='color1'>   </td>
+                            <td className='color1 colortext'>#########</td>
                         </tr>
                         </tbody>
                     </table>
@@ -168,7 +174,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td>IMPORTE GRAVADO 15%</td>
-                                    <td className='color1'>{"L. "+subTotal}</td>
+                                    <td className='color1'>{"L. "+(venta.venta_grabada_15||0)}</td>
                                 </tr>
                                 <tr>
                                     <td>IMPORTE GRAVADO 18%</td>
@@ -176,7 +182,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td>I.S.V 15%</td>
-                                    <td className='color1'>{"L. "+(subTotal)}</td>
+                                    <td className='color1'>{"L. "+(venta.impuesto_15||0)}</td>
                                 </tr>
                                 <tr>
                                     <td>I.S.V 18%</td>
@@ -184,7 +190,7 @@ export default function Factura() {
                                 </tr>
                                 <tr>
                                     <td><strong>TOTAL A PAGAR L.</strong></td>
-                                    <td><strong>L. 0.0</strong></td>
+                                    <td><strong>{"L. "+(venta.venta_total||0)}</strong></td>
                                 </tr>
                             </tbody>
                         </table>

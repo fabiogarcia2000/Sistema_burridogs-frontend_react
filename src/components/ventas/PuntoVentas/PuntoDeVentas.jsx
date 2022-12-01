@@ -64,8 +64,15 @@ const PuntoDeVentas = () => {
 
   const [subTotal, setSubTotal] = useState(0.0);
   const [Impuesto, setImpuesto] = useState(0.0);
+  const [ImpDesc, setImpDesc] = useState(0.0);
+  const [grabada15, setGrabada15] = useState(0.0);
   const [montoDesc, setMontoDesc] = useState(0.0);
   const [total, setTotal] = useState(0.0);
+
+  /***temp***/
+  const [tempTotal, setTempTotal] = useState(0.0);
+  const [tempIsv, setTempIsv] = useState(0.0);
+  /***temp***/
 
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoPedido, setTipoPedido] = useState(2);
@@ -93,12 +100,12 @@ const PuntoDeVentas = () => {
     cod_sucursal: "BD01",
     fecha: "2022-11-23",
     numero_cuenta: 10002,
-    venta_grabada_15: 100,
+    venta_grabada_15: 0,
     venta_grabada_18: 0,
     venta_exenta: 0,
-    impuesto_15: 15,
+    impuesto_15: 0,
     impuesto_18: 0,
-    venta_total: 115,
+    venta_total: 0,
     cai: "ABCDF-GHIJK-LMNOP-QRST",
     correlativo: 1,
     rtn: "0801-1900-1234",
@@ -283,12 +290,23 @@ const PuntoDeVentas = () => {
     );
   }, [listaCompras]);
 
-  /**
+  /**********temp*********/
+  useEffect(() => {
+    setTempIsv(((subTotal||0)-(montoDesc||0))*(0.15));
+  }, [subTotal, montoDesc]);
+
+  useEffect(() => {
+    setTempTotal((subTotal-montoDesc)+(tempIsv));
+  }, [tempIsv, montoDesc]);
+
+  /**********temp*********/
+
+
 useEffect(() => {
-    setImpuesto(subTotal * isv);
-  }, [subTotal]);
-* 
- */
+  setGrabada15(subTotal-montoDesc);
+}, [subTotal, montoDesc]);
+
+
 
   useEffect(() => {
     setTotal(subTotal + Impuesto - montoDesc);
@@ -522,15 +540,28 @@ useEffect(() => {
 
   //resetea el valores
   const resetValores = () => {
-    setSubTotal(0);
+    /**setSubTotal(0);
     setImpuesto(0);
+    setImpDesc(0);
     setTotal(0);
     setListaCompras([]);
     setCantidad(1);
     Enc();
     setDetalles([]);
     setDetallesPromo([]);
-    setTipoPedido(0);
+    setCliente([])
+    setGrabada15(0)
+    setMontoDesc(0)
+    setTempTotal(0)
+    setTempIsv(0)
+    setDetalles([])
+    setNewDetalles([])
+    setDetallesPago([])
+    setDetallesPromo([])
+    setDetallesDesc([])
+    setListo(false)
+    setPreparar(false)
+    setVenta(valuesInicial) */
     Refrescar();
   };
 
@@ -541,12 +572,12 @@ useEffect(() => {
 
   //resetea el valores
   const Refrescar = () => {
-    //window.location.reload();
+    window.location.reload();
   };
 
   //calcular el cambio a entregar
   const Calcular_Cambio = (monto) => {
-    let cambio = monto - total;
+    let cambio = monto - tempTotal;
 
     if (cambio < 0) {
       setCambio(0);
@@ -599,7 +630,18 @@ useEffect(() => {
           (parseFloat(items.precio) * parseFloat(items.cantidad))),
     }));
     setNewDetalles(...newDetalles, newData);
+
+    
   };
+
+  useEffect(() => {
+    setImpDesc(0);
+    newDetalles.map((val) =>
+    setImpDesc((prevValores) => prevValores + val.total_impuesto)
+    );
+    console.log(ImpDesc)
+  }, [newDetalles]);
+
 
   const Calc_Desc = () => {
     setMontoDesc(subTotal * porcDescuento[0].porcentaje);
@@ -634,6 +676,9 @@ useEffect(() => {
       detalle_pago: detallesPago,
       detalle_promo: detallesPromo,
       detalle_desc: detallesDesc,
+      venta_grabada_15:grabada15,
+      impuesto_15: tempIsv,
+      venta_total:tempTotal
     });
   };
 
@@ -940,9 +985,10 @@ useEffect(() => {
                   setDetallesPago([]);
                   Detalles_Pago();
                   setTipoPedido(valores.id_modo_pedido);
-                  setTotalEnLetras(numeroALetras(parseFloat(total)));
+                  setTotalEnLetras(numeroALetras(parseFloat(tempTotal)));
                   setDetallesDesc([]);
                   setNewDetalles([]);
+                  setImpDesc(0);
                   Detalles_Desc();
                 }
               }}
@@ -1017,12 +1063,12 @@ useEffect(() => {
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
-                          <span className="">{"L. " + Impuesto}</span>
+                          <span className="">{"L. " + (tempIsv || 0)}</span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           <h4>Total</h4>
                           <span className="">
-                            <h4>{"L. " + parseFloat(total)}</h4>
+                            <h4>{"L. " + parseFloat(tempTotal)}</h4>
                           </span>
                         </li>
                       </ul>
@@ -1258,7 +1304,7 @@ useEffect(() => {
             // Validacion de monto
             if (!valores.monto_recibido) {
               errores.monto_recibido = "Requerido";
-            } else if (valores.monto_recibido < total) {
+            } else if (valores.monto_recibido < tempTotal) {
               errores.monto_recibido =
                 "El monto recibido debe ser mayor o igual al total";
             } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_recibido)) {
@@ -1280,7 +1326,7 @@ useEffect(() => {
                 <div className="container">
                   <div className="row text-center">
                     <h5>Total a Pagar:</h5>
-                    <h1>{"L. " + parseFloat(total)}</h1>
+                    <h1>{"L. " + parseFloat(tempTotal)}</h1>
                     <p>{"(" + totalEnLetras + ")"}</p>
                   </div>
                   <hr />
@@ -1461,7 +1507,18 @@ useEffect(() => {
           <Button
             color="secondary"
             onClick={() => {
-              abrirModalFactura();
+              if(cliente.descripcion === undefined){
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+                //setListo(true)
+              }
+              setPreparar(true)
+              if(listo === true){
+                //handlePrint();
+                resetValores();
+                //abrirModalCliente();
+                abrirModalFactura()
+              }
+              //abrirModalFactura();
             }}
           >
             No

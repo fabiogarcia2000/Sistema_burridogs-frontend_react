@@ -23,6 +23,10 @@
     background-color: darkgray !important;
 }
 
+.colortext{
+    color: darkgray !important;
+}
+
 .print2{
     display: none !important; 
     margin: 30px 30px !important;
