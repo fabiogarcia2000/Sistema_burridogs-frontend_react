@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["ID", "PARAMETRO","VALOR","CREADO POR","FECHA DE CREACIÓN","MODIFICADO POR","FECHA DE MODIFICACIÓN"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_parametro, elt.parametro, elt.valor, elt.creado_por, elt. fecha_creacion,elt.modificado_por,elt.fecha_modificacion]);
+    const datos = data.map((elt,i) => [(i+1), elt.parametro, elt.valor, elt.creado_por, elt. fecha_creacion,elt.modificado_por,elt.fecha_modificacion]);
     
     //Tabla
     const tabla = { 
@@ -26,7 +26,7 @@ export function Export_PDF (data) {
 
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
-    let reporte = "Parámetros de Seguridad";
+    let reporte = "PARÁMETROS DE SEGURIDAD";
     let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
@@ -36,7 +36,7 @@ export function Export_PDF (data) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas

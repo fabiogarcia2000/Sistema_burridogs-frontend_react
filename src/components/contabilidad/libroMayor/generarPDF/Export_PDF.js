@@ -97,7 +97,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
 
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
-    let reporte = "Balance general";
+    let reporte = "BALANCE GENERAL";
     let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
@@ -108,7 +108,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 38, 20, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-  doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
+  doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
    // doc.text(`ACTIVOS:`);
     doc.autoTable(tabla);
    // doc.addPage();

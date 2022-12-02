@@ -12,10 +12,10 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["ID", "CUENTA","INFORME FINANCIERO"]];
+    const encabezado = [["#", "CUENTA","INFORME FINANCIERO"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.id_destino_cuenta, elt.id_cuenta, elt.id_informe_financiero]);
+    const datos = data.map((elt,i) => [(i+1), elt.id_cuenta, elt.id_informe_financiero]);
     
     //Tabla
     const tabla = {
@@ -28,7 +28,7 @@ export function Export_PDF (data) {
 
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
-    let reporte = "Categorías";
+    let reporte = "CATEGORÍAS";
     let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data)
@@ -38,7 +38,7 @@ export function Export_PDF (data) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
