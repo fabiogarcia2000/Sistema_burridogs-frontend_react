@@ -12,7 +12,7 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
 
     //const header = ["ID", "Código", "Descripción", "Estado", "Creado por", "Fecha creado", "Modificado por", "Fecha modificado"];
-    const encabezado = [["ID", "PARAMETRO","VALOR","CREADO POR","FECHA DE CREACIÓN","MODIFICADO POR","FECHA DE MODIFICACIÓN"]];
+    const encabezado = [["#", "PARAMETRO","VALOR","CREADO POR","FECHA DE CREACIÓN","MODIFICADO POR","FECHA DE MODIFICACIÓN"]];
    
     //Registros de la tabla
     const datos = data.map((elt,i) => [(i+1), elt.parametro, elt.valor, elt.creado_por, elt. fecha_creacion,elt.modificado_por,elt.fecha_modificacion]);
