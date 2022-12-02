@@ -111,6 +111,8 @@ const MostrarInvArticulos = () => {
     }
   };
 
+  const [registroVerMas, setRegistroVerMas] = useState({});
+
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
@@ -179,57 +181,86 @@ const MostrarInvArticulos = () => {
     },
 
     {
-      name: "CANT. MÍN",
-      selector: (row) => row.inventario_minimo,
-      sortable: true,
-      maxWidth: "160px",
-    },
-
-    {
-      name: "CANT. MAX",
-      selector: (row) => row.inventario_maximo,
-      sortable: true,
-      maxWidth: "160px",
+      name: "ESTADO",
+      cell: (row) => (
+        <>
+          <Link
+            type="button"
+            className="btn btn-light"
+            title="Ver Más..."
+            onClick={() => {
+              abrirModalVerMas();
+              setRegistroVerMas(row);
+            }}
+          >
+            <i class="bi bi-info-circle-fill"></i>
+          </Link>
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
     },
   ];
 
   //condicionales de color en filas
   const conditionalRowStyles = [
     {
-      when: row => parseFloat(row.en_mano) < parseFloat(row.inventario_maximo) && parseFloat(row.en_mano) > parseFloat(row.inventario_minimo),
+      when: (row) =>
+        parseFloat(row.en_mano) < parseFloat(row.inventario_maximo) &&
+        parseFloat(row.en_mano) > parseFloat(row.inventario_minimo),
+
       style: {
-        backgroundColor: 'yellow',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
+        backgroundColor: "yellow",
+        color: "black",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+
+    {
+      when: (row) =>
+        parseFloat(row.en_mano) < parseFloat(row.inventario_minimo),
+      style: {
+        backgroundColor: "red",
+        color: "black",
+        "&:hover": {
+          cursor: "pointer",
         },
       },
     },
     {
-      when: row => parseFloat(row.en_mano) < parseFloat(row.inventario_minimo),
+      when: (row) =>
+        parseFloat(row.en_mano) > parseFloat(row.inventario_maximo),
+
       style: {
-        backgroundColor: 'red',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
+        backgroundColor: "green",
+        color: "black",
+        "&:hover": {
+          cursor: "pointer",
         },
       },
     },
-    {
-      when: row => parseFloat(row.en_mano) > parseFloat(row.inventario_maximo),
-      style: {
-        backgroundColor: 'green',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      },
-    }
-    
-    
   ];
 
-  
+  // Validación para mostrar la descripción según inventarios
+  var comentario;
+
+  if ((row) => parseFloat(row.en_mano) > parseFloat(row.inventario_maximo)) {
+    comentario = "Mucho";
+  } else if (
+    (row) =>
+      parseFloat(row.en_mano) < parseFloat(row.inventario_maximo) &&
+      parseFloat(row.en_mano) > parseFloat(row.inventario_minimo)
+  ) {
+    comentario = "Está bien";
+  } else if (
+    (row) => parseFloat(row.en_mano) < parseFloat(row.inventario_minimo)
+  ) {
+    comentario = "Poco";
+  }
+
   //Configuramos las columnas de la tabla
   const columns2 = [
     {
@@ -322,20 +353,22 @@ const MostrarInvArticulos = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
-        {results.length > 0 ? (
-          <DataTable
-            columns={columns}
-            data={results}
-            pagination
-            paginationComponentOptions={paginationComponentOptions}
-            highlightOnHover
-            fixedHeader
-            fixedHeaderScrollHeight="550px"
-            conditionalRowStyles={conditionalRowStyles}
-          />
-        ) : (
-          <p className="text-center">Ningún Registro</p>
-        )}
+        <div className="col-10">
+          {results.length > 0 ? (
+            <DataTable
+              columns={columns}
+              data={results}
+              pagination
+              paginationComponentOptions={paginationComponentOptions}
+              highlightOnHover
+              fixedHeader
+              fixedHeaderScrollHeight="550px"
+              conditionalRowStyles={conditionalRowStyles}
+            />
+          ) : (
+            <p className="text-center">Ningún Registro</p>
+          )}
+        </div>
       </div>
       <br />
       <hr />
@@ -485,16 +518,44 @@ const MostrarInvArticulos = () => {
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
-        <ModalHeader toggle={abrirModalVerMas}>Movimientos</ModalHeader>
+        <ModalHeader toggle={abrirModalVerMas}>
+          Estado del artículo: {registroVerMas.cod_articulo}
+        </ModalHeader>
         <ModalBody>
-          <div className="row">
-            <DataTable
-              columns={columns2}
-              data={""}
-              highlightOnHover
-              fixedHeader
-              fixedHeaderScrollHeight="200px"
-            />
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">Inventario Máximo: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.inventario_maximo} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">Inventario Mínimo: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.inventario_minimo} </p>
+            </div>
+          </div>
+
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">Inventario en Mano: </p>
+            </div>
+            <div className="col-sm-6">
+              <p> {registroVerMas.en_mano} </p>
+            </div>
+          </div>
+          <div className="row g-3">
+            <div className="col-sm-6">
+              <p className="colorText">Descripción: </p>
+            </div>
+            <div className="col-sm-6">
+              <p>{comentario}</p>{" "}
+              {/* Descripción del artículo según inventario */}
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>
