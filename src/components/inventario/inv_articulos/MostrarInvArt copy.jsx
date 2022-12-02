@@ -193,43 +193,6 @@ const MostrarInvArticulos = () => {
     },
   ];
 
-  //condicionales de color en filas
-  const conditionalRowStyles = [
-    {
-      when: row => parseFloat(row.en_mano) < parseFloat(row.inventario_maximo) && parseFloat(row.en_mano) > parseFloat(row.inventario_minimo),
-      style: {
-        backgroundColor: 'yellow',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      },
-    },
-    {
-      when: row => parseFloat(row.en_mano) < parseFloat(row.inventario_minimo),
-      style: {
-        backgroundColor: 'red',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      },
-    },
-    {
-      when: row => parseFloat(row.en_mano) > parseFloat(row.inventario_maximo),
-      style: {
-        backgroundColor: 'green',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      },
-    }
-    
-    
-  ];
-
-  
   //Configuramos las columnas de la tabla
   const columns2 = [
     {
@@ -331,7 +294,6 @@ const MostrarInvArticulos = () => {
             highlightOnHover
             fixedHeader
             fixedHeaderScrollHeight="550px"
-            conditionalRowStyles={conditionalRowStyles}
           />
         ) : (
           <p className="text-center">Ningún Registro</p>
