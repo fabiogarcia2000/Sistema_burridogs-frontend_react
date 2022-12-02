@@ -427,8 +427,8 @@ const getRegistrosTotalIngresoGasto = async () => {
     results = registros
   } else {
     results = registros.filter((dato) =>
-      dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+      dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
+      //dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
     )
   };
 
@@ -603,7 +603,7 @@ const getRegistrosTotalIngresoGasto = async () => {
                 <input
                   className="form-control me-2"
                   type="text"
-                  placeholder="Buscar por código o nombre de la cuenta..."
+                  placeholder="Buscar por descripción de periodo..."
                   aria-label="Search"
                   value={busqueda}
                   onChange={valorBuscar}

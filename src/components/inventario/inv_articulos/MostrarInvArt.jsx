@@ -130,7 +130,9 @@ const MostrarInvArticulos = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_articulo.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_articulo
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion_articulo
           .toLowerCase()
           .includes(busqueda.toLocaleLowerCase())
@@ -238,7 +240,7 @@ const MostrarInvArticulos = () => {
               role="group"
               aria-label="Second group"
             >
-              <Link
+              <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
@@ -246,9 +248,9 @@ const MostrarInvArticulos = () => {
                   Export_Excel(results);
                 }}
               >
-                <i class="bi bi-file-earmark-excel"></i>
-              </Link>
-              <Link
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
@@ -256,8 +258,8 @@ const MostrarInvArticulos = () => {
                   Export_PDF(results);
                 }}
               >
-                <i class="bi bi-filetype-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
             </div>
           </div>
         </div>
@@ -283,15 +285,19 @@ const MostrarInvArticulos = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
+        {results.length > 0 ? (
+          <DataTable
+            columns={columns}
+            data={results}
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            highlightOnHover
+            fixedHeader
+            fixedHeaderScrollHeight="550px"
+          />
+        ) : (
+          <p className="text-center">Ningún Registro</p>
+        )}
       </div>
       <br />
       <hr />
@@ -394,7 +400,7 @@ const MostrarInvArticulos = () => {
                   <button className="btn btn-primary mb-3 me-2" type="submit">
                     Consultar
                   </button>
-                  <Link
+                  <Button
                     type="button"
                     className="btn btn-success"
                     title="Exportar a Excel"
@@ -402,9 +408,9 @@ const MostrarInvArticulos = () => {
                       Export_Excel_MV(results2);
                     }}
                   >
-                    <i class="bi bi-file-earmark-excel"></i>
-                  </Link>
-                  <Link
+                    <i className="bi bi-file-earmark-excel-fill"></i>
+                  </Button>
+                  <Button
                     type="button"
                     className="btn btn-danger"
                     title="Exportar a PDF"
@@ -412,8 +418,8 @@ const MostrarInvArticulos = () => {
                       Export_PDF_MV(results2);
                     }}
                   >
-                    <i class="bi bi-filetype-pdf"></i>
-                  </Link>
+                    <i className="bi bi-filetype-pdf"></i>
+                  </Button>
                 </div>
               </div>
             </Form>
@@ -423,7 +429,7 @@ const MostrarInvArticulos = () => {
       {/*Mostramos la segunda tabla con los datos*/}
       <div className="row">
         <div className="col-8">
-          {results.length > 0 ? (
+          {results2.length > 0 ? (
             <DataTable
               columns={columns2}
               data={results2}

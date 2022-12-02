@@ -158,7 +158,7 @@ const MostrarCuentas = () => {
   } else {
     results = registros.filter((dato) =>
       dato.codigo_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-      dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+      dato.nombre_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase())
     )
   };
 
@@ -442,14 +442,7 @@ const MostrarCuentas = () => {
             </div>
           </div>
 
-          <div className="row g-3">
-            <div className="col-sm-6">
-              <p className="colorText">SALDO: </p>
-            </div>
-            <div className="col-sm-6">
-              <p> {cuentaVerMas.saldo} </p>
-            </div>
-          </div>
+        
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={abrirModalVerMas}>

@@ -71,7 +71,8 @@ const MostrarMateriales = () => {
    }, [permisos]);
  
    const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
+     setPermitido(permisos[0].permiso_consultar);
+     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR MATERIALES");
    }
  /*******************/ 
 
@@ -171,9 +172,7 @@ const MostrarMateriales = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.id_articulo_padre
-          .toString()
-          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.id_articulo_padre.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.comentario.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -343,12 +342,12 @@ const MostrarMateriales = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+            <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por código o descripción..."
+              placeholder="Buscar por artículo o comentario..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -360,6 +359,7 @@ const MostrarMateriales = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -369,6 +369,9 @@ const MostrarMateriales = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ningún Registro</p>
+        )}
       </div>
 
   </div>

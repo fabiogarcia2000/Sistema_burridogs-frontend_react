@@ -9,14 +9,22 @@ import { useReactToPrint } from "react-to-print";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcell/Export_Excel";
 import Swal from "sweetalert2";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useNavigate } from "react-router-dom";
 
 const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventasusuario/";
+const objeto = "RPT_VENTA_POR_CAJERO"
 
 const ReporteVentaCajero = () => {
-  var dataPar = JSON.parse(localStorage.getItem("bodsuc"))
-  var datausuario = JSON.parse(localStorage.getItem("data"))
+  const navigate = useNavigate();
 
-  var id_usuario= datausuario.id
+  var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
+  var datausuario = JSON.parse(localStorage.getItem("data"));
+
+  var sucursal = dataPar[0].descripcion_sucursal;
+
+  var id_usuario= datausuario.id;
+  
   var id_sucursal= dataPar[0].id_sucursal
   const [encabezado, setEncabezado] = useState([]);
   //Barra de busqueda
@@ -25,6 +33,43 @@ const ReporteVentaCajero = () => {
   const valorBuscar = (e) => {
     setBusqueda(e.target.value);
   };
+/*****Obtener y corroborar Permisos*****/
+const [temp, setTemp] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [permitido, setPermitido] = useState(true)
+
+const Permisos = () =>{
+  const newData = temp.filter(
+    (item) => item.objeto === objeto
+  );
+  setPermisos(newData);
+}
+
+useEffect(() => {
+  let data = localStorage.getItem('permisos')
+  if(data){
+    setTemp(JSON.parse(data))
+  }
+}, []);
+
+useEffect(() => {
+  Permisos();
+}, [temp]);
+
+
+useEffect(() => {
+  if(permisos.length > 0){
+    TienePermisos();
+  }
+}, [permisos]);
+
+
+const TienePermisos = () =>{
+  setPermitido(permisos[0].permiso_consultar);
+  RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR CATEGORIAS")
+}
+
+/*******************/
 
   //metodo de filtrado
   let results = [];
@@ -86,9 +131,11 @@ const ReporteVentaCajero = () => {
 
   return (
     <div className="container">
-      <h3>Consultar las Ventas por Producto</h3>
+      <h3>Consultar las Ventas por Cajero</h3>
       <br />
-
+      {permitido? (
+     
+     <div>
       <div className="row">
         <Formik
           //valores iniciales
@@ -179,7 +226,9 @@ const ReporteVentaCajero = () => {
                 </div>
 
                 <div className="col-sm-4 bottom-aligned">
-                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                  <button className="btn btn-primary mb-3 me-2" type="submit"
+                    onClick={ () => (
+                      RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR REPORTE DE VENTAS POR CAJERO"))}>
                     Consultar
                   </button>
                 </div>
@@ -195,26 +244,30 @@ const ReporteVentaCajero = () => {
         {/*Mostrar la barra de busqueda*/}
         <div className="col-6">
           <div className="input-group flex-nowrap">
-            <Link
+            <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL RPT DE VENTAS POR CAJERO");
+
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Link
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results);
+                  Export_PDF(results, sucursal);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE VENTAS POR CAJERO");
+
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
           </div>
         </div>
       </div>
@@ -237,7 +290,11 @@ const ReporteVentaCajero = () => {
           <p className="text-center">No hay registros que mostrar</p>
         )}
       </div>
+      </div>
 
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
 
     </div>
   );

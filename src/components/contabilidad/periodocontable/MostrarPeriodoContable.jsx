@@ -158,7 +158,7 @@ const mostrarAlertas = (alerta) =>{
         results = registros.filter( (dato) =>
         dato.fecha_inicial.toString().includes(busqueda.toLocaleLowerCase()) || 
         dato.fecha_final.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.fecha_creacion.toString().includes(busqueda.toLocaleLowerCase())
+        dato.descripcion_periodo.toLowerCase().includes(busqueda.toLocaleLowerCase())
         )
    };
 
@@ -373,7 +373,7 @@ const mostrarAlertas = (alerta) =>{
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por fecha inicial/fecha final/fecha creación..."
+              placeholder="Buscar por descripción, fecha inicial/fecha final..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}

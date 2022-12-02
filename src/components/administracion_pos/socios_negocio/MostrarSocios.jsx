@@ -71,7 +71,8 @@ const MostrarSocios = () => {
    }, [permisos]);
  
    const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
+     setPermitido(permisos[0].permiso_consultar);
+     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR SOCIOS DE NEGOCIO")
    }
  /*******************/  
 
@@ -162,9 +163,7 @@ const MostrarSocios = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_socio_negocio
-          .toString()
-          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_socio_negocio.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -378,7 +377,7 @@ const MostrarSocios = () => {
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+            <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
@@ -395,6 +394,7 @@ const MostrarSocios = () => {
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -404,6 +404,9 @@ const MostrarSocios = () => {
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+        ) : (
+          <p className="text-center">Ningún Registro</p>
+        )}
       </div>
     </div>
 

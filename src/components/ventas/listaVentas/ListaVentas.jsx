@@ -7,13 +7,17 @@ import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Factura from "../facturaA4/Factura";
-
 import Swal from "sweetalert2";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useNavigate } from "react-router-dom";
 
 const UrlEncabezado = "http://190.53.243.69:3001/venta/venta_por_fecha/";
 const UrlDetalles = "http://190.53.243.69:3001/venta/detalle_por_encabezado/";
 
+const objeto = "FORM_CONSULTAR_VENTA"
+
 const VentaResumen = () => {
+  const navigate = useNavigate();
   const componenteRef = useRef();
 
   const [encabezado, setEncabezado] = useState([]);
@@ -26,9 +30,47 @@ const VentaResumen = () => {
     const [totalIsv, setTotalIsv] = useState(0);
     const [totalPagar, setTotalPagar] = useState(0);
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+
+/*******************/
+
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
+
 
   //procedimineto para obtener los detalles
   const getDetalles = async (id) => {
@@ -86,7 +128,6 @@ useEffect(() => {
     results = encabezado.filter(
       (dato) =>
         dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.rtn.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -187,9 +228,11 @@ useEffect(() => {
 
   return (
     <div className="container">
-      <h3>Consultar Ventas</h3>
+      <h3>Consultar Facturas</h3>
       <br />
-
+      {permitido? (
+     
+     <div>
       <div className="row">
         <Formik
           //valores iniciales
@@ -293,7 +336,7 @@ useEffect(() => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por cliente, R.T.N, factura..."
+              placeholder="Buscar por cliente o factura..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -320,6 +363,12 @@ useEffect(() => {
           <p className="text-center">No hay registros que mostrar</p>
         )}
       </div>
+      </div>
+
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
+
 
       {/* Ventana Modal de ver más*/}
       <Modal size="lg" isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
@@ -407,7 +456,7 @@ useEffect(() => {
               abrirModalVerMas();
             }}
           >
-            Imprimir Factura
+            Reimprimir Factura
           </Button>
           <Button color="secondary" onClick={abrirModalVerMas}>
             Cerrar

@@ -52,6 +52,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Bodega.pdf")
+    //doc.save("Bodega.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

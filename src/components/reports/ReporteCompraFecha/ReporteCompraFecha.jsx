@@ -3,23 +3,69 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcell/Export_Excel";
 import Factura from "./facturaA4/Factura";
 import Swal from "sweetalert2";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { useNavigate } from "react-router-dom";
+
 
 const UrlEncabezado = "http://190.53.243.69:3001/compras/compras_por_fecha/";
 const UrlDetalles = "http://190.53.243.69:3001/compras/detalle_por_encabezado/";
 const UrlAnular ="http://190.53.243.69:3001/compras/anular/";
 
+const objeto = "RPT_COMPRA_POR_FECHA"
+
 const ReporteCompraFecha = () => {
   const componenteRef = useRef();
+  const navigate = useNavigate();
+
 
   const [registroDelete, setRegistroDelete] = useState('');
   const [encabezado, setEncabezado] = useState([]);
   const [detalles, setDetalles] = useState([]);
+  const [datos, setDatos] = useState([]);
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true)
+ 
+   const Permisos = () =>{
+     const newData = temp.filter(
+       (item) => item.objeto === objeto
+     );
+     setPermisos(newData);
+   }
+ 
+   useEffect(() => {
+     let data = localStorage.getItem('permisos')
+     if(data){
+       setTemp(JSON.parse(data))
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+ 
+   useEffect(() => {
+     if(permisos.length > 0){
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+ 
+   const TienePermisos = () =>{
+     setPermitido(permisos[0].permiso_consultar);
+     RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR CATEGORIAS")
+   }
+ 
+ /*******************/
 
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
@@ -35,6 +81,24 @@ const ReporteCompraFecha = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+   //procedimineto para anular una compra
+   const getEncabezados = async () => {
+    try {
+      console.log(datos);
+      const res = await axios.post(UrlEncabezado, datos);
+      setEncabezado(res.data);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  useEffect(() => {
+    getEncabezados();
+  }, [datos]);
+
 
     //Para generar factura/imprimir
     const handlePrint = useReactToPrint({
@@ -142,7 +206,7 @@ const ReporteCompraFecha = () => {
               abrirModalEliminar();
             }}
           >
-            <i className="fa-solid fa-trash"></i>
+            <i className="bi bi-trash3-fill"></i>
           </button>
           </>
         ),
@@ -204,9 +268,11 @@ const ReporteCompraFecha = () => {
     try {
       console.log(registroDelete)
       const res = await axios.post(`${UrlAnular}${registroDelete}`);
-      getDetalles();
+      //getDetalles();
       if (res.status === 200) {
+        getEncabezados()
          mostrarAlertas("eliminado"); 
+         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR REGISTRO DE RPT DE COMPRA POR FECHA");
       } else {
         mostrarAlertas("error");
       }
@@ -220,7 +286,9 @@ const ReporteCompraFecha = () => {
     <div className="container">
       <h3>Reporte de Compra por Fecha</h3>
       <br />
-
+{permitido? (
+     
+     <div>
       <div className="row">
         <Formik
           //valores iniciales
@@ -245,21 +313,14 @@ const ReporteCompraFecha = () => {
             return errores;
           }}
           onSubmit={async (valores) => {
-            try {
-              console.log(valores);
-              const res = await axios.post(UrlEncabezado, valores);
-              setEncabezado(res.data);
-              console.log(res);
-            } catch (error) {
-              console.log(error);
-              mostrarAlertas("errormostrar");
-            }
+            setDatos(valores)
+            //getEncabezados(valores)
           }}
         >
           {({ errors, values }) => (
             <Form>
               <div className="row g-3">
-                <div className="col-sm-3">
+                <div className="col-sm-4">
                   <div className="mb-3">
                     <label htmlFor="inicio" className="form-label">
                       Fecha Inicio:
@@ -280,7 +341,7 @@ const ReporteCompraFecha = () => {
                   </div>
                 </div>
 
-                <div className="col-sm-3">
+                <div className="col-sm-4">
                   <div className="mb-3">
                     <label htmlFor="final" className="form-label">
                       Fecha Final:
@@ -302,7 +363,9 @@ const ReporteCompraFecha = () => {
                 </div>
 
                 <div className="col-sm-4 bottom-aligned">
-                  <button className="btn btn-primary mb-3 me-2" type="submit">
+                  <button className="btn btn-primary mb-3 me-2" type="submit"
+                    onClick={ () => (
+                      RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR REPORTE DE COMPRAS POR FECHA"))}>
                     Consultar
                   </button>
                 </div>
@@ -329,26 +392,30 @@ const ReporteCompraFecha = () => {
               value={busqueda}
               onChange={valorBuscar}
             />
-            <Link
+            <Button
                 type="button"
                 className="btn btn-success"
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL RPT DE COMPRA POR FECHA");
+
                 }}
               >
-                <i className="fa-solid fa-file-excel"></i>
-              </Link>
-              <Link
+               <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
                 type="button"
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
                   Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE COMPRA POR FECHA");
+
                 }}
               >
-                <i className="fa-solid fa-file-pdf"></i>
-              </Link>
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
           </div>
         </div>
       </div>
@@ -371,6 +438,12 @@ const ReporteCompraFecha = () => {
           <p className="text-center">No hay registros que mostrar</p>
         )}
       </div>
+      </div>
+
+) : (
+  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
+)}
+
        {/* Ventana Modal de ver más*/}
        <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
@@ -380,7 +453,7 @@ const ReporteCompraFecha = () => {
               <p className="colorText">FACTURA: </p>
             </div>
             <div className="col-sm-6">
-              <p> {detalles.referencia} </p>
+              <p> {(detalles.referencia||"")} </p>
             </div>
           </div>
 
@@ -389,7 +462,7 @@ const ReporteCompraFecha = () => {
               <p className="colorText">CODIGO: </p>
             </div>
             <div className="col-sm-6">
-              <p> {detalles.cod_socio_negocio} </p>
+              <p> {(detalles.cod_socio_negocio||"")} </p>
             </div>
           </div>
 
@@ -398,7 +471,7 @@ const ReporteCompraFecha = () => {
               <p className="colorText">FECHA DE CREACIÓN: </p>
             </div>
             <div className="col-sm-6">
-              <p> {detalles.fecha_creacion} </p>
+              <p> {(detalles.fecha_creacion||"")} </p>
             </div>
           </div>
 
@@ -407,7 +480,7 @@ const ReporteCompraFecha = () => {
               <p className="colorText">MODIFICADO POR: </p>
             </div>
             <div className="col-sm-6">
-              <p> {detalles.modificado_por} </p>
+              <p> {(detalles.modificado_por||"")} </p>
             </div>
           </div>
 
@@ -416,31 +489,32 @@ const ReporteCompraFecha = () => {
               <p className="colorText">FECHA DE MODIFICACIÓN: </p>
             </div>
             <div className="col-sm-6">
-              <p> {detalles.fecha_modificacion} </p>
+              <p> {(detalles.fecha_modificacion||"")} </p>
             </div>
             </div>
 
-          {/**FACTURA**/}
-          <div ref={componenteRef} className="imprimir">
-          <Factura />
-          </div>
+              {/** 
+              <div ref={componenteRef} className="imprimir">
+                 <Factura />
+              </div> */}
           
           </ModalBody>
           <ModalFooter>
-          <Button
+          {/**<Button
             color="primary"
             onClick={() => {
-              handlePrint();
+              //handlePrint();
               abrirModalVerMas();
             }}
           >
             Imprimir Factura
-          </Button>
+          </Button> */}
           <Button color="secondary" onClick={abrirModalVerMas}>
             Cerrar
           </Button>
         </ModalFooter>
           </Modal>
+
           {/* Ventana Modal de Eliminar*/}
           <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
           <ModalHeader toggle={abrirModalEliminar}>Anular Registro</ModalHeader>

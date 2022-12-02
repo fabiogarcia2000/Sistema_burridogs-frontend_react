@@ -9,6 +9,16 @@ export function cambiarAMayusculasDescripcion(valores) {
 }
 
 //función convertir a mayuscula comentario
+export function cambiarAMayusculasNombreCliente(valores) {
+  try {
+    let texto = valores.nombre;
+    valores.nombre = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//función convertir a mayuscula comentario
 export function cambiarAMayusculasComentario(valores) {
   try {
     let texto = valores.comentario;

@@ -3,8 +3,9 @@ import "jspdf-autotable";
 import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
+import { UsuarioConectado } from "../../../seguridad/bitacora/UsuarioActivo";
 
-export function Export_PDF (data) {
+export function Export_PDF (data, sucursalConectado) {
     const unit = "pt";
     const size = "Letter"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
@@ -12,10 +13,10 @@ export function Export_PDF (data) {
     const doc = new jsPDF(orientation, unit, size);
 
     //Encabezado de las columnas
-  const encabezado = [["FECHA", "BODEGA", "CODIGO", "TIPO", "DESCRIPCIÓN", "MONTO IMPUESTO", "MONTO TOTAL","ESTADO"]];
+  const encabezado = [["DESCRIPCIÓN", "MONTO"]];
    
   //Registros de la tabla
-  const datos = data.map(elt=> [elt.fecha,elt.cod_centro_costo,elt.cod_socio_negocio,elt.referencia,elt.descripcion_centro_costo,elt.monto_impuesto_total,elt.monto_total,elt.descripcion_estado]);
+  const datos = data.map(elt=> [elt.descripcion, elt.monto]);
      
     //Tabla
     const tabla = {
@@ -27,8 +28,8 @@ export function Export_PDF (data) {
     //Parametros que se deben obtener
     let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
     let reporte = "Reporte de Ventas por Fecha";
-    let sucursal = "Principal";
-    let usuario = "jperez";
+    let sucursal = sucursalConectado;
+    let usuario =  UsuarioConectado();
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
 
@@ -37,7 +38,7 @@ export function Export_PDF (data) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`Reporte de ${reporte}`, `Sucursal ${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`Reporte de ${reporte}`, `${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
@@ -53,6 +54,6 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Reporte de Ventas por Fecha.pdf")
-
+    //doc.save("Reporte de Ventas por Fecha.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 };

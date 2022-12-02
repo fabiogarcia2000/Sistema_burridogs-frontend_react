@@ -70,7 +70,8 @@ const MostrarTalonarioSAR = () => {
   }, [permisos]);
 
   const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
+    setPermitido(permisos[0].permiso_consultar);
+    InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR CORRELATIVOS")
   }
 /*******************/
 
@@ -157,7 +158,7 @@ const mostrarAlertas = (alerta) =>{
        results = registros
    }else{
         results = registros.filter( (dato) =>
-        dato.id_pos.toString().includes(busqueda.toLocaleLowerCase()) || 
+        dato.descripcion_pos.toLowerCase().includes(busqueda.toLocaleLowerCase()) || 
         dato.cai.toLowerCase().includes(busqueda.toLocaleLowerCase())        
         )
    };
@@ -365,12 +366,12 @@ const mostrarAlertas = (alerta) =>{
         <div className="col-4">
           <div className="input-group flex-nowrap">
             <span className="input-group-text" id="addon-wrapping">
-              <i className="fa-solid fa-magnifying-glass"></i>
+            <i className="bi bi-search"></i>
             </span>
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por código o descripción..."
+              placeholder="Buscar por CAI O POS..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
@@ -382,6 +383,7 @@ const mostrarAlertas = (alerta) =>{
 
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
+      {results.length > 0 ? (
         <DataTable
           columns={columns}
           data={results}
@@ -391,6 +393,9 @@ const mostrarAlertas = (alerta) =>{
           fixedHeader
           fixedHeaderScrollHeight="550px"
         />
+           ) : (
+     <p className="text-center">Ningún Registro</p>
+   )}
       </div>
 
     </div>

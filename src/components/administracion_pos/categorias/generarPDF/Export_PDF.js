@@ -3,7 +3,6 @@ import "jspdf-autotable";
 import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
-import { UsuarioConectado } from "../../../seguridad/bitacora/UsuarioActivo";
 
 
 export function Export_PDF (data) {
@@ -58,6 +57,6 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Categorias.pdf")
-
+    //doc.save("Categorias.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 };

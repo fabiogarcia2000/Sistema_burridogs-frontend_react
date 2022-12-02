@@ -6,7 +6,7 @@ import { getCurrentTime } from '../../../../utils/fechaYhora';
 
 export function Export_PDF (data) {
     const unit = "pt";
-    const size = "Letter"; // Use A1, A2, A3 or A4
+    const size = "Legal"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
 
     const doc = new jsPDF(orientation, unit, size);
@@ -15,7 +15,7 @@ export function Export_PDF (data) {
     const encabezado = [["CODIGO", "DESCRIPCION", "ESTADO", "SUCURSAL", "CREADO POR", "FECHA CREACION", "MODIFICADO POR", "FECHA MODIFICACION"]];
    
     //Registros de la tabla
-    const datos = data.map(elt=> [elt.cod_pos, elt.descripcion, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.id_sucursal, elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
+    const datos = data.map(elt=> [elt.cod_pos, elt.descripcion_pos, (elt.activo === "1" ? "ACTIVO" : "INACTIVO"), elt.descripcion_sucursal, elt.creado_por, elt.fecha_creacion, elt.modificado_por, elt.fecha_modificacion]);
     
     //Tabla
     const tabla = {
@@ -35,8 +35,8 @@ export function Export_PDF (data) {
 
     //Preparacion del documento
     doc.setFontSize(12);
-    doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-  doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
+    doc.addImage(logo, 830, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.text([`${empresa}`,`${espacio}`,`Reporte de ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
@@ -52,6 +52,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("POS.pdf")
+    //doc.save("POS.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };

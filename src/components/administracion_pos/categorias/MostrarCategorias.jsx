@@ -68,7 +68,8 @@ const MostrarCategorias = () => {
 
 
   const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
+    setPermitido(permisos[0].permiso_consultar);
+    RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR CATEGORIAS")
   }
 
 /*******************/
@@ -349,7 +350,7 @@ const MostrarCategorias = () => {
      fixedHeaderScrollHeight="550px"
    />
    ) : (
-     <p className="text-center">Ninguna Categoría</p>
+     <p className="text-center">Ningún Registro</p>
    )}
  </div>
     </div>

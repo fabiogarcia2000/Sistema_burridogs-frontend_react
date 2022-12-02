@@ -31,8 +31,6 @@ function Sidebar() {
             className="nav-content collapse "
             data-bs-parent="#sidebar-nav"
           >
-
-
             <li>
               <Link to="/admin/cambiocontrasena">
                 <i className="bi bi-circle"></i>
@@ -184,12 +182,6 @@ function Sidebar() {
             </li>
 
             <li>
-              <Link to="/admin/mostrarmateriales">
-                <i className="bi bi-circle"></i>
-                <span>Materiales</span>
-              </Link>
-            </li>
-            <li>
               <Link to="/admin/mostrarunidadesmedida">
                 <i className="bi bi-circle"></i>
                 <span>Unidades de Medida</span>
@@ -199,12 +191,6 @@ function Sidebar() {
               <Link to="/admin/crearcompra">
                 <i className="bi bi-circle"></i>
                 <span>Compras</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/crearsalidamds">
-                <i className="bi bi-circle"></i>
-                <span>Salida de Mercadería</span>
               </Link>
             </li>
           </ul>
@@ -306,12 +292,12 @@ function Sidebar() {
                 <span>Resumen de Ventas</span>
               </Link>
             </li>
-            <li>
+            {/**<li>
               <Link to="/admin/reporte-libro-mayor">
                 <i className="bi bi-circle"></i>
                 <span>Libro Mayor</span>
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/admin/reporte-compra-fecha">
                 <i className="bi bi-circle"></i>

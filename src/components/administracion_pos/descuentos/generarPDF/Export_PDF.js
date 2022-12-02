@@ -53,6 +53,7 @@ export function Export_PDF (data) {
     }
 
     //Se guarda el documento
-    doc.save("Descuentos.pdf")
+    //doc.save("Descuentos.pdf")
+    window.open(doc.output('bloburl', '_blank'));
 
 };
