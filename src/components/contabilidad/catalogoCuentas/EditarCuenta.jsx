@@ -9,37 +9,33 @@ import { cambiarAMayusculasNombreCuenta } from "../../../utils/cambiarAMayuscula
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { useState, useEffect } from "react";
 
-
 const URLEditar = "http://190.53.243.69:3001/mc_catalogo/actualizar-insertar/";
 
 const Urldestino = "http://190.53.243.69:3001/mc_destino/getall";
 const Urlcategoria = "http://190.53.243.69:3001/mc_categoriacont/getall";
 
-const objeto = "FORM_CAT_CUENTAS"
+const objeto = "FORM_CAT_CUENTAS";
 
 const EditarCuenta = () => {
-  const [edit] = useGlobalState('registroEdit')
-
+  const [edit] = useGlobalState("registroEdit");
 
   const navigate = useNavigate();
 
-//===================Obtener datos del localstorage=====================
+  //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
-  const Permisos = () =>{
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
-    if(data){
-      setTemp(JSON.parse(data))
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -47,23 +43,20 @@ const EditarCuenta = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
-    if(permisos.length > 0){
+    if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  //================================================================
 
-  const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
-  }
-//================================================================
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
+  const userdata = JSON.parse(localStorage.getItem("data"));
 
-  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
-  const userdata = JSON.parse(localStorage.getItem('data'))
-
-  
   //procedimineto para obtener todos las sucursales y mostrarlas en select
   const [destino, setdestino] = useState([]);
   useEffect(() => {
@@ -98,33 +91,32 @@ const EditarCuenta = () => {
     }
   };
 
-
-
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
-      case 'guardado':
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "Los cambios se guardaron con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
         break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudieron guardar los cambios',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          title: "Error",
+          text: "No se pudieron guardar los cambios",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
         break;
 
-      default: break;
+      default:
+        break;
     }
   };
 
@@ -140,7 +132,6 @@ const EditarCuenta = () => {
           id_categoria: edit.id_categoria,
           id_destino_cuenta: edit.id_destino_cuenta,
         }}
-
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
@@ -148,13 +139,12 @@ const EditarCuenta = () => {
           // Validacion de usuario
           if (!valores.id_usuario) {
             errores.id_usuario = "Por favor ingresa un id de usuario";
-          } 
+          }
 
           // Validacion de código cuenta
           if (!valores.codigo_cuenta) {
             errores.codigo_cuenta = "Por favor ingresa un código de cuenta";
           }
-
 
           // Validacion nombre cuenta
           if (!valores.nombre_cuenta) {
@@ -164,7 +154,7 @@ const EditarCuenta = () => {
           // Validacion de id categoria
           if (!valores.id_categoria) {
             errores.id_categoria = "Por favor seleccione una opcion";
-          } 
+          }
 
           // Validacion de id destino cuenta
           if (!valores.id_destino_cuenta) {
@@ -176,16 +166,22 @@ const EditarCuenta = () => {
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
           try {
-            const res = await axios.put(`${URLEditar}${valores.id_cuenta}`, valores);
+            const res = await axios.put(
+              `${URLEditar}${valores.id_cuenta}`,
+              valores
+            );
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR CATALOGO CUENTA"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "EDITAR CATALOGO CUENTA"
+              ); //Insertar bitacora
               navigate("/admin/mostrarcatalogo");
             } else {
               mostrarAlertas("error");
             }
-
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
@@ -219,8 +215,6 @@ const EditarCuenta = () => {
                   />
                 </div>
               </div>
-
-
 
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -270,8 +264,6 @@ const EditarCuenta = () => {
                 </div>
               </div>
 
-
-
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="nombreCuenta" className="form-label">
@@ -296,7 +288,6 @@ const EditarCuenta = () => {
               </div>
             </div>
 
-
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -308,12 +299,12 @@ const EditarCuenta = () => {
                     className="form-select"
                     id="idCategoria"
                     name="id_categoria"
-                    >
-                    <option value="">Seleccionar...</option>
+                  >
                     {categoria.map((item, i) => (
-                      <option key={i} value={item.id_categoria}>{item.nombre_categoria}</option>
+                      <option key={i} value={item.id_categoria}>
+                        {item.nombre_categoria}
+                      </option>
                     ))}
-                   
                   </Field>
                   <ErrorMessage
                     name="id_categoria"
@@ -323,8 +314,6 @@ const EditarCuenta = () => {
                   />
                 </div>
               </div>
-
-
 
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -336,14 +325,14 @@ const EditarCuenta = () => {
                     className="form-select"
                     id="idDestinoCuenta"
                     name="id_destino_cuenta"
-               
-                    >
-                    <option value="">Seleccionar...</option>
+                  >
                     {destino.map((item, i) => (
-                      <option key={i} value={item.id_destino_cuenta}>{item.descripcion_informe_financiero}</option>
+                      <option key={i} value={item.id_destino_cuenta}>
+                        {item.descripcion_informe_financiero}
+                      </option>
                     ))}
                   </Field>
-            
+
                   <ErrorMessage
                     name="id_destino_cuenta"
                     component={() => (

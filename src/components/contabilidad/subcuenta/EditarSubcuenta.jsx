@@ -13,29 +13,27 @@ const URLEditar = "http://190.53.243.69:3001/mc_subcuenta/actualizar-insertar/";
 const UrlMostrar = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 //Identificador del formulario
-const objeto = "FORM_SUBCUENTA"
+const objeto = "FORM_SUBCUENTA";
 
 const EditarSubCuenta = () => {
-  const [edit] = useGlobalState('registroEdit')
-   const navigate = useNavigate();
+  const [edit] = useGlobalState("registroEdit");
+  const navigate = useNavigate();
 
- //===================Obtener datos del localstorage=====================
+  //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
-  const Permisos = () =>{
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
-    if(data){
-      setTemp(JSON.parse(data))
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -43,63 +41,60 @@ const EditarSubCuenta = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
-    if(permisos.length > 0){
+    if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  //================================================================
 
-  const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
-  }
-//================================================================
+  //procedimineto para obtener todos las sucursales y mostrarlas en select
+  const [cuenta, setcuenta] = useState([]);
+  useEffect(() => {
+    getcuenta();
+  }, []);
 
-
- //procedimineto para obtener todos las sucursales y mostrarlas en select
- const [cuenta, setcuenta] = useState([]);
- useEffect(() => {
-   getcuenta();
- }, []);
-
- //petición a api
- const getcuenta = async () => {
-   try {
-     const res = await axios.get(UrlMostrar);
-     setcuenta(res.data);
-   } catch (error) {
-     console.log(error);
-     mostrarAlertas("errormostrar");
-   }
- };
-
+  //petición a api
+  const getcuenta = async () => {
+    try {
+      const res = await axios.get(UrlMostrar);
+      setcuenta(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
-      case 'guardado':
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "Los cambios se guardaron con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
         break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudieron guardar los cambios',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          title: "Error",
+          text: "No se pudieron guardar los cambios",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
         break;
 
-      default: break;
+      default:
+        break;
     }
   };
 
@@ -111,23 +106,23 @@ const EditarSubCuenta = () => {
           id_subcuenta: edit.id_subcuenta,
           id_cuenta: edit.nombre_cuenta,
           nombre_subcuenta: edit.nombre_subcuenta,
-
         }}
-
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-
           // Validacion nombre cuenta
           if (!valores.id_cuenta) {
             errores.id_cuenta = "Por favor seleccione una cuenta";
-          } 
+          }
 
           // Validacion nombre subcuenta
           if (!valores.nombre_subcuenta) {
-            errores.nombre_subcuenta = "Por favor ingresa un nombre de subcuenta";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_subcuenta)) {
+            errores.nombre_subcuenta =
+              "Por favor ingresa un nombre de subcuenta";
+          } else if (
+            !/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_subcuenta)
+          ) {
             errores.nombre_subcuenta = "Escribir solo en MAYÚSCULAS";
           }
           return errores;
@@ -135,16 +130,22 @@ const EditarSubCuenta = () => {
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
           try {
-            const res = await axios.put(`${URLEditar}${valores.id_subcuenta}`, valores);
+            const res = await axios.put(
+              `${URLEditar}${valores.id_subcuenta}`,
+              valores
+            );
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR SUBCUENTA"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "EDITAR SUBCUENTA"
+              ); //Insertar bitacora
               navigate("/admin/mostrarsubcuenta");
             } else {
               mostrarAlertas("error");
             }
-
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
@@ -190,9 +191,10 @@ const EditarSubCuenta = () => {
                     id="id_cuenta"
                     name="id_cuenta"
                   >
-                    <option value="">Seleccionar...</option>
                     {cuenta.map((item, i) => (
-                      <option key={i} value={item.id_cuenta}>{item.nombre_cuenta}</option>
+                      <option key={i} value={item.id_cuenta}>
+                        {item.nombre_cuenta}
+                      </option>
                     ))}
                   </Field>
 
@@ -217,7 +219,6 @@ const EditarSubCuenta = () => {
                   name="nombre_subcuenta"
                   placeholder="Nombre subcuenta..."
                   onKeyUp={cambiarAMayusculasNombreSubcuenta(values)}
-
                 />
 
                 <ErrorMessage

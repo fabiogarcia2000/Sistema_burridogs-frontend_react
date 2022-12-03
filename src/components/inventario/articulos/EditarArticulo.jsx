@@ -26,49 +26,37 @@ const FormularioEditar = () => {
 
   const navigate = useNavigate();
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true);
 
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
+    setPermisos(newData);
+  };
 
+  useEffect(() => {
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
+    }
+  }, []);
 
- /*****Obtener y corroborar Permisos*****/
- const [temp, setTemp] = useState([]);
- const [permisos, setPermisos] = useState([]);
- const [permitido, setPermitido] = useState(true)
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
 
- const Permisos = () =>{
-   const newData = temp.filter(
-     (item) => item.objeto === objeto
-   );
-   setPermisos(newData);
- }
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
 
- useEffect(() => {
-   let data = localStorage.getItem('permisos')
-   if(data){
-     setTemp(JSON.parse(data))
-   }
- }, []);
-
- useEffect(() => {
-   Permisos();
- }, [temp]);
-
-
- useEffect(() => {
-   if(permisos.length > 0){
-     TienePermisos();
-   }
- }, [permisos]);
-
- const TienePermisos = () =>{
-   setPermitido(permisos[0].permiso_consultar)
- }
-/*******************/
-
-
-
-
-
-
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  /*******************/
 
   //procedimineto para obtener las unidades de medida
   const [unidades, setUnidades] = useState([]);
@@ -227,21 +215,28 @@ const FormularioEditar = () => {
 
           // Validacion precio
           if (!valores.precio) {
-            errores.precio = "Por favor ingrese el precio";
-          } else if (!/^^[0-9]+$/.test(valores.precio)) {
-            errores.precio = "El precio solo puede contener números";
+            errores.precio = "Por favor ingresa un precio";
+          } else if (!/^^\d*\.\d+$/.test(valores.precio)) {
+            errores.precio = "Solo números";
+          } else if (!/^^[0-9-.]+$/.test(valores.precio)) {
+            errores.precio = "Solo números";
           }
-
           // Validacion inventario minimo
           if (!valores.inventario_minimo) {
-            errores.inventario_minimo = "Por favor ingrese el precio";
+            errores.inventario_minimo = "Por favor ingresa una cantidad mínima";
+          } else if (!/^^\d*\.\d+$/.test(valores.inventario_minimo)) {
+            errores.inventario_minimo = "Solo números";
+          } else if (!/^^[0-9-.]+$/.test(valores.inventario_minimo)) {
+            errores.inventario_minimo = "Solo números";
           }
-
           // Validacion inventario maximo
           if (!valores.inventario_maximo) {
-            errores.inventario_maximo = "Por favor ingrese el precio";
+            errores.inventario_maximo = "Por favor ingresa una cantidad máxima";
+          } else if (!/^^\d*\.\d+$/.test(valores.inventario_maximo)) {
+            errores.inventario_maximo = "Solo números";
+          } else if (!/^^[0-9-.]+$/.test(valores.inventario_maximo)) {
+            errores.inventario_maximo = "Solo números";
           }
-
           // Validacion unidad medida
           if (!valores.id_unidad_medida) {
             errores.id_unidad_medida = "Por favor seleccione una opción";
@@ -263,7 +258,11 @@ const FormularioEditar = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR ARTICULO");
+              InsertarBitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "EDITAR ARTICULO"
+              );
               navigate("/admin/mostrararticulos");
             } else {
               mostrarAlertas("error");
@@ -584,10 +583,6 @@ const FormularioEditar = () => {
           </Form>
         )}
       </Formik>
-      <br />
-      <hr />
-      <h3>Agregar Receta</h3>
-      <br />
     </div>
   );
 };
