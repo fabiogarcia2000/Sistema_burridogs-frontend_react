@@ -219,40 +219,46 @@ const TienePermisos = () =>{
   //Configuramos las columnas de la tabla
   const columns = [
     {
-      name: "ID LIBRO DIARIO ENCABEZADO",
+      name: "ID",
       selector: (row) => row.id_libro_diario_enca,
       sortable: true,
     },
-    {
+    /*{
       name: "PERIODO CONTABLE",
       selector: (row) => row.id_periodo_contable,
       sortable: true,
+    },*/
+    {
+      name: "FECHA",
+      selector: (row) => row.fecha_inicial,
+      sortable: true,
     },
+    /*{
+      name: "FECHA FINAL",
+      selector: (row) => row.fecha_final,
+      sortable: true,
+    },*/
+    {
+      name: "DESCRIPCIÓN",
+      selector: (row) => row.descripcion,
+      sortable: true,
+    },
+    /*{
+      name: "MONTO HABER",
+      selector: (row) => row.monto_haber,
+      sortable: true,
+    },*/
     {
       name: "ESTADO",
       selector: (row) => row.tipo_estado,
       sortable: true,
     },
     {
-      name: "FECHA INICIAL",
-      selector: (row) => row.fecha_inicial,
+      name: "USUARIO",
+      selector: (row) => row.id_usuario,
       sortable: true,
     },
-    {
-      name: "FECHA FINAL",
-      selector: (row) => row.fecha_final,
-      sortable: true,
-    },
-    {
-      name: "MONTO DEBE",
-      selector: (row) => row.monto_debe,
-      sortable: true,
-    },
-    {
-      name: "MONTO HABER",
-      selector: (row) => row.monto_haber,
-      sortable: true,
-    },
+
 
     {
       name: "ACCIONES",
@@ -326,7 +332,7 @@ const TienePermisos = () =>{
 
   return (
     <div className="container">
-      <h3>Encabezado Libro Diario</h3>
+      <h3>Libro Diario</h3>
       <br />
 
       {permitido? (
@@ -435,7 +441,7 @@ const TienePermisos = () =>{
        <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
      )}
 
-      {/* Ventana Modal de ver más*/}
+      {/* Ventana Modal de ver más
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
         <ModalBody>
@@ -498,7 +504,7 @@ const TienePermisos = () =>{
             Cerrar
           </Button>
         </ModalFooter>
-      </Modal>
+      </Modal>*/}
 
       {/* Ventana Modal de Eliminar*/}
       <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
