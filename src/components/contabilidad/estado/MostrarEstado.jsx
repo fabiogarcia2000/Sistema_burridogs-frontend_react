@@ -137,10 +137,12 @@ const mostrarAlertas = (alerta) =>{
          RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR ESTADO DIARIO");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR ESTADO DIARIO");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR ESTADO DIARIO");
     }
   };
 

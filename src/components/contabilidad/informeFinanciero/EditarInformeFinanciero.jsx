@@ -124,11 +124,13 @@ const objeto = "FORM_INFORME_FINANCIERO"
                     navigate("/admin/mostrarinformefinanciero");
                   } else {
                     mostrarAlertas("error");
+                    RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR INFORME FINANCIERO"); //Insertar bitacora
                   }
                 
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR INFORME FINANCIERO"); //Insertar bitacora
                 navigate("/admin/mostrarinformefinanciero");
               }
         }}

@@ -139,10 +139,12 @@ const mostrarAlertas = (alerta) =>{
          RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR INFORME FINANCIERO");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR INFORME FINANCIERO");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR INFORME FINANCIERO");
     }
   };
 

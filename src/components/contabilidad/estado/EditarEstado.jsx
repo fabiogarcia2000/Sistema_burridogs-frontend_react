@@ -127,11 +127,13 @@ const objeto = "FORM_EST_DIARIO"
                     navigate("/admin/mostrarestado");
                   } else {
                     mostrarAlertas("error");
+                    RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR ESTADO DIARIO"); //Insertar bitacora
                   }
                 
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR ESTADO DIARIO"); //Insertar bitacora
                 navigate("/admin/mostrarestado");
               }
         }}

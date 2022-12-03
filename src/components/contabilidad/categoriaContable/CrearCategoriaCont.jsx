@@ -133,14 +133,17 @@ const CrearCategoriaCont = () => {
                         navigate("/admin/mostrarcategoriacont");
                     } else {
                       mostrarAlertas("error");
+                      RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR CATEGORIA CONTABLE"); //Insertar bitacora
                     }
                     
                 }else{ 
                   mostrarAlertas("duplicado");
+                  RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR CATEGORIA CONTABLE"); //Insertar bitacora
                 }
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR CATEGORIA CONTABLE"); //Insertar bitacora
                 navigate("/admin/mostrarcategoriacont");
               }
         }}

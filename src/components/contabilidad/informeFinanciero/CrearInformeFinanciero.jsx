@@ -134,14 +134,17 @@ const CrearInformeFinanciero = () => {
                         navigate("/admin/mostrarinformefinanciero");
                     } else {
                       mostrarAlertas("error");
+                      RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR INFORME FINANCIERO"); //Insertar bitacora
                     }
                     
                 }else{ 
                   mostrarAlertas("duplicado");
+                  RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR INFORME FINANCIERO"); //Insertar bitacora
                 }
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR INFORME FINANCIERO"); //Insertar bitacora
                 navigate("/admin/mostrarinformefinanciero");
               }
         }}

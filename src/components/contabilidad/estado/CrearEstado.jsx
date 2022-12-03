@@ -131,14 +131,17 @@ const CrearEstado = () => {
                 navigate("/admin/mostrarestado");
               } else {
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR ESTADO DIARIO"); //Insertar bitacora
               }
 
             } else {
               mostrarAlertas("duplicado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR ESTADO DIARIO"); //Insertar bitacora
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR ESTADO DIARIO"); //Insertar bitacora
             navigate("/admin/mostrarestado");
           }
         }}

@@ -117,11 +117,13 @@ const objeto = "FORM_CATEGORIA_CONTABLE"
                     navigate("/admin/mostrarcategoriacont");
                   } else {
                     mostrarAlertas("error");
+                    RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR CATEGORIA CONTABLE"); //Insertar bitacora
                   }
                 
               } catch (error) {
                 console.log(error);
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR CATEGORIA CONTABLE"); //Insertar bitacora
                 navigate("/admin/mostrarcategoriacont");
               }
         }}

@@ -141,10 +141,12 @@ const MostrarCategoriasCont = () => {
 
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR CATEGORIA CONTABLE");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR CATEGORIA CONTABLE");
     }
   };
 
