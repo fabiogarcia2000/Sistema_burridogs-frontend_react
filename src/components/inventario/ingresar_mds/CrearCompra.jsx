@@ -5,13 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import DataTable from "react-data-table-component";
+import { quitarTildes } from "./utils/textoSinTildes";
 import { MostrarAlertas } from "../ingresar_mds/utils/Alertas";
+import { InsertCompra } from "./insertCompra";
 import { numeroALetras } from "./utils/num_a_letras";
-import Swal from "sweetalert2";
 import {
-  cambiarAMayusculasDescripCorta,
-  cambiarAMayusculasDescripArticulo,
-} from "../../../utils/cambiarAMayusculas";
+  getCurrentDate,
+  getCurrentTime,
+  getCurrentDateShort,
+} from "../../../utils/fechaYhora";
+import Swal from "sweetalert2";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
@@ -30,13 +33,12 @@ const objeto = "FORM_COMPRAS";
 const Formulario = () => {
   const navigate = useNavigate();
 
-  var datausuario = JSON.parse(localStorage.getItem("data"));
-  var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
+  const dataSec = JSON.parse(localStorage.getItem("bodsuc"));
+  const idSucursal = dataSec[0].id_sucursal;
+  const DescSucursal = dataSec[0].descripcion_sucursal;
+  const codSucursal = dataSec[0].cod_sucursal;
 
-  var id_usuario = datausuario.id;
-  var sucursal = dataPar[0].descripcion_sucursal;
-
-  console.log(localStorage);
+  const userdata = JSON.parse(localStorage.getItem("data"));
 
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -69,11 +71,73 @@ const Formulario = () => {
   const [total, setTotal] = useState(0.0);
 
   const [tipoPago, setTipoPago] = useState(1);
-  const [tipoPedido, setTipoPedido] = useState(2);
+
   const [porcDescuento, setPorcDescuento] = useState({});
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
   const [cambio, setCambio] = useState(0);
+
+  const [listo, setListo] = useState(false);
+
+  /**************Fecha y Hora*************************/
+  const [fecha, setFecha] = useState("--/--/--");
+  const [fechaCorta, setFechaCorta] = useState("--/--/----");
+  const [hora, setHora] = useState("--:--:--");
+  /***************************************************/
+
+  useEffect(() => {
+    getCategorias();
+    getArticulos();
+    getMetodosPago();
+    getDescuentos();
+    Enc();
+    Fecha();
+    Hora();
+  }, []);
+
+  /**********temp*********/
+  useEffect(() => {
+    setTempIsv(((subTotal || 0) - (montoDesc || 0)) * 0.15);
+  }, [subTotal, montoDesc]);
+
+  useEffect(() => {
+    setTempTotal(subTotal - montoDesc + tempIsv);
+  }, [tempIsv, montoDesc]);
+
+  /**********temp*********/
+
+  //Buscador --con expresiones regulares js
+  const handleBuscador = (e) => {
+    const buscar = quitarTildes(e.target.value.toLowerCase());
+    let tmpArray = [];
+    const limite = articulos.length;
+
+    for (let index = 0; index < limite; index++) {
+      const buscarEn = quitarTildes(articulos[index].descripcion.toLowerCase());
+      const buscarEn2 = articulos[index].cod_articulo.toLowerCase();
+      const patt = new RegExp(buscar);
+      const res = patt.test(buscarEn, buscarEn2);
+
+      if (res) {
+        tmpArray.push(articulos[index]);
+      }
+    }
+    setArticulosMostrar(tmpArray);
+  };
+
+  //*******FECHA Y HORA*******/
+  //obtener fecha
+  const Fecha = () => {
+    setFecha(getCurrentDate());
+    setFechaCorta(getCurrentDateShort());
+  };
+
+  //obtener hora
+  const Hora = () => {
+    setHora(getCurrentTime());
+  };
+  setInterval(Hora, 1000);
+  //*************************/
 
   useEffect(() => {
     getCategorias();
@@ -82,7 +146,7 @@ const Formulario = () => {
 
   const valuesInicial = {
     secuencia_enc: undefined,
-    id_socio_negocio: 0,
+    id_socio_negocio: "",
     fecha: "",
     referencia: "",
     monto_total: 0,
@@ -91,8 +155,8 @@ const Formulario = () => {
     fecha_creacion: "",
     modificado_por: "",
     fecha_modificacion: "",
-    id_usuario: undefined,
-    id_centro_costo: 1,
+    id_usuario: 0,
+    id_centro_costo: 0,
     detalle: [],
   };
   const [compra, setCompra] = useState(valuesInicial);
@@ -309,7 +373,7 @@ const Formulario = () => {
         ...listaCompras,
         {
           id: articuloClick.id_articulo,
-          porc: articuloClick.porcentaje,
+          und: articuloClick.id_unidad_medida,
           cod: articuloClick.cod_articulo,
           desc: articuloClick.descripcion_corta,
           cant: cantidad,
@@ -526,7 +590,6 @@ const Formulario = () => {
     Enc();
     setDetalles([]);
     setDetallesPromo([]);
-    setTipoPedido(0);
     Refrescar();
   };
 
@@ -548,6 +611,32 @@ const Formulario = () => {
       setCambio(parseFloat(cambio));
     }
   };
+
+  //preparar data de la venta
+  const PrepararData = () => {
+    /**if (!porcDescuento === []) {
+      setDetalles(newDetalles);
+      console.log(porcDescuento)
+      console.log("datos Descuento 2")
+    } */
+    setCompra({
+      ...compra,
+      fecha: fechaCorta,
+      id_usuario: userdata.data.id,
+      id_sucursal: idSucursal,
+      cod_sucursal: codSucursal,
+      secuencia_enc: parseInt(enc),
+      detalle: porcDescuento.length > 0 ? newDetalles : detalles,
+      monto_total: tempTotal,
+    });
+  };
+
+  useEffect(() => {
+    if (compra.detalle.length > 0) {
+      InsertCompra(compra);
+      setListo(true);
+    }
+  }, [compra]);
 
   //Ventana modal cantidad
   const [modalCantidad, setModalCantidad] = useState(false);
@@ -576,13 +665,13 @@ const Formulario = () => {
 
   const columns = [
     {
-      name: "CÓDIGO ARTÍCULO",
-      selector: (row) => row.cod,
+      name: "NOMBRE ARTÍCULO",
+      selector: (row) => row.desc,
       sortable: true,
     },
     {
       name: "UNIDAD DE MEDIDA",
-      selector: (row) => row.unidad,
+      selector: (row) => row.und,
       sortable: true,
     },
     {
@@ -646,245 +735,113 @@ const Formulario = () => {
   ];
 
   return (
-    <div className="container">
-      {permitido ? (
-        <div>
-          <Formik
-            //valores iniciales
-            initialValues={{
-              secuencia_enc: "",
-              id_socio_negocio: "",
-              fecha: "",
-              referencia: "",
-              monto_total: "",
-              monto_impuesto_total: { Impuesto },
-              creado_por: "eaplicano",
-              fecha_creacion: "2022-11-21",
-              modificado_por: "eaplicano",
-              fecha_modificacion: "2022-11-21",
-              id_usuario: id_usuario,
-              id_centro_costo: sucursal,
-            }}
-            //Funcion para validar
-            validate={(valores) => {
-              let errores = {};
+    <div>
+      {/** {/*permitido ? (*/}
+      <div className="row">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="container-fluid">
+            <div className="col-3">
+              <h3>Nueva Orden de Compra</h3>
+            </div>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
 
-              // Validacion socio
-              if (!valores.id_socio_negocio) {
-                errores.id_socio_negocio = "Por favor seleccione una opción";
-              }
+            <div className="col-5">
+              <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav">
+                  <li className="nav-item">
+                    <p className="nav-link" aria-current="page">
+                      {DescSucursal}
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
-              // Validacion referencia
-              if (!valores.referencia) {
-                errores.referencia = "Por favor ingrese una referencia";
-              }
-
-              // Validacion monto
-              if (!valores.monto_total) {
-                errores.monto_total = "Por favor ingrese un monto";
-              } else if (!/^^[0-9]+$/.test(valores.monto_total)) {
-                errores.monto_total = "El monto solo pueden contener números";
-              }
-
-              // Validacion unidad
-              if (!valores.unidad) {
-                errores.unidad = "Por favor ingrese una unidad";
-              }
-              // Validacion cantidad
-              if (!valores.cantidad) {
-                errores.cantidad = "Por favor ingrese la cantidad";
-              } else if (!/^^[0-9]+$/.test(valores.id)) {
-                errores.cantidad = "La cantidad solo puede contener números";
-              }
-              // Validacion precio unitario
-              if (!valores.preciou) {
-                errores.preciou = "Por favor ingrese un precio";
-              }
-
-              // Validacion total
-              if (!valores.total) {
-                errores.total = "Por favor ingrese el total";
-              } else if (!/^^[0-9]+$/.test(valores.total)) {
-                errores.id = "El total solo puede contener números";
-              }
-
-              return errores;
-            }}
-            onSubmit={async (valores) => {
-              console.log("onSubmit");
-              //validar si existe un registro con el codigo ingresado
-              try {
-                const res = await axios.put(`${URLCrear}`, valores);
-                console.log(res);
-                if (res.status === 200) {
-                  mostrarAlertas("guardado");
-                  RegistroEnVitacora(
-                    permisos[0].id_objeto,
-                    "CREAR",
-                    "CREAR COMPRA"
-                  ); //Insertar bitacora
-                  navigate("/admin/mostrarmateriales");
-                } else {
-                  mostrarAlertas("error");
-                }
-              } catch (error) {
-                console.log(error);
-                mostrarAlertas("error");
-                navigate("/admin/mostrarmateriales");
-              }
-            }}
-          >
-            {({ errors }) => (
-              <Form>
-                <h3 className="mb-3">Nueva orden de compra</h3>
-                <hr />
-                <div className="row g-3">
-                  <div className="col-sm-3">
-                    <div className="mb-3">
-                      <label htmlFor="socioCompra" className="form-label">
-                        Socio de Negocio:
-                      </label>
-                      <Field
-                        as="select"
-                        className="form-select"
-                        id="socioCompra"
-                        name="id_socio_negocio"
-                      >
-                        <option value="">Seleccionar...</option>
-                        {socios.map((item, i) => (
-                          <option key={i} value={item.id_socio_negocio}>
-                            {item.descripcion}
-                          </option>
-                        ))}
-                      </Field>
-
-                      <ErrorMessage
-                        name="id"
-                        component={() => (
-                          <div className="error">{errors.id}</div>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-sm-3">
-                    <div className="mb-3">
-                      <label htmlFor="fechaCompra" className="form-label">
-                        Fecha:
-                      </label>
-                      <Field
-                        type="date"
-                        className="form-control"
-                        id="fechaCompra"
-                        name="fecha"
-                        placeholder="Descripcion del Artículo..."
-                      />
-
-                      <ErrorMessage
-                        name="fecha"
-                        component={() => (
-                          <div className="error">{errors.fecha}</div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-3">
-                    <div className="mb-3">
-                      <label htmlFor="RefCompra" className="form-label">
-                        Referencia:
-                      </label>
-                      <Field
-                        type="text"
-                        className="form-control"
-                        id="RefCompra"
-                        name="referencia"
-                        placeholder="Referencia..."
-                      />
-
-                      <ErrorMessage
-                        name="referencia"
-                        component={() => (
-                          <div className="error">{errors.referencia}</div>
-                        )}
-                      />
-                    </div>
-                  </div>
+            <div className="col-3">
+              <li className="d-flex justify-content-between align-items-start">
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">{hora}</div>
+                  <p>{fecha}</p>
                 </div>
+              </li>
+            </div>
 
-                <div className="row g-3">
-                  <div className="col-sm-3">
-                    <div className="mb-3">
-                      <label htmlFor="rtnSucursal" className="form-label">
-                        Impuesto Total:
-                      </label>
-                      <Field
-                        type="text"
-                        className="form-control"
-                        id="rtnSucursal"
-                        name="preciou"
-                        disabled
-                      />
-
-                      <ErrorMessage
-                        name="preciou"
-                        component={() => (
-                          <div className="error">{errors.precio}</div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-3">
-                    <div className="mb-3">
-                      <label htmlFor="idUsuario" className="form-label">
-                        Id Usuario:
-                      </label>
-                      <Field
-                        type="text"
-                        className="form-control"
-                        id="idUsuario"
-                        name="id_usuario"
-                        disabled
-                      />
-
-                      <ErrorMessage
-                        name="id_usuario"
-                        component={() => (
-                          <div className="error">{errors.id_usuario}</div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-3">
-                    <div className="mb-3">
-                      <label
-                        htmlFor="centroCostoSucursal"
-                        className="form-label"
+            <div className="col">
+              <ul className="navbar-nav justify-content-center">
+                <li className="nav-item dropdown">
+                  <Link
+                    className="navbar-brand dropdown-toggle"
+                    to="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Opciones
+                  </Link>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <li>
+                      <Link
+                        className="dropdown-item"
+                        to={"/admin/panelcompras"}
                       >
-                        Centro de Costo:
-                      </label>
-                      <Field
-                        type="text"
-                        className="form-control"
-                        id="centroCostoSucursal"
-                        name="descripcion_sucursal"
-                        disabled
-                      />
+                        Salir
+                      </Link>
+                    </li>
+                    <li>
+                      {/**<Link className="dropdown-item" to="#">
+                        Información
+                      </Link> */}
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <hr />
 
-                      <ErrorMessage
-                        name="descripcion_sucursal"
-                        component={() => (
-                          <div className="error">{errors.id_centro_costo}</div>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/*Mostrar categorias
+      <div>
+        <div className="row">
+          {/*Mostrar la barra de busqueda*/}
+          <div className="row">
+            <div className="col-8">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por descripción..."
+                  aria-label="Search"
+                  onChange={handleBuscador}
+                />
+              </div>
+            </div>
+          </div>
+          <br />
+          <br />
+          {/*Mostrar categorias*/}
+          <div className="col-7">
             <div className="row colorcategorias">
               <div className="col d-grid gap-2 col-3 mx-auto">
                 <button
-                  className="btn btn-secondary m-1"
+                  className="btn btn-info m-2"
                   onClick={() => {
                     getArticulos();
                   }}
@@ -896,7 +853,7 @@ const Formulario = () => {
                 categorias.map((categ, i) => (
                   <div key={i} className="col d-grid gap-2 col-3 mx-auto">
                     <button
-                      className="btn btn-secondary m-1"
+                      className="btn btn-info m-2"
                       onClick={() => {
                         getArticulosCategoria(categ.id_categoria);
                       }}
@@ -905,42 +862,38 @@ const Formulario = () => {
                     </button>
                   </div>
                 ))}
-            </div>*/}
-                <hr />
-                {/*Mostrar productos*/}
-                <div className="row divCards">
-                  <br />
-                  {articulosMostrar &&
-                    articulosMostrar.map((artic, i) => (
-                      <div className="col-sm-3 mb-2" key={i}>
-                        <div
-                          className="card colorCards"
-                          type="button"
-                          onClick={() => {
-                            abrirModalCantidad();
-                            setArticuloClick(artic);
-                            Det();
-                          }}
-                        >
-                          <div className="card-body">
-                            <h5 className="card-title">{artic.descripcion}</h5>
-                            <h6 className="card-subtitle mb-2 text-muted">
-                              {"Código: " + artic.cod_articulo}
-                            </h6>
-                            <p className="card-text">
-                              <span className="badge bg-success rounded-pill">
-                                {"Precio: " + artic.precio}
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+            </div>
+            <br />
+          </div>
+          <br />
+          <hr />
+          <br />
+          {/*Mostrar productos*/}
+          <div className="row divCards">
+            <br />
+            {articulosMostrar &&
+              articulosMostrar.map((artic, i) => (
+                <div className="col-sm-2 mb-2" key={i}>
+                  <div
+                    className="card colorCards"
+                    type="button"
+                    onClick={() => {
+                      abrirModalCantidad();
+                      setArticuloClick(artic);
+                      Det();
+                    }}
+                  >
+                    <div className="card-body">
+                      <p className="card-title">{artic.descripcion}</p>
+                      <h6 className="card-subtitle mb-2 text-muted">
+                        {"Código: " + artic.cod_articulo}
+                      </h6>
+                    </div>
+                  </div>
                 </div>
-                <hr />
-              </Form>
-            )}
-          </Formik>
+              ))}
+          </div>
+          <hr />
           <div className="row">
             <div className="col-8">
               <div className="row divDetalles">
@@ -957,11 +910,10 @@ const Formulario = () => {
                 )}
               </div>
             </div>
-
             <div className="col-4">
               <Formik
-                //valores iniciales
                 initialValues={{
+                  id_descuento: "",
                   id_modo_pedido: "",
                 }}
                 //Funcion para validar
@@ -976,9 +928,6 @@ const Formulario = () => {
                   return errores;
                 }}
                 onSubmit={async (valores) => {
-                  console.log("Hola");
-                  console.log(detalles);
-
                   // Validacion de modo pedido
                   if (!listaCompras.length > 0) {
                     MostrarAlertas("agregar");
@@ -987,64 +936,67 @@ const Formulario = () => {
                     abrirModalVenta();
                     setDetallesPago([]);
                     Detalles_Pago();
-                    setTipoPedido(valores.id_modo_pedido);
-                    setTotalEnLetras(numeroALetras(parseFloat(total)));
+                    setTotalEnLetras(numeroALetras(parseFloat(tempTotal)));
                     setDetallesDesc([]);
                     setNewDetalles([]);
                     Detalles_Desc();
                   }
                 }}
               >
-                <Form>
-                  <div className="container">
-                    <div className="row">
-                      <ul className="list-group">
-                        <li className="list-group-item d-flex justify-content-between align-items-center">
-                          Sub Total
-                          <span className="">{"L. " + subTotal}</span>
-                        </li>
-                        <li className="list-group-item d-flex justify-content-between align-items-center">
-                          Descuento
-                          <span className="">{"L. " + montoDesc}</span>
-                        </li>
-                        <li className="list-group-item d-flex justify-content-between align-items-center">
-                          Impuesto
-                          <span className="">{"L. " + Impuesto}</span>
-                        </li>
-                        <li className="list-group-item d-flex justify-content-between align-items-center">
-                          <h4>Total</h4>
-                          <span className="">
-                            <h4>{"L. " + parseFloat(total)}</h4>
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                    <hr />
-                    <div className="row">
-                      <div className="d-grid gap-2 col-12 mx-auto">
-                        <button className="btn btn-primary" type="submit">
-                          Realizar Compra
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          type="button"
-                          onClick={abrirModalCancelar}
-                        >
-                          Cancelar
-                        </button>
+                {({ errors, values }) => (
+                  <Form>
+                    <div className="container">
+                      <div className="row">
+                        <ul className="list-group">
+                          <li className="list-group-item d-flex justify-content-between align-items-center">
+                            Sub Total
+                            <span className="">
+                              {"L. " + (subTotal || 0).toFixed(2)}
+                            </span>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between align-items-center">
+                            Impuesto
+                            <span className="">
+                              {"L. " + (tempIsv || 0).toFixed(2)}
+                            </span>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between align-items-center">
+                            <h4>Total</h4>
+                            <span className="">
+                              <h4>
+                                {"L. " + parseFloat(tempTotal).toFixed(2)}
+                              </h4>
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                      <hr />
+                      <div className="row">
+                        <div className="d-grid gap-2 col-12 mx-auto">
+                          <Button className="btn btn-success" type="submit">
+                            Procesar Venta
+                          </Button>
+                          <Button
+                            className="btn btn-danger"
+                            type="button"
+                            onClick={abrirModalCancelar}
+                          >
+                            Cancelar
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Form>
+                  </Form>
+                )}
               </Formik>
             </div>
           </div>
         </div>
-      ) : (
-        <p className="text-center text-danger">
+        {/*) : (<p className="text-center text-danger">
           Lo siento, no tienes permisos para realizar esta acción.
         </p>
-      )}
+        )} */}
+      </div>
       {/* Ventana Modal de cancelar la venta*/}
       <Modal isOpen={modalCancelar} toggle={abrirModalCancelar} centered>
         <ModalHeader toggle={abrirModalCancelar}>
@@ -1068,7 +1020,6 @@ const Formulario = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
       {/* Ventana Modal de Procesar ventas*/}
       <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
         <Formik
@@ -1195,7 +1146,6 @@ const Formulario = () => {
           )}
         </Formik>
       </Modal>
-
       {/* Ventana Modal de cantidad de articulos a agregar*/}
       <Modal isOpen={modalCantidad} toggle={abrirModalCantidad} centered>
         <ModalHeader toggle={abrirModalCantidad}>
@@ -1253,7 +1203,6 @@ const Formulario = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
       {/* Ventana Modal de editar cantidad*/}
       <Modal
         isOpen={modalCantidadEdit}

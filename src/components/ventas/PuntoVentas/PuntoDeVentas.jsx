@@ -28,7 +28,7 @@ const UrlDescuentos = "http://190.53.243.69:3001/descuento/getall/";
 const UrlPedidos = "http://190.53.243.69:3001/modo_pedido/getall";
 
 const PuntoDeVentas = () => {
-  const { idPos } = useParams();  
+  const { idPos } = useParams();
   const componenteRef = useRef();
   const dataSec = JSON.parse(localStorage.getItem("bodsuc"));
   const idSucursal = dataSec[0].id_sucursal;
@@ -38,8 +38,6 @@ const PuntoDeVentas = () => {
   const descTerminal = DataTerminal[0].descripcion;
 
   const userdata = JSON.parse(localStorage.getItem("data"));
-
- 
 
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -92,8 +90,8 @@ const PuntoDeVentas = () => {
 
   const [detallesDesc, setDetallesDesc] = useState([]);
 
- const [listo, setListo] = useState(false);
- const [preparar, setPreparar] = useState(false);
+  const [listo, setListo] = useState(false);
+  const [preparar, setPreparar] = useState(false);
 
   const valuesInicial = {
     secuencia_enc: undefined,
@@ -293,21 +291,18 @@ const PuntoDeVentas = () => {
 
   /**********temp*********/
   useEffect(() => {
-    setTempIsv(((subTotal||0)-(montoDesc||0))*(0.15));
+    setTempIsv(((subTotal || 0) - (montoDesc || 0)) * 0.15);
   }, [subTotal, montoDesc]);
 
   useEffect(() => {
-    setTempTotal((subTotal-montoDesc)+(tempIsv));
+    setTempTotal(subTotal - montoDesc + tempIsv);
   }, [tempIsv, montoDesc]);
 
   /**********temp*********/
 
-
-useEffect(() => {
-  setGrabada15(subTotal-montoDesc);
-}, [subTotal, montoDesc]);
-
-
+  useEffect(() => {
+    setGrabada15(subTotal - montoDesc);
+  }, [subTotal, montoDesc]);
 
   useEffect(() => {
     setTotal(subTotal + Impuesto - montoDesc);
@@ -328,7 +323,7 @@ useEffect(() => {
 
     for (let index = 0; index < limite; index++) {
       const buscarEn = quitarTildes(articulos[index].descripcion.toLowerCase());
-      const buscarEn2 = (articulos[index].cod_articulo.toLowerCase());
+      const buscarEn2 = articulos[index].cod_articulo.toLowerCase();
       const patt = new RegExp(buscar);
       const res = patt.test(buscarEn, buscarEn2);
 
@@ -580,7 +575,7 @@ useEffect(() => {
   //calcular el cambio a entregar
   const Calcular_Cambio = (monto) => {
     let cambio = monto - tempTotal;
-    cambio = cambio.toFixed(2)
+    cambio = cambio.toFixed(2);
 
     if (cambio < 0) {
       setCambio(0);
@@ -605,7 +600,9 @@ useEffect(() => {
       secuencia_det: item.secuencia_det,
       id_articulo: item.id_articulo,
       id_descuento: porcDescuento[0].id_descuento,
-      monto:parseFloat(porcDescuento[0].porcentaje) *(parseFloat(item.precio) * parseFloat(item.cantidad)),
+      monto:
+        parseFloat(porcDescuento[0].porcentaje) *
+        (parseFloat(item.precio) * parseFloat(item.cantidad)),
     }));
     setDetallesDesc(...detallesDesc, dato);
 
@@ -617,34 +614,35 @@ useEffect(() => {
       precio: items.precio,
       cantidad: items.cantidad,
       id_impuesto: items.id_impuesto,
-      total_impuesto:(parseFloat(items.precio) * parseFloat(items.cantidad)-parseFloat(items.precio) *parseFloat(items.cantidad) *parseFloat(porcDescuento[0].porcentaje)) *
+      total_impuesto:
+        (parseFloat(items.precio) * parseFloat(items.cantidad) -
+          parseFloat(items.precio) *
+            parseFloat(items.cantidad) *
+            parseFloat(porcDescuento[0].porcentaje)) *
         (parseFloat(items.total_impuesto) /
           (parseFloat(items.precio) * parseFloat(items.cantidad))),
       total:
-      parseFloat(items.precio) * parseFloat(items.cantidad) -
-      parseFloat(items.precio) *
-        parseFloat(items.cantidad) *
-        parseFloat(porcDescuento[0].porcentaje) +
-      (parseFloat(items.precio) * parseFloat(items.cantidad) -
+        parseFloat(items.precio) * parseFloat(items.cantidad) -
         parseFloat(items.precio) *
           parseFloat(items.cantidad) *
-          parseFloat(porcDescuento[0].porcentaje)) *
-        (parseFloat(items.total_impuesto) /
-          (parseFloat(items.precio) * parseFloat(items.cantidad))),
+          parseFloat(porcDescuento[0].porcentaje) +
+        (parseFloat(items.precio) * parseFloat(items.cantidad) -
+          parseFloat(items.precio) *
+            parseFloat(items.cantidad) *
+            parseFloat(porcDescuento[0].porcentaje)) *
+          (parseFloat(items.total_impuesto) /
+            (parseFloat(items.precio) * parseFloat(items.cantidad))),
     }));
     setNewDetalles(...newDetalles, newData);
-
-    
   };
 
   useEffect(() => {
     setImpDesc(0);
     newDetalles.map((val) =>
-    setImpDesc((prevValores) => prevValores + val.total_impuesto)
+      setImpDesc((prevValores) => prevValores + val.total_impuesto)
     );
-    console.log(ImpDesc)
+    console.log(ImpDesc);
   }, [newDetalles]);
-
 
   const Calc_Desc = () => {
     setMontoDesc(subTotal * porcDescuento[0].porcentaje);
@@ -671,24 +669,24 @@ useEffect(() => {
       nombre_cliente: cliente.descripcion,
       rtn: cliente.rtn,
       id_usuario: userdata.data.id,
-      id_sucursal:idSucursal,
-      cod_sucursal:codSucursal,
-      id_pos:idPos,
+      id_sucursal: idSucursal,
+      cod_sucursal: codSucursal,
+      id_pos: idPos,
       secuencia_enc: parseInt(enc),
-      detalle: (porcDescuento.length > 0? newDetalles : detalles),
+      detalle: porcDescuento.length > 0 ? newDetalles : detalles,
       detalle_pago: detallesPago,
       detalle_promo: detallesPromo,
       detalle_desc: detallesDesc,
-      venta_grabada_15:grabada15,
+      venta_grabada_15: grabada15,
       impuesto_15: tempIsv,
-      venta_total:tempTotal
+      venta_total: tempTotal,
     });
   };
 
   useEffect(() => {
     if (venta.detalle.length > 0) {
       InsertVenta(venta);
-      setListo(true)
+      setListo(true);
     }
   }, [venta]);
 
@@ -843,10 +841,7 @@ useEffect(() => {
                     aria-labelledby="navbarDropdown"
                   >
                     <li>
-                      <Link
-                        className="dropdown-item"
-                        to={"/admin/login-pos"}
-                      >
+                      <Link className="dropdown-item" to={"/admin/login-pos"}>
                         Salir
                       </Link>
                     </li>
@@ -871,7 +866,7 @@ useEffect(() => {
             <div className="row">
               <div className="input-group flex-nowrap">
                 <span className="input-group-text" id="addon-wrapping">
-                <i className="bi bi-search"></i>
+                  <i className="bi bi-search"></i>
                 </span>
                 <input
                   className="form-control me-2"
@@ -1056,20 +1051,26 @@ useEffect(() => {
                       <ul className="list-group">
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Sub Total
-                          <span className="">{"L. " + ((subTotal||0).toFixed(2))}</span>
+                          <span className="">
+                            {"L. " + (subTotal || 0).toFixed(2)}
+                          </span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Descuento
-                          <span className="">{"L. " + ((montoDesc||0).toFixed(2))}</span>
+                          <span className="">
+                            {"L. " + (montoDesc || 0).toFixed(2)}
+                          </span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           Impuesto
-                          <span className="">{"L. " + (tempIsv || 0).toFixed(2)}</span>
+                          <span className="">
+                            {"L. " + (tempIsv || 0).toFixed(2)}
+                          </span>
                         </li>
                         <li className="list-group-item d-flex justify-content-between align-items-center">
                           <h4>Total</h4>
                           <span className="">
-                            <h4>{"L. " + (parseFloat(tempTotal).toFixed(2))}</h4>
+                            <h4>{"L. " + parseFloat(tempTotal).toFixed(2)}</h4>
                           </span>
                         </li>
                       </ul>
@@ -1125,7 +1126,6 @@ useEffect(() => {
               setTimeout(function () {
                 //PrepararData()
               }, 3000);
-          
             }}
           >
             {({ errors, values }) => (
@@ -1190,17 +1190,16 @@ useEffect(() => {
             onClick={() => {
               //InsertVenta(venta);
 
-              if(cliente.descripcion === undefined){
-                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+              if (cliente.descripcion === undefined) {
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL" });
                 //setListo(true)
               }
 
-              setPreparar(true)
-              if(listo === true){
+              setPreparar(true);
+              if (listo === true) {
                 handlePrint();
                 abrirModalCliente();
               }
-             
             }}
           >
             Aceptar
@@ -1226,7 +1225,7 @@ useEffect(() => {
             // Validacion id
             if (!valores.nombre) {
               errores.nombre = "Nombre requerido";
-            }else if (!/^[A-Z, ]+$/.test(valores.nombre)) {
+            } else if (!/^[A-Z, ]+$/.test(valores.nombre)) {
               errores.nombre = "Ingrese un nombre válido";
             }
 
@@ -1236,7 +1235,7 @@ useEffect(() => {
             setCliente({ ...cliente, descripcion: valores.nombre });
             //dataCliente(valores);
             abrirModalCliente2();
-            abrirModalCliente();            
+            abrirModalCliente();
           }}
         >
           {({ errors, values }) => (
@@ -1511,16 +1510,16 @@ useEffect(() => {
           <Button
             color="secondary"
             onClick={() => {
-              if(cliente.descripcion === undefined){
-                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL"});
+              if (cliente.descripcion === undefined) {
+                setCliente({ ...cliente, descripcion: "CONSUMIDOR FINAL" });
                 //setListo(true)
               }
-              setPreparar(true)
-              if(listo === true){
+              setPreparar(true);
+              if (listo === true) {
                 //handlePrint();
                 resetValores();
                 //abrirModalCliente();
-                abrirModalFactura()
+                abrirModalFactura();
               }
               //abrirModalFactura();
             }}

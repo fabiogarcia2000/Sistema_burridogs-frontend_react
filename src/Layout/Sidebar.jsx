@@ -188,7 +188,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/crearcompra">
+              <Link to="/admin/panelcompras">
                 <i className="bi bi-circle"></i>
                 <span>Compras</span>
               </Link>
