@@ -127,8 +127,8 @@ useEffect(() => {
   } else {
     results = encabezado.filter(
       (dato) =>
-        dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
+        dato.nombre_cliente? dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()): null ||
+        dato.rtn.toString().includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -336,11 +336,35 @@ useEffect(() => {
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar por cliente o factura..."
+              placeholder="Buscar..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
             />
+            <Button
+                type="button"
+                className="btn btn-success"
+                title="Exportar a Excel"
+                onClick={()=>{
+                  //Export_Excel(results);
+                  //RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
+
+                }}
+              >
+                <i className="bi bi-file-earmark-excel-fill"></i>
+              </Button>
+              <Button
+                type="button"
+                className="btn btn-danger"
+                title="Exportar a PDF"
+                onClick={()=>{
+                  //Export_PDF(results, sucursal);
+                  //RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
+
+                }}
+              >
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
           </div>
         </div>
       </div>
