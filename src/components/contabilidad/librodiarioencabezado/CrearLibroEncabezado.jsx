@@ -180,12 +180,12 @@ const CrearLibroEncabezado = () => {
   // ! Se creo una funcion onClick para agregar detalle.
   const onAddDetail = (e) => {
     setListDetail([...listDetail, {
-      id_subcuenta: e.target.form[4].value,
-      monto_debe: e.target.form[5].value,
-      monto_haber: e.target.form[6].value,
-      sinopsis: e.target.form[7].value,
-      id_sucursal: e.target.form[8].value,
-      id_centro_costo: e.target.form[9].value,
+        id_subcuenta: parseInt(e.target.form[4].value),
+        monto_debe: parseFloat(e.target.form[5].value),
+        monto_haber: parseFloat(e.target.form[6].value),
+        sinopsis: e.target.form[7].value,
+        id_sucursal: parseInt(e.target.form[8].value),
+        id_centro_costo: parseInt(e.target.form[9].value),
     }]);
   }
 
