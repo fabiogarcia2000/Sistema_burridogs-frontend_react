@@ -245,7 +245,7 @@ function Sidebar() {
             <li>
               <Link to="/admin/mostrarlibroencabezado">
                 <i className="bi bi-circle"></i>
-                <span>Libro Diario Encabezado</span>
+                <span>Libro Diario </span>
               </Link>
             </li>
 

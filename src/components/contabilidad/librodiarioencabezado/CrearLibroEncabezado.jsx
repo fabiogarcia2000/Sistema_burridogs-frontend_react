@@ -186,7 +186,6 @@ const CrearLibroEncabezado = () => {
       sinopsis: e.target.form[7].value,
       id_sucursal: e.target.form[8].value,
       id_centro_costo: e.target.form[9].value,
-
     }]);
   }
 
@@ -253,12 +252,12 @@ const CrearLibroEncabezado = () => {
         initialValues={{
           id_libro_diario_enca: "",
           fecha: date,
-          descripcion: "PRUEBA",
+          descripcion: "",
           id_estado: "2",
           id_sucursal: "",
           id_centro_costo: "",
         
-          id_usuario: userdata.data.nameUser.replace('"', "").replace('"', ""),
+          id_usuario: userdata.data.id,
           detalle: []
 
 
@@ -339,18 +338,18 @@ const CrearLibroEncabezado = () => {
             // !Antes de mandar la data, guardanos la lista de detalles en los valores.detalle
             valores.detalle = listDetail;
             console.log(valores);
-
+            console.log("Linea 341")
             {/*const res = await axios.get(`${URLMostrarUno}${valores.id_libro_diario_deta}`);
                 console.log(res)
               if (res.data === ""){*/}
             //procedimineto para guardar el nuevo registro en el caso de que no exista
-            //const res = await axios.post(`${URLCrear}${valores.id_libro_diario_enca}`, valores);
-            // if (res.status === 200) {
-            // mostrarAlertas("guardado");
-            // navigate("/admin/mostrarlibroencabezado");
-            // } else {
-            //  mostrarAlertas("error");
-            //  }
+            const res = await axios.post(`${URLCrear}${valores.id_libro_diario_enca}`, valores);
+             if (res.status === 200) {
+             mostrarAlertas("guardado");
+             navigate("/admin/mostrarlibroencabezado");
+            } else {
+             mostrarAlertas("error");
+              }
 
             // }//else{ 
             //mostrarAlertas("duplicado");
@@ -480,10 +479,6 @@ const CrearLibroEncabezado = () => {
 
             </div>
 
-
-
-
-
             <hr />
 
             {/**********************PRUEBA DE LA API ****************************/}
@@ -499,6 +494,7 @@ const CrearLibroEncabezado = () => {
                     as="select"
                     className="form-select"
                     id="idsubcuenta"
+                    type="text"
                     name="id_subcuenta"
                   >
                     <option value="">Seleccionar...</option>
@@ -593,6 +589,7 @@ const CrearLibroEncabezado = () => {
                     className="form-select"
                     id="pos"
                     name="id_sucursal"
+                    type="number"
                   >
                     <option value="">Seleccionar...</option>
                     {sucursal.map((item, i) => (
@@ -620,6 +617,7 @@ const CrearLibroEncabezado = () => {
                     className="form-select"
                     id="centrocosto"
                     name="id_centro_costo"
+                    type ="number"
                   >
                     <option value="">Seleccionar...</option>
                     {centro.map((item, i) => (
@@ -660,12 +658,26 @@ const CrearLibroEncabezado = () => {
             </button>
 
             <hr />
-
+              <div className="row">
+              <div className="col-4">
+              <button className="btn btn-success mb-3 me-2" type="submit">
+        Guardar
+      </button>
+      <Link
+        to="/admin/mostrarlibroencabezado"
+        type="button"
+        className="btn btn-danger mb-3 me-2"
+      >
+        Cancelar
+      </Link>
+      {/**/}
+      </div>
+              </div>
           </Form>
         )}
       </Formik>
 
-      <h1>List Detail</h1>
+      <h3>Partidas</h3>
       {/*Mostramos la tabla con los datos*/}
       <div className="row">
         {listDetail.length > 0 ? (
@@ -707,17 +719,7 @@ const CrearLibroEncabezado = () => {
         </div>
       </div>
       <br />
-      <button className="btn btn-success mb-3 me-2" type="submit">
-        Guardar
-      </button>
-      <Link
-        to="/admin/mostrarlibroencabezado"
-        type="button"
-        className="btn btn-danger mb-3 me-2"
-      >
-        Cancelar
-      </Link>
-      {/**/}
+     
 
           
     </div >
