@@ -237,12 +237,6 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to="/admin/mostrarperiodo">
-                <i className="bi bi-circle"></i>
-                <span>Periodo Contable</span>
-              </Link>
-            </li>
-            <li>
               <Link to="/admin/mostrarestado">
                 <i className="bi bi-circle"></i>
                 <span>Estado Libro Diario</span>
@@ -251,7 +245,20 @@ function Sidebar() {
             <li>
               <Link to="/admin/mostrarlibroencabezado">
                 <i className="bi bi-circle"></i>
-                <span>Libro Diario Encabezado</span>
+                <span>Libro Diario </span>
+              </Link>
+            </li>
+
+            {/*<li>
+              <Link to="/admin/mostrarlibrodetalle">
+                <i className="bi bi-circle"></i>
+                <span>Libro Diario Detalle</span>
+              </Link>
+            </li>*/}
+            <li>
+              <Link to="/admin/mostrarperiodo">
+                <i className="bi bi-circle"></i>
+                <span>Periodo Contable</span>
               </Link>
             </li>
             <li>
@@ -261,12 +268,7 @@ function Sidebar() {
               </Link>
             </li>
 
-            {/*<li>
-              <Link to="/admin/mostrarlibrodetalle">
-                <i className="bi bi-circle"></i>
-                <span>Libro Diario Detalle</span>
-              </Link>
-              </li>*/}
+
           </ul>
         </li>
 

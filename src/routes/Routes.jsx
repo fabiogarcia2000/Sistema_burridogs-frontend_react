@@ -364,7 +364,7 @@ function Rutas() {
           <Route path="crearestado" element={<CrearEstado />} />
           {/*DETALLE LIBRO DIARIO*/}
           <Route
-            path="mostrarlibrodetalle/:id"
+            path="mostrarlibrodetalle"
             element={<MostrarLibroDetalle />}
           />
           <Route path="editarlibrodetalle" element={<EditarLibroDetalle />} />

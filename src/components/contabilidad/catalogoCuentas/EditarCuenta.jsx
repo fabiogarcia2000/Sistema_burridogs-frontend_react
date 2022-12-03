@@ -308,7 +308,6 @@ const EditarCuenta = () => {
                     className="form-select"
                     id="idCategoria"
                     name="id_categoria"
-                    placeholder="Nombre de la categoría..."
                     >
                     <option value="">Seleccionar...</option>
                     {categoria.map((item, i) => (
@@ -329,15 +328,15 @@ const EditarCuenta = () => {
 
               <div className="col-sm-6">
                 <div className="mb-3">
-                  <label htmlFor="id_destino_cuenta" className="form-label">
+                  <label htmlFor="idDestinoCuenta" className="form-label">
                     Destino de cuenta:
                   </label>
                   <Field
-                    type="text"
                     as="select"
                     className="form-select"
+                    id="idDestinoCuenta"
                     name="id_destino_cuenta"
-                    placeholder="ID del destino de la cuenta..."
+               
                     >
                     <option value="">Seleccionar...</option>
                     {destino.map((item, i) => (

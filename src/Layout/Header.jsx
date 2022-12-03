@@ -7,6 +7,8 @@ import imgPerfil from "../assets/img/profile-img.png";
 import { getOneParam } from "../utils/utils";
 
 function Header() {
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo =DatosEmpresa.logo1;
   //(LineLink 9-24) Asignar valores de manerLink global, al dar click al boton de menu, estos valores seran usados en el Sidebar.jsx, Footer.jsx
   const [isMenuClicked, setIsMenuClicked] = useState(true);
   const userdata = JSON.parse(localStorage.getItem('data'))
@@ -43,7 +45,8 @@ function Header() {
           <i className="bi bi-list toggle-sidebar-btn"></i>
         </div>
         <Link to="/admin/home" className="logoGeneral d-flex align-items-center">
-          <img src={logoEmpresa} alt="Logo Empresa" className="imglogo"/>
+          {/**<img src={logoEmpresa} alt="Logo Empresa" className="imglogo"/> */}
+          <img src={`data:image/png;base64,${logo}`} className="imglogo" alt="Logo Empresa"/>
         </Link>
       </div>
 

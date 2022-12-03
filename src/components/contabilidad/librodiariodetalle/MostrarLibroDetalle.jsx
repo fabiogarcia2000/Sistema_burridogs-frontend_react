@@ -7,7 +7,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2"; 
 
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getDetPorI/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_librodetalle/getall";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 const MostrarLibroDetalle= () => {
@@ -23,7 +23,7 @@ const MostrarLibroDetalle= () => {
   //procedimineto para obtener todos los registros
   const getRegistros = async () => {
     try {
-      const res = await axios.get(UrlMostrar+id);
+      const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
     } catch (error) {
       console.log(error);
