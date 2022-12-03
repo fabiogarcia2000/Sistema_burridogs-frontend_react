@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import axios from "axios";
+import { useGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCentroCosto, cambiarAMayusculasSinopsis, cambiarAMayusculasSucursal } from "../../../utils/cambiarAMayusculas";
 import { useParams } from "react-router-dom";
@@ -11,7 +12,7 @@ import { useEffect } from "react";
 import DataTable from "react-data-table-component";
 
 
-const URLCrear = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
+const URLEditar = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
 const UrlEstado = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlSubcuenta = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlCentroCost = "http://190.53.243.69:3001/centro_costo/getall";
@@ -22,8 +23,8 @@ const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
 
-const CrearLibroEncabezado = () => {
-
+const EditarLibroEncabezado = () => {
+    const [edit] = useGlobalState('registroEdit')
   const navigate = useNavigate();
   
   const [partidaDelete, setPartidaDelete] = useState(0);
@@ -143,7 +144,7 @@ const CrearLibroEncabezado = () => {
 
   //Eliminar un articulo de la lista
   const eliminarPartida = () => {
-    const newLista = listDetail.filter((e) => e.id_libro_diario_deta !== partidaDelete);
+    const newLista = listDetail.filter((cd) => cd.id_libro_diario_enca !== partidaDelete);
     setListDetail(newLista);
     eliminarDataPartida();
   };
@@ -151,7 +152,7 @@ const CrearLibroEncabezado = () => {
   //Eliminar un articulo de la lista --ACTUALIZAR DATA VENTA
   const eliminarDataPartida = () => {
     const newLista = listDetail.filter(
-      (item) => item.id_libro_diario_deta !== partidaDelete
+      (item) => item.id_libro_diario_enca !== partidaDelete
     );
     setListDetail(newLista);
   };
@@ -255,7 +256,7 @@ const CrearLibroEncabezado = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setPartidaDelete(row.id_libro_diario_deta);
+              setPartidaDelete(row.id_libro_diario_enca);
               abrirModalEliminarPartida();
             }}
           >
@@ -276,13 +277,11 @@ const CrearLibroEncabezado = () => {
         //valores iniciales
         initialValues={{
           id_libro_diario_enca: "",
-          id_libro_diario_deta:"",
           fecha: date,
           descripcion: "",
           id_estado: "2",
           id_sucursal: "",
           id_centro_costo: "",
-        
           id_usuario: userdata.data.id,
           detalle: []
 
@@ -364,12 +363,12 @@ const CrearLibroEncabezado = () => {
             // !Antes de mandar la data, guardanos la lista de detalles en los valores.detalle
             valores.detalle = listDetail;
             console.log(valores);
-            console.log("Linea 341")
+            //console.log("Linea 341")
             {/*const res = await axios.get(`${URLMostrarUno}${valores.id_libro_diario_deta}`);
                 console.log(res)
               if (res.data === ""){*/}
             //procedimineto para guardar el nuevo registro en el caso de que no exista
-            const res = await axios.post(`${URLCrear}${valores.id_libro_diario_enca}`, valores);
+            const res = await axios.post(`${URLEditar}${valores.id_libro_diario_enca}`, valores);
              if (res.status === 200) {
              mostrarAlertas("guardado");
              navigate("/admin/mostrarlibroencabezado");
@@ -389,7 +388,7 @@ const CrearLibroEncabezado = () => {
       >
         {({ errors, values }) => (
           <Form>
-            <h3 className="mb-3">Nuevo registro diario</h3>
+            <h3 className="mb-3">Editar registro diario</h3>
             <div className="row g-3">
 
               <div className="col-sm-4">
@@ -402,7 +401,7 @@ const CrearLibroEncabezado = () => {
                     className="form-control"
                     id="usuario"
                     name="id_libro_diario_enca:"
-
+                    disabled
                   />
                   <ErrorMessage
                     name="id_libro_diario_enca"
@@ -778,6 +777,6 @@ const CrearLibroEncabezado = () => {
   );
 };
 
-export default CrearLibroEncabezado;
+export default EditarLibroEncabezado;
 
 

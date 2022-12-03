@@ -180,7 +180,7 @@ import EditarLibroDetalle from "../components/contabilidad/librodiariodetalle/Ed
 //ENCABEZADO LIBRO encabezado
 import MostrarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/MostrarLibroEncabezado";
 import CrearLibroEncabezado from "../components/contabilidad/librodiarioencabezado/CrearLibroEncabezado";
-import EditarLibroEncabezado from "../components/contabilidad/";
+import EditarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/EditarLibroEncabezado";
 
 //PERIODO CONTABLE
 import MostrarPeriodoContable from "../components/contabilidad/periodocontable/MostrarPeriodoContable";
@@ -375,10 +375,10 @@ function Rutas() {
             element={<MostrarLibroEncabezado />}
           />
           <Route path="/admin/home" element={<EditarLibroEncabezado />} />
-          <Route
-            path="/admin/CrearLibroEncabezado"
-            element={<CrearLibroEncabezado />}
-          />
+          <Route path="/admin/CrearLibroEncabezado" element={<CrearLibroEncabezado />} />
+          <Route path="/admin/EditarLibroEncabezado" element={<EditarLibroEncabezado />} />
+
+
           {/*PERIODO CONTABLE*/}
           <Route path="mostrarperiodo" element={<MostrarPeriodoContable />} />
           <Route path="editarperiodo" element={<EditarPeriodoContable />} />

@@ -10,9 +10,11 @@ import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/1";
+const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 const fechaHoy = "2022-02-01"
+
+const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 
 const objeto = "FORM_LIBRO_ENCABEZADO"
 
@@ -45,6 +47,21 @@ const MostrarLibroDetalle = () => {
   const ValidarFecha = () => {
 
   }
+  const [sucursal, setperiodo] = useState([]);
+  useEffect(() => {
+    getperiodo();
+  }, []);
+
+  //petición a api
+  const getperiodo = async () => {
+    try {
+      const res = await axios.get(UrlPeriodo);
+      setperiodo(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
 
 
 //************************************************/
@@ -202,7 +219,7 @@ const TienePermisos = () =>{
     results = registros
   } else {
     results = registros.filter((dato) =>
-      dato.id_libro_diario_enca.toString().includes(busqueda.toLocaleLowerCase())
+      dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
     )
   };
 
@@ -223,11 +240,11 @@ const TienePermisos = () =>{
       selector: (row) => row.id_libro_diario_enca,
       sortable: true,
     },
-    /*{
+    {
       name: "PERIODO CONTABLE",
       selector: (row) => row.id_periodo_contable,
       sortable: true,
-    },*/
+    },
     {
       name: "FECHA",
       selector: (row) => row.fecha_inicial,
@@ -264,7 +281,7 @@ const TienePermisos = () =>{
       name: "ACCIONES",
       cell: (row) => (
         <>
-          <Link
+         {/*<Link
             type="button"
             className="btn btn-light"
             title="Ver Más..."
@@ -275,7 +292,7 @@ const TienePermisos = () =>{
             }}
           >
             <i className="bi bi-eye-fill"></i>
-          </Link>
+          </Link>*/} 
           &nbsp;
           <button
             type="button"
@@ -284,13 +301,14 @@ const TienePermisos = () =>{
             onClick={() => {
               if(row.fecha_final < fechaHoy){
                 mostrarAlertas("periodocerrado");
+                setGlobalState("registroEdit", row);
               }else{
-                navigate(`/admin/mostrarlibrodetalle/${row.id_libro_diario_enca}`)
+                navigate("/admin/EditarLibroEncabezado")
               }
               
               if(permisos[0].permiso_actualizacion){
                 setGlobalState("registroEdit", row);
-                navigate("/admin/editarlibrodetalle")
+                navigate("/admin/EditarLibroEncabezado")
               }else{
                 mostrarAlertas("/admin/CrearLibroEncabezado");
               } 
@@ -409,13 +427,38 @@ const TienePermisos = () =>{
             <input
               className="form-control me-2"
               type="text"
-              placeholder="Buscar id de encabezado libro diario..."
+              placeholder="Buscar por descripcion..."
               aria-label="Search"
               value={busqueda}
               onChange={valorBuscar}
             />
           </div>
         </div>
+        <br />
+        <div className="row">
+              <div className="col-5">
+                <div className="mb-3">
+
+                  <label htmlFor="id_periodo_contable" className="form-label">
+                    Periodo contable
+                  </label>
+                  <select
+                    className="form-select"
+                    id="id_periodo_contable"
+                    name="id_periodo_contable"
+                    onClick={handlerCargarPerido}
+                  >
+                    <option value="">Seleccionar...</option>
+                    {sucursal.map((item, i) => (
+                      <option key={i} value={item.id_periodo_contable}>Periodo:{item.id_periodo_contable}       Fecha inicio:{item.fecha_inicial}      Fecha final{item.fecha_final}</option>
+                    ))}
+                  </select >
+                </div>
+              </div>
+            </div>
+
+
+
       </div>
       <br />
 
