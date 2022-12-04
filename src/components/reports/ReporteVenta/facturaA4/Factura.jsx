@@ -1,19 +1,19 @@
 import React from 'react'
 import { useGlobalState } from "../../../globalStates/globalStates";
 import { Link } from "react-router-dom";
-import logoEmpresa from './logo1.png';
 import "./styles.css";
 import { useState, useEffect } from 'react';
 
 export default function Factura() {
+    const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+    const logo1 =DatosEmpresa.logo1;
+
     const [totalDesc, setTotalDesc] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
 
     const [venta] = useGlobalState('dataVenta')
     const detalles = venta.detalle;
 
-    const [DatosEmpresa] = useGlobalState('datosEmpresa');
-    console.log(DatosEmpresa)
 
     useEffect(() => {
         setTotalDesc(0)
@@ -37,7 +37,7 @@ export default function Factura() {
             <div className='col-7'>
                 <div className='row'>
                     <Link to="#" className="d-flex align-items-center">
-                         <img src={logoEmpresa} alt="Logo Empresa" className="imgfactura"/>
+                         <img src={`data:image/png;base64,${logo1}`} alt="Logo Empresa" className="imgfactura"/>
                     </Link>
                 </div>
                 <div className='row'>

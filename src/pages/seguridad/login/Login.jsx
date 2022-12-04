@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 // import { Form, Link, useNavigate } from "react-router-dom";
 import { Alert, Button, FormGroup, Input, Label } from "reactstrap";
 import md5 from "md5";
@@ -7,7 +8,6 @@ import md5 from "md5";
 import { Form, Field } from "react-final-form";
 
 import "./login.css";
-import burridogs from "./loginbg.jpg";
 import {
   isChar,
   isNumber,
@@ -20,6 +20,8 @@ import {
 const getOneParam = (objectJson, nameParam) => {
   return objectJson.filter((item) => item.parametro === nameParam)[0] || {};
 };
+
+const UrlDatosEmpresa = "http://190.53.243.69:3001/empresa/getone/"
 
 // const urlAPi = "http://localhost:3001";
 const URL_API_ENV = process.env.REACT_APP_URL_API;
@@ -67,6 +69,27 @@ export default function Login(props) {
     getAllSettingsParams();
     //  nameCompany=params
   }, []);
+
+  //DATOS EMPRESA GET
+  const getDatos = async () => {
+    try {
+      const res = await axios.get(UrlDatosEmpresa);
+      if(res.status === 200){
+        localStorage.setItem("dataEmpresa", JSON.stringify(res.data));
+        console.log(res.data)
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getDatos();
+  }, []);
+
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo2 =DatosEmpresa.logo2;
 
   var dataPar = JSON.parse(localStorage.getItem("params")) || [];
   var nombreParam = getOneParam(dataPar, "SYS_NOMBRE");
@@ -250,7 +273,7 @@ export default function Login(props) {
 
   return (
     <div className="background">
-      <img src={burridogs} alt="burridogs" />
+      <img src={`data:image/png;base64,${logo2}`} alt="Imagen" />
       <div className="formulario">
         <Alert isOpen={isValid} color={color}>
           {message}

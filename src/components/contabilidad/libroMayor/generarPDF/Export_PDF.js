@@ -1,10 +1,12 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
 
 export function Export_PDF (data,data2,data3, data4, data5, data6) {
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo1 =DatosEmpresa.logo1;
+
     const unit = "pt";
     const size = "Letter"; // Use A1, A2, A3 or A4
     const orientation = "portrait"; // portrait or landscape
@@ -96,7 +98,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
     };
 
     //Parametros que se deben obtener
-    let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
+    let empresa = DatosEmpresa.descripcion;
     let reporte = "BALANCE GENERAL";
     let espacio = " ";
     let fecha = getCurrentDateShort(data);
@@ -107,7 +109,7 @@ export function Export_PDF (data,data2,data3, data4, data5, data6) {
 
     //Preparacion del documento
     doc.setFontSize(12);
-    doc.addImage(logo, 38, 20, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.addImage(logo1, 38, 20, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
   doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
    // doc.text(`ACTIVOS:`);
     doc.autoTable(tabla);

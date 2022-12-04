@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { setGlobalState } from "./responseClass";
 
-import logoEmpresa from "../assets/img/logo1.png";
+//import logoEmpresa from "../assets/img/logo1.png";
 import imgPerfil from "../assets/img/profile-img.png";
 import { getOneParam } from "../utils/utils";
 

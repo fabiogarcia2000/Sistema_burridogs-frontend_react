@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../cambio_contrasena/login.css";
-import burridogs from "../cambio_contrasena/loginbg.jpg";
 import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -23,6 +22,9 @@ import { getOneParam } from "../../../utils/utils";
 const URL_API_ENV = process.env.REACT_APP_URL_API;
 console.log("URL_API_ENV===>", URL_API_ENV);
 export default function CambioContra(props) {
+
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo2 =DatosEmpresa.logo2;
   /**
    ** get settign params
    * obteniendo todos los parametros de configuracion del sistema
@@ -146,7 +148,7 @@ export default function CambioContra(props) {
     <div className="background">
       {validLink ? (
         <div className="">
-          <img src={burridogs} alt="burridogs" />
+          <img src={`data:image/png;base64,${logo2}`} alt="Imagen" />
 
           <div className="formulario">
             <Alert isOpen={isValid} color={color}>

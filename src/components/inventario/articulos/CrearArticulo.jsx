@@ -245,7 +245,7 @@ const Formulario = () => {
           // Validacion precio
           if (!valores.precio) {
             errores.precio = "Por favor ingrese el precio";
-          } else if (!/^^[0-9]+$/.test(valores.precio)) {
+          } else if (!/^^[0-9-.]+$/.test(valores.precio)) {
             errores.precio = "El precio solo puede contener números";
           }
 

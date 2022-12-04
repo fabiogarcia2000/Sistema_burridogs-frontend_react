@@ -9,6 +9,8 @@ import {
 } from "../../utils/cambiarAMayusculas";
 import axios from "axios";
 import Swal from "sweetalert2";
+import "./styles.css";
+import { getCurrentDateShort } from "../../utils/fechaYhora"
 
 import { InsertarBitacora } from "../seguridad/bitacora/InsertarBitacora";
 
@@ -20,16 +22,21 @@ const objeto = "FORM_ARTICULO";
 
 const FormularioEmpresa = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
-  const [imagen, setImagen] = useState("");
+  const [imagen1, setImagen1] = useState("");
+  const [imagen2, setImagen2] = useState("");
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
-  const logo =DatosEmpresa.logo1;
+  const logo1 =DatosEmpresa.logo1;
+  const logo2 =DatosEmpresa.logo2;
   
 
   const navigate = useNavigate();
 
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
   /*****Obtener y corroborar Permisos*****/
-  const [img, setImg] = useState();
+ // const [img, setImg] = useState();
 
 
   const [temp, setTemp] = useState([]);
@@ -100,9 +107,20 @@ const FormularioEmpresa = () => {
         var arrayAuxiliar = [];
         var base64 = reader.result;
         arrayAuxiliar = base64.split(',')
-        setImagen(arrayAuxiliar[1])
-        console.log("result")
-        console.log(arrayAuxiliar[1])
+        setImagen1(arrayAuxiliar[1])
+      }
+    })
+  }
+
+  const ConvertirImg2Base64 = (archivos) =>{
+    Array.from(archivos).forEach(archivo =>{
+      var reader = new FileReader();
+      reader.readAsDataURL(archivo);
+      reader.onload = function(){
+        var arrayAuxiliar = [];
+        var base64 = reader.result;
+        arrayAuxiliar = base64.split(',')
+        setImagen2(arrayAuxiliar[1])
       }
     })
   }
@@ -120,50 +138,23 @@ const FormularioEmpresa = () => {
             correo: DatosEmpresa.correo,
             rtn: DatosEmpresa.rtn,
             //logo1: DatosEmpresa.logo1,
-            logo2: DatosEmpresa.logo2,
+            //logo2: DatosEmpresa.logo2,
             logo3: DatosEmpresa.logo3,
             logo4: DatosEmpresa.logo4,
-            creado_por: "autorPrueba",
-            fecha_creacion: "2022/10/27",
-            modificado_por: "autorPrueba",
-            fecha_modificacion: "2022/10/27",
+            creado_por: usuario,
+            fecha_creacion: fecha,
+            modificado_por: usuario,
+            fecha_modificacion: fecha,
           }}
           //Funcion para validar
           validate={(valores) => {
             let errores = {};
 
-            // Validacion codigo
-            if (!valores.descripcion) {
-              errores.descripcion = "Requerido";
-            }
-
-            // Validacion descripción articulo
-            if (!valores.direccion) {
-              errores.direccion = "Requerido";
-            }
-
-            // Validacion descripción corta
-            if (!valores.telefono) {
-              errores.telefono = "Requerido";
-            }
-
-            // Validacion impuesto
-            if (!valores.correo) {
-              errores.correo = "Requerido";
-            }
-
-            // Validacion categoria
-            if (!valores.rtn) {
-              errores.rtn = "Requerido";
-            }
-
-            /**   // Validacion logo1
-          if (!valores.logo1) {
-            errores.logo1 = "Requerido";
-          }  */
+           
 
             return errores;
           }}
+
           onSubmit={async (valores) => {
             //procedimineto para guardar el los cambios
             const datosEnviar = {
@@ -173,11 +164,12 @@ const FormularioEmpresa = () => {
               telefono: valores.telefono,
               correo: valores.correo,
               rtn: valores.rtn,
-              logo1: imagen? imagen:logo,
-              creado_por: "autorPrueba",
-              fecha_creacion: "2022/10/27",
-              modificado_por: "autorPrueba",
-              fecha_modificacion: "2022/10/27"
+              logo1: imagen1? imagen1:logo1,
+              logo2: imagen2? imagen2:logo2,
+              creado_por: valores.creado_por,
+              fecha_creacion: valores.fecha_creacion,
+              modificado_por: valores.modificado_por,
+              fecha_modificacion: valores.fecha_modificacion
             }
 
             console.log(datosEnviar)
@@ -190,7 +182,7 @@ const FormularioEmpresa = () => {
 
               if (res.status === 200) {
                 mostrarAlertas("guardado");
-                //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS EMPRESA");
+                //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
                 navigate("/admin/home");
                 //window.location.reload();
               } else {
@@ -341,7 +333,7 @@ const FormularioEmpresa = () => {
                       type="file"
                       className="form-control"
                       name="logo1"
-                      accept="image/png, image/jpeg"
+                      accept="image/png"
                       onChange={(e) => ConvertirImgBase64(e.target.files)}
                     />
                   </div>
@@ -349,75 +341,51 @@ const FormularioEmpresa = () => {
 
                 <div className="col-sm-4">
                   <div className="mb-3">
-                    <label htmlFor="invMinArticulo" className="form-label">
-                      Logo 2:
+                    <label htmlFor="logo1Articulo" className="form-label">
+                      Logo 2 (Login):
                     </label>
-                    <Field
+                    <input
+                      id="imgs2"
                       type="file"
                       className="form-control"
-                      id="invMinArticulo"
                       name="logo2"
-                    />
-
-                    <ErrorMessage
-                      name="logo2"
-                      component={() => (
-                        <div className="error">{errors.logo2}</div>
-                      )}
+                      accept="image/png"
+                      onChange={(e) => ConvertirImg2Base64(e.target.files)}
                     />
                   </div>
                 </div>
-                <div className="col-sm-4">
-                  <div className="mb-3">
-                    <label htmlFor="invMaxArticulo" className="form-label">
-                      Logo 3:
-                    </label>
-                    <Field
-                      type="file"
-                      className="form-control"
-                      id="invMaxArticulo"
-                      name="logo3"
-                    />
-
-                    <ErrorMessage
-                      name="logo3"
-                      component={() => (
-                        <div className="error">{errors.logo3}</div>
-                      )}
-                    />
-                  </div>
-                </div>
+                
               </div>
 
-              <div className="row g-3">
-                <div className="col-sm-4">
-                  <div className="mb-3">
-                    <label htmlFor="codigobarraArticulo" className="form-label">
-                      Logo 4:
-                    </label>
-                    <Field
-                      type="file"
-                      className="form-control"
-                      id="codigobarraArticulo"
-                      name="logo4"
-                    />
 
-                    <ErrorMessage
-                      name="logo4"
-                      component={() => (
-                        <div className="error">{errors.logo4}</div>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-2">
                   <div className="row">
-                    <picture>
-                      <img src={`data:image/png;base64,${logo}`} className="img-fluid img-thumbnail" alt="..." style={{ width: "200px", height: "100px" }}/>
-                    </picture>
+                    <div className="col-sm-4">
+                      {
+                        imagen1?
+                        <picture>
+                          <img src={`data:image/png;base64,${imagen1}`} className="imglogos" alt="Logo 1" style={{ width: "200px", height: "100px" }}/>
+                        </picture>
+                        :
+                        <picture>
+                          <img src={`data:image/png;base64,${logo1}`} className="imglogos" alt="Logo 1" style={{ width: "200px", height: "100px" }}/>
+                        </picture>
+                      }
+                    </div>
+                    <div className="col-sm-4">
+                    {
+                        imagen2?
+                        <picture>
+                          <img src={`data:image/png;base64,${imagen2}`} className="imglogos" alt="Logo 1" style={{ width: "200px", height: "100px" }}/>
+                        </picture>
+                        :
+                        <picture>
+                          <img src={`data:image/png;base64,${logo2}`} className="imglogos" alt="Logo 1" style={{ width: "200px", height: "100px" }}/>
+                        </picture>
+                      }
+                    </div>
                   </div>
-                </div>
-              </div>
+<br />
+
               <button className="btn btn-success mb-3 me-2" type="submit">
                 Guardar
               </button>

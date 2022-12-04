@@ -5,7 +5,6 @@ import Styles from "../../../utils/Styles";
 import { Field } from "react-final-form";
 import Wizard from "../../../utils/Wizard";
 import "../recuperacion_preguntas/login.css";
-import burridogs from "../recuperacion_preguntas/loginbg.jpg";
 
 import { getOneParam, isComent, translateUperCase } from "../../../utils/utils";
 
@@ -26,6 +25,9 @@ const Error = ({ name }) => (
 
 // const required = (value) => (value ? undefined : "Required");
 export default function RecuperacionPreguntas(props) {
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo2 =DatosEmpresa.logo2;
+
   let navigate = useNavigate();
   const { id_usuario } = useParams();
   useEffect(() => {
@@ -148,7 +150,7 @@ export default function RecuperacionPreguntas(props) {
   };
   return (
     <div className="background">
-      <img src={burridogs} alt="burridogs" />
+      <img src={`data:image/png;base64,${logo2}`} alt="Imagen" />
 
       <div className="formulario steps">
         <h2>Recuperaci&oacute;n por preguntas </h2>

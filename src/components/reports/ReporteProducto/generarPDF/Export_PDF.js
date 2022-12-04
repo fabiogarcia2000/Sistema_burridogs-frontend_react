@@ -1,11 +1,13 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import logo from './logo1.png' //Logo de la empresa
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
 import { UsuarioConectado } from "../../../seguridad/bitacora/UsuarioActivo";
 
 export function Export_PDF (data, sucursalConectado) {
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo1 =DatosEmpresa.logo1;
+
     const unit = "pt";
     const size = "Letter"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
@@ -26,7 +28,7 @@ export function Export_PDF (data, sucursalConectado) {
     };
 
     //Parametros que se deben obtener
-    let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
+    let empresa = DatosEmpresa.descripcion;
     let reporte = "Reporte de Ventas por Producto";
     let sucursal = sucursalConectado;
     let usuario = UsuarioConectado();
@@ -37,7 +39,7 @@ export function Export_PDF (data, sucursalConectado) {
 
     //Preparacion del documento
     doc.setFontSize(12);
-    doc.addImage(logo, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
+    doc.addImage(logo1, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
     doc.text([`${empresa}`,`Reporte de ${reporte}`, `${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 

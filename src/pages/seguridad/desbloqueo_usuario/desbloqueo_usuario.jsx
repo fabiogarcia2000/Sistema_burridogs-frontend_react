@@ -4,7 +4,6 @@ import { Alert, Button, FormGroup, Input, Label } from "reactstrap";
 // import { FormFeedback, FormGroup, FormText, Input, Label } from 'reactstrap';
 import { Form, Field } from "react-final-form";
 import "../recuperacion_contrasena/reset.css";
-import burridogs from "../recuperacion_contrasena/loginbg.jpg";
 import {
   getOneParam,
   isChar,
@@ -21,6 +20,8 @@ console.log("URL_API_ENV===>", URL_API_ENV);
 export default function RecuperacionContra(props) {
   let navigate = useNavigate();
 
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo2 =DatosEmpresa.logo2;
   /**
    ** get settign params
    * obteniendo todos los parametros de configuracion del sistema
@@ -123,7 +124,7 @@ export default function RecuperacionContra(props) {
 
   return (
     <div className="background">
-      <img src={burridogs} alt="burridogs" />
+      <img src={`data:image/png;base64,${logo2}`} alt="Imagen" />
       <div className="formulario">
         <Alert isOpen={isValid} color={color}>
           {" "}
