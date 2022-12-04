@@ -2,13 +2,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import DataTable from "react-data-table-component";
 import { quitarTildes } from "./utils/textoSinTildes";
 import { MostrarAlertas } from "../ingresar_mds/utils/Alertas";
 import { InsertCompra } from "./insertCompra";
 import { numeroALetras } from "./utils/num_a_letras";
+import { useReactToPrint } from "react-to-print";
 import {
   getCurrentDate,
   getCurrentTime,
@@ -19,7 +20,8 @@ import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
-const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
+const UrlMostrarSocios =
+  "http://190.53.243.69:3001/socio_negocio/getallproveedores";
 const UrlCategorias = "http://190.53.243.69:3001/categoria/getall_active";
 const UrlMostrarMetodosPago = "http://190.53.243.69:3001/metodo_pago/getall/";
 const UrlArticulos = "http://190.53.243.69:3001/articulo/getallactiveinv/";
@@ -30,8 +32,9 @@ const isv = 0.15;
 
 const objeto = "FORM_COMPRAS";
 
-const Formulario = () => {
+const OrdenCompra = () => {
   const navigate = useNavigate();
+  const componenteRef = useRef();
 
   const dataSec = JSON.parse(localStorage.getItem("bodsuc"));
   const idSucursal = dataSec[0].id_sucursal;
@@ -73,6 +76,7 @@ const Formulario = () => {
   const [total, setTotal] = useState(0.0);
 
   const [tipoPago, setTipoPago] = useState(1);
+  const [tipoSocio, setTipoSocio] = useState(2);
 
   const [porcDescuento, setPorcDescuento] = useState({});
 
@@ -80,6 +84,7 @@ const Formulario = () => {
   const [cambio, setCambio] = useState(0);
 
   const [listo, setListo] = useState(false);
+  const [preparar, setPreparar] = useState(false);
 
   /**************Fecha y Hora*************************/
   const [fecha, setFecha] = useState("--/--/--");
@@ -172,6 +177,9 @@ const Formulario = () => {
     const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
   };
+
+  //procedimiento registrar referencia
+  const [referencia, setRef] = useState([]);
 
   useEffect(() => {
     let data = localStorage.getItem("permisos");
@@ -337,18 +345,22 @@ const Formulario = () => {
     }
   };
 
-  //procedimineto para obtener todos los modos de pedido y mostrarlas en select
-  const [pedidos, setPedidos] = useState([]);
-
   //Descuento
   const handlerDescuento = function (e) {
     let id = e.target.value;
     Desc(id);
   };
 
+  //Para generar factura/imprimir
+  const handlePrint = useReactToPrint({
+    content: () => componenteRef.current,
+    documentTitle: "Factura",
+    onAfterPrint: () => resetValores(),
+  });
+
   //procedimineto para obtener la secuencia det y enc
-  const urlDet = "http://190.53.243.69:3001/venta/secuencia_det_getone";
-  const urlEnc = "http://190.53.243.69:3001/venta/secuencia_enc_getone";
+  const urlDet = "http://190.53.243.69:3001/compras/secuencia_det_getone/";
+  const urlEnc = "http://190.53.243.69:3001/compras/secuencia_enc_getone/";
   const Det = async () => {
     try {
       const res = await axios.get(urlDet);
@@ -614,24 +626,30 @@ const Formulario = () => {
     }
   };
 
-  //preparar data de la venta
+  //preparar data de la compra
   const PrepararData = () => {
-    /**if (!porcDescuento === []) {
-      setDetalles(newDetalles);
-      console.log(porcDescuento)
-      console.log("datos Descuento 2")
-    } */
     setCompra({
       ...compra,
+      id_socio_negocio: tipoSocio,
       fecha: fechaCorta,
+      referencia: referencia,
+      fecha_creacion: fechaCorta,
+      creado_por: userdata.data.nameUser,
       id_usuario: userdata.data.id,
-      id_sucursal: idSucursal,
+      id_centro_costo: idSucursal,
       cod_sucursal: codSucursal,
       secuencia_enc: parseInt(enc),
       detalle: porcDescuento.length > 0 ? newDetalles : detalles,
       monto_total: tempTotal,
+      monto_impuesto_total: "",
     });
   };
+
+  useEffect(() => {
+    if (detalles.length > 0) {
+      PrepararData();
+    }
+  }, [preparar]);
 
   useEffect(() => {
     if (compra.detalle.length > 0) {
@@ -672,11 +690,6 @@ const Formulario = () => {
       sortable: true,
     },
     {
-      name: "UNIDAD DE MEDIDA",
-      selector: (row) => row.und,
-      sortable: true,
-    },
-    {
       name: "CANTIDAD",
       selector: (row) => row.cant,
       sortable: true,
@@ -686,16 +699,6 @@ const Formulario = () => {
       selector: (row) => row.prec,
       sortable: true,
     },
-    /*{
-      name: "IMPUESTO",
-      selector: (row) => row.impuesto,
-      sortable: true,
-    },
-    {
-      name: "MONTO IMPUESTO",
-      selector: (row) => row.descripcion,
-      sortable: true,
-    },*/
 
     {
       name: "TOTAL",
@@ -919,16 +922,6 @@ const Formulario = () => {
                   id_modo_pedido: "",
                 }}
                 //Funcion para validar
-                validate={(valores) => {
-                  let errores = {};
-
-                  // Validacion de modo pedido
-                  if (!valores.id_modo_pedido) {
-                    errores.id_modo_pedido = "Requerido";
-                  }
-
-                  return errores;
-                }}
                 onSubmit={async (valores) => {
                   // Validacion de modo pedido
                   if (!listaCompras.length > 0) {
@@ -939,9 +932,7 @@ const Formulario = () => {
                     setDetallesPago([]);
                     Detalles_Pago();
                     setTotalEnLetras(numeroALetras(parseFloat(tempTotal)));
-                    setDetallesDesc([]);
                     setNewDetalles([]);
-                    Detalles_Desc();
                   }
                 }}
               >
@@ -976,7 +967,7 @@ const Formulario = () => {
                       <div className="row">
                         <div className="d-grid gap-2 col-12 mx-auto">
                           <Button className="btn btn-success" type="submit">
-                            Procesar Venta
+                            Realizar Compra
                           </Button>
                           <Button
                             className="btn btn-danger"
@@ -1022,65 +1013,94 @@ const Formulario = () => {
           </Button>
         </ModalFooter>
       </Modal>
+
+      {/* Ventana Modal de confirmación de factura*/}
+      <Modal isOpen={modalFactura} toggle={abrirModalFactura} centered>
+        <ModalHeader toggle={abrirModalFactura}>Factura</ModalHeader>
+        <ModalBody>
+          <h5>¿Imprimir Factura?</h5>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="primary"
+            onClick={() => {
+              abrirModalFactura();
+            }}
+          >
+            Imprimir
+          </Button>
+          <Button
+            color="secondary"
+            onClick={() => {
+              setPreparar(true);
+              if (listo === true) {
+                //handlePrint();
+                resetValores();
+                //abrirModalCliente();
+                abrirModalFactura();
+              }
+              //abrirModalFactura();
+            }}
+          >
+            No
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       {/* Ventana Modal de Procesar ventas*/}
       <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
         <Formik
           //valores iniciales
           initialValues={{
-            metodo_pago: "",
-            monto_recibido: "",
+            id_socio_negocio: "",
           }}
           //Funcion para validar
           validate={(valores) => {
             let errores = {};
 
-            // Validacion tipo de pago
-            if (!valores.metodo_pago) {
-              errores.metodo_pago = "Requerido";
+            // Validacion socio negocio
+            if (!valores.id_socio_negocio) {
+              errores.id_socio_negocio = "Requerido";
             }
 
-            // Validacion de monto
-            if (!valores.monto_recibido) {
-              errores.monto_recibido = "Requerido";
-            } else if (valores.monto_recibido < tempTotal) {
-              errores.monto_recibido =
-                "El monto recibido debe ser mayor o igual al total";
-            } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_recibido)) {
-              errores.monto_recibido = "Monto Incorrecto";
+            // Validacion referencia
+            if (!valores.referencia) {
+              errores.referencia = "Requerido";
             }
 
             return errores;
           }}
           onSubmit={async (valores) => {
-            setTipoPago(valores.metodo_pago);
+            setTipoSocio(valores.id_socio_negocio);
+            setRef(valores.referencia);
             abrirModalVenta();
             abrirModalFactura();
           }}
         >
           {({ errors, values }) => (
             <Form>
-              <ModalHeader toggle={abrirModalVenta}>Caja</ModalHeader>
+              <ModalHeader toggle={abrirModalVenta}>Compra</ModalHeader>
               <ModalBody>
                 <div className="container">
                   <div className="row text-center">
-                    <h5>Total a Pagar:</h5>
+                    <h5>Monto Total:</h5>
                     <h1>{"L. " + parseFloat(tempTotal)}</h1>
                     <p>{"(" + totalEnLetras + ")"}</p>
                   </div>
                   <hr />
                   <div className="row">
-                    <h5>Método de Pago:</h5>
+                    <h5>Proveedor:</h5>
                   </div>
                   <div className="row">
                     <Field
                       className="form-select"
                       id="country"
                       as="select"
-                      name="metodo_pago"
+                      name="id_socio_negocio"
                     >
                       <option value="">Seleccionar...</option>
-                      {metodosPago.map((item, i) => (
-                        <option key={i} value={item.id_metodo_pago}>
+                      {socios.map((item, i) => (
+                        <option key={i} value={item.id_socio_negocio}>
                           {item.descripcion}
                         </option>
                       ))}
@@ -1088,52 +1108,31 @@ const Formulario = () => {
                     </Field>
 
                     <ErrorMessage
-                      name="metodo_pago"
+                      name="id_socio_negocio"
                       component={() => (
-                        <div className="error">{errors.metodo_pago}</div>
+                        <div className="error">{errors.id_socio_negocio}</div>
                       )}
                     />
                   </div>
-                  <hr />
-
+                  <br />
                   <div className="row">
-                    <div className="col">
-                      <div className="row">
-                        <h5>Monto Recibido:</h5>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-8">
-                          <Field
-                            type="text"
-                            className="form-control"
-                            id="monto"
-                            name="monto_recibido"
-                            placeholder="L.0.0"
-                            onKeyUp={Calcular_Cambio(values.monto_recibido)}
-                          />
-                          <ErrorMessage
-                            name="monto_recibido"
-                            component={() => (
-                              <div className="error">
-                                {errors.monto_recibido}
-                              </div>
-                            )}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col">
-                      <div className="row">
-                        <h5>Cambio:</h5>
-                      </div>
-                      <div className="row">
-                        <h2>{"L." + cambio}</h2>
-                      </div>
-                    </div>
+                    <h5>Referencia:</h5>
                   </div>
+                  <div className="row">
+                    <Field
+                      type="text"
+                      className="form-control"
+                      name="referencia"
+                      placeholder="Referencia de compra..."
+                    />
 
-                  <hr />
+                    <ErrorMessage
+                      name="referencia"
+                      component={() => (
+                        <div className="error">{errors.referencia}</div>
+                      )}
+                    />
+                  </div>
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -1295,4 +1294,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default OrdenCompra;
