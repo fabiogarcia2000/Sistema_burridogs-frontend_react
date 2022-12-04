@@ -27,7 +27,7 @@ export function Export_PDF (data) {
     };
 
     //Parametros que se deben obtener
-    let empresa = "INVERSIONES TURISTICAS DE COMAYAGUA";
+    let empresa = DatosEmpresa.descripcion;
     let reporte = "USUARIOS";
     let espacio = " ";
     let fecha = getCurrentDateShort(data);
