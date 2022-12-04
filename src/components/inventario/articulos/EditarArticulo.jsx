@@ -11,7 +11,7 @@ import {
   cambiarAMayusculasDescripcion,
 } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
-import { getCurrentDateShort } from "../../../utils/fechaYhora"
+import { getCurrentDateShort } from "../../../utils/fechaYhora";
 
 const URLEditar = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 
@@ -30,7 +30,6 @@ const FormularioEditar = () => {
   const fecha = getCurrentDateShort();
   const userdata = JSON.parse(localStorage.getItem("data"));
   const usuario = userdata.data.nameUser;
-
 
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
@@ -222,26 +221,26 @@ const FormularioEditar = () => {
           // Validacion precio
           if (!valores.precio) {
             errores.precio = "Por favor ingresa un precio";
-          } else if (!/^^\d*\.\d+$/.test(valores.precio)) {
+            /*} else if (!/^^\d*\.\d+$/.test(valores.precio)) {
             errores.precio = "Solo números";
           } else if (!/^^[0-9-.]+$/.test(valores.precio)) {
-            errores.precio = "Solo números";
+            errores.precio = "Solo números";/*/
           }
           // Validacion inventario minimo
           if (!valores.inventario_minimo) {
             errores.inventario_minimo = "Por favor ingresa una cantidad mínima";
-          } else if (!/^^\d*\.\d+$/.test(valores.inventario_minimo)) {
+            /*} } else if (!/^^\d*\.\d+$/.test(valores.inventario_minimo)) {
             errores.inventario_minimo = "Solo números";
           } else if (!/^^[0-9-.]+$/.test(valores.inventario_minimo)) {
-            errores.inventario_minimo = "Solo números";
+            errores.inventario_minimo = "Solo números";*/
           }
           // Validacion inventario maximo
           if (!valores.inventario_maximo) {
             errores.inventario_maximo = "Por favor ingresa una cantidad máxima";
-          } else if (!/^^\d*\.\d+$/.test(valores.inventario_maximo)) {
+            /* } else if (!/^^\d*\.\d+$/.test(valores.inventario_maximo)) {
             errores.inventario_maximo = "Solo números";
           } else if (!/^^[0-9-.]+$/.test(valores.inventario_maximo)) {
-            errores.inventario_maximo = "Solo números";
+            errores.inventario_maximo = "Solo números";*/
           }
           // Validacion unidad medida
           if (!valores.id_unidad_medida) {

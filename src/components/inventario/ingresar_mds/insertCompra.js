@@ -10,9 +10,9 @@ export const InsertCompra = async (valores) => {
     const res = await axios.post(urlCompra, valores);
     console.log("Data Respuesta");
     console.log(res.data);
-    setGlobalState("dataVenta", res.data);
+    setGlobalState("dataCompra", res.data);
   } catch (error) {
     console.log(error);
-    setGlobalState("dataVenta", {});
+    setGlobalState("dataCompra", {});
   }
 };

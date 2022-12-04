@@ -160,8 +160,8 @@ const OrdenCompra = () => {
     monto_impuesto_total: 0,
     creado_por: usuario,
     fecha_creacion: "",
-    modificado_por: "",
-    fecha_modificacion: "",
+    modificado_por: "Jonathan",
+    fecha_modificacion: "2022-12-12",
     id_usuario: 0,
     id_centro_costo: 0,
     detalle: [],
@@ -359,12 +359,13 @@ const OrdenCompra = () => {
   });
 
   //procedimineto para obtener la secuencia det y enc
-  const urlDet = "http://190.53.243.69:3001/compras/secuencia_det_getone/";
-  const urlEnc = "http://190.53.243.69:3001/compras/secuencia_enc_getone/";
+  const urlDet = "http://190.53.243.69:3001/compras/secuencia_det_getone";
+  const urlEnc = "http://190.53.243.69:3001/compras/secuencia_enc_getone";
+
   const Det = async () => {
     try {
       const res = await axios.get(urlDet);
-      setDet(res.data.ft_secuencia_det_getone);
+      setDet(res.data.ft_secuencia_det_compras_getone);
     } catch (error) {
       console.log(error);
     }
@@ -373,7 +374,7 @@ const OrdenCompra = () => {
   const Enc = async () => {
     try {
       const res = await axios.get(urlEnc);
-      setEnc(res.data.ft_secuencia_enc_getone);
+      setEnc(res.data.ft_secuencia_enc_compras_getone);
       //console.log("dentro de ENC" ,enc);
     } catch (error) {
       console.log(error);
@@ -387,7 +388,8 @@ const OrdenCompra = () => {
         ...listaCompras,
         {
           id: articuloClick.id_articulo,
-          und: articuloClick.id_unidad_medida,
+          idUnd: articuloClick.id_unidad_medida,
+          und: articuloClick.cod_unidad_medida,
           cod: articuloClick.cod_articulo,
           desc: articuloClick.descripcion_corta,
           cant: cantidad,
@@ -406,7 +408,7 @@ const OrdenCompra = () => {
           precio_unit: parseFloat(articuloClick.precio),
           cantidad: cantidad,
           id_impuesto: articuloClick.id_impuesto,
-          id_unidad_medida: 1,
+          id_unidad_medida: articuloClick.id_unidad_medida,
           monto_impuesto:
             parseFloat(articuloClick.precio) *
             parseFloat(cantidad) *
@@ -641,7 +643,7 @@ const OrdenCompra = () => {
       secuencia_enc: parseInt(enc),
       detalle: porcDescuento.length > 0 ? newDetalles : detalles,
       monto_total: tempTotal,
-      monto_impuesto_total: "",
+      monto_impuesto_total: tempIsv,
     });
   };
 
@@ -689,6 +691,12 @@ const OrdenCompra = () => {
       selector: (row) => row.desc,
       sortable: true,
     },
+    {
+      name: "UND. MEDIDA",
+      selector: (row) => row.und,
+      sortable: true,
+    },
+
     {
       name: "CANTIDAD",
       selector: (row) => row.cant,
