@@ -6,6 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCAI } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLCrear = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
 const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
@@ -15,6 +16,9 @@ const objeto = "FORM_CORRELATIVO_PDV";
 const Formulario = () => {
 
   const navigate = useNavigate();
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser
 
 
   /*****Obtener y corroborar Permisos*****/
@@ -127,8 +131,8 @@ const Formulario = () => {
             fecha_vencimiento:"",
             activo: "1",
             siguiente:"1",
-            creado_por: "autorPrueba",
-            fecha_creacion: "2022/10/27",         
+            creado_por: usuario,
+            fecha_creacion: fecha       
         }}
         //Funcion para validar
         validate={(valores) => {

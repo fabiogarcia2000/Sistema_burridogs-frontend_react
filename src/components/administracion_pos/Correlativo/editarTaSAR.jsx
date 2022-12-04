@@ -7,6 +7,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasCAI } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
 const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
@@ -17,6 +18,9 @@ const objeto = "FORM_DESCUENTO_PDV";
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
 
   /*****Obtener y corroborar Permisos*****/
@@ -117,8 +121,8 @@ const objeto = "FORM_DESCUENTO_PDV";
           fecha_vencimiento: edit.fecha_vencimiento,
           activo: edit.activo,
           siguiente: edit.siguiente,
-          modificado_por: "autorPrueba",
-          fecha_modificacion:"2022/10/27"
+          modificado_por: usuario,
+          fecha_modificacion:fecha
         }}
 
         //Funcion para validar

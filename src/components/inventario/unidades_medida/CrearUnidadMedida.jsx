@@ -9,6 +9,7 @@ import {
 } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLCrear = "http://190.53.243.69:3001/unidad_medida/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/unidad_medida/getone/";
@@ -19,9 +20,9 @@ const objeto = "FORM_UNIDADES_MEDIDA";
 const Formulario = () => {
   const navigate = useNavigate();
 
-
-
-
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
 
    /*****Obtener y corroborar Permisos*****/
@@ -114,8 +115,8 @@ const Formulario = () => {
         initialValues={{
           cod_unidad_medida: "",
           descripcion: "",
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",
+          creado_por: usuario,
+          fecha_creacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {

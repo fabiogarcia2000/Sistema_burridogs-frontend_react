@@ -20,11 +20,9 @@ const Formulario = () => {
 
   const fecha = getCurrentDateShort();
   const userdata = JSON.parse(localStorage.getItem("data"));
-  const usuario = userdata.data.nameUser
+  const usuario = userdata.data.nameUser;
 
  
-
-
   //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);

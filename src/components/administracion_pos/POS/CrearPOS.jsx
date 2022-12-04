@@ -6,6 +6,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion, cambiarAMayusculasDescripcionPOS } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLCrear = "http://190.53.243.69:3001/pos/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/pos/getone/";
@@ -18,7 +19,9 @@ const Formulario = () => {
   const navigate = useNavigate();
 
 
-
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
 
   /*****Obtener y corroborar Permisos*****/
@@ -125,8 +128,8 @@ const Formulario = () => {
           descripcion: "",
           id_sucursal: "",
           activo: "1",
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/10/27",         
+          creado_por: usuario,
+          fecha_creacion: fecha,         
         }}
         //Funcion para validar
         validate={(valores) => {

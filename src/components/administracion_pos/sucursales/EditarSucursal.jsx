@@ -10,6 +10,7 @@ import {
   cambiarAMayusculasDirección,
 } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar = "http://190.53.243.69:3001/sucursal/actualizar-insertar/";
 
@@ -21,6 +22,10 @@ const EditarSucursal = () => {
   const [edit] = useGlobalState("registroEdit");
 
   const navigate = useNavigate();
+
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
@@ -114,8 +119,8 @@ const EditarSucursal = () => {
           id_centro_costo: edit.id_centro_costo,
           id_mapa: undefined,
           activo: edit.activo,
-          modificado_por: "autorPrueba",
-          fecha_modificacion: "2022/11/03",
+          modificado_por: usuario,
+          fecha_modificacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {
