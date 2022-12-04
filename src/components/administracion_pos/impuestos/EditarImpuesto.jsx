@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
 
@@ -16,6 +17,10 @@ const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
 
   const navigate = useNavigate();
+
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
 
 
@@ -93,8 +98,8 @@ const FormularioEditar = () => {
           porcentaje:edit.porcentaje,
           tipo:edit.tipo,
           activo:edit.activo,
-          modificado_por: "autorPrueba",
-          fecha_modificacion: "2022/10/27",
+          modificado_por: usuario,
+          fecha_modificacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {

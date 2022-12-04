@@ -84,7 +84,7 @@ const MostrarMateriales = () => {
     case "eliminado":
       Swal.fire({
         title: "¡Eliminado!",
-        text: "La categoría se eliminó con éxito",
+        text: "Se eliminó con éxito",
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
@@ -95,7 +95,7 @@ const MostrarMateriales = () => {
     case "error":
       Swal.fire({
         title: "Error",
-        text: "No se pudo eliminar la categoría",
+        text: "No se pudo eliminar",
         icon: "error",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
@@ -139,14 +139,14 @@ const MostrarMateriales = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        alert("Eliminado!");
+        mostrarAlertas("eliminado")
         InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR MATERIAL");
       } else {
-        alert("ERROR al Eliminar :(");
+        mostrarAlertas("error")
       }
     } catch (error) {
       console.log(error);
-      alert("ERROR - No se ha podido eliminar :(");
+      mostrarAlertas("error")
     }
   };
   //Ventana modal de confirmación de eliminar

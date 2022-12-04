@@ -12,6 +12,7 @@ import {
 } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLCrear = "http://190.53.243.69:3001/socio_negocio/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/socio_negocio/getone/";
@@ -23,6 +24,9 @@ const Formulario = () => {
   const navigate = useNavigate();
 
 
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
 
 
@@ -120,8 +124,8 @@ const Formulario = () => {
           balance: "",
           cuenta_contable: "",
           activo: "",
-          creado_por: "eaplicano",
-          fecha_creacion: "now()",
+          creado_por: usuario,
+          fecha_creacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {

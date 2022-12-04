@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar = "http://190.53.243.69:3001/centro_costo/actualizar-insertar/";
 
@@ -17,7 +18,9 @@ const objeto = "FORM_BODEGA";
 
   const navigate = useNavigate();
 
-
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
  /*****Obtener y corroborar Permisos*****/
  const [temp, setTemp] = useState([]);
@@ -96,8 +99,8 @@ const objeto = "FORM_BODEGA";
           cod_centro_costo: edit.cod_centro_costo,
           descripcion: edit.descripcion,
           activo: edit.activo,
-          modificado_por: "autorPrueba",
-          fecha_modificacion: "2022/10/27"
+          modificado_por: usuario,
+          fecha_modificacion: fecha
         }}
 
         //Funcion para validar

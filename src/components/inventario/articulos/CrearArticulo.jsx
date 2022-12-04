@@ -9,6 +9,7 @@ import {
   cambiarAMayusculasDescripArticulo,
 } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/articulo/getone/";
@@ -23,7 +24,9 @@ const objeto = "FORM_ARTICULO";
 const Formulario = () => {
   const navigate = useNavigate();
 
-
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
 
    /*****Obtener y corroborar Permisos*****/
@@ -200,8 +203,8 @@ const Formulario = () => {
           id_unidad_medida: "",
           //descripcion_unidad_medida: "",
           activo: "",
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/11/05",
+          creado_por: usuario,
+          fecha_creacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {

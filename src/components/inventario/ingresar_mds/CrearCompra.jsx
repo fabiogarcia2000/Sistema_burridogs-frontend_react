@@ -41,7 +41,9 @@ const OrdenCompra = () => {
   const DescSucursal = dataSec[0].descripcion_sucursal;
   const codSucursal = dataSec[0].cod_sucursal;
 
+  //const fecha = getCurrentDateShort();
   const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
   const [categorias, setCategorias] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -156,7 +158,7 @@ const OrdenCompra = () => {
     referencia: "",
     monto_total: 0,
     monto_impuesto_total: 0,
-    creado_por: "",
+    creado_por: usuario,
     fecha_creacion: "",
     modificado_por: "",
     fecha_modificacion: "",

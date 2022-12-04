@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar = "http://190.53.243.69:3001/metodo_pago/actualizar-insertar/";
 
@@ -17,7 +18,9 @@ const Formulario = () => {
 
   const navigate = useNavigate();
 
-
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
@@ -94,8 +97,8 @@ const Formulario = () => {
           tipo:edit.tipo,
           cuenta_contable:edit.cuenta_contable,
           activo:edit.activo,
-          creado_por: "autorPrueba",
-          fecha_creacion: "2022/11/04",
+          creado_por: usuario,
+          fecha_creacion: fecha,
         }}
 
         //Funcion para validar

@@ -7,6 +7,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar =
   "http://190.53.243.69:3001/lista_materiales/actualizar-insertar/";
@@ -20,7 +21,9 @@ const FormularioEditar = () => {
 
   const navigate = useNavigate();
 
-
+  const fecha = getCurrentDateShort();
+  const userdata = JSON.parse(localStorage.getItem("data"));
+  const usuario = userdata.data.nameUser;
 
  /*****Obtener y corroborar Permisos*****/
  const [temp, setTemp] = useState([]);
@@ -118,8 +121,8 @@ const FormularioEditar = () => {
           id_articulo_hijo: edit.id_articulo_hijo,
           cantidad: edit.cantidad,
           comentario: edit.comentario,
-          modificado_por: "autorPrueba",
-          fecha_modificacion: "2022/10/27",
+          modificado_por: usuario,
+          fecha_modificacion: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {
