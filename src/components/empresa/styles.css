@@ -1,0 +1,7 @@
+.imglogos{
+    width: 200px !important;
+    height: 100px !important;
+    filter: blur(0px) !important;
+    position: inherit !important;
+    margin-right: 10px !important;
+  }

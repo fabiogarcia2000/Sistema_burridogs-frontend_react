@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import '../recuperacion_correo/login.css';
-import burridogs from '../recuperacion_correo/loginbg.jpg';
 
 //url 
 /*const URL_LOGIN = ""
@@ -17,6 +16,8 @@ const enviarData = async (url, data) => {
 }*/
 
 export default function RecuperacionCorreo(props) {
+    const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+    const logo2 =DatosEmpresa.logo2;
 
     //capturar los datos ingresados
     /* const refPregunta = useRef(null);
@@ -33,8 +34,8 @@ export default function RecuperacionCorreo(props) {
     return (
         <div className="background">
             <img
-                src={burridogs}
-                alt="burridogs" />
+                src={`data:image/png;base64,${logo2}`}
+                alt="Imagen" />
 
             <div className="formulario">
 

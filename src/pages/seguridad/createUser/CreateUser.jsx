@@ -12,6 +12,9 @@ var newOTP = require("otp-generators");
 var md5 = require("md5");
 // const urlapi = "http://localhost:3001";
 const CreateUser = () => {
+
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo2 =DatosEmpresa.logo2;
   
   const [loading, setLoading] = useState(false);
 

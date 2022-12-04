@@ -57,19 +57,16 @@ function Home() {
 
   /***********DATOS DE EMPRESA**************/
 //procedimineto para obtener los valores de la empresa
-const [DatosEmpresa, setDatosEmpresa] = useState([]);
 useEffect(() => {
   getDatos();
 }, []);
 
-//petición a api
+//petición a api datos empresa
 const getDatos = async () => {
   try {
     const res = await axios.get(UrlDatosEmpresa);
     if(res.status === 200){
-      setDatosEmpresa(res.data);
       localStorage.setItem("dataEmpresa", JSON.stringify(res.data));
-      console.log(res.data)
     }
     
   } catch (error) {
@@ -77,15 +74,12 @@ const getDatos = async () => {
   }
 };
 
-useEffect(() => {
-  setGlobalState("datosEmpresa", DatosEmpresa);
-}, [DatosEmpresa]);
 
   /***********DATOS DE EMPRESA**************/
 
   return (
     <div>
-      <h1 id="Bienvenido">Bienvenido Al Sistema POS Burridogs</h1>
+      <h1 id="Bienvenido">Bienvenido Al Sistema POS</h1>
       {/*<img id="LogoEmpresa" src={logoEmpresa} alt="Logo Empresa" />*/}
     </div>
   );

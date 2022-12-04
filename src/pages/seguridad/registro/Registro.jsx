@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 // import { useForm } from "react-hook-form";
 import "./Registro.css";
-import burridogs from "./loginbg.jpg";
 // import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 // import { render } from "@testing-library/react";
@@ -36,6 +35,9 @@ const URL_API_ENV = process.env.REACT_APP_URL_API;
 console.log("URL_API_ENV===>", URL_API_ENV);
 
 const Registro = () => {
+  const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
+  const logo2 =DatosEmpresa.logo2;
+
   /**
    ** get settign params
    * obteniendo todos los parametros de configuracion del sistema
@@ -176,7 +178,7 @@ const Registro = () => {
   return (
     <div className="background">
       <div className="">
-        <img src={burridogs} alt="burridogs" />
+        <img src={`data:image/png;base64,${logo2}`} alt="burridogs" />
 
         <div className="formulario">
           <Alert isOpen={isValid} color={color}>

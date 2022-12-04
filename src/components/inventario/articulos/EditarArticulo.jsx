@@ -221,10 +221,8 @@ const FormularioEditar = () => {
           // Validacion precio
           if (!valores.precio) {
             errores.precio = "Por favor ingresa un precio";
-            /*} else if (!/^^\d*\.\d+$/.test(valores.precio)) {
-            errores.precio = "Solo números";
           } else if (!/^^[0-9-.]+$/.test(valores.precio)) {
-            errores.precio = "Solo números";/*/
+            errores.precio = "Solo números"; /*/
           }
           // Validacion inventario minimo
           if (!valores.inventario_minimo) {
