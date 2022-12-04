@@ -94,15 +94,15 @@ const MostrarArticulos = () => {
   };
 
   //procedimineto para mostrar las recetas
-  /* const getRecetas = async () => {
+  const getRecetas = async () => {
     try {
-      const res = await axios.get(UrlMostrarReceta); 
+      const res = await axios.get(UrlMostrarReceta);
       setRecetas(res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
     }
-  };*/
+  };
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -172,7 +172,7 @@ const MostrarArticulos = () => {
     try {
       console.log(recetaDelete);
       const res = await axios.delete(`${UrlEliminarReceta}${recetaDelete}`);
-      getRegistros();
+      getRecetas();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
       } else {
@@ -187,6 +187,10 @@ const MostrarArticulos = () => {
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
   const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
+
+  //Ventana modal de confirmación de eliminar receta
+  const [modalEliminar2, setModalEliminar2] = useState(false);
+  const abrirModalEliminar2 = () => setModalEliminar2(!modalEliminar);
 
   //Ventana modal para mostrar más articulos
   const [modalVerMas, setVerMas] = useState(false);
@@ -426,7 +430,7 @@ const MostrarArticulos = () => {
             title="Eliminar"
             onClick={() => {
               setRecetaDelete(row.id_articulo_padre);
-              abrirModalEliminar();
+              abrirModalEliminar2();
             }}
           >
             <i className="bi bi-trash3-fill"></i>
@@ -881,6 +885,28 @@ const MostrarArticulos = () => {
             Eliminar
           </Button>
           <Button color="secondary" onClick={abrirModalEliminar}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Ventana Modal de Eliminar Receta*/}
+      <Modal isOpen={modalEliminar2} toggle={abrirModalEliminar2} centered>
+        <ModalHeader toggle={abrirModalEliminar2}>Eliminar Receta</ModalHeader>
+        <ModalBody>
+          <p>¿Está seguro de Eliminar este Registro?</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="danger"
+            onClick={() => {
+              deleteReceta();
+              abrirModalEliminar2();
+            }}
+          >
+            Eliminar
+          </Button>
+          <Button color="secondary" onClick={abrirModalEliminar2}>
             Cancelar
           </Button>
         </ModalFooter>

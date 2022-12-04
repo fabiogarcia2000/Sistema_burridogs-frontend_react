@@ -1,9 +1,11 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { getCurrentDateShort } from "../../../../utils/fechaYhora";
+import { getCurrentTime } from "../../../../utils/fechaYhora";
 
 export function Export_PDF_MV(data) {
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
-  const logo1 =DatosEmpresa.logo1;
+  const logo1 = DatosEmpresa.logo1;
 
   const unit = "pt";
   const size = "A4"; // Use A1, A2, A3 or A4
@@ -25,9 +27,11 @@ export function Export_PDF_MV(data) {
   };
 
   //Parametros que se deben obtener
-  var sucursal = "Principal";
-  var usuario = "SYSTEMUSER";
-  var fecha = "22-11-2022";
+  let empresa = DatosEmpresa.descripcion;
+  let reporte = "MOVIMIENTOS";
+  let espacio = " ";
+  let fecha = getCurrentDateShort(data);
+  let hora = getCurrentTime(data);
 
   var width = doc.internal.pageSize.getWidth(); //Para centrar el texto
 
@@ -35,18 +39,12 @@ export function Export_PDF_MV(data) {
   doc.setFontSize(14);
   doc.addImage(logo1, 1500, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
   doc.text(
-    [
-      "Reporte de Movimientos de Articulos Por Bodega",
-      `Sucursal: ${sucursal}`,
-      `Fecha: ${fecha}`,
-      `Usuario: ${usuario}`,
-    ],
+    [`${empresa}`, `${espacio}`, `REPORTE DE ${reporte}`],
     width / 2,
     30,
     { align: "center" }
   );
   doc.autoTable(tabla);
-
   //Se recorre el documento para encontrar el numero de paginas
   var pageCount = doc.internal.getNumberOfPages(); //Total Page Number
   var i = 0;
@@ -59,9 +57,15 @@ export function Export_PDF_MV(data) {
       10,
       doc.internal.pageSize.height - 10
     );
-    //doc.text('Pagina: ' + pageCurrent + ' de ' + pageCount, 210-20, 297-30, null, null);
+    doc.text(
+      `Fecha y hora: ${fecha}, ${hora}`,
+      width - 10,
+      doc.internal.pageSize.height - 10,
+      { align: "right" }
+    );
   }
 
   //Se guarda el documento
-  doc.save("Artic_BdgMov.pdf");
+  //doc.save("Categorias.pdf")
+  window.open(doc.output("bloburl", "_blank"));
 }

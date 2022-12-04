@@ -13,11 +13,9 @@ import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 const UrlMostrar = "http://190.53.243.69:3001/lista_materiales/getall/";
 const UrlEliminar = "http://190.53.243.69:3001/lista_materiales/eliminar/";
 
-
 const objeto = "FORM_LISTA_MATERIALES";
 
 const MostrarMateriales = () => {
-
   const navigate = useNavigate();
 
   //Configurar los hooks
@@ -38,99 +36,89 @@ const MostrarMateriales = () => {
     }
   };
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true);
 
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
+    setPermisos(newData);
+  };
 
-   /*****Obtener y corroborar Permisos*****/
-   const [temp, setTemp] = useState([]);
-   const [permisos, setPermisos] = useState([]);
-   const [permitido, setPermitido] = useState(true)
- 
-   const Permisos = () =>{
-     const newData = temp.filter(
-       (item) => item.objeto === objeto
-     );
-     setPermisos(newData);
-   }
- 
-   useEffect(() => {
-     let data = localStorage.getItem('permisos')
-     if(data){
-       setTemp(JSON.parse(data))
-     }
-   }, []);
- 
-   useEffect(() => {
-     Permisos();
-   }, [temp]);
- 
- 
-   useEffect(() => {
-     if(permisos.length > 0){
-       TienePermisos();
-     }
-   }, [permisos]);
- 
-   const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar);
-     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR MATERIALES");
-   }
- /*******************/ 
+  useEffect(() => {
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
+    }
+  }, []);
 
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
 
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
 
- //Alertas de éxito o error al eliminar
- const mostrarAlertas = (alerta) => {
-  switch (alerta) {
-    case "eliminado":
-      Swal.fire({
-        title: "¡Eliminado!",
-        text: "Se eliminó con éxito",
-        icon: "success",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Ok",
-      });
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+    InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR MATERIALES");
+  };
+  /*******************/
 
-      break;
+  //Alertas de éxito o error al eliminar
+  const mostrarAlertas = (alerta) => {
+    switch (alerta) {
+      case "eliminado":
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "Se eliminó con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
-    case "error":
-      Swal.fire({
-        title: "Error",
-        text: "No se pudo eliminar",
-        icon: "error",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Ok",
-      });
+        break;
 
-      break;
+      case "error":
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo eliminar",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
-    case "errormostrar":
-      Swal.fire({
-        title: "Error al Mostrar",
-        text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
-        icon: "error",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Ok",
-      });
+        break;
 
-      break;
+      case "errormostrar":
+        Swal.fire({
+          title: "Error al Mostrar",
+          text: "En este momento no se pueden mostrar los datos, puede ser por un error de red o con el servidor. Intente más tarde.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
 
       case "permisos":
-      Swal.fire({
-        title: "Lo siento, no tienes permisos para realizar esta acción.",
-        icon: "error",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Ok",
-      });
+        Swal.fire({
+          title: "Lo siento, no tienes permisos para realizar esta acción.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
-      break;
+        break;
 
-    default:
-      break;
-  }
-};
-
-
-
+      default:
+        break;
+    }
+  };
 
   //procedimineto para eliminar un registro
   const deleteRegistro = async () => {
@@ -139,14 +127,18 @@ const MostrarMateriales = () => {
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
-        mostrarAlertas("eliminado")
-        InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR MATERIAL");
+        mostrarAlertas("eliminado");
+        InsertarBitacora(
+          permisos[0].id_objeto,
+          "ELIMINAR",
+          "ELIMINAR MATERIAL"
+        );
       } else {
-        mostrarAlertas("error")
+        mostrarAlertas("error");
       }
     } catch (error) {
       console.log(error);
-      mostrarAlertas("error")
+      mostrarAlertas("error");
     }
   };
   //Ventana modal de confirmación de eliminar
@@ -172,7 +164,9 @@ const MostrarMateriales = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.id_articulo_padre.toString().includes(busqueda.toLocaleLowerCase()) ||
+        dato.id_articulo_padre
+          .toString()
+          .includes(busqueda.toLocaleLowerCase()) ||
         dato.comentario.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -218,7 +212,11 @@ const MostrarMateriales = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
-              InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS MATERIAL")
+              InsertarBitacora(
+                permisos[0].id_objeto,
+                "LECTURA",
+                "MOSTRAR MAS MATERIAL"
+              );
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -229,12 +227,12 @@ const MostrarMateriales = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if(permisos[0].permiso_actualizacion){
+              if (permisos[0].permiso_actualizacion) {
                 setGlobalState("registroEdit", row);
                 navigate("/admin/editarmaterial");
-              }else{
+              } else {
                 mostrarAlertas("permisos");
-              }              
+              }
             }}
           >
             <i className="bi bi-pencil-square"></i>
@@ -244,13 +242,12 @@ const MostrarMateriales = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              if(permisos[0].permiso_eliminacion){
+              if (permisos[0].permiso_eliminacion) {
                 setRegistroDelete(row.id_articulo_padre);
                 abrirModalEliminar();
-              }else{
+              } else {
                 mostrarAlertas("permisos");
               }
-              
             }}
           >
             <i className="bi bi-trash3-fill"></i>
@@ -276,110 +273,116 @@ const MostrarMateriales = () => {
       <h3>Materiales</h3>
       <br />
 
-{permitido? (     
-     <div>
-
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <button
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
-                onClick={() => {
-                  if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearmaterial")
-                  }else{
-                   mostrarAlertas("permisos");
-                  }              
-                }}
+      {permitido ? (
+        <div>
+          {/*Mostrar los botones: Nuevo, Excel y PDF */}
+          <div className="row">
+            <div className="col">
+              <div
+                className="btn-toolbar"
+                role="toolbar"
+                aria-label="Toolbar with button groups"
               >
-                <i className="bi bi-plus-lg"></i> Nuevo
-              </button>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="First group"
+                >
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    title="Agregar Nuevo"
+                    onClick={() => {
+                      if (permisos[0].permiso_insercion) {
+                        navigate("/admin/crearmaterial");
+                      } else {
+                        mostrarAlertas("permisos");
+                      }
+                    }}
+                  >
+                    <i className="bi bi-plus-lg"></i> Nuevo
+                  </button>
+                </div>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="Second group"
+                >
+                  <Button
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                    onClick={() => {
+                      Export_Excel(results);
+                      InsertarBitacora(
+                        permisos[0].id_objeto,
+                        "EXPORTAR",
+                        "EXPORTAR EXCEL LISTA MATERIALES"
+                      );
+                    }}
+                  >
+                    <i className="bi bi-file-earmark-excel-fill"></i>
+                  </Button>
+                  <Button
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                    onClick={() => {
+                      Export_PDF(results);
+                      InsertarBitacora(
+                        permisos[0].id_objeto,
+                        "EXPORTAR",
+                        "EXPORTAR PDF LISTA MATERIALES"
+                      );
+                    }}
+                  >
+                    <i className="bi bi-filetype-pdf"></i>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="Second group"
-            >
-              <Button
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-                onClick={()=>{
-                  Export_Excel(results);
-                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LISTA MATERIALES")
-                }}
-              >
-                <i className="bi bi-file-earmark-excel-fill"></i>
-              </Button>
-              <Button
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-                onClick={()=>{
-                  Export_PDF(results);
-                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LISTA MATERIALES")
-                }}
-              >
-                <i className="bi bi-filetype-pdf"></i>
-              </Button>
+
+            {/*Mostrar la barra de busqueda*/}
+            <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por artículo o comentario..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
+              </div>
             </div>
           </div>
-        </div>
+          <br />
 
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="addon-wrapping">
-            <i className="bi bi-search"></i>
-            </span>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Buscar por artículo o comentario..."
-              aria-label="Search"
-              value={busqueda}
-              onChange={valorBuscar}
-            />
+          {/*Mostramos la tabla con los datos*/}
+          <div className="row">
+            {results.length > 0 ? (
+              <DataTable
+                columns={columns}
+                data={results}
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="550px"
+              />
+            ) : (
+              <p className="text-center">Ningún Registro</p>
+            )}
           </div>
         </div>
-      </div>
-      <br />
-
-      {/*Mostramos la tabla con los datos*/}
-      <div className="row">
-      {results.length > 0 ? (
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
-        ) : (
-          <p className="text-center">Ningún Registro</p>
-        )}
-      </div>
-
-  </div>
-
-) : (
-  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
-)}
-
+      ) : (
+        <p className="text-center text-danger">
+          Lo siento, no tienes permisos para realizar esta acción.
+        </p>
+      )}
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>

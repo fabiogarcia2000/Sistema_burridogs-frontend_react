@@ -520,6 +520,8 @@ const MostrarInvArticulos = () => {
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
         <ModalHeader toggle={abrirModalVerMas}>
           Estado del artículo: {registroVerMas.cod_articulo}
+          {" - "}
+          {registroVerMas.descripcion_articulo}
         </ModalHeader>
         <ModalBody>
           <div className="row g-3">
