@@ -10,7 +10,7 @@ import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 
-const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/";
+const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/0";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 const fechaHoy = "2022-02-01"
 
