@@ -191,11 +191,10 @@ const MostrarArticulos = () => {
   //procedimineto para eliminar receta
   const deleteReceta = async () => {
     try {
+      console.log("RECTA DELETE")
       console.log(recetaDelete);
-      const res = await axios.delete(`${UrlEliminarReceta}`, {
-        id_articulo_padre: idpadre,
-        id_articulo_hijo: idhijo,
-      });
+      const res = await axios.delete(`${UrlEliminarReceta}`, recetaDelete);
+      console.log(res)
       //getRecetas();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
@@ -214,7 +213,7 @@ const MostrarArticulos = () => {
 
   //Ventana modal de confirmación de eliminar receta
   const [modalEliminar2, setModalEliminar2] = useState(false);
-  const abrirModalEliminar2 = () => setModalEliminar2(!modalEliminar);
+  const abrirModalEliminar2 = () => setModalEliminar2(!modalEliminar2);
 
   //Ventana modal para mostrar más articulos
   const [modalVerMas, setVerMas] = useState(false);
@@ -455,6 +454,7 @@ const MostrarArticulos = () => {
             onClick={() => {
               setpadreDelete(row.id_articulo_padre);
               sethijoDelete(row.id_articulo_hijo);
+              setRecetaDelete({...recetaDelete, id_articulo_padre: row.id_articulo_padre, id_articulo_hijo: row.id_articulo_hijo })
               abrirModalEliminar2();
             }}
           >
