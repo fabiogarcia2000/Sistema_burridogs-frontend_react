@@ -91,7 +91,7 @@ export default function Factura() {
         </div>
       </div>
       <br />
-      <div className="row">
+      {/* <div className="row">
         <div class="input-group input-group-sm mb-3">
           <span class="input-group-text color1" id="basic-addon1">
             <strong>PROVEEDOR: </strong>
@@ -114,7 +114,7 @@ export default function Factura() {
             value={compra.rtn || ""}
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="row regul">
         <table class="table table-sm table-bordered border-dark table-responsive">
