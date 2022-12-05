@@ -116,14 +116,11 @@ const EditarSubCuenta = () => {
             errores.id_cuenta = "Por favor seleccione una cuenta";
           }
 
+
           // Validacion nombre subcuenta
           if (!valores.nombre_subcuenta) {
             errores.nombre_subcuenta =
               "Por favor ingresa un nombre de subcuenta";
-          } else if (
-            !/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.nombre_subcuenta)
-          ) {
-            errores.nombre_subcuenta = "Escribir solo en MAYÚSCULAS";
           }
           return errores;
         }}
@@ -137,18 +134,16 @@ const EditarSubCuenta = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              RegistroEnVitacora(
-                permisos[0].id_objeto,
-                "EDITAR",
-                "EDITAR SUBCUENTA"
-              ); //Insertar bitacora
+              RegistroEnVitacora(permisos[0].id_objeto,"EDITAR","EDITAR SUBCUENTA"); //Insertar bitacora
               navigate("/admin/mostrarsubcuenta");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto,"EDITAR","ERROR AL EDITAR SUBCUENTA"); //Insertar bitacora
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto,"EDITAR","ERROR AL EDITAR SUBCUENTA"); //Insertar bitacora
             navigate("/admin/mostrarsubcuenta");
           }
         }}
@@ -191,6 +186,7 @@ const EditarSubCuenta = () => {
                     id="id_cuenta"
                     name="id_cuenta"
                   >
+                    <option value="">Seleccionar...</option>
                     {cuenta.map((item, i) => (
                       <option key={i} value={item.id_cuenta}>
                         {item.nombre_cuenta}

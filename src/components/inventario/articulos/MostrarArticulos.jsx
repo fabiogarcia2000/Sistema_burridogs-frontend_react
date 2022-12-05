@@ -192,7 +192,7 @@ const MostrarArticulos = () => {
       console.log("RECTA DELETE");
       console.log(recetaDelete);
       const res = await axios.delete(`${UrlEliminarReceta}`, recetaDelete);
-      console.log(res);
+      
       //getRecetas();
       if (res.status === 200) {
         mostrarAlertas("eliminado");

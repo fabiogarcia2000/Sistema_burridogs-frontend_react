@@ -135,10 +135,12 @@ const MostrarObjetos = () => {
           RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR OBJETO");
        } else {
          mostrarAlertas("error");
+         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR OBJETO");
        }
      } catch (error) {
        console.log(error);
        mostrarAlertas("error");
+       RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR OBJETO");
      }
    };
  

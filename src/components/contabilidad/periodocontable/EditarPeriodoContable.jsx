@@ -148,11 +148,13 @@ const EditarPeriodoContable = () => {
               navigate("/admin/mostrarperiodo");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERIODO CONTABLE"); //Insertar bitacora
             }
 
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERIODO CONTABLE"); //Insertar bitacora
             navigate("/admin/mostrarperiodo");
           }
         }}

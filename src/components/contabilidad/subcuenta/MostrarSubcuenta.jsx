@@ -135,10 +135,12 @@ const MostrarSubCuentas = () => {
         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR SUBCUENTA");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR SUBCUENTA");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR SUBCUENTA");
     }
   };
 

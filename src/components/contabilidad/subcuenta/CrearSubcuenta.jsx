@@ -153,14 +153,17 @@ const CrearSubCuenta = () => {
               navigate("/admin/mostrarsubcuenta");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR SUBCUENTA"); //Insertar bitacora
             }
 
             }else{ 
               mostrarAlertas("duplicado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR SUBCUENTA"); //Insertar bitacora
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR SUBCUENTA"); //Insertar bitacora
             navigate("/admin/mostrarsubcuenta");
           }
         }}

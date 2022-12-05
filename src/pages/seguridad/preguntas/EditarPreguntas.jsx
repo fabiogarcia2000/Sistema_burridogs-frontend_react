@@ -113,11 +113,13 @@ const mostrarAlertas = (alerta) => {
               navigate("/admin/questions");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PREGUNTA SEGURIDAD"); //Insertar bitacora
             }
 
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PREGUNTA SEGURIDAD"); //Insertar bitacora
             navigate("/admin/questions");
           }
         }}

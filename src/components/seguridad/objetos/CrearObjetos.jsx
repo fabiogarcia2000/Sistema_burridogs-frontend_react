@@ -147,12 +147,14 @@ const CrearObjeto = () => {
                           navigate("/admin/mostrarobjetos");
                         } else {
                           mostrarAlertas("error");
+                          RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR OBJETO"); //Insertar bitacora
                         }
             
             
                       } catch (error) {
                         console.log(error);
                         mostrarAlertas("error");
+                        RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR OBJETO"); //Insertar bitacora
                         navigate("/admin/mostrarobjetos");
                       }
                     }}

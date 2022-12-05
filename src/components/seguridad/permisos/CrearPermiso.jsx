@@ -205,6 +205,7 @@ const CrearPermiso = () => {
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PERMISO"); //Insertar bitacora
             }
           } /*else {
               mostrarAlertas("duplicado");
@@ -212,6 +213,7 @@ const CrearPermiso = () => {
           }*/ catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PERMISO"); //Insertar bitacora
             navigate("/admin/mostrarpermisos");
           };
         }}

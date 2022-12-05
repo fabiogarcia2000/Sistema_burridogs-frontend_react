@@ -148,10 +148,12 @@ export default function Roles(props) {
         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR ROL");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR ROL");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR ROL");
     }
   };
 

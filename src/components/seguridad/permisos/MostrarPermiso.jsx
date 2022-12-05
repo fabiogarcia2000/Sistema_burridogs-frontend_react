@@ -134,10 +134,12 @@ const MostrarPermiso = () => {
                 RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PERMISO");
             } else {
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR PERMISO");
             }
         } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR PERMISO");
         }
     };
 

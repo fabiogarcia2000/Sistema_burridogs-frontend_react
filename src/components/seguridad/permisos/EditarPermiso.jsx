@@ -135,11 +135,13 @@ const PermisoEditar = () => {
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERMISO"); //Insertar bitacora
             }
 
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERMISO"); //Insertar bitacora
             navigate("/admin/mostrarpermiso");
           }
         }}
