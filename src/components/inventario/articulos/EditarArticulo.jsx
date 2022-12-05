@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 import {
   cambiarAMayusculasDescripCorta,
   cambiarAMayusculasDescripArticulo,
-  cambiarAMayusculasDescripcion,
 } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora";
@@ -18,7 +17,6 @@ const URLEditar = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 const UrlMostrarUnidades = "http://190.53.243.69:3001/unidad_medida/getall/";
 const UrlMostrarCategorias = "http://190.53.243.69:3001/categoria/getall/";
 const UrlMostrarImpuestos = "http://190.53.243.69:3001/impuesto/getall/";
-const UrlMostrarSocios = "http://190.53.243.69:3001/socio_negocio/getall";
 
 const objeto = "FORM_ARTICULO";
 
@@ -108,23 +106,6 @@ const FormularioEditar = () => {
     try {
       const res = await axios.get(UrlMostrarImpuestos);
       setImpuestos(res.data);
-    } catch (error) {
-      console.log(error);
-      mostrarAlertas("errormostrar");
-    }
-  };
-
-  //procedimineto para obtener los socios de negocio
-  const [socios, setSocios] = useState([]);
-  useEffect(() => {
-    getSocios();
-  }, []);
-
-  //petición a api
-  const getSocios = async () => {
-    try {
-      const res = await axios.get(UrlMostrarSocios);
-      setSocios(res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -253,6 +234,7 @@ const FormularioEditar = () => {
         }}
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
+
           try {
             const res = await axios.put(
               `${URLEditar}${valores.cod_articulo}`,

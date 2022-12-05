@@ -10,12 +10,14 @@ import { MostrarAlertas } from "../ingresar_mds/utils/Alertas";
 import { InsertCompra } from "./insertCompra";
 import { numeroALetras } from "./utils/num_a_letras";
 import { useReactToPrint } from "react-to-print";
+import { cambiarAMayusculasReferencia } from "../../../utils/cambiarAMayusculas";
 import {
   getCurrentDate,
   getCurrentTime,
   getCurrentDateShort,
 } from "../../../utils/fechaYhora";
 import Swal from "sweetalert2";
+import Factura from "../ingresar_mds/facturaA4/Factura";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
@@ -849,8 +851,10 @@ const OrdenCompra = () => {
           </div>
           <br />
           <br />
+          <br />
           {/*Mostrar categorias*/}
           <div className="col-7">
+            <h4>Categorías</h4>
             <div className="row colorcategorias">
               <div className="col d-grid gap-2 col-3 mx-auto">
                 <button
@@ -882,6 +886,9 @@ const OrdenCompra = () => {
           <hr />
           <br />
           {/*Mostrar productos*/}
+          <h4>Artículos</h4>
+          <br />
+          <br />
           <div className="row divCards">
             <br />
             {articulosMostrar &&
@@ -1032,7 +1039,11 @@ const OrdenCompra = () => {
           <Button
             color="primary"
             onClick={() => {
-              abrirModalFactura();
+              setPreparar(true);
+              if (listo === true) {
+                handlePrint();
+                abrirModalFactura();
+              }
             }}
           >
             Imprimir
@@ -1132,6 +1143,7 @@ const OrdenCompra = () => {
                       className="form-control"
                       name="referencia"
                       placeholder="Referencia de compra..."
+                      onKeyUp={cambiarAMayusculasReferencia(values)}
                     />
 
                     <ErrorMessage

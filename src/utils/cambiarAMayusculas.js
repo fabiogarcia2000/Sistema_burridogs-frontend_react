@@ -8,6 +8,16 @@ export function cambiarAMayusculasDescripcion(valores) {
   }
 }
 
+//función convertir a mayuscula
+export function cambiarAMayusculasReferencia(valores) {
+  try {
+    let texto = valores.referencia;
+    valores.referencia = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //función convertir a mayuscula comentario
 export function cambiarAMayusculasNombreCliente(valores) {
   try {
