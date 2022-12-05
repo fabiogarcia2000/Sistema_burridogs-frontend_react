@@ -138,7 +138,7 @@ function Sidebar() {
             <li>
               <Link to="/admin/mostrarPOS">
                 <i className="bi bi-circle"></i>
-                <span>POS</span>
+                <span>PDV</span>
               </Link>
             </li>
           </ul>
@@ -267,8 +267,6 @@ function Sidebar() {
                 <span>Libro Mayor</span>
               </Link>
             </li>
-
-
           </ul>
         </li>
 
@@ -300,12 +298,6 @@ function Sidebar() {
                 <span>Libro Mayor</span>
               </Link>
             </li> */}
-            <li>
-              <Link to="/admin/reporte-compra-fecha">
-                <i className="bi bi-circle"></i>
-                <span>Reporte de Compra por Fecha</span>
-              </Link>
-            </li>
             <li>
               <Link to="/admin/reporte-producto">
                 <i className="bi bi-circle"></i>

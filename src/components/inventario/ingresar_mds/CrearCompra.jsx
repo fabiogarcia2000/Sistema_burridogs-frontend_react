@@ -79,6 +79,7 @@ const OrdenCompra = () => {
 
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoSocio, setTipoSocio] = useState(2);
+  const [nombreSocio, setNombreSocio] = useState(2);
 
   const [porcDescuento, setPorcDescuento] = useState({});
 
@@ -162,7 +163,7 @@ const OrdenCompra = () => {
     monto_impuesto_total: 0,
     creado_por: usuario,
     fecha_creacion: "",
-    modificado_por: "Jonathan",
+    modificado_por: usuario,
     fecha_modificacion: "2022-12-12",
     id_usuario: 0,
     id_centro_costo: 0,
@@ -635,6 +636,7 @@ const OrdenCompra = () => {
     setCompra({
       ...compra,
       id_socio_negocio: tipoSocio,
+      descripcion: nombreSocio,
       fecha: fechaCorta,
       referencia: referencia,
       fecha_creacion: fechaCorta,
@@ -646,6 +648,7 @@ const OrdenCompra = () => {
       detalle: porcDescuento.length > 0 ? newDetalles : detalles,
       monto_total: tempTotal,
       monto_impuesto_total: tempIsv,
+      impuesto_15: tempIsv,
     });
   };
 
@@ -686,6 +689,10 @@ const OrdenCompra = () => {
   //Ventana modal confirmación de imprimir factura
   const [modalFactura, setModalFactura] = useState(false);
   const abrirModalFactura = () => setModalFactura(!modalFactura);
+
+  //Ventana modal confirmación factura
+  const [modalConfirmar, setModalConfirmar] = useState(false);
+  const abrirModalConfirmar = () => setModalConfirmar(!modalConfirmar);
 
   const columns = [
     {
@@ -1034,6 +1041,10 @@ const OrdenCompra = () => {
         <ModalHeader toggle={abrirModalFactura}>Factura</ModalHeader>
         <ModalBody>
           <h5>¿Imprimir Factura?</h5>
+          {/**FACTURA**/}
+          <div ref={componenteRef} className="imprimir">
+            <Factura />
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button
@@ -1066,6 +1077,34 @@ const OrdenCompra = () => {
         </ModalFooter>
       </Modal>
 
+      {/* Ventana Modal de confirmación imprimir*/}
+      {/*
+        <Modal isOpen={modalConfirmar} toggle={abrirModalConfirmar} centered>
+          <ModalHeader toggle={abrirModalConfirmar}>Factura</ModalHeader>
+          <ModalBody>
+            <h5>Imprimir</h5>
+            {/**FACTURA**}
+            <div ref={componenteRef} className="imprimir">
+              <Factura />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="primary"
+              onClick={() => {
+                setPreparar(true);
+                if (listo === true) {
+                  handlePrint();
+                  abrirModalConfirmar();
+                }
+              }}
+            >
+              Imprimir
+            </Button>
+          </ModalFooter>
+        </Modal>
+            */}
+
       {/* Ventana Modal de Procesar ventas*/}
       <Modal isOpen={modalVenta} toggle={abrirModalVenta} centered>
         <Formik
@@ -1091,6 +1130,7 @@ const OrdenCompra = () => {
           }}
           onSubmit={async (valores) => {
             setTipoSocio(valores.id_socio_negocio);
+            setNombreSocio(valores.descripcion);
             setRef(valores.referencia);
             abrirModalVenta();
             abrirModalFactura();

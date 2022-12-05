@@ -274,6 +274,7 @@ const FormularioEditar = () => {
                     id="codArticulo"
                     name="cod_articulo"
                     placeholder="Código del Artículo..."
+                    disabled
                   />
 
                   <ErrorMessage
