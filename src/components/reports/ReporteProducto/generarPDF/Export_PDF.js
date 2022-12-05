@@ -40,7 +40,7 @@ export function Export_PDF (data, sucursalConectado) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo1, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`Reporte de ${reporte}`, `${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`${reporte}`, `${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
