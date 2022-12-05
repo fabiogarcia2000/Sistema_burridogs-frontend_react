@@ -174,6 +174,7 @@ const Formulario = () => {
                     id="idDescuento"
                     name="cod_descuento"
                     placeholder="Código..."
+                    disabled
                   />
 
                   <ErrorMessage

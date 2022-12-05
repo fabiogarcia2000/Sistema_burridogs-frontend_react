@@ -148,14 +148,14 @@ const FormularioEditar = () => {
 
           // Validacion teléfono
           if (!valores.telefono) {
-            errores.telefono = "Por favor ingrese un numero teléfonico";
-          } else if (!/^[0-9]+$/.test(valores.telefono)) {
-            errores.telefono = " Porfavor solo escriba números";
+            errores.telefono = "Por favor ingrese un número de teléfono";
+          }  else if (!/^[0-9-+]+$/.test(valores.telefono)) {
+            errores.telefono = " Porfavor escriba un número válido";
           }
 
           // Validacion contacto
           if (!valores.contacto) {
-            errores.contacto = "Por favor ingrese un contacto";
+            errores.contacto = "Por favor ingrese un Nombre de contacto";
           }
 
           // Validacion correo
@@ -167,8 +167,8 @@ const FormularioEditar = () => {
 
           // Validacion rtn
           if (!valores.rtn) {
-            errores.rtn = "Por favor ingrese un rtn";
-          } else if (!/^[0-9]+$/.test(valores.rtn)) {
+            errores.rtn = "Por favor ingrese un R.T.N";
+          }else if (!/^[0-9A-Za-z]+$/.test(valores.rtn)) {
             errores.rtn = "Ingrese un R.T.N válido";
           }
 

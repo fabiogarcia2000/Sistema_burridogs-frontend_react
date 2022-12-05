@@ -135,7 +135,7 @@ const Formulario = () => {
           if (!valores.cod_socio_negocio) {
             errores.cod_socio_negocio = "Por favor ingresa un código";
           }else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,12}$/.test(valores.cod_socio_negocio)) {
-            errores.cod_socio_negocio = "Escribir números y letras sin espacios. Ejemplo: C001";
+            errores.cod_socio_negocio = "Escribir números y letras sin espacios. Ejemplo: C0001";
           }
 
 
@@ -159,13 +159,13 @@ const Formulario = () => {
           // Validacion teléfono
           if (!valores.telefono) {
             errores.telefono = "Por favor ingrese un número de teléfono";
-          } else if (!/^[0-9]+$/.test(valores.telefono)) {
-            errores.telefono = " Porfavor solo escriba números";
+          } else if (!/^[0-9-+]+$/.test(valores.telefono)) {
+            errores.telefono = " Porfavor escriba un número válido";
           }
 
           // Validacion contacto
           if (!valores.contacto) {
-            errores.contacto = "Por favor ingrese el nombre de contacto";
+            errores.contacto = "Por favor ingrese un nombre de contacto";
           }
 
           // Validacion correo
@@ -177,8 +177,8 @@ const Formulario = () => {
 
           // Validacion rtn
           if (!valores.rtn) {
-            errores.rtn = "Por favor ingrese un rtn";
-          } else if (!/^[0-9]+$/.test(valores.rtn)) {
+            errores.rtn = "Por favor ingrese un R.T.N";
+          } else if (!/^[0-9A-Za-z]+$/.test(valores.rtn)) {
             errores.rtn = "Ingrese un R.T.N válido";
           }
 
