@@ -203,23 +203,19 @@ const FormularioEditar = () => {
           if (!valores.precio) {
             errores.precio = "Por favor ingresa un precio";
           } else if (!/^^[0-9-.]+$/.test(valores.precio)) {
-            errores.precio = "Solo números"; /*/
+            errores.precio = "Solo se aceptan números";
           }
           // Validacion inventario minimo
           if (!valores.inventario_minimo) {
             errores.inventario_minimo = "Por favor ingresa una cantidad mínima";
-            /*} } else if (!/^^\d*\.\d+$/.test(valores.inventario_minimo)) {
-            errores.inventario_minimo = "Solo números";
           } else if (!/^^[0-9-.]+$/.test(valores.inventario_minimo)) {
-            errores.inventario_minimo = "Solo números";*/
+            errores.inventario_minimo = "Solo se aceptan números";
           }
           // Validacion inventario maximo
           if (!valores.inventario_maximo) {
             errores.inventario_maximo = "Por favor ingresa una cantidad máxima";
-            /* } else if (!/^^\d*\.\d+$/.test(valores.inventario_maximo)) {
-            errores.inventario_maximo = "Solo números";
           } else if (!/^^[0-9-.]+$/.test(valores.inventario_maximo)) {
-            errores.inventario_maximo = "Solo números";*/
+            errores.inventario_maximo = "Solo se aceptan números";
           }
           // Validacion unidad medida
           if (!valores.id_unidad_medida) {

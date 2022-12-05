@@ -18,6 +18,7 @@ const UrlMostrarReceta =
 const UrlEliminarArt = "http://190.53.243.69:3001/articulo/eliminar/";
 const UrlEliminarReceta =
   "http://190.53.243.69:3001/lista_materiales/eliminar/";
+const UrlMostrarArtV = "http://190.53.243.69:3001/articulo/getallactive";
 
 const objeto = "FORM_ARTICULO";
 
@@ -36,6 +37,7 @@ const MostrarArticulos = () => {
   const [articulos, setArticulos] = useState([]);
   useEffect(() => {
     getArticulos();
+    getArticulosV();
   }, []);
 
   //petición a api
@@ -43,6 +45,23 @@ const MostrarArticulos = () => {
     try {
       const res = await axios.get(UrlMostrar);
       setArticulos(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener los artículos
+  const [articulosV, setArticulosV] = useState([]);
+  useEffect(() => {
+    getArticulos();
+  }, []);
+
+  //petición a api
+  const getArticulosV = async () => {
+    try {
+      const res = await axios.get(UrlMostrarArtV);
+      setArticulosV(res.data);
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -603,9 +622,9 @@ const MostrarArticulos = () => {
                       name="id_articulo_padre"
                     >
                       <option value="">Seleccionar...</option>
-                      {articulos.map((item, i) => (
+                      {articulosV.map((item, i) => (
                         <option key={i} value={item.id_articulo}>
-                          {item.descripcion_articulo}
+                          {item.descripcion_corta}
                         </option>
                       ))}
                     </Field>

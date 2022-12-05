@@ -9,7 +9,7 @@ import {
   cambiarAMayusculasDescripArticulo,
 } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
-import { getCurrentDateShort } from "../../../utils/fechaYhora"
+import { getCurrentDateShort } from "../../../utils/fechaYhora";
 
 const URLCrear = "http://190.53.243.69:3001/articulo/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/articulo/getone/";
@@ -28,48 +28,37 @@ const Formulario = () => {
   const userdata = JSON.parse(localStorage.getItem("data"));
   const usuario = userdata.data.nameUser;
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true);
 
-   /*****Obtener y corroborar Permisos*****/
-   const [temp, setTemp] = useState([]);
-   const [permisos, setPermisos] = useState([]);
-   const [permitido, setPermitido] = useState(true)
- 
-   const Permisos = () =>{
-     const newData = temp.filter(
-       (item) => item.objeto === objeto
-     );
-     setPermisos(newData);
-   }
- 
-   useEffect(() => {
-     let data = localStorage.getItem('permisos')
-     if(data){
-       setTemp(JSON.parse(data))
-     }
-   }, []);
- 
-   useEffect(() => {
-     Permisos();
-   }, [temp]);
- 
- 
-   useEffect(() => {
-     if(permisos.length > 0){
-       TienePermisos();
-     }
-   }, [permisos]);
- 
-   const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
-   }
- /*******************/
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
+    setPermisos(newData);
+  };
 
+  useEffect(() => {
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
+    }
+  }, []);
 
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
 
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
 
-
-
-
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  /*******************/
 
   //procedimineto para obtener las unidades de medida
   const [unidades, setUnidades] = useState([]);
@@ -246,21 +235,21 @@ const Formulario = () => {
           if (!valores.precio) {
             errores.precio = "Por favor ingrese el precio";
           } else if (!/^^[0-9-.]+$/.test(valores.precio)) {
-            errores.precio = "El precio solo puede contener números";
+            errores.precio = "Solo se aceptan números";
           }
 
           // Validacion inventario minimo
           if (!valores.inventario_minimo) {
-            errores.inventario_minimo = "Por favor ingrese el precio";
+            errores.inventario_minimo = "Por favor ingresa una cantidad mínima";
           } else if (!/^^[0-9]+$/.test(valores.inventario_minimo)) {
-            errores.inventario_minimo = "Las unidades deben ser en números";
+            errores.inventario_minimo = "Solo se aceptan números";
           }
 
           // Validacion inventario maximo
           if (!valores.inventario_maximo) {
-            errores.inventario_maximo = "Por favor ingrese el precio";
+            errores.inventario_maximo = "Por favor ingresa una cantidad máxima";
           } else if (!/^^[0-9]+$/.test(valores.inventario_maximo)) {
-            errores.inventario_maximo = "Las unidades deben ser en números";
+            errores.inventario_maximo = "Solo se aceptan números";
           }
 
           // Validacion estado
@@ -285,7 +274,11 @@ const Formulario = () => {
               );
               if (res.status === 200) {
                 mostrarAlertas("guardado");
-                InsertarBitacora(permisos[0].id_objeto, "CREAR", "CREAR ARTICULO");
+                InsertarBitacora(
+                  permisos[0].id_objeto,
+                  "CREAR",
+                  "CREAR ARTICULO"
+                );
                 navigate("/admin/mostrararticulos");
               } else {
                 mostrarAlertas("error");
