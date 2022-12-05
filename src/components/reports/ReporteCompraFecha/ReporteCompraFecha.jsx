@@ -272,7 +272,7 @@ const ReporteCompraFecha = () => {
       if (res.status === 200) {
         getEncabezados()
          mostrarAlertas("eliminado"); 
-         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR REGISTRO DE RPT DE COMPRA POR FECHA");
+         RegistroEnVitacora(permisos[0].id_objeto, "ANULAR", "ANULAR REGISTRO DE RPT DE COMPRA POR FECHA");
       } else {
         mostrarAlertas("error");
       }

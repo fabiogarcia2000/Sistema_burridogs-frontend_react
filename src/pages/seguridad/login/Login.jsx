@@ -278,7 +278,7 @@ export default function Login(props) {
         <Alert isOpen={isValid} color={color}>
           {message}
         </Alert>
-        <h2>{nameCompany}</h2>
+        <h2>Login</h2>
         <h2>Panel administrativo</h2>
         {/* <h4>Inicio de Sesión</h4> */}
         <h5 className="caption">Ingresa tus credenciales para continuar</h5>
@@ -422,11 +422,8 @@ export default function Login(props) {
                 </div>
                 <div className="info-container">
                   <p>
-                    Para dudas o consultas comunicate con{" "}
-                    <strong>{userContact}</strong>
-                    <br />
-                    administardor del sistema al número <strong>{phone}</strong>
-                    <br />o escribe al correo <strong>{mailContact}</strong>
+                    Para dudas o consultas comunicate al número <strong>{DatosEmpresa.telefono}</strong>
+                    <br />o escribe al correo <strong>{DatosEmpresa.correo}</strong>
                   </p>
                 </div>
               </form>

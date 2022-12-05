@@ -50,7 +50,7 @@ function Header() {
         </Link>
       </div>
 
-      <span className="titleCompany">Panel administrativo <strong>{nameCompany}</strong> </span>
+      <span className="titleCompany">Panel administrativo <strong>{DatosEmpresa.descripcion}</strong> </span>
       <nav className="header-nav ms-auto">
         <ul className="d-flex align-items-center">
           {/*<li className="nav-item dropdown">
@@ -142,7 +142,7 @@ function Header() {
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
               <li className="dropdown-header">
                 <h6>{userdata.data.nameUser} </h6>
-                <span>{userdata.data.id} </span>
+                <span>{"ID "+userdata.data.id} </span>
               </li>
               <li>
                 <hr className="dropdown-divider" />

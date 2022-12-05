@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const UrlEncabezado = "http://190.53.243.69:3001/venta/venta_por_fecha/";
 const UrlDetalles = "http://190.53.243.69:3001/venta/detalle_por_encabezado/";
+const UrlAnular = "http://190.53.243.69:3001/venta/anular/";
 
 const objeto = "FORM_CONSULTAR_VENTA"
 
@@ -22,6 +23,8 @@ const VentaResumen = () => {
   const navigate = useNavigate();
   const componenteRef = useRef();
 
+  const [registroDelete, setRegistroDelete] = useState('');
+  const [datos, setDatos] = useState([]);
   const [encabezado, setEncabezado] = useState([]);
   const [datosEncabezado, setDatosEncabezado] = useState([]);
   const [detalles, setDetalles] = useState([]);
@@ -129,8 +132,9 @@ useEffect(() => {
   } else {
     results = encabezado.filter(
       (dato) =>
-        dato.nombre_cliente? dato.nombre_cliente.toLowerCase().includes(busqueda.toLocaleLowerCase()): null ||
-        dato.rtn.toString().includes(busqueda.toLocaleLowerCase())
+        (dato.nombre_cliente||"").toLowerCase().includes(busqueda.toLocaleLowerCase())||
+       ( dato.rtn||0).toString().includes(busqueda.toLocaleLowerCase()) ||
+        (dato.correlativo ||0).toString().includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -140,6 +144,10 @@ useEffect(() => {
     documentTitle: "Factura",
     onAfterPrint: () => console.log("Listo"),
   });
+
+  //Ventana modal de confirmación de eliminar
+  const [modalEliminar, setModalEliminar] = useState(false);
+  const abrirModalEliminar = () => setModalEliminar(!modalEliminar);
 
   //Configuramos las columnas de la tabla
   const columns = [
@@ -194,6 +202,17 @@ useEffect(() => {
           >
             <i className="bi bi-eye-fill"></i>
           </Link>
+          &nbsp;
+            <button
+              className="btn btn-light"
+              title="Anular"
+              onClick={() => {
+              setRegistroDelete(row.secuencia_enc);
+              abrirModalEliminar();
+            }}
+          >
+            <i className="bi bi-trash3-fill"></i>
+          </button>
         </>
       ),
       ignoreRowClick: true,
@@ -222,9 +241,55 @@ useEffect(() => {
           confirmButtonText: "Ok",
         });
         break;
+        case "anulado":
+        Swal.fire({
+          title: "¡anulado!",
+          text: "Se anulo con éxito",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
 
       default:
         break;
+    }
+  };
+
+
+//procedimineto para anular una compra
+const getEncabezados = async () => {
+  try {
+    console.log(datos);
+    const res = await axios.post(UrlEncabezado, datos);
+    setEncabezado(res.data);
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errormostrar");
+  }
+};
+
+useEffect(() => {
+  getEncabezados();
+}, [datos]);
+
+  //procedimineto para eliminar un registro
+  const deleteRegistro = async () => {
+    try {
+      console.log(registroDelete)
+      const res = await axios.post(`${UrlAnular}${registroDelete}`);
+      //getDetalles();
+      if (res.status === 200) {
+        getEncabezados()
+         mostrarAlertas("eliminado"); 
+         RegistroEnVitacora(permisos[0].id_objeto, "ANULAR", "ANULAR REGISTRO DE RPT DE VENTAS POR FECHA");
+      } else {
+        mostrarAlertas("error");
+      }
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("error");
     }
   };
 
@@ -259,15 +324,8 @@ useEffect(() => {
             return errores;
           }}
           onSubmit={async (valores) => {
-            try {
-              console.log(valores);
-              const res = await axios.post(UrlEncabezado, valores);
-              setEncabezado(res.data);
-              console.log(res);
-            } catch (error) {
-              console.log(error);
-              mostrarAlertas("errormostrar");
-            }
+            setDatos(valores)
+            
           }}
         >
           {({ errors, values }) => (
@@ -489,6 +547,28 @@ useEffect(() => {
           </Button>
         </ModalFooter>
       </Modal>
+
+      {/* Ventana Modal de Eliminar*/}
+      <Modal isOpen={modalEliminar} toggle={abrirModalEliminar} centered>
+          <ModalHeader toggle={abrirModalEliminar}>Anular Registro</ModalHeader>
+          <ModalBody>
+            <p>¿Está seguro de Anular este Registro?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="danger"
+              onClick={() => {
+              deleteRegistro();
+              abrirModalEliminar();
+            }}
+            >
+              Anular
+            </Button>
+            <Button color="secondary" onClick={abrirModalEliminar}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+          </Modal>
     </div>
   );
 };
