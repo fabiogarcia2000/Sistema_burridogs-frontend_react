@@ -133,6 +133,7 @@ const mostrarAlertas = (alerta) =>{
     try {
       console.log(registroDelete)
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      console.log(res)
       getRegistros();
       if (res.status === 200) {
          mostrarAlertas("eliminado"); 

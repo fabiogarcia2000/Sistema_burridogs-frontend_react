@@ -12,7 +12,7 @@ import { getCurrentDateShort } from "../../../utils/fechaYhora"
 const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
 const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
 
-const objeto = "FORM_DESCUENTO_PDV";
+const objeto = "FORM_CORRELATIVO";
 
  const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')

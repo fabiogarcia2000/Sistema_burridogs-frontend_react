@@ -11,7 +11,7 @@ import { getCurrentDateShort } from "../../../utils/fechaYhora"
 const URLCrear = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
 const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
 
-const objeto = "FORM_CORRELATIVO_PDV";
+const objeto = "FORM_CORRELATIVO";
 
 const Formulario = () => {
 

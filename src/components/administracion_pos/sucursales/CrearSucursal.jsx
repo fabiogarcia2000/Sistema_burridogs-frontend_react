@@ -13,7 +13,7 @@ const URLMostrarUno = "http://190.53.243.69:3001/sucursal/getone/";
 
 const UrlMostrarBodegas = "http://190.53.243.69:3001/centro_costo/getall";
 
-const objeto = "FORM_SUCURSAL";
+const objeto = "FORM_SUCURSALES";
 
 const CrearSucursal = () => {
 
