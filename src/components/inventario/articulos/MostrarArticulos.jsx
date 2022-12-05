@@ -16,8 +16,8 @@ const UrlMostrar = "http://190.53.243.69:3001/articulo/getall/";
 const UrlMostrarReceta =
   "http://190.53.243.69:3001/lista_materiales/padregetone/";
 const UrlEliminarArt = "http://190.53.243.69:3001/articulo/eliminar/";
-const UrlEliminarReceta =
-  "http://190.53.243.69:3001/lista_materiales/eliminar/";
+
+const UrlEliminarReceta = "http://190.53.243.69:3001/lista_materiales/eliminar";
 const UrlMostrarArtV = "http://190.53.243.69:3001/articulo/getallactive";
 
 const objeto = "FORM_ARTICULO";
@@ -189,9 +189,11 @@ const MostrarArticulos = () => {
   //procedimineto para eliminar receta
   const deleteReceta = async () => {
     try {
+      console.log("RECTA DELETE");
       console.log(recetaDelete);
-      const res = await axios.delete(`${UrlEliminarReceta}${recetaDelete}`);
-      getRecetas();
+      const res = await axios.delete(`${UrlEliminarReceta}`, recetaDelete);
+      
+      //getRecetas();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
       } else {
@@ -209,7 +211,7 @@ const MostrarArticulos = () => {
 
   //Ventana modal de confirmación de eliminar receta
   const [modalEliminar2, setModalEliminar2] = useState(false);
-  const abrirModalEliminar2 = () => setModalEliminar2(!modalEliminar);
+  const abrirModalEliminar2 = () => setModalEliminar2(!modalEliminar2);
 
   //Ventana modal para mostrar más articulos
   const [modalVerMas, setVerMas] = useState(false);
@@ -448,7 +450,11 @@ const MostrarArticulos = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRecetaDelete(row.id_articulo_padre);
+              setRecetaDelete({
+                ...recetaDelete,
+                id_articulo_padre: row.id_articulo_padre,
+                id_articulo_hijo: row.id_articulo_hijo,
+              });
               abrirModalEliminar2();
             }}
           >

@@ -79,7 +79,8 @@ const OrdenCompra = () => {
 
   const [tipoPago, setTipoPago] = useState(1);
   const [tipoSocio, setTipoSocio] = useState(2);
-  const [nombreSocio, setNombreSocio] = useState(2);
+  const [nombreSocio, setNombreSocio] = useState({});
+  const [datosSocio, setDatosSocio] = useState({});
 
   const [porcDescuento, setPorcDescuento] = useState({});
 
@@ -307,6 +308,22 @@ const OrdenCompra = () => {
   const Desc = (id) => {
     const desc = tiposDescuentos.filter((item) => item.id_descuento == id);
     setPorcDescuento(desc);
+  };
+
+
+  useEffect(() => {
+    DescSocio();
+  }, [tipoSocio]);
+
+  const DescSocio = () => {
+    try {
+      const DesSocio = socios.filter((item) => item.id_socio_negocio == tipoSocio);
+      console.log("Desc. Socio")
+      console.log(DesSocio)
+      setDatosSocio(DesSocio);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   //Alertas de éxito o error

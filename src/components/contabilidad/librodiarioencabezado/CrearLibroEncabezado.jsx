@@ -721,29 +721,29 @@ const CrearLibroEncabezado = () => {
         )}
       </div>
 
-      <div className="row">
+      {/*<div className="row">
         <div className="col">
           <ul className="list-group">
             <li className="list-group-item d-flex justify-content-between align-items-center">
               <h4>Debe</h4>
               <span className="">
                 {/*<h4>{"L. " (parseFloat(total).toFixed(2))}</h4>*/}
-              </span>
+             {/* </span>
             </li>
           </ul>
-        </div>
+        </div>*/}
 
-        <div className="col">
+        {/*<div className="col">
           <ul className="list-group">
             <li className="list-group-item d-flex justify-content-between align-items-center">
               <h4>Haber</h4>
               <span className="">
                 {/*<h4>{"L. " + (parseFloat(tempTotal).toFixed(2))}</h4>*/}
-              </span>
+              {/*</span>
             </li>
           </ul>
         </div>
-      </div>
+      </div>*/}
       <br />
      
           {/* Ventana Modal de eliminar un articulo de la lista*/}
