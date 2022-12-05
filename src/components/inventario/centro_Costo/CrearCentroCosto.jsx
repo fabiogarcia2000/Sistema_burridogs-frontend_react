@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
+import { cambiarAMayusculasDescripcion, cambiarAMayusculasCodigoBodega } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
@@ -124,8 +124,8 @@ const Formulario = () => {
              // Validacion de código
           if (!valores.cod_centro_costo) {
             errores.cod_centro_costo = "Por favor ingresa un código";
-          } else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,12}$/.test(valores.cod_centro_costo)) {
-            errores.cod_centro_costo = "Escribir números y letras sin espacios. Ejemplo: S001";
+          } else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,6}$/.test(valores.cod_centro_costo)) {
+            errores.cod_centro_costo = "Escribir números y letras sin espacios. Ejemplo: B0001";
           }
 
   
@@ -185,6 +185,7 @@ const Formulario = () => {
                     id="codCentroCosto"
                     name="cod_centro_costo"
                     placeholder="Código..."
+                    onKeyUp={cambiarAMayusculasCodigoBodega(values)}
                   />
 
                   <ErrorMessage

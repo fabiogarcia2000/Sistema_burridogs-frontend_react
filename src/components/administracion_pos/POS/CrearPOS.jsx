@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasDescripcion, cambiarAMayusculasDescripcionPOS } from "../../../utils/cambiarAMayusculas";
+import { cambiarAMayusculasDescripcionPOS, cambiarAMayusculasCodigoPOS } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
@@ -138,8 +138,8 @@ const Formulario = () => {
             // Validacion de código
             if (!valores.cod_pos) {
               errores.cod_pos = "Por favor ingresa un código";
-            } else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,12}$/.test(valores.cod_pos)) {
-              errores.cod_pos = "Escribir números y letras sin espacios. Ejemplo: S001";
+            } else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,6}$/.test(valores.cod_pos)) {
+              errores.cod_pos = "Escribir números y letras sin espacios. Ejemplo: P0001";
             }
 
   
@@ -204,6 +204,7 @@ const Formulario = () => {
                     id="codPOS"
                     name="cod_pos"
                     placeholder="Código..."
+                    onKeyUp={cambiarAMayusculasCodigoPOS(values)}
                   />
 
                   <ErrorMessage

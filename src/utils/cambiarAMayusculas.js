@@ -57,6 +57,46 @@ export function cambiarAMayusculasCodigoSocio(valores) {
   }
 }
 
+//función comvertir a mayuscula código sucursal
+export function cambiarAMayusculasCodigoSucursal(valores) {
+  try {
+    let texto = valores.cod_sucursal;
+    valores.cod_sucursal = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//función comvertir a mayuscula código pos
+export function cambiarAMayusculasCodigoPOS(valores) {
+  try {
+    let texto = valores.cod_pos;
+    valores.cod_pos = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//función comvertir a mayuscula código articulo
+export function cambiarAMayusculasCodigoArticulo(valores) {
+  try {
+    let texto = valores.cod_articulo;
+    valores.cod_articulo = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//función comvertir a mayuscula código bodega
+export function cambiarAMayusculasCodigoBodega(valores) {
+  try {
+    let texto = valores.cod_centro_costo;
+    valores.cod_centro_costo = texto.toUpperCase();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function cambiarAMayusculasCAI(valores) {
   try {
     let texto = valores.cai;

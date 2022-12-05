@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección } from "../../../utils/cambiarAMayusculas";
+import { cambiarAMayusculasDescripcion, cambiarAMayusculasDirección, cambiarAMayusculasCodigoSucursal} from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
@@ -156,8 +156,8 @@ const CrearSucursal = () => {
           // Validacion codigo
           if (!valores.cod_sucursal) {
             errores.cod_sucursal = "Por favor ingresa un código";
-          } else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,12}$/.test(valores.cod_sucursal)) {
-            errores.cod_sucursal = "Escribir números y letras sin espacios. Ejemplo: S001";
+          } else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,6}$/.test(valores.cod_sucursal)) {
+            errores.cod_sucursal = "Escribir números y letras sin espacios. Ejemplo: S0001";
           }
 
           // Validacion descripción
@@ -242,6 +242,7 @@ const CrearSucursal = () => {
                     id="idSucursal"
                     name="cod_sucursal"
                     placeholder="Código..."
+                    onKeyUp={cambiarAMayusculasCodigoSucursal(values)}
                   />
 
                   <ErrorMessage

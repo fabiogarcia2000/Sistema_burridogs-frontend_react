@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import {
   cambiarAMayusculasDescripCorta,
   cambiarAMayusculasDescripArticulo,
+  cambiarAMayusculasCodigoArticulo
 } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora";
@@ -202,6 +203,8 @@ const Formulario = () => {
           // Validacion codigo
           if (!valores.cod_articulo) {
             errores.cod_articulo = "Por favor ingrese un código";
+          }else if (!/^^(?=[A-Z]+[0-9])[A-Z-0-9]{2,6}$/.test(valores.cod_articulo)) {
+            errores.cod_articulo = "Escribir números y letras sin espacios. Ejemplo: A0001";
           }
 
           // Validacion tipo
@@ -308,6 +311,7 @@ const Formulario = () => {
                     id="codArticulo"
                     name="cod_articulo"
                     placeholder="Código del Artículo..."
+                    onKeyUp={cambiarAMayusculasCodigoArticulo(values)}
                   />
 
                   <ErrorMessage

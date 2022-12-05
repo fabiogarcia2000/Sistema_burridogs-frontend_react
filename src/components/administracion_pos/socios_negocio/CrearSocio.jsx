@@ -134,7 +134,7 @@ const Formulario = () => {
           // Validacion de código
           if (!valores.cod_socio_negocio) {
             errores.cod_socio_negocio = "Por favor ingresa un código";
-          }else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,12}$/.test(valores.cod_socio_negocio)) {
+          }else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,6}$/.test(valores.cod_socio_negocio)) {
             errores.cod_socio_negocio = "Escribir números y letras sin espacios. Ejemplo: C0001";
           }
 

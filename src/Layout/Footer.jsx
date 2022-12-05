@@ -9,13 +9,13 @@ function Footer() {
       <div className="copyright">
         &copy; Copyright
         <strong>
-          <span> BURRIDOGS</span>
+          {/**<span> Enigma</span> */}
         </strong>
         . Todos los derechos reservados
       </div>
       <div className="credits">
         Sistema creado por: 
-        <Link to=""> Enigma y The Fifth System</Link>
+        <Link to="#"> Enigma y The Fifth System</Link>
       </div>
     </footer>
   );
