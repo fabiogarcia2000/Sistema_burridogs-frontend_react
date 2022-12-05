@@ -11,8 +11,8 @@ export function Export_Excel(data) {
   
   //Se genera el archivo de Excel
   downloadExcel({
-    fileName: "Reporte de Compras por Fecha",
-    sheet: "Reporte de Compras por Fecha",
+    fileName: "Reporte de Resumen de Ventas",
+    sheet: "Resumen de Ventas",
     tablePayload: {
       header: encabezado,
       body: datos,
