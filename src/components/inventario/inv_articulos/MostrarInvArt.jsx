@@ -245,7 +245,7 @@ const MostrarInvArticulos = () => {
   ];
 
   // Validación para mostrar la descripción según inventarios
-  var comentario;
+  /*var comentario;
 
   if ((row) => parseFloat(row.en_mano) > parseFloat(row.inventario_maximo)) {
     comentario = "Mucho";
@@ -259,7 +259,7 @@ const MostrarInvArticulos = () => {
     (row) => parseFloat(row.en_mano) < parseFloat(row.inventario_minimo)
   ) {
     comentario = "Poco";
-  }
+  }*/
 
   //Configuramos las columnas de la tabla
   const columns2 = [
@@ -550,15 +550,15 @@ const MostrarInvArticulos = () => {
               <p> {registroVerMas.en_mano} </p>
             </div>
           </div>
-          <div className="row g-3">
+          {/*<div className="row g-3">
             <div className="col-sm-6">
               <p className="colorText">Descripción: </p>
             </div>
             <div className="col-sm-6">
               <p>{comentario}</p>{" "}
-              {/* Descripción del artículo según inventario */}
+              {/* Descripción del artículo según inventario }
             </div>
-          </div>
+          </div>*/}
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={abrirModalVerMas}>
