@@ -10,9 +10,10 @@ import {
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./styles.css";
-import { getCurrentDateShort } from "../../utils/fechaYhora"
-
+import { getCurrentDateShort } from "../../utils/fechaYhora";
 import { InsertarBitacora } from "../seguridad/bitacora/InsertarBitacora";
+import {Spinner} from "reactstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 
 const URLGuardar = "http://190.53.243.69:3001/empresa/actualizar-insertar/";
 
@@ -22,6 +23,7 @@ const objeto = "FORM_ARTICULO";
 
 const FormularioEmpresa = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
+  const [loading, setLoading] = useState(false);
   const [imagen1, setImagen1] = useState("");
   const [imagen2, setImagen2] = useState("");
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
@@ -125,9 +127,24 @@ const FormularioEmpresa = () => {
     })
   }
 
+  //Ventana modal de confirmación de eliminar
+ 
+
   return (
     <>
-      <div className="container">
+    
+      {
+        loading?
+          <Modal size="sm" isOpen={loading} centered>
+            <ModalBody>
+             <div className="text-center">
+              <Spinner color="secondary" centered/>
+             </div>
+            </ModalBody>
+          </Modal>
+        
+        : 
+        <div className="container">
         <Formik
           //valores iniciales
           initialValues={{
@@ -156,6 +173,7 @@ const FormularioEmpresa = () => {
           }}
 
           onSubmit={async (valores) => {
+            setLoading(true)
             //procedimineto para guardar el los cambios
             const datosEnviar = {
               id_empresa:valores.id_empresa,
@@ -181,6 +199,7 @@ const FormularioEmpresa = () => {
               );
 
               if (res.status === 200) {
+                setLoading(false)
                 mostrarAlertas("guardado");
                 //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
                 navigate("/admin/home");
@@ -400,9 +419,10 @@ const FormularioEmpresa = () => {
           )}
         </Formik>
 
-          
+         
 
       </div>
+      }
 
 
       
