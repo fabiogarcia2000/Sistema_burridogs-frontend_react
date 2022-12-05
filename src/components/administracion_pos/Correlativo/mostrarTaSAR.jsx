@@ -9,14 +9,16 @@ import Swal from "sweetalert2";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { Server } from "../../../Server/Server";
 
-
-const UrlMostrar = "http://190.53.243.69:3001/correlativo/getall";
-const UrlEliminar = "http://190.53.243.69:3001/correlativo/eliminar/";
 
 const objeto = "FORM_CORRELATIVO";
 
 const MostrarTalonarioSAR = () => {
+  const UrlServer = Server();
+  const UrlMostrar = UrlServer+"correlativo/getall";
+  const UrlEliminar = UrlServer+"correlativo/eliminar/";
+
 
   const navigate = useNavigate();
 
@@ -133,6 +135,7 @@ const mostrarAlertas = (alerta) =>{
     try {
       console.log(registroDelete)
       const res = await axios.delete(`${UrlEliminar}${registroDelete}`);
+      console.log(res)
       getRegistros();
       if (res.status === 200) {
          mostrarAlertas("eliminado"); 
@@ -269,7 +272,7 @@ const mostrarAlertas = (alerta) =>{
             title="Eliminar"
             onClick={() => {
               if(permisos[0].permiso_eliminacion){
-                setRegistroDelete(row.id_pos);
+                setRegistroDelete(row.id_correlativo);
                 abrirModalEliminar();
               }else{
                 mostrarAlertas("permisos");

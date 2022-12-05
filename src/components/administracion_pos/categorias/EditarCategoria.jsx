@@ -8,14 +8,17 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
 import { useState, useEffect } from "react";
+import { Server } from "../../../Server/Server";
 
-const URLEditar = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
 
 //Identificador del formulario
 const objeto = "FORM_CATEGORIA_PDV"
 
  const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
+  
+  const UrlServer = Server();
+  const URLEditar = UrlServer+"categoria/actualizar-insertar/";
 
   const navigate = useNavigate();
 

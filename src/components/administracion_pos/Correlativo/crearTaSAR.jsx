@@ -7,13 +7,15 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasCAI } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
+import { Server } from "../../../Server/Server";
 
-const URLCrear = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
-const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
 
-const objeto = "FORM_CORRELATIVO_PDV";
+const objeto = "FORM_CORRELATIVO";
 
 const Formulario = () => {
+  const UrlServer = Server();
+  const URLCrear = UrlServer+"correlativo/actualizar-insertar/";
+  const UrlMostrarPOS = UrlServer+"pos/getall";
 
   const navigate = useNavigate();
   const fecha = getCurrentDateShort();

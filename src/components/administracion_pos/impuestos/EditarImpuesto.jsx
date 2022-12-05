@@ -8,13 +8,17 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
+import { Server } from "../../../Server/Server";
 
-const URLEditar = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
+
 
 const objeto = "FORM_IMPUESTO";
 
 const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
+
+  const UrlServer = Server();
+  const URLEditar = UrlServer+"impuesto/actualizar-insertar/";
 
   const navigate = useNavigate();
 

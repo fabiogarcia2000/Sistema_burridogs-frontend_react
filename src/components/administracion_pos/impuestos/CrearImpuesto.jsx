@@ -7,13 +7,15 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
-
-const URLCrear = "http://190.53.243.69:3001/impuesto/actualizar-insertar/";
-const URLMostrarUno = "http://190.53.243.69:3001/impuesto/getone/";
+import { Server } from "../../../Server/Server";
 
 const objeto = "FORM_IMPUESTO";
 
 const Formulario = () => {
+  const UrlServer = Server();
+  const URLCrear = UrlServer+"impuesto/actualizar-insertar/";
+  const URLMostrarUno = UrlServer+"impuesto/getone/";
+
 
   const navigate = useNavigate();
 

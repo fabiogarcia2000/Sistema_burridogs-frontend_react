@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { setGlobalState } from "../globalStates/globalStates";
-import logoEmpresa from "../assets/img/logo1.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOneParam } from "../utils/utils";
 

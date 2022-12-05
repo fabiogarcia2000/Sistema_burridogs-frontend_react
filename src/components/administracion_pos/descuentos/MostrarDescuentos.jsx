@@ -9,13 +9,16 @@ import Swal from "sweetalert2";
 import {Export_Excel} from "./generarExcel/Export_Excel";
 import {Export_PDF} from "./generarPDF/Export_PDF";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
+import { Server } from "../../../Server/Server";
 
-const UrlMostrar = "http://190.53.243.69:3001/descuento/getall/";
-const UrlEliminar = "http://190.53.243.69:3001/descuento/eliminar/";
 
 const objeto = "FORM_DESCUENTO";
 
 const MostrarSucursales = () => {
+  const UrlServer = Server();
+  const UrlMostrar = UrlServer+"descuento/getall/";
+  const UrlEliminar = UrlServer+"descuento/eliminar/";
+
 
   const navigate = useNavigate();
 
