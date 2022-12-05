@@ -8,14 +8,16 @@ import Swal from "sweetalert2";
 import { cambiarAMayusculasCAI } from "../../../utils/cambiarAMayusculas";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
-
-const URLEditar = "http://190.53.243.69:3001/correlativo/actualizar-insertar/";
-const UrlMostrarPOS = "http://190.53.243.69:3001/pos/getall";
+import { Server } from "../../../Server/Server";
 
 const objeto = "FORM_CORRELATIVO";
 
  const FormularioEditar = () => {
   const [edit] = useGlobalState('registroEdit')
+
+  const UrlServer = Server();
+  const URLEditar = UrlServer+"correlativo/actualizar-insertar/";
+  const UrlMostrarPOS = UrlServer+"pos/getall";
 
   const navigate = useNavigate();
   const fecha = getCurrentDateShort();

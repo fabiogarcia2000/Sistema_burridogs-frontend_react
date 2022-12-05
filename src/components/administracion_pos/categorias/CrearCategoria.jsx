@@ -7,15 +7,16 @@ import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { useState, useEffect } from "react";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
-
-const URLCrear = "http://190.53.243.69:3001/categoria/actualizar-insertar/";
-const URLMostrarUno = "http://190.53.243.69:3001/categoria/getone/";
-
+import { Server } from "../../../Server/Server";
 
 //Identificador del formulario
 const objeto = "FORM_CATEGORIA_PDV"
 
 const Formulario = () => {
+  const UrlServer = Server();
+  const URLCrear = UrlServer+"categoria/actualizar-insertar/";
+  const URLMostrarUno = UrlServer+"categoria/getone/";
+
   const navigate = useNavigate();
 
   const fecha = getCurrentDateShort();
