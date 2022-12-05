@@ -9,6 +9,8 @@ import { useReactToPrint } from "react-to-print";
 import Factura from "../facturaA4/Factura";
 import Swal from "sweetalert2";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+import { Export_PDF } from "./generarPDF/Export_PDF";
+import {Export_Excel} from "./generarExcel/Export_Excel"
 import { useNavigate } from "react-router-dom";
 
 const UrlEncabezado = "http://190.53.243.69:3001/venta/venta_por_fecha/";
@@ -346,8 +348,8 @@ useEffect(() => {
                 className="btn btn-success"
                 title="Exportar a Excel"
                 onClick={()=>{
-                  //Export_Excel(results);
-                  //RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
+                  Export_Excel(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT FACTURAS");
 
                 }}
               >
@@ -358,8 +360,8 @@ useEffect(() => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  //Export_PDF(results, sucursal);
-                  //RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
+                  Export_PDF(results);
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT FACTURAS");
 
                 }}
               >
