@@ -26,6 +26,8 @@ const MostrarArticulos = () => {
   //Configurar los hooks
   const [encabezado, setEncabezado] = useState([]);
   const [registroDelete, setRegistroDelete] = useState("");
+  const [idpadre, setpadreDelete] = useState("");
+  const [idhijo, sethijoDelete] = useState("");
   const [recetaDelete, setRecetaDelete] = useState("");
   const [registros, setRegistros] = useState([]);
   const [recetas, setRecetas] = useState([]);
@@ -168,7 +170,7 @@ const MostrarArticulos = () => {
   const deleteRegistro = async () => {
     try {
       console.log(registroDelete);
-      const res = await axios.delete(`${UrlEliminarArt}${registroDelete}`);
+      const res = await axios.delete(`${UrlEliminarArt}${idpadre}`);
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
@@ -190,8 +192,11 @@ const MostrarArticulos = () => {
   const deleteReceta = async () => {
     try {
       console.log(recetaDelete);
-      const res = await axios.delete(`${UrlEliminarReceta}${recetaDelete}`);
-      getRecetas();
+      const res = await axios.delete(`${UrlEliminarReceta}`, {
+        id_articulo_padre: idpadre,
+        id_articulo_hijo: idhijo,
+      });
+      //getRecetas();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
       } else {
@@ -448,7 +453,8 @@ const MostrarArticulos = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setRecetaDelete(row.id_articulo_padre);
+              setpadreDelete(row.id_articulo_padre);
+              sethijoDelete(row.id_articulo_hijo);
               abrirModalEliminar2();
             }}
           >
