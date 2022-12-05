@@ -408,10 +408,12 @@ const getRegistrosTotalIngresoGasto = async () => {
         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO MAYOR");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR LIBRO MAYOR");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR LIBRO MAYOR");
     }
   };
 

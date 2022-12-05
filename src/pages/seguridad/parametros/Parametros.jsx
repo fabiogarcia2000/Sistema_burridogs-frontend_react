@@ -137,10 +137,12 @@ const deleteRegistro = async () => {
       RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PARÁMETRO");
     } else {
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR PARÁMETRO");
     }
   } catch (error) {
     console.log(error);
     mostrarAlertas("error");
+    RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR PARÁMETRO");
   }
 };
 

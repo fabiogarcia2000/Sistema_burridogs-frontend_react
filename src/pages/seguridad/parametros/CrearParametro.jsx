@@ -164,6 +164,7 @@ const CrearParametro = () => {
                 navigate("/admin/params");
               } else {
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PARÁMETRO"); //Insertar bitacora
               }
             /*} else {
               mostrarAlertas("duplicado");
@@ -171,6 +172,7 @@ const CrearParametro = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PARÁMETRO"); //Insertar bitacora
             navigate("/admin/params");
           }
         }}

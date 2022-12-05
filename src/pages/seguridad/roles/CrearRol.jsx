@@ -149,6 +149,7 @@ const userdata = JSON.parse(localStorage.getItem('data'))
 
           } else {
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR ROL"); //Insertar bitacora
           }
         //}else{ 
          // mostrarAlertas("duplicado");
@@ -156,6 +157,7 @@ const userdata = JSON.parse(localStorage.getItem('data'))
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR ROL"); //Insertar bitacora
             navigate("/admin/roles");
           }
         }}

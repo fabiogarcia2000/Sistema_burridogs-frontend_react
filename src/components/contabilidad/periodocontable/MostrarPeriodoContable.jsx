@@ -137,10 +137,12 @@ const mostrarAlertas = (alerta) =>{
          RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PERIODO CONTABLE");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR ELIMINAR PERIODO CONTABLE");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR ELIMINAR PERIODO CONTABLE");
     }
   };
 

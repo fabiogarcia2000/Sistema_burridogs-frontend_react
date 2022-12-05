@@ -176,16 +176,12 @@ const CrearCuenta = () => {
           // Validacion de id categoria
           if (!valores.id_categoria) {
             errores.id_categoria = "Por favor seleccione una categoria";
-          } else if (!/^[0-9]+$/.test(valores.id_categoria)) {
-            errores.id_categoria = "Escribir solo números";
-          }
+          } 
 
           // Validacion de id destino cuenta
           if (!valores.id_destino_cuenta) {
             errores.id_destino_cuenta = "Por favor seleccione un destino cuenta";
-          } else if (!/^[0-9]+$/.test(valores.id_destino_cuenta)) {
-            errores.id_destino_cuenta = "Escribir solo números";
-          }
+          } 
 
           // Validacion de saldo
           /*  if (!valores.saldo) {
@@ -213,13 +209,16 @@ const CrearCuenta = () => {
                 navigate("/admin/mostrarcatalogo");
               } else {
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR CATALOGO CUENTAS"); //Insertar bitacora
               }
             } else {
               mostrarAlertas("duplicado");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR CATALOGO CUENTAS"); //Insertar bitacora
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR CATALOGO CUENTAS"); //Insertar bitacora
             navigate("/admin/mostrarcatalogo");
           }
         }}

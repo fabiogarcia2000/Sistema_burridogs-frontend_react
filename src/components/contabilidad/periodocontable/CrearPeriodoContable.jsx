@@ -153,6 +153,7 @@ const userdata = JSON.parse(localStorage.getItem('data'))
               navigate("/admin/mostrarperiodo");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PERIODO CONTABLE"); //Insertar bitacora
             }
 
             // } else {
@@ -161,6 +162,7 @@ const userdata = JSON.parse(localStorage.getItem('data'))
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PERIODO CONTABLE"); //Insertar bitacora
             navigate("/admin/mostrarperiodo");
           }
         }}

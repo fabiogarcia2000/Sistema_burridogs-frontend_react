@@ -138,10 +138,12 @@ const MostrarCuentas = () => {
 
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR CATALOGO CUENTA");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR CATALOGO CUENTA");
     }
   };
 

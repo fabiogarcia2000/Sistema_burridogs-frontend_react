@@ -125,11 +125,13 @@ const EditarRol = () => {
                             navigate("/admin/roles");
                         } else {
                             mostrarAlertas("error");
+                            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR ROL"); //Insertar bitacora
                         }
 
                     } catch (error) {
                         console.log(error);
                         mostrarAlertas("error");
+                        RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR ROL"); //Insertar bitacora
                         navigate("/admin/roles");
                     }
                 }}

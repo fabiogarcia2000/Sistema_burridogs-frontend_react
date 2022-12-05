@@ -134,11 +134,15 @@ const mostrarAlertas = (alerta) => {
               navigate("/admin/mostrarobjetos");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR OBJETO"); //Insertar bitacora
+
             }
 
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR OBJETO"); //Insertar bitacora
+
             navigate("/admin/mostrarobjetos");
           }
         }}

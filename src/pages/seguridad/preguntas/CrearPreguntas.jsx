@@ -144,6 +144,7 @@ const CrearPregunta = () => {
                 navigate("/admin/questions");
               } else {
                 mostrarAlertas("error");
+                RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PREGUNTA SEGURIDAD"); //Insertar bitacora
               }
             /*} else {
               mostrarAlertas("duplicado");
@@ -151,6 +152,7 @@ const CrearPregunta = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PREGUNTA SEGURIDAD"); //Insertar bitacora
             navigate("/admin/questions");
           };
         }}

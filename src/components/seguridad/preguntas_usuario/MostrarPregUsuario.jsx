@@ -133,10 +133,12 @@ const MostrarPregUsuario = () => {
         RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR PREGUNTA USUARIO");
       } else {
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR PREGUNTA USUARIO");
       }
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ERROR AL ELIMINAR PREGUNTA USUARIO");
     }
   };
 

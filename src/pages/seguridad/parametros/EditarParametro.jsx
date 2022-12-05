@@ -125,11 +125,15 @@ const mostrarAlertas = (alerta) => {
               navigate("/admin/params");
             } else {
               mostrarAlertas("error");
+              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PARÁMETRO"); //Insertar bitacora
+
             }
 
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PARÁMETRO"); //Insertar bitacora
+
             navigate("/admin/params");
           }
         }}
