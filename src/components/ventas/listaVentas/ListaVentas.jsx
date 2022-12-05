@@ -187,7 +187,7 @@ useEffect(() => {
       sortable: true,
     },
     {
-      name: "VER MÁS...",
+      name: "OPCIONES",
       cell: (row) => (
         <>
           <Link

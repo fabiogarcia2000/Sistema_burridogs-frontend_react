@@ -122,12 +122,10 @@ const ReporteCompraFecha = () => {
   } else {
     results = encabezado.filter(
       (dato) =>
-        dato.nombre_cliente
-          .toLowerCase()
-          .includes(busqueda.toLocaleLowerCase()) ||
-        dato.cod_socio_negocio.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.descripcion_socio_negocio.toString().includes(busqueda.toLocaleLowerCase()) ||
-        dato.monto_total.toString().includes(busqueda.toLocaleLowerCase())
+        (dato.cod_socio_negocio||0).toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        (dato.descripcion_socio_negocio||"").toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        (dato.referencia||"").toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        (dato.monto_total||0).toString().includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -182,7 +180,7 @@ const ReporteCompraFecha = () => {
           sortable: true,
       },
       {
-        name: "VER MÁS...",
+        name: "OPCIONES",
         cell: (row) => (
           <>
             <Link
