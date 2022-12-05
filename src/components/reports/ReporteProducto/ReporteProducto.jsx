@@ -22,8 +22,6 @@ const ReporteVentaResumen = () => {
   var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
   var id_sucursal= dataPar[0].id_sucursal;
 
-  var sucursal = dataPar[0].descripcion_sucursal;
-
   const [encabezado, setEncabezado] = useState([]);
   //Barra de busqueda
   const [busqueda, setBusqueda] = useState("");
@@ -298,7 +296,7 @@ const TienePermisos = () =>{
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results, sucursal);
+                  Export_PDF(results);
                   RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
 
                 }}
