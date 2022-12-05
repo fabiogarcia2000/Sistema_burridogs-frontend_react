@@ -16,8 +16,8 @@ const UrlMostrar = "http://190.53.243.69:3001/articulo/getall/";
 const UrlMostrarReceta =
   "http://190.53.243.69:3001/lista_materiales/padregetone/";
 const UrlEliminarArt = "http://190.53.243.69:3001/articulo/eliminar/";
-const UrlEliminarReceta =
-  "http://190.53.243.69:3001/lista_materiales/eliminar/";
+
+const UrlEliminarReceta = "http://190.53.243.69:3001/lista_materiales/eliminar";
 const UrlMostrarArtV = "http://190.53.243.69:3001/articulo/getallactive";
 
 const objeto = "FORM_ARTICULO";
@@ -26,8 +26,6 @@ const MostrarArticulos = () => {
   //Configurar los hooks
   const [encabezado, setEncabezado] = useState([]);
   const [registroDelete, setRegistroDelete] = useState("");
-  const [idpadre, setpadreDelete] = useState("");
-  const [idhijo, sethijoDelete] = useState("");
   const [recetaDelete, setRecetaDelete] = useState("");
   const [registros, setRegistros] = useState([]);
   const [recetas, setRecetas] = useState([]);
@@ -170,7 +168,7 @@ const MostrarArticulos = () => {
   const deleteRegistro = async () => {
     try {
       console.log(registroDelete);
-      const res = await axios.delete(`${UrlEliminarArt}${idpadre}`);
+      const res = await axios.delete(`${UrlEliminarArt}${registroDelete}`);
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
@@ -191,10 +189,10 @@ const MostrarArticulos = () => {
   //procedimineto para eliminar receta
   const deleteReceta = async () => {
     try {
-      console.log("RECTA DELETE")
+      console.log("RECTA DELETE");
       console.log(recetaDelete);
       const res = await axios.delete(`${UrlEliminarReceta}`, recetaDelete);
-      console.log(res)
+      console.log(res);
       //getRecetas();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
@@ -452,9 +450,11 @@ const MostrarArticulos = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setpadreDelete(row.id_articulo_padre);
-              sethijoDelete(row.id_articulo_hijo);
-              setRecetaDelete({...recetaDelete, id_articulo_padre: row.id_articulo_padre, id_articulo_hijo: row.id_articulo_hijo })
+              setRecetaDelete({
+                ...recetaDelete,
+                id_articulo_padre: row.id_articulo_padre,
+                id_articulo_hijo: row.id_articulo_hijo,
+              });
               abrirModalEliminar2();
             }}
           >
