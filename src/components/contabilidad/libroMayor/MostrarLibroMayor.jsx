@@ -495,15 +495,15 @@ const getRegistrosTotalIngresoGasto = async () => {
       name: "ACCIONES",
       cell: (row) => (
         <>
-          {/*<Link
-            to="/editarlibromayor"
+          <Link
+            to="/admin/editarlibromayor"
             type="button"
             className="btn btn-light"
             title="Editar"
             onClick={() => setGlobalState('registroEdit', row)}
           >
             <i className="fa-solid fa-pen-to-square"></i>
-      </Link>*/}
+      </Link>
           &nbsp;
           <button
             className="btn btn-light"

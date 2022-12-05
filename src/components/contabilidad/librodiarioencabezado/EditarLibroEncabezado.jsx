@@ -10,9 +10,10 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import DataTable from "react-data-table-component";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 
-const URLEditar = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
+const URLEditar = "http://190.53.243.69:3001/mc_libroencabezado/update";
 const UrlEstado = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlSubcuenta = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlCentroCost = "http://190.53.243.69:3001/centro_costo/getall";
@@ -22,6 +23,7 @@ const URLMostrarUno = "";
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
+const objeto = "FORM_LIBRO_ENCABEZADO"
 
 const EditarLibroEncabezado = () => {
     const [edit] = useGlobalState('registroEdit')
@@ -162,6 +164,43 @@ const EditarLibroEncabezado = () => {
   const abrirModalEliminarPartida = () =>
     setModalEliminarPartida(!modalEliminarPartida);
 
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -204,12 +243,12 @@ const EditarLibroEncabezado = () => {
   // ! Se creo una funcion onClick para agregar detalle.
   const onAddDetail = (e) => {
     setListDetail([...listDetail, {
-        id_subcuenta: parseInt(e.target.form[4].value),
-        monto_debe: parseFloat(e.target.form[5].value),
-        monto_haber: parseFloat(e.target.form[6].value),
-        sinopsis: e.target.form[7].value,
-        id_sucursal: parseInt(e.target.form[8].value),
-        id_centro_costo: parseInt(e.target.form[9].value),
+      id_subcuenta: parseInt(e.target.form[4].value),
+      monto_debe: parseFloat(e.target.form[5].value),
+      monto_haber: parseFloat(e.target.form[6].value),
+      sinopsis: e.target.form[7].value,
+      id_sucursal: parseInt(e.target.form[8].value),
+      id_centro_costo: parseInt(e.target.form[9].value),
     }]);
   }
 
@@ -276,13 +315,18 @@ const EditarLibroEncabezado = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_libro_diario_enca: "",
+          id_libro_diario_enca: edit.id_libro_diario_enca,
           fecha: date,
-          descripcion: "",
+          descripcion: edit.descripcion,
           id_estado: "2",
           id_sucursal: "",
           id_centro_costo: "",
           id_usuario: userdata.data.id,
+          monto_debe: edit.monto_debe,
+          monto_haber: edit.monto_haber,
+          sinopsis: edit.sinopsis,
+          sucursal: edit.sucursal,
+          id_centro_costo: edit.id_centro_costo,
           detalle: []
 
 
@@ -371,9 +415,11 @@ const EditarLibroEncabezado = () => {
             const res = await axios.post(`${URLEditar}${valores.id_libro_diario_enca}`, valores);
              if (res.status === 200) {
              mostrarAlertas("guardado");
+             RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR LIBRO DIARIO"); //Insertar bitacora
              navigate("/admin/mostrarlibroencabezado");
             } else {
              mostrarAlertas("error");
+             RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR LIBRO DIARIO"); //Insertar bitacora
               }
 
             // }//else{ 
@@ -382,6 +428,7 @@ const EditarLibroEncabezado = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR LIBRO DIARIO"); //Insertar bitacora
             navigate("/admin/mostrarlibroencabezado");
           }
         }}
@@ -720,29 +767,29 @@ const EditarLibroEncabezado = () => {
         )}
       </div>
 
-      <div className="row">
+{/*<div className="row">
         <div className="col">
           <ul className="list-group">
             <li className="list-group-item d-flex justify-content-between align-items-center">
               <h4>Debe</h4>
               <span className="">
                 {/*<h4>{"L. " (parseFloat(total).toFixed(2))}</h4>*/}
-              </span>
+             {/* </span>
             </li>
           </ul>
-        </div>
+        </div>*/}
 
-        <div className="col">
+        {/*<div className="col">
           <ul className="list-group">
             <li className="list-group-item d-flex justify-content-between align-items-center">
               <h4>Haber</h4>
               <span className="">
                 {/*<h4>{"L. " + (parseFloat(tempTotal).toFixed(2))}</h4>*/}
-              </span>
+              {/*</span>
             </li>
           </ul>
         </div>
-      </div>
+      </div>*/}
       <br />
      
           {/* Ventana Modal de eliminar un articulo de la lista*/}

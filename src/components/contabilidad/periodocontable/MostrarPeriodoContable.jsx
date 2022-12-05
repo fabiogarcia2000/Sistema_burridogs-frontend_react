@@ -263,7 +263,7 @@ const mostrarAlertas = (alerta) =>{
             title="Eliminar"
             onClick={() => {
               if(permisos[0].permiso_eliminacion){
-                setRegistroDelete(row.cod_categoria);
+                setRegistroDelete(row.id_periodo_contable);
                 abrirModalEliminar();
               }else{
                 mostrarAlertas("permisos");

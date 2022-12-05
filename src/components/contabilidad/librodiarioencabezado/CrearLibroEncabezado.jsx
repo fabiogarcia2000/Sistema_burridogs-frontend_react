@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import DataTable from "react-data-table-component";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 
 const URLCrear = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
@@ -21,6 +22,7 @@ const URLMostrarUno = "";
 const current = new Date();
 const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
 
+const objeto = "FORM_LIBRO_ENCABEZADO"
 
 const CrearLibroEncabezado = () => {
 
@@ -160,6 +162,44 @@ const CrearLibroEncabezado = () => {
   const [modalEliminarPartida, setModalEliminarPartida] = useState(false);
   const abrirModalEliminarPartida = () =>
     setModalEliminarPartida(!modalEliminarPartida);
+
+//===================Obtener datos del localstorage=====================
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true)
+
+  const Permisos = () =>{
+    const newData = temp.filter(
+      (item) => item.objeto === objeto
+    );
+    setPermisos(newData);
+  }
+
+  useEffect(() => {
+    let data = localStorage.getItem('permisos')
+    if(data){
+      setTemp(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
+
+
+  useEffect(() => {
+    if(permisos.length > 0){
+      TienePermisos();
+    }
+  }, [permisos]);
+
+
+  const TienePermisos = () =>{
+    setPermitido(permisos[0].permiso_consultar)
+  }
+//================================================================
+
 
 
   //Alertas de éxito o error
@@ -372,9 +412,11 @@ const CrearLibroEncabezado = () => {
             const res = await axios.post(`${URLCrear}${valores.id_libro_diario_enca}`, valores);
              if (res.status === 200) {
              mostrarAlertas("guardado");
+             RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR LIBRO DIARIO"); //Insertar bitacora
              navigate("/admin/mostrarlibroencabezado");
             } else {
              mostrarAlertas("error");
+             RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR LIBRO DIARIO"); //Insertar bitacora
               }
 
             // }//else{ 
@@ -383,6 +425,7 @@ const CrearLibroEncabezado = () => {
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
+            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR LIBRO DIARIO"); //Insertar bitacora
             navigate("/admin/mostrarlibroencabezado");
           }
         }}
@@ -402,7 +445,7 @@ const CrearLibroEncabezado = () => {
                     className="form-control"
                     id="usuario"
                     name="id_libro_diario_enca:"
-
+                    disabled
                   />
                   <ErrorMessage
                     name="id_libro_diario_enca"

@@ -197,7 +197,7 @@ const TienePermisos = () =>{
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
-        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO DIARIO ENCABEZADO");
+        RegistroEnVitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR LIBRO DIARIO");
       } else {
         mostrarAlertas("error");
       }
@@ -397,7 +397,7 @@ const TienePermisos = () =>{
                 title="Exportar a Excel"
                 onClick={()=>{
                   Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LIBRO DIARIO ENCABEZADO");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL LIBRO DIARIO");
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -408,7 +408,7 @@ const TienePermisos = () =>{
                 title="Exportar a PDF"
                 onClick={() =>{
                   Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LIBRO DIARIO ENCABEZADO");
+                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF LIBRO DIARIO");
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>
