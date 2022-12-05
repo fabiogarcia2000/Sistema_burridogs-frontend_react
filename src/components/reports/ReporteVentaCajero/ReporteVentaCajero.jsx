@@ -21,8 +21,6 @@ const ReporteVentaCajero = () => {
   var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
   var datausuario = JSON.parse(localStorage.getItem("data"));
 
-  var sucursal = dataPar[0].descripcion_sucursal;
-
   var id_usuario= datausuario.id;
   
   var id_sucursal= dataPar[0].id_sucursal
@@ -261,7 +259,7 @@ const TienePermisos = () =>{
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results, sucursal);
+                  Export_PDF(results);
                   RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE VENTAS POR CAJERO");
 
                 }}

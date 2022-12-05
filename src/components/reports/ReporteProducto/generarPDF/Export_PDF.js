@@ -2,9 +2,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getCurrentDateShort } from '../../../../utils/fechaYhora';
 import { getCurrentTime } from '../../../../utils/fechaYhora';
-import { UsuarioConectado } from "../../../seguridad/bitacora/UsuarioActivo";
 
-export function Export_PDF (data, sucursalConectado) {
+export function Export_PDF (data) {
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
   const logo1 =DatosEmpresa.logo1;
 
@@ -29,9 +28,8 @@ export function Export_PDF (data, sucursalConectado) {
 
     //Parametros que se deben obtener
     let empresa = DatosEmpresa.descripcion;
-    let reporte = "Reporte de Ventas por Producto";
-    let sucursal = sucursalConectado;
-    let usuario = UsuarioConectado();
+    let reporte = "VENTAS POR PRODUCTO";
+    let espacio = " ";
     let fecha = getCurrentDateShort(data);
     let hora = getCurrentTime(data);
 
@@ -40,7 +38,7 @@ export function Export_PDF (data, sucursalConectado) {
     //Preparacion del documento
     doc.setFontSize(12);
     doc.addImage(logo1, 650, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-    doc.text([`${empresa}`,`${reporte}`, `${sucursal}`, `Usuario ${usuario}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas

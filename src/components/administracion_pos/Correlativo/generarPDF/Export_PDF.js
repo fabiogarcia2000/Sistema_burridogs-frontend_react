@@ -35,14 +35,14 @@ export function Export_PDF (data) {
     let reporte = "CORRELATIVOS";
     let espacio = " ";
     let fecha = getCurrentDateShort(data);
-    let hora = getCurrentTime(data)
+    let hora = getCurrentTime(data);
 
     var width = doc.internal.pageSize.getWidth(); //Para centrar el texto
 
     //Preparacion del documento
     doc.setFontSize(14);
     doc.addImage(logo1, 1500, 10, 100, 50); // Agregar la imagen al PDF (X, Y, Width, Height)
-  doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
+    doc.text([`${empresa}`,`${espacio}`,`REPORTE DE ${reporte}`], width/2, 30, { align: 'center' });
     doc.autoTable(tabla);
 
     //Se recorre el documento para encontrar el numero de paginas
