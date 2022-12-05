@@ -158,6 +158,7 @@ const OrdenCompra = () => {
   const valuesInicial = {
     secuencia_enc: undefined,
     id_socio_negocio: "",
+    descripcion: "",
     fecha: "",
     referencia: "",
     monto_total: 0,
@@ -310,19 +311,20 @@ const OrdenCompra = () => {
     setPorcDescuento(desc);
   };
 
-
   useEffect(() => {
     DescSocio();
   }, [tipoSocio]);
 
   const DescSocio = () => {
     try {
-      const DesSocio = socios.filter((item) => item.id_socio_negocio == tipoSocio);
-      console.log("Desc. Socio")
-      console.log(DesSocio)
+      const DesSocio = socios.filter(
+        (item) => item.id_socio_negocio == tipoSocio
+      );
+      console.log("Desc. Socio");
+      console.log(DesSocio);
       setDatosSocio(DesSocio);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -653,7 +655,7 @@ const OrdenCompra = () => {
     setCompra({
       ...compra,
       id_socio_negocio: tipoSocio,
-      descripcion: nombreSocio,
+      descripcion: datosSocio.descripcion,
       fecha: fechaCorta,
       referencia: referencia,
       fecha_creacion: fechaCorta,
