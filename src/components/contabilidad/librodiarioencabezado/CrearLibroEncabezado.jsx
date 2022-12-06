@@ -4,34 +4,38 @@ import { useNavigate } from "react-router-dom";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { cambiarAMayusculasCentroCosto, cambiarAMayusculasSinopsis, cambiarAMayusculasSucursal } from "../../../utils/cambiarAMayusculas";
+import {
+  cambiarAMayusculasCentroCosto,
+  cambiarAMayusculasSinopsis,
+  cambiarAMayusculasSucursal,
+} from "../../../utils/cambiarAMayusculas";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
-
 const URLCrear = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
 const UrlEstado = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlSubcuenta = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlCentroCost = "http://190.53.243.69:3001/centro_costo/getall";
-const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall"
+const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall";
 
 const URLMostrarUno = "";
 const current = new Date();
-const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
+const date = `${current.getFullYear()}/${
+  current.getMonth() + 1
+}/${current.getDate()}`;
 
-const objeto = "FORM_LIBRO_ENCABEZADO"
+const objeto = "FORM_LIBRO_ENCABEZADO";
 
 const CrearLibroEncabezado = () => {
-
   const navigate = useNavigate();
-  
+
   const [partidaDelete, setPartidaDelete] = useState(0);
 
-  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
-  const userdata = JSON.parse(localStorage.getItem('data'))
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
+  const userdata = JSON.parse(localStorage.getItem("data"));
 
   // ! Se creo un stado de lista de detalles.
   const [listDetail, setListDetail] = useState([]);
@@ -44,6 +48,20 @@ const CrearLibroEncabezado = () => {
     selectAllRowsItemText: "Todos",
   };
 
+  /***temp***/
+  const [DifTotal, setDifTotal] = useState(0.0);
+  const [tempdebe, setTempDebe] = useState(0.0);
+  const [temphaber, setTempHaber] = useState(0.0);
+
+  useEffect(
+    () => {
+      setDifTotal(tempdebe + temphaber);
+    } /*[tempIsv, montoDesc]*/
+  );
+
+  /**********temp*********/
+
+  /***temp***/
 
   //resetea el valores
   const resetValores = () => {
@@ -55,12 +73,10 @@ const CrearLibroEncabezado = () => {
     window.location.reload();
   };
 
- 
-
   //UTILIZAN ESTA PARTE PARA TRAER LOS DATOS DEL OBJETO
   // const [detalles, setidiario_enca] = useState([])
 
-  const [dato, setDato] = useState([])
+  const [dato, setDato] = useState([]);
 
   /* const { id_libro_diario_enca } = useParams()
    const obtenerId = async () => {
@@ -145,7 +161,9 @@ const CrearLibroEncabezado = () => {
 
   //Eliminar un articulo de la lista
   const eliminarPartida = () => {
-    const newLista = listDetail.filter((e) => e.id_libro_diario_deta !== partidaDelete);
+    const newLista = listDetail.filter(
+      (e) => e.id_libro_diario_deta !== partidaDelete
+    );
     setListDetail(newLista);
     eliminarDataPartida();
   };
@@ -163,23 +181,21 @@ const CrearLibroEncabezado = () => {
   const abrirModalEliminarPartida = () =>
     setModalEliminarPartida(!modalEliminarPartida);
 
-//===================Obtener datos del localstorage=====================
+  //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
-  const Permisos = () =>{
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
-    if(data){
-      setTemp(JSON.parse(data))
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -187,72 +203,70 @@ const CrearLibroEncabezado = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
-    if(permisos.length > 0){
+    if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
-
-  const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
-  }
-//================================================================
-
-
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  //================================================================
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
-      case 'guardado':
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "El detalle de libro diario se creó con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
         break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo crear el detalle de libro diario',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          title: "Error",
+          text: "No se pudo crear el detalle de libro diario",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
         break;
 
-      case 'duplicado':
+      case "duplicado":
         Swal.fire({
-          text: 'Ya existe un detalle de libro diario con el código ingresado',
-          icon: 'warning',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          text: "Ya existe un detalle de libro diario con el código ingresado",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
         break;
 
-      default: break;
+      default:
+        break;
     }
   };
 
   // ! Se creo una funcion onClick para agregar detalle.
   const onAddDetail = (e) => {
-    setListDetail([...listDetail, {
+    setListDetail([
+      ...listDetail,
+      {
         id_subcuenta: parseInt(e.target.form[4].value),
         monto_debe: parseFloat(e.target.form[5].value),
         monto_haber: parseFloat(e.target.form[6].value),
         sinopsis: e.target.form[7].value,
         id_sucursal: parseInt(e.target.form[8].value),
         id_centro_costo: parseInt(e.target.form[9].value),
-    }]);
-  }
-
-
+      },
+    ]);
+  };
 
   const columns = [
     {
@@ -289,7 +303,6 @@ const CrearLibroEncabezado = () => {
       name: "",
       cell: (row) => (
         <>
-
           &nbsp;
           <button
             className="btn btn-light"
@@ -308,7 +321,9 @@ const CrearLibroEncabezado = () => {
       button: true,
     },
   ];
-  { JSON.stringify(listDetail) }
+  {
+    JSON.stringify(listDetail);
+  }
 
   return (
     <div className="container">
@@ -316,16 +331,15 @@ const CrearLibroEncabezado = () => {
         //valores iniciales
         initialValues={{
           id_libro_diario_enca: "",
-          id_libro_diario_deta:"",
+          id_libro_diario_deta: "",
           fecha: date,
           descripcion: "",
           id_estado: "2",
           id_sucursal: "",
           id_centro_costo: "",
-        
-          id_usuario: userdata.data.id,
-          detalle: []
 
+          id_usuario: userdata.data.id,
+          detalle: [],
 
           /*id_subcuenta: "",
           id_estado: "",
@@ -333,12 +347,11 @@ const CrearLibroEncabezado = () => {
           sucursal: "PRUEBA",
           centro_costo: "PRUEBA"*/
         }}
-
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion de id 
+          // Validacion de id
           /*   if (!valores.id_libro_diario_enca) {
                errores.id_libro_diario_enca = "Por favor ingresa el id";
              } else if (!/^[0-9]+$/.test(valores.id_libro_diario_enca)) {
@@ -396,7 +409,6 @@ const CrearLibroEncabezado = () => {
            }
  
              return errores;*/
-
         }}
         onSubmit={async (valores) => {
           //validar si existe un registro con el nombre ingresado
@@ -404,28 +416,45 @@ const CrearLibroEncabezado = () => {
             // !Antes de mandar la data, guardanos la lista de detalles en los valores.detalle
             valores.detalle = listDetail;
             console.log(valores);
-            console.log("Linea 341")
-            {/*const res = await axios.get(`${URLMostrarUno}${valores.id_libro_diario_deta}`);
+            console.log("Linea 341");
+            {
+              /*const res = await axios.get(`${URLMostrarUno}${valores.id_libro_diario_deta}`);
                 console.log(res)
-              if (res.data === ""){*/}
+              if (res.data === ""){*/
+            }
             //procedimineto para guardar el nuevo registro en el caso de que no exista
-            const res = await axios.post(`${URLCrear}${valores.id_libro_diario_enca}`, valores);
-             if (res.status === 200) {
-             mostrarAlertas("guardado");
-             RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR LIBRO DIARIO"); //Insertar bitacora
-             navigate("/admin/mostrarlibroencabezado");
+            const res = await axios.post(
+              `${URLCrear}${valores.id_libro_diario_enca}`,
+              valores
+            );
+            if (res.status === 200) {
+              mostrarAlertas("guardado");
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "CREAR",
+                "CREAR LIBRO DIARIO"
+              ); //Insertar bitacora
+              navigate("/admin/mostrarlibroencabezado");
             } else {
-             mostrarAlertas("error");
-             RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR LIBRO DIARIO"); //Insertar bitacora
-              }
+              mostrarAlertas("error");
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "CREAR",
+                "ERROR AL CREAR LIBRO DIARIO"
+              ); //Insertar bitacora
+            }
 
-            // }//else{ 
+            // }//else{
             //mostrarAlertas("duplicado");
             //}
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR LIBRO DIARIO"); //Insertar bitacora
+            RegistroEnVitacora(
+              permisos[0].id_objeto,
+              "CREAR",
+              "ERROR AL CREAR LIBRO DIARIO"
+            ); //Insertar bitacora
             navigate("/admin/mostrarlibroencabezado");
           }
         }}
@@ -434,7 +463,6 @@ const CrearLibroEncabezado = () => {
           <Form>
             <h3 className="mb-3">Nuevo registro diario</h3>
             <div className="row g-3">
-
               <div className="col-sm-4">
                 <div className="mb-1">
                   <label htmlFor="usuario" className="form-label">
@@ -534,7 +562,6 @@ const CrearLibroEncabezado = () => {
                     className="form-control"
                     id="usuario"
                     name="id_usuario"
-
                     disabled
                   />
                   <ErrorMessage
@@ -545,7 +572,6 @@ const CrearLibroEncabezado = () => {
                   />
                 </div>
               </div>
-
             </div>
 
             <hr />
@@ -568,7 +594,9 @@ const CrearLibroEncabezado = () => {
                   >
                     <option value="">Seleccionar...</option>
                     {subcuenta.map((item, i) => (
-                      <option key={i} value={item.id_subcuenta}>{item.nombre_subcuenta}</option>
+                      <option key={i} value={item.id_subcuenta}>
+                        {item.nombre_subcuenta}
+                      </option>
                     ))}
                   </Field>
                   <ErrorMessage
@@ -591,7 +619,6 @@ const CrearLibroEncabezado = () => {
                     id="montodebe"
                     name="monto_debe"
                     placeholder="Monto debe..."
-
                   />
                   <ErrorMessage
                     name="montodebe"
@@ -613,7 +640,6 @@ const CrearLibroEncabezado = () => {
                     id="montoHaber"
                     name="monto_haber"
                     placeholder="Monto haber..."
-
                   />
                   <ErrorMessage
                     name="montoHaber"
@@ -637,7 +663,6 @@ const CrearLibroEncabezado = () => {
                     id="sinopsis"
                     name="sinopsis"
                     placeholder="Sinopsis..."
-
                   />
                   <ErrorMessage
                     name="sinopsis"
@@ -662,7 +687,9 @@ const CrearLibroEncabezado = () => {
                   >
                     <option value="">Seleccionar...</option>
                     {sucursal.map((item, i) => (
-                      <option key={i} value={item.id_sucursal}>{item.descripcion_sucursal}</option>
+                      <option key={i} value={item.id_sucursal}>
+                        {item.descripcion_sucursal}
+                      </option>
                     ))}
                   </Field>
 
@@ -675,7 +702,6 @@ const CrearLibroEncabezado = () => {
                 </div>
               </div>
 
-
               <div className="col-sm-4">
                 <div className="mb-3">
                   <label htmlFor="centrocosto" className="form-label">
@@ -686,11 +712,13 @@ const CrearLibroEncabezado = () => {
                     className="form-select"
                     id="centrocosto"
                     name="id_centro_costo"
-                    type ="number"
+                    type="number"
                   >
                     <option value="">Seleccionar...</option>
                     {centro.map((item, i) => (
-                      <option key={i} value={item.id_centro_costo}>{item.descripcion}</option>
+                      <option key={i} value={item.id_centro_costo}>
+                        {item.descripcion}
+                      </option>
                     ))}
                   </Field>
                   <ErrorMessage
@@ -700,7 +728,6 @@ const CrearLibroEncabezado = () => {
                     )}
                   />
                 </div>
-
               </div>
             </div>
 
@@ -708,7 +735,6 @@ const CrearLibroEncabezado = () => {
             <button
               type="button"
               onClick={onAddDetail}
-
               className="btn btn-warning mb-3 me-2 text-gray"
             >
               Agregar Detalle
@@ -720,28 +746,27 @@ const CrearLibroEncabezado = () => {
               onClick={() => {
                 resetValores();
               }}
-
               className="btn btn-warning mb-3 me-2 text-gray"
             >
               Limpiar
             </button>
 
             <hr />
-              <div className="row">
+            <div className="row">
               <div className="col-4">
-              <button className="btn btn-success mb-3 me-2" type="submit">
-        Guardar
-      </button>
-      <Link
-        to="/admin/mostrarlibroencabezado"
-        type="button"
-        className="btn btn-danger mb-3 me-2"
-      >
-        Cancelar
-      </Link>
-      {/**/}
-      </div>
+                <button className="btn btn-success mb-3 me-2" type="submit">
+                  Guardar
+                </button>
+                <Link
+                  to="/admin/mostrarlibroencabezado"
+                  type="button"
+                  className="btn btn-danger mb-3 me-2"
+                >
+                  Cancelar
+                </Link>
+                {/**/}
               </div>
+            </div>
           </Form>
         )}
       </Formik>
@@ -763,33 +788,51 @@ const CrearLibroEncabezado = () => {
           <p className="text-center">Ningún Registro</p>
         )}
       </div>
-
-      <div className="row">
-        <div className="col">
-          <ul className="list-group">
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <h4>Debe</h4>
-              <span className="">
-                {/*<h4>{"L. " (parseFloat(total).toFixed(2))}</h4>*/}
-             </span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="col">
-          <ul className="list-group">
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <h4>Haber</h4>
-              <span className="">
-                {/*<h4>{"L. " + (parseFloat(tempTotal).toFixed(2))}</h4>*/}
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
       <br />
-     
-          {/* Ventana Modal de eliminar un articulo de la lista*/}
+      <br />
+      <Formik>
+        <Form>
+          <div className="container">
+            <div className="col-4">
+              <div className="row-2">
+                <ul className="list-group">
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    Total Debe
+                    <span className="">
+                      {"L. " + (tempdebe || 0).toFixed(2)}
+                    </span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    Total Haber
+                    <span className="">
+                      {"L. " + (temphaber || 0).toFixed(2)}
+                    </span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    <h4>Diferencia</h4>
+                    <span className="">
+                      <h4>{"L. " + parseFloat(DifTotal).toFixed(2)}</h4>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <br />
+            <div className="col-2">
+              <div className="row">
+                <div className="d-grid gap-2 col-12 mx-auto">
+                  <Button className="btn btn-warning" type="submit">
+                    Realizar Ajuste
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </Formik>
+      <br />
+
+      {/* Ventana Modal de eliminar un articulo de la lista*/}
       <Modal
         isOpen={modalEliminarPartida}
         toggle={abrirModalEliminarPartida}
@@ -816,11 +859,8 @@ const CrearLibroEncabezado = () => {
           </Button>
         </ModalFooter>
       </Modal>
-          
-    </div >
+    </div>
   );
 };
 
 export default CrearLibroEncabezado;
-
-
