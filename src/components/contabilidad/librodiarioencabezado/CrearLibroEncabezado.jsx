@@ -15,11 +15,14 @@ import { useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
-const URLCrear = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
+
 const UrlEstado = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlSubcuenta = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlCentroCost = "http://190.53.243.69:3001/centro_costo/getall";
 const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall";
+
+const URLCrear = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
+const URLValidarFecha = "http://190.53.243.69:3001/mc_periodo/validar/";
 
 const URLMostrarUno = "";
 const current = new Date();
@@ -39,7 +42,9 @@ const CrearLibroEncabezado = () => {
     fecha:"",
     descripcion:""
   });
+  const [validarFecha, setValidarFecha] = useState(true);
   const [asiento, setAsiento] = useState({});
+  const [enviar, setEnviar] = useState(false);
 
   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
   const userdata = JSON.parse(localStorage.getItem("data"));
@@ -150,6 +155,23 @@ const CrearLibroEncabezado = () => {
     }
   };
 
+  //Validar fecha
+  const ValidarFecha = async () => {
+    try {
+      const res = await axios.get(URLValidarFecha+datosEnc.fecha);
+      setValidarFecha(res.data);
+    } catch (error) {
+      console.log(error);
+      //mostrarAlertas("errormostrar");
+    }
+  };
+
+  useEffect(() => {
+    if(datosEnc.fecha){
+      ValidarFecha()
+    }
+  }, [datosEnc]);
+
   //fecha encabezado
   const GuardarFecha=  (valor) => {
     setDatosEnc({...datosEnc, fecha: valor})
@@ -164,12 +186,14 @@ const CrearLibroEncabezado = () => {
   const Submit = () => {
     if(datosEnc.fecha === ""){
       alert("Ingrese una fecha")
+    }else if(!validarFecha){
+      mostrarAlertas("fechaError")
     }else if(datosEnc.descripcion === ""){
       alert("Ingrese una descripcion")
     }else if(!listDetail.length){
-      alert("Sin detalles")
+      mostrarAlertas("vacio")
     }else if(DifTotal>0 || DifTotal<0){
-      alert("El debe y el haber deben cuadrar")
+      mostrarAlertas("cuadrar")
     }else{
       setAsiento({
         id_estado: 1,
@@ -178,7 +202,7 @@ const CrearLibroEncabezado = () => {
         id_usuario:iDusuario,
         detalle: listDetail
       });
-      alert("TODO BIEN")
+      setEnviar(true)
     }
   };
 
@@ -186,6 +210,8 @@ const CrearLibroEncabezado = () => {
   const PostAsiento = async () => {
     try {
       const res = await axios.post(URLCrear, asiento);
+      setEnviar(false)
+      mostrarAlertas("guardado")
       console.log(res)
     } catch (error) {
       console.log(error)
@@ -193,7 +219,7 @@ const CrearLibroEncabezado = () => {
   };
 
   useEffect(() => {
-    if(asiento.descripcion){
+    if(asiento.descripcion  && enviar){
       PostAsiento()
     }
   }, [asiento]);
@@ -279,10 +305,28 @@ const CrearLibroEncabezado = () => {
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
+      case "vacio":
+        Swal.fire({
+          text: "Libro diario detalles está vacío",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
+        case "cuadrar":
+        Swal.fire({
+          text: "No debe haber diferencia entre el total debe y el total haber.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
       case "guardado":
         Swal.fire({
           title: "¡Guardado!",
-          text: "El detalle de libro diario se creó con éxito",
+          text: "Se creó con éxito",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -293,16 +337,16 @@ const CrearLibroEncabezado = () => {
       case "error":
         Swal.fire({
           title: "Error",
-          text: "No se pudo crear el detalle de libro diario",
+          text: "No se pudo crear",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
         });
         break;
 
-      case "duplicado":
+      case "fechaError":
         Swal.fire({
-          text: "Ya existe un detalle de libro diario con el código ingresado",
+          text: "No hay un período abierto para la fecha seleccionada",
           icon: "warning",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
