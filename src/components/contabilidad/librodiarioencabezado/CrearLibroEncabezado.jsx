@@ -46,6 +46,11 @@ const CrearLibroEncabezado = () => {
   const [asiento, setAsiento] = useState({});
   const [enviar, setEnviar] = useState(false);
 
+  const [error, setError] = useState({
+    errorFecha: false,
+    errorDesc: false
+  });
+
   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
   const userdata = JSON.parse(localStorage.getItem("data"));
   const iDusuario = userdata.data.id;
@@ -175,21 +180,40 @@ const CrearLibroEncabezado = () => {
   //fecha encabezado
   const GuardarFecha=  (valor) => {
     setDatosEnc({...datosEnc, fecha: valor})
+    setError({...error, errorFecha: false})
   };
 
   //descripcion encabezado
   const GuardarDesc=  (valor) => {
     setDatosEnc({...datosEnc, descripcion: valor})
+    setError({...error, errorDesc: false})
   };
+
+  useEffect(() => {
+    if(datosEnc.fecha === ""){
+      setError({...error, errorFecha: true})
+    }else{
+      setError({...error, errorFecha: false})
+    }
+  }, [datosEnc.fecha]);
+
+  useEffect(() => {
+    if(datosEnc.descripcion === ""){
+      setError({...error, errorDesc: true})
+    }else{
+      setError({...error, errorDesc: false})
+    }
+
+  }, [datosEnc.descripcion]);
 
   //PREPARAR DATA 
   const Submit = () => {
     if(datosEnc.fecha === ""){
-      alert("Ingrese una fecha")
+      setError({...error, errorFecha: true})
     }else if(!validarFecha){
       mostrarAlertas("fechaError")
     }else if(datosEnc.descripcion === ""){
-      alert("Ingrese una descripcion")
+      setError({...error, errorDesc: true})
     }else if(!listDetail.length){
       mostrarAlertas("vacio")
     }else if(DifTotal>0 || DifTotal<0){
@@ -433,13 +457,18 @@ const CrearLibroEncabezado = () => {
                     name="fecha_final"
                     onChange={(e) => GuardarFecha(e.target.value)}
                   /> 
+                  {error.errorFecha=== true?
+                    <div className="error">Seleccione una fecha</div>
+                  :
+                    ""
+                  }
                 </div>
               </div>
 
               <div className="col-sm-8">
                 <div className="mb-3">
                   <label htmlFor="descripcion" className="form-label">
-                    Descripcion:
+                    Descripción:
                   </label>
                   <input
                     type="text"
@@ -448,6 +477,11 @@ const CrearLibroEncabezado = () => {
                     name="descripcion"
                     onChange={(e) => GuardarDesc(e.target.value)}
                   />
+                  {error.errorDesc=== true?
+                    <div className="error">Ingrese una descripción</div>
+                  :
+                    ""
+                  }
                 </div>
               </div>
 
@@ -460,8 +494,8 @@ const CrearLibroEncabezado = () => {
         //valores iniciales
         initialValues={{
           id_subcuenta:"",
-          monto_debe:undefined,
-          monto_haber:undefined,
+          monto_debe:"0",
+          monto_haber:"0",
           sinopsis:"",
           id_sucursal:"",
           id_centro_costo:""
@@ -475,11 +509,33 @@ const CrearLibroEncabezado = () => {
              errores.id_subcuenta = "Requerido";
            }
 
-          // Validacion de 
-          if (valores.monto_haber !== "" && valores.monto_debe !== "") {
-            errores.monto_haber = "Solo puede ingresar en uno";
-            errores.monto_debe = "Solo puede ingresar en uno";
+           // Validacion de 
+           if (!valores.monto_debe) {
+            valores.monto_debe = "0"
+          }else if (!/^[0-9.]+$/.test(valores.monto_debe)) {
+            errores.monto_debe = "Escribir solo números";
           }
+
+          // Validacion de 
+          if (!valores.monto_haber) {
+            valores.monto_haber = "0"
+          }else if (!/^[0-9.]+$/.test(valores.monto_haber)) {
+            errores.monto_haber = "Escribir solo números";
+          }
+
+          // Validacion de 
+          if (valores.monto_debe === "0" && valores.monto_haber === "0") {
+            errores.monto_debe = "Requerido";
+            errores.monto_haber = "Requerido";
+          }          
+
+          // Validacion de 
+          if (valores.monto_debe !== "0" && valores.monto_haber !== "0") {
+            errores.monto_debe = "No puede ingresar en el debe y en el haber a la vez, solo en uno";
+            errores.monto_haber = "No puede ingresar en el haber y en el debe a la vez, solo en uno";
+          }     
+          
+
           // Validacion de 
           if (!valores.sinopsis) {
             errores.sinopsis = "Requerido";
@@ -505,7 +561,7 @@ const CrearLibroEncabezado = () => {
         }}
         onSubmit={async (valores) => {
 
-          if(valores.monto_debe !== "" && valores.monto_haber !== ""){
+          if(valores.monto_debe !== "0" && valores.monto_haber !== "0"){
             alert("Solo debe ingresar en el debe o en el haber, no en ambos")
           }else{
             setListDetail([...listDetail, {
@@ -519,12 +575,6 @@ const CrearLibroEncabezado = () => {
             }])
             setIndice(indice + 1)
           }          
-
-          try {
-          
-          } catch (error) {
-            
-          }
         }}
       >
         {({ errors, values }) => (
@@ -760,8 +810,8 @@ const CrearLibroEncabezado = () => {
       </Formik>
 <hr />
 
-      <div className="row">
-              <div className="col-4">
+      <div className="row text-end">
+              <div className="col-12">
                 <button className="btn btn-success mb-3 me-2" 
                 type="button"
                 onClick={()=>(
