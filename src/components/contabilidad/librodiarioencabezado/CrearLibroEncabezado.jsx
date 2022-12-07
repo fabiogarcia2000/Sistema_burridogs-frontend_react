@@ -514,6 +514,8 @@ const CrearLibroEncabezado = () => {
             valores.monto_debe = "0"
           }else if (!/^[0-9.]+$/.test(valores.monto_debe)) {
             errores.monto_debe = "Escribir solo números";
+          }else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_debe)) {
+            errores.monto_debe = "Ingrese un número válido";
           }
 
           // Validacion de 
@@ -521,6 +523,8 @@ const CrearLibroEncabezado = () => {
             valores.monto_haber = "0"
           }else if (!/^[0-9.]+$/.test(valores.monto_haber)) {
             errores.monto_haber = "Escribir solo números";
+          }else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_haber)) {
+            errores.monto_haber = "Ingrese un número válido";
           }
 
           // Validacion de 
