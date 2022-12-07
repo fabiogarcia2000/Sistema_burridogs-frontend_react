@@ -34,12 +34,18 @@ const CrearLibroEncabezado = () => {
 
   const [indice, setIndice] = useState(1);
   const [partidaDelete, setPartidaDelete] = useState(0);
+  const [listDetail, setListDetail] = useState([]);
+  const [datosEnc, setDatosEnc] = useState({
+    fecha:"",
+    descripcion:""
+  });
+  const [asiento, setAsiento] = useState({});
 
   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
   const userdata = JSON.parse(localStorage.getItem("data"));
+  const iDusuario = userdata.data.id;
 
-  // ! Se creo un stado de lista de detalles.
-  const [listDetail, setListDetail] = useState([]);
+ 
 
   //Configurar la paginación de la tabla
   const paginationComponentOptions = {
@@ -144,6 +150,55 @@ const CrearLibroEncabezado = () => {
     }
   };
 
+  //fecha encabezado
+  const GuardarFecha=  (valor) => {
+    setDatosEnc({...datosEnc, fecha: valor})
+  };
+
+  //descripcion encabezado
+  const GuardarDesc=  (valor) => {
+    setDatosEnc({...datosEnc, descripcion: valor})
+  };
+
+  //PREPARAR DATA 
+  const Submit = () => {
+    if(datosEnc.fecha === ""){
+      alert("Ingrese una fecha")
+    }else if(datosEnc.descripcion === ""){
+      alert("Ingrese una descripcion")
+    }else if(!listDetail.length){
+      alert("Sin detalles")
+    }else if(DifTotal>0 || DifTotal<0){
+      alert("El debe y el haber deben cuadrar")
+    }else{
+      setAsiento({
+        id_estado: 1,
+        descripcion: datosEnc.descripcion,
+        fecha: datosEnc.fecha,
+        id_usuario:iDusuario,
+        detalle: listDetail
+      });
+      alert("TODO BIEN")
+    }
+  };
+
+  //Enviar Data
+  const PostAsiento = async () => {
+    try {
+      const res = await axios.post(URLCrear, asiento);
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  useEffect(() => {
+    if(asiento.descripcion){
+      PostAsiento()
+    }
+  }, [asiento]);
+
+
   //Eliminar una partida de la lista
   const eliminarPartida = () => {
     const newLista = listDetail.filter((item) => item.i !== partidaDelete
@@ -152,11 +207,35 @@ const CrearLibroEncabezado = () => {
   };
 
   //CALCULAR EL TOTAL DEL DEBE Y HABER
-  const DebeYHaber = () => {
-    const newLista = listDetail.filter((item) => item.i !== partidaDelete
+  useEffect(() => {
+    setTempDebe(0);
+    setTempHaber(0);
+
+    try {
+
+      listDetail.map((item) =>
+      setTempDebe((prevValor) => prevValor + parseFloat(item.monto_debe))
+  
     );
-    setListDetail(newLista);
-  };
+
+    listDetail.map((item) =>
+      setTempHaber((prevValor) => prevValor + parseFloat(item.monto_haber))
+    );
+
+    } catch (error) {
+      
+    }
+  }, [listDetail]);
+
+   //CALCULAR LA DIFERENCIA DEL DEBE Y HABER
+   useEffect(() => {
+    setDifTotal(0);
+    try {
+      setDifTotal(parseFloat(tempdebe)-parseFloat(temphaber))
+    } catch (error) {
+      
+    }
+  }, [tempdebe, temphaber]);
 
 
   //Ventana modal eliminar artículo
@@ -308,6 +387,7 @@ const CrearLibroEncabezado = () => {
                     className="form-control"
                     id="fechafinal"
                     name="fecha_final"
+                    onChange={(e) => GuardarFecha(e.target.value)}
                   /> 
                 </div>
               </div>
@@ -322,6 +402,7 @@ const CrearLibroEncabezado = () => {
                     className="form-control"
                     id="descripcion"
                     name="descripcion"
+                    onChange={(e) => GuardarDesc(e.target.value)}
                   />
                 </div>
               </div>
@@ -385,9 +466,9 @@ const CrearLibroEncabezado = () => {
           }else{
             setListDetail([...listDetail, {
               i:indice,
-              id_subcuenta:valores.id_subcuenta,
-              monto_debe: (valores.monto_debe||0),
-              monto_haber: (valores.monto_haber||0),
+              id_subcuenta:parseFloat(valores.id_subcuenta),
+              monto_debe: parseFloat(valores.monto_debe||0),
+              monto_haber: parseFloat(valores.monto_haber||0),
               sinopsis: valores.sinopsis,
               id_sucursal: valores.id_sucursal,
               id_centro_costo: valores.id_centro_costo
@@ -637,7 +718,12 @@ const CrearLibroEncabezado = () => {
 
       <div className="row">
               <div className="col-4">
-                <button className="btn btn-success mb-3 me-2" type="submit">
+                <button className="btn btn-success mb-3 me-2" 
+                type="button"
+                onClick={()=>(
+                  Submit()
+                )}
+                >
                   Guardar
                 </button>
                 <Link
