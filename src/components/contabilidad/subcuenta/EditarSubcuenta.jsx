@@ -104,7 +104,7 @@ const EditarSubCuenta = () => {
         //valores iniciales
         initialValues={{
           id_subcuenta: edit.id_subcuenta,
-          id_cuenta: edit.nombre_cuenta,
+          id_cuenta: edit.id_cuenta,
           nombre_subcuenta: edit.nombre_subcuenta,
         }}
         //Funcion para validar

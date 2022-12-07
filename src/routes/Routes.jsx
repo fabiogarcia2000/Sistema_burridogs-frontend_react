@@ -8,6 +8,8 @@ import Footer from "../Layout/Footer";
 import Home from "../pages/Home";
 import PanelCompras from "../components/inventario/ingresar_mds/PanelCompras";
 
+import Index from "../pruebas/Index";
+
 import Productos from "../pages/inventario/Productos";
 
 import LoginPos from "../components/ventas/loginPOS/LoginPos";
@@ -305,6 +307,10 @@ function Rutas() {
           <Route path="mostrarMesas" element={<MostrarMesas />} />
           <Route path="editarMesas" element={<EditarMesas />} />
           <Route path="productos" element={<Productos />} />
+
+          <Route path="index" element={<Index />} /> 
+
+
           {/*--------------------------------------Rutas inventario-----------------------------------*/}
           <Route path="mostrarcentrocosto" element={<MostrarCentroCosto />} />
           <Route path="crearcentrocosto" element={<CrearCentroCosto />} />
