@@ -374,6 +374,18 @@ function Sidebar() {
                 <span>Objetos</span>
               </Link>
             </li>
+            <li>
+              <Link to="/admin/copiaseguridad">
+                <i className="bi bi-gear"></i>
+                <span>Copia de Seguridad</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/restaurar">
+                <i className="bi bi-gear"></i>
+                <span>Restaurar</span>
+              </Link>
+            </li>
           </ul>
         </li>
         <li className="nav-heading">Más</li>

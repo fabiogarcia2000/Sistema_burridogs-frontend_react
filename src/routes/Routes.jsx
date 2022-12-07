@@ -136,6 +136,12 @@ import EditarPregUsuario from "../components/seguridad/preguntas_usuario/EditarP
 import Roles from "../pages/seguridad/roles/Roles";
 import CrearRol from "../pages/seguridad/roles/CrearRol";
 import EditarRol from "../pages/seguridad/roles/EditarRol";
+
+//COPIA DE SEGURIDAD
+import CopiaSeguridad from "../components/seguridad/copia_seguridad/CopiaSeguridad";
+import Restaurar from "../components/seguridad/restauracion/Restauracion";
+//RESTAURACIÓN
+
 //---------------------------------------------------- MÓDULO DE CONTABILIDAD -----------------------------------------------------------------
 //CATEGORIA CONTABLE
 import CrearCategoriaCont from "../components/contabilidad/categoriaContable/CrearCategoriaCont";
@@ -255,6 +261,10 @@ function Rutas() {
           <Route path="roles" element={<Roles />} />
           <Route path="crearrol" element={<CrearRol />} />
           <Route path="editarrol" element={<EditarRol />} />
+          {/*COPIA SEGURIDAD/RESTAURAR*/}
+          <Route path="copiaseguridad" element={<CopiaSeguridad />} />
+          <Route path="restaurar" element={<Restaurar />} />
+
           {/*------------------------------Rutas Administración POS----------------------------------*/}
           {/*Ruta Datos de Empresa*/}
           <Route path="datos-empresa" element={<DatosEmpresa />} />
@@ -363,10 +373,7 @@ function Rutas() {
           <Route path="editarestado" element={<EditarEstado />} />
           <Route path="crearestado" element={<CrearEstado />} />
           {/*DETALLE LIBRO DIARIO*/}
-          <Route
-            path="mostrarlibrodetalle"
-            element={<MostrarLibroDetalle />}
-          />
+          <Route path="mostrarlibrodetalle" element={<MostrarLibroDetalle />} />
           <Route path="editarlibrodetalle" element={<EditarLibroDetalle />} />
           <Route path="crearlibrodetalle" element={<CrearLibroDetalle />} />
           {/*ENCABEZADO LIBRO DIARIO*/}
@@ -375,9 +382,14 @@ function Rutas() {
             element={<MostrarLibroEncabezado />}
           />
           <Route path="/admin/home" element={<EditarLibroEncabezado />} />
-          <Route path="/admin/CrearLibroEncabezado" element={<CrearLibroEncabezado />} />
-          <Route path="/admin/EditarLibroEncabezado" element={<EditarLibroEncabezado />} />
-
+          <Route
+            path="/admin/CrearLibroEncabezado"
+            element={<CrearLibroEncabezado />}
+          />
+          <Route
+            path="/admin/EditarLibroEncabezado"
+            element={<EditarLibroEncabezado />}
+          />
 
           {/*PERIODO CONTABLE*/}
           <Route path="mostrarperiodo" element={<MostrarPeriodoContable />} />
