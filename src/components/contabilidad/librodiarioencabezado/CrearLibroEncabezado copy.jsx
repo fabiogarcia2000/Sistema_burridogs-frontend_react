@@ -1,7 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { setGlobalState } from "../../../globalStates/globalStates";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -15,6 +14,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
+
 
 const UrlEstado = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlSubcuenta = "http://190.53.243.69:3001/mc_subcuenta/getall";
@@ -39,8 +39,8 @@ const CrearLibroEncabezado = () => {
   const [partidaDelete, setPartidaDelete] = useState(0);
   const [listDetail, setListDetail] = useState([]);
   const [datosEnc, setDatosEnc] = useState({
-    fecha: "",
-    descripcion: "",
+    fecha:"",
+    descripcion:""
   });
   const [validarFecha, setValidarFecha] = useState(true);
   const [asiento, setAsiento] = useState({});
@@ -48,12 +48,14 @@ const CrearLibroEncabezado = () => {
 
   const [error, setError] = useState({
     errorFecha: false,
-    errorDesc: false,
+    errorDesc: false
   });
 
   //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
   const userdata = JSON.parse(localStorage.getItem("data"));
   const iDusuario = userdata.data.id;
+
+ 
 
   //Configurar la paginación de la tabla
   const paginationComponentOptions = {
@@ -68,6 +70,11 @@ const CrearLibroEncabezado = () => {
   const [tempdebe, setTempDebe] = useState(0.0);
   const [temphaber, setTempHaber] = useState(0.0);
 
+
+
+
+
+
   //resetea el valores
   const Refrescar = () => {
     window.location.reload();
@@ -78,7 +85,11 @@ const CrearLibroEncabezado = () => {
 
   const [dato, setDato] = useState([]);
 
-  useEffect(() => {}, []);
+  
+   useEffect(() => {
+
+ 
+   }, [])
 
   //procedimineto para obtener ESTADO
   const [estado, setestado] = useState([]);
@@ -152,7 +163,7 @@ const CrearLibroEncabezado = () => {
   //Validar fecha
   const ValidarFecha = async () => {
     try {
-      const res = await axios.get(URLValidarFecha + datosEnc.fecha);
+      const res = await axios.get(URLValidarFecha+datosEnc.fecha);
       setValidarFecha(res.data);
     } catch (error) {
       console.log(error);
@@ -161,90 +172,87 @@ const CrearLibroEncabezado = () => {
   };
 
   useEffect(() => {
-    if (datosEnc.fecha) {
-      ValidarFecha();
+    if(datosEnc.fecha){
+      ValidarFecha()
     }
   }, [datosEnc]);
 
   //fecha encabezado
-  const GuardarFecha = (valor) => {
-    setDatosEnc({ ...datosEnc, fecha: valor });
-    setError({ ...error, errorFecha: false });
+  const GuardarFecha=  (valor) => {
+    setDatosEnc({...datosEnc, fecha: valor})
+    setError({...error, errorFecha: false})
   };
 
   //descripcion encabezado
-  const GuardarDesc = (valor) => {
-    setDatosEnc({ ...datosEnc, descripcion: valor });
-    setError({ ...error, errorDesc: false });
+  const GuardarDesc=  (valor) => {
+    setDatosEnc({...datosEnc, descripcion: valor})
+    setError({...error, errorDesc: false})
   };
 
   useEffect(() => {
-    if (datosEnc.fecha === "") {
-      setError({ ...error, errorFecha: true });
-    } else {
-      setError({ ...error, errorFecha: false });
+    if(datosEnc.fecha === ""){
+      setError({...error, errorFecha: true})
+    }else{
+      setError({...error, errorFecha: false})
     }
   }, [datosEnc.fecha]);
 
   useEffect(() => {
-    if (datosEnc.descripcion === "") {
-      setError({ ...error, errorDesc: true });
-    } else {
-      setError({ ...error, errorDesc: false });
+    if(datosEnc.descripcion === ""){
+      setError({...error, errorDesc: true})
+    }else{
+      setError({...error, errorDesc: false})
     }
+
   }, [datosEnc.descripcion]);
 
-  //PREPARAR DATA
+  //PREPARAR DATA 
   const Submit = () => {
-    if (datosEnc.fecha === "") {
-      setError({ ...error, errorFecha: true });
-    } else if (!validarFecha) {
-      mostrarAlertas("fechaError");
-    } else if (datosEnc.descripcion === "") {
-      setError({ ...error, errorDesc: true });
-    } else if (!listDetail.length) {
-      mostrarAlertas("vacio");
-    } else if (DifTotal > 0 || DifTotal < 0) {
-      mostrarAlertas("cuadrar");
-    } else {
+    if(datosEnc.fecha === ""){
+      setError({...error, errorFecha: true})
+    }else if(!validarFecha){
+      mostrarAlertas("fechaError")
+    }else if(datosEnc.descripcion === ""){
+      setError({...error, errorDesc: true})
+    }else if(!listDetail.length){
+      mostrarAlertas("vacio")
+    }else if(DifTotal>0 || DifTotal<0){
+      mostrarAlertas("cuadrar")
+    }else{
       setAsiento({
         id_estado: 1,
         descripcion: datosEnc.descripcion,
         fecha: datosEnc.fecha,
-        id_usuario: iDusuario,
-        detalle: listDetail,
+        id_usuario:iDusuario,
+        detalle: listDetail
       });
-      setEnviar(true);
+      setEnviar(true)
     }
   };
 
   //Enviar Data
   const PostAsiento = async () => {
-    console.log("valores a enviar");
-    console.log(asiento);
     try {
       const res = await axios.post(URLCrear, asiento);
-      console.log("Data Respuesta");
-      console.log(res.data);
-      setGlobalState("dataPartida", res.data);
-      setEnviar(false);
-      mostrarAlertas("guardado");
-      navigate("/admin/mostrarlibroencabezado")
-      console.log(res);
+      setEnviar(false)
+      mostrarAlertas("guardado")
+      console.log(res)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   };
 
   useEffect(() => {
-    if (asiento.descripcion && enviar) {
-      PostAsiento();
+    if(asiento.descripcion  && enviar){
+      PostAsiento()
     }
   }, [asiento]);
 
+
   //Eliminar una partida de la lista
   const eliminarPartida = () => {
-    const newLista = listDetail.filter((item) => item.i !== partidaDelete);
+    const newLista = listDetail.filter((item) => item.i !== partidaDelete
+    );
     setListDetail(newLista);
   };
 
@@ -254,23 +262,31 @@ const CrearLibroEncabezado = () => {
     setTempHaber(0);
 
     try {
-      listDetail.map((item) =>
-        setTempDebe((prevValor) => prevValor + parseFloat(item.monto_debe))
-      );
 
       listDetail.map((item) =>
-        setTempHaber((prevValor) => prevValor + parseFloat(item.monto_haber))
-      );
-    } catch (error) {}
+      setTempDebe((prevValor) => prevValor + parseFloat(item.monto_debe))
+  
+    );
+
+    listDetail.map((item) =>
+      setTempHaber((prevValor) => prevValor + parseFloat(item.monto_haber))
+    );
+
+    } catch (error) {
+      
+    }
   }, [listDetail]);
 
-  //CALCULAR LA DIFERENCIA DEL DEBE Y HABER
-  useEffect(() => {
+   //CALCULAR LA DIFERENCIA DEL DEBE Y HABER
+   useEffect(() => {
     setDifTotal(0);
     try {
-      setDifTotal(parseFloat(tempdebe) - parseFloat(temphaber));
-    } catch (error) {}
+      setDifTotal(parseFloat(tempdebe)-parseFloat(temphaber))
+    } catch (error) {
+      
+    }
   }, [tempdebe, temphaber]);
+
 
   //Ventana modal eliminar artículo
   const [modalEliminarPartida, setModalEliminarPartida] = useState(false);
@@ -322,7 +338,7 @@ const CrearLibroEncabezado = () => {
         });
 
         break;
-      case "cuadrar":
+        case "cuadrar":
         Swal.fire({
           text: "No debe haber diferencia entre el total debe y el total haber.",
           icon: "warning",
@@ -367,6 +383,7 @@ const CrearLibroEncabezado = () => {
     }
   };
 
+
   const columns = [
     {
       name: "SUBCUENTA",
@@ -407,7 +424,7 @@ const CrearLibroEncabezado = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setPartidaDelete(row.i);
+              setPartidaDelete(row.i)
               abrirModalEliminarPartida();
             }}
           >
@@ -421,145 +438,152 @@ const CrearLibroEncabezado = () => {
     },
   ];
 
+
   return (
     <div className="container">
-      <h3 className="mb-3">Nuevo registro diario</h3>
-      <div className="row g-3">
-        <div className="col-sm-4">
-          <div className="mb-3">
-            <label htmlFor="fechafinal" className="form-label">
-              Fecha:
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="fechafinal"
-              name="fecha_final"
-              onChange={(e) => GuardarFecha(e.target.value)}
-            />
-            {error.errorFecha === true ? (
-              <div className="error">Seleccione una fecha</div>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
+            <h3 className="mb-3">Nuevo registro diario</h3>
+            <div className="row g-3">
+              
 
-        <div className="col-sm-8">
-          <div className="mb-3">
-            <label htmlFor="descripcion" className="form-label">
-              Descripción:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="descripcion"
-              name="descripcion"
-              onChange={(e) => GuardarDesc(e.target.value)}
-            />
-            {error.errorDesc === true ? (
-              <div className="error">Ingrese una descripción</div>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      </div>
+              <div className="col-sm-4">
+                <div className="mb-3">
+                  <label htmlFor="fechafinal" className="form-label">
+                    Fecha:
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="fechafinal"
+                    name="fecha_final"
+                    onChange={(e) => GuardarFecha(e.target.value)}
+                  /> 
+                  {error.errorFecha=== true?
+                    <div className="error">Seleccione una fecha</div>
+                  :
+                    ""
+                  }
+                </div>
+              </div>
+
+              <div className="col-sm-8">
+                <div className="mb-3">
+                  <label htmlFor="descripcion" className="form-label">
+                    Descripción:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="descripcion"
+                    name="descripcion"
+                    onChange={(e) => GuardarDesc(e.target.value)}
+                  />
+                  {error.errorDesc=== true?
+                    <div className="error">Ingrese una descripción</div>
+                  :
+                    ""
+                  }
+                </div>
+              </div>
+
+            </div>
+
+
+
 
       <Formik
         //valores iniciales
         initialValues={{
-          id_subcuenta: "",
-          monto_debe: "0",
-          monto_haber: "0",
-          sinopsis: "",
-          id_sucursal: "",
-          id_centro_costo: "",
+          id_subcuenta:"",
+          monto_debe:"0",
+          monto_haber:"0",
+          sinopsis:"",
+          id_sucursal:"",
+          id_centro_costo:""
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion de subcuenta
-          if (!valores.id_subcuenta) {
-            errores.id_subcuenta = "Requerido";
-          }
+           // Validacion de 
+           if (!valores.id_subcuenta) {
+             errores.id_subcuenta = "Requerido";
+           }
 
-          // Validacion de debe y haber
-          if (!valores.monto_debe) {
-            valores.monto_debe = "0";
-          } else if (!/^[0-9.]+$/.test(valores.monto_debe)) {
+           // Validacion de 
+           if (!valores.monto_debe) {
+            valores.monto_debe = "0"
+          }else if (!/^[0-9.]+$/.test(valores.monto_debe)) {
             errores.monto_debe = "Escribir solo números";
-          } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_debe)) {
+          }else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_debe)) {
             errores.monto_debe = "Ingrese un número válido";
           }
 
-          // Validacion de debe y haber
+          // Validacion de 
           if (!valores.monto_haber) {
-            valores.monto_haber = "0";
-          } else if (!/^[0-9.]+$/.test(valores.monto_haber)) {
+            valores.monto_haber = "0"
+          }else if (!/^[0-9.]+$/.test(valores.monto_haber)) {
             errores.monto_haber = "Escribir solo números";
-          } else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_haber)) {
+          }else if (!/^[0-9]+(.[0-9]+)?$/.test(valores.monto_haber)) {
             errores.monto_haber = "Ingrese un número válido";
           }
 
-          // Validacion de debe y haber
+          // Validacion de 
           if (valores.monto_debe === "0" && valores.monto_haber === "0") {
             errores.monto_debe = "Requerido";
             errores.monto_haber = "Requerido";
-          }
+          }          
 
-          // Validacion de debe y haber
+          // Validacion de 
           if (valores.monto_debe !== "0" && valores.monto_haber !== "0") {
-            errores.monto_debe =
-              "No puede ingresar en el debe y en el haber a la vez, solo en uno";
-            errores.monto_haber =
-              "No puede ingresar en el haber y en el debe a la vez, solo en uno";
-          }
+            errores.monto_debe = "No puede ingresar en el debe y en el haber a la vez, solo en uno";
+            errores.monto_haber = "No puede ingresar en el haber y en el debe a la vez, solo en uno";
+          }     
+          
 
-          // Validacion de sinopsis
+          // Validacion de 
           if (!valores.sinopsis) {
             errores.sinopsis = "Requerido";
           }
-          // Validacion de id subcuenta
+          // Validacion de 
           if (!valores.id_subcuenta) {
             errores.id_subcuenta = "Requerido";
           }
-
-          {/**
+ 
+          // Validacion de 
           if (!valores.id_sucursal) {
             errores.id_sucursal = "Requerido";
           }
-
-          
+ 
+          // Validacion de 
           if (!valores.id_centro_costo) {
             errores.id_centro_costo = "Requerido";
           }
-         */}
-          return errores;
+ 
+           
+ 
+             return errores;
         }}
         onSubmit={async (valores) => {
-          if (valores.monto_debe !== "0" && valores.monto_haber !== "0") {
-            alert("Solo debe ingresar en el debe o en el haber, no en ambos");
-          } else {
-            setListDetail([
-              ...listDetail,
-              {
-                i: indice,
-                id_subcuenta: parseFloat(valores.id_subcuenta),
-                monto_debe: parseFloat(valores.monto_debe || 0),
-                monto_haber: parseFloat(valores.monto_haber || 0),
-                sinopsis: valores.sinopsis,
-                id_sucursal: valores.id_sucursal,
-                id_centro_costo: valores.id_centro_costo,
-              },
-            ]);
-            setIndice(indice + 1);
-          }
+
+          if(valores.monto_debe !== "0" && valores.monto_haber !== "0"){
+            alert("Solo debe ingresar en el debe o en el haber, no en ambos")
+          }else{
+            setListDetail([...listDetail, {
+              i:indice,
+              id_subcuenta:parseFloat(valores.id_subcuenta),
+              monto_debe: parseFloat(valores.monto_debe||0),
+              monto_haber: parseFloat(valores.monto_haber||0),
+              sinopsis: valores.sinopsis,
+              id_sucursal: valores.id_sucursal,
+              id_centro_costo: valores.id_centro_costo
+            }])
+            setIndice(indice + 1)
+          }          
         }}
       >
         {({ errors, values }) => (
           <Form>
+        
             <hr />
 
             {/**********************PRUEBA DE LA API ****************************/}
@@ -732,6 +756,7 @@ const CrearLibroEncabezado = () => {
             </button>
 
             <hr />
+            
           </Form>
         )}
       </Formik>
@@ -755,7 +780,7 @@ const CrearLibroEncabezado = () => {
       </div>
       <br />
 
-      <hr />
+<hr />
       <Formik>
         <Form>
           <div className="container">
@@ -783,30 +808,32 @@ const CrearLibroEncabezado = () => {
                 </ul>
               </div>
             </div>
+
           </div>
         </Form>
       </Formik>
-      <hr />
+<hr />
 
       <div className="row text-end">
-        <div className="col-12">
-          <button
-            className="btn btn-success mb-3 me-2"
-            type="button"
-            onClick={() => Submit()}
-          >
-            Guardar
-          </button>
-          <Link
-            to="/admin/mostrarlibroencabezado"
-            type="button"
-            className="btn btn-danger mb-3 me-2"
-          >
-            Cancelar
-          </Link>
-          {/**/}
-        </div>
-      </div>
+              <div className="col-12">
+                <button className="btn btn-success mb-3 me-2" 
+                type="button"
+                onClick={()=>(
+                  Submit()
+                )}
+                >
+                  Guardar
+                </button>
+                <Link
+                  to="/admin/mostrarlibroencabezado"
+                  type="button"
+                  className="btn btn-danger mb-3 me-2"
+                >
+                  Cancelar
+                </Link>
+                {/**/}
+              </div>
+            </div>
       {/* Ventana Modal de eliminar un articulo de la lista*/}
       <Modal
         isOpen={modalEliminarPartida}
@@ -824,7 +851,7 @@ const CrearLibroEncabezado = () => {
             color="danger"
             onClick={() => {
               //eliminarPartida();
-              eliminarPartida();
+              eliminarPartida()
               abrirModalEliminarPartida();
             }}
           >
