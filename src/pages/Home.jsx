@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import hello from "../assets/img/hello.png";
+import "./home/styles.css";
 import { setGlobalState } from "../globalStates/globalStates";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOneParam } from "../utils/utils";
@@ -77,9 +79,60 @@ const getDatos = async () => {
   /***********DATOS DE EMPRESA**************/
 
   return (
-    <div>
-      <h1 id="Bienvenido">Bienvenido Al Sistema POS</h1>
-      {/*<img id="LogoEmpresa" src={logoEmpresa} alt="Logo Empresa" />*/}
+    <div className="container">
+      {/**<h1 id="Bienvenido">Bienvenido Al Sistema POS</h1> */}
+          <div className="row">
+            <div className="col">
+                <img src={hello} alt="hello" className="imgHi"/>
+            </div>
+            <div className="col-sm-10 padre">
+              <div className="hijo">
+                  <h1 className="h1s"><strong>¡HOLA!</strong></h1>
+                  <p className="ps">BIENVENIDO AL PANEL DE ADMINISTRACIÓN</p>
+              </div>
+            </div>
+          </div>
+<br />
+          <div className="row">
+            <div className="container bootstrap snippets bootdey">
+              <div className="row">
+                <div className="col-md-3 col-sm-6 col-xs-12">
+                      <div className="panel panel-dark panel-colorful" onClick={()=>{navigate("/admin/login-pos")}} type="button">
+                        <div className="panel-body text-center">
+                          <p className="text-uppercase mar-btm text-sm"><strong>Punto de Ventas</strong></p>
+                          <i className="bi bi-cart3 fs-1"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3 col-sm-6 col-xs-12">
+                      <div className="panel panel-danger panel-colorful" onClick={()=>{navigate("/admin/panelcompras")}} type="button">
+                        <div className="panel-body text-center">
+                          <p className="text-uppercase mar-btm text-sm"><strong>Compras</strong></p>
+                          <i className="bi bi-bag-plus fs-1"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3 col-sm-6 col-xs-12">
+                      <div className="panel panel-primary panel-colorful" onClick={()=>{navigate("/admin/mostrarlibromayor")}} type="button">
+                        <div className="panel-body text-center">
+                          <p className="text-uppercase mar-btm text-sm"><strong>Libro Mayor</strong></p>
+                          <i className="bi bi-coin fs-1"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3 col-sm-6 col-xs-12">
+                      <div className="panel panel-info panel-colorful" onClick={()=>{navigate("/admin/mostrarlibroencabezado")}} type="button">
+                        <div className="panel-body text-center">
+                          <p className="text-uppercase mar-btm text-sm"><strong>Libro Diario</strong></p>
+                          <i className="bi bi-journal-plus fs-1"></i>
+                        </div>
+                      </div>
+                    </div>    
+              </div>
+            </div>
+          </div>
+
+      
     </div>
   );
 }
