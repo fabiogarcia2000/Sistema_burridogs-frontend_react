@@ -9,7 +9,7 @@ import "./styles.css";
 import {Spinner} from "reactstrap";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 
-const URLGuardar = "http://190.53.243.69:3001/backup";
+const URLGuardar = "http://190.53.243.69:3001/upload";
 
 const objeto = "FORM_ARTICULO";
 
@@ -21,7 +21,7 @@ const Restaurar = () => {
   const [archivos, setArchivos] = useState(null);
 
   const SubirArchivos = (archivo) =>{
-    setArchivos(archivo)
+    setArchivos(archivo[0])
   }
 
   const navigate = useNavigate();
@@ -117,14 +117,12 @@ const EnviarBackup = async () => {
 
     const res = await axios.post(URLGuardar, fil, {headers:{'Content-Type':'multipart/form-data'}});
     console.log(res.data)
-    if (res.status === 200) {
+
       setLoading(false)
       mostrarAlertas("subido");
       //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
       //window.location.reload();
-    } else {
-      mostrarAlertas("error");
-    }
+
   } catch (error) {
     console.log(error);
     mostrarAlertas("error");
