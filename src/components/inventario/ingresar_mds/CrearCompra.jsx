@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useGlobalState } from "../../../globalStates/globalStates";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import DataTable from "react-data-table-component";
 import { quitarTildes } from "./utils/textoSinTildes";
