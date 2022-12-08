@@ -1,0 +1,20 @@
+.principal{
+    position: relative !important;
+    height: 70vh !important;
+
+  }
+
+  .secundario{
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin: -200px 0 0 -200px!important;
+  }
+
+  .img-backup{
+    width: 350px !important;
+    height: 300px !important;
+    filter: blur(0px) !important;
+    position: inherit !important;
+   
+  }

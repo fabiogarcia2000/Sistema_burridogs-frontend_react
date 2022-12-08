@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
-import DataTable from "react-data-table-component";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates";
+import { useState} from "react";
+import { Modal, ModalBody} from "reactstrap";
+
 import Swal from "sweetalert2";
+import imagen from "../../../assets/img/img-backup.png";
+import "./styles.css";
 import {Spinner} from "reactstrap";
 
 
@@ -23,8 +22,8 @@ const CopiaSeguridad = () => {
   switch (alerta) {
     case "creado":
       Swal.fire({
-        title: "¡Se subio el archivo con éxito!",
-        text: "Los archivos se subieron con éxito",
+        title: "¡Se creó con éxito!",
+        text: "",
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
@@ -35,7 +34,7 @@ const CopiaSeguridad = () => {
     case "error":
       Swal.fire({
         title: "Error",
-        text: "No se pudieron subir los archivos",
+        text: "Error al crear copia de seguridad",
         icon: "error",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Ok",
@@ -47,59 +46,46 @@ const CopiaSeguridad = () => {
     }
   };
 
+  const GenerarBackup = async () => {
+    setLoading(true)
+      try {
+          const res = await axios.get(UrlCrearCopia);
+            //setcopia(res.data);
+            setLoading(false)
+            mostrarAlertas("creado");
+            console.log(res)
+              //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
+              //navigate("/admin/copiaseguridad");
+
+      } catch (error) {
+            console.log(error);
+            mostrarAlertas("error");
+            setLoading(false)
+      }   
+  };
+
   return (
-    <> 
-      {
-        loading?
-          <Modal size="sm" isOpen={loading} centered>
+      <div className='container principal'>
+        <h3 className="mb-3">Crear Copia de Seguridad</h3>
+        <div className='secundario'>
+          <div className='row'>
+            <img src={imagen} className="img-backup" alt="Img"/>
+          </div>
+          <br /><br />
+          <div className='row'>
+            <button className='btn btn-primary mb-3 me-2' onClick={()=>{GenerarBackup()}}>Crear Copia de Seguridad</button>
+          </div>
+        </div>
+
+        <Modal size="sm" isOpen={loading} centered>
             <ModalBody>
              <div className="text-center">
               <Spinner color="secondary" centered/>
+              <p>Creando...</p>
              </div>
             </ModalBody>
           </Modal>
-        
-        : 
-        <Formik>
-        onSubmit={async (valores) => {
-          setLoading(true)
-          //procedimineto para guardar el los cambios
-          try {
-            const res = await axios.get(UrlCrearCopia);
-            setcopia(res.data);
-            if (res.status === 200) {
-              setLoading(false)
-              mostrarAlertas("creado");
-              //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
-              //navigate("/admin/copiaseguridad");
-              //window.location.reload();
-            } else {
-              mostrarAlertas("error");
-            }
-          } catch (error) {
-            console.log(error);
-            mostrarAlertas("error");
-          }   
-        }}
-        
-          <Form>
-          <div>
-          <h3>Copia de Seguridad</h3>
-            <div className="col-sm-4">
-              <div className="mb-3">  
-                  <button className="btn btn-success mb-3 me-2" type="submit">
-                    Crear Copia de Seguridad
-                  </button>
-              </div>
-            </div>
-        </div>
-        </Form>
-        
-        
-      </Formik>
-      }
-      
-    </>    
+      </div>  
   );
 };
 

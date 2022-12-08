@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import imagen from "../../../assets/img/img-restore.png";
-import "./styles.css";
 import {Spinner} from "reactstrap";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 
@@ -18,10 +16,10 @@ const objeto = "FORM_ARTICULO";
 const Restaurar = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
   const [loading, setLoading] = useState(false);
-  const [archivos, setArchivos] = useState(null);
+  const [archivos, setarchivos] = useState("");
 
-  const SubirArchivos = (archivo) =>{
-    setArchivos(archivo)
+  const subirArchivos =e =>{
+    setarchivos(e);
   }
 
   const navigate = useNavigate();
@@ -85,42 +83,22 @@ const Restaurar = () => {
         });
         break;
 
-        case "vacio":
-        Swal.fire({
-          title: "Seleccione un Archivo",
-          icon: "warning",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Ok",
-        });
-        break;
-
       default:
         break;
     }
   };
 
 const EnviarBackup = async () => {
-  
- if(archivos){
-
   setLoading(true)
-
-
+  //procedimineto para guardar el los cambios
   try {
-    const fil = new FormData();
-    for (let index = 0; index < archivos.length; index++) {
-      fil.append("restore", archivos[index]);
-      console.log(fil)      
-    }
+    const res = await axios.post(URLGuardar);
 
-    
-
-    const res = await axios.post(URLGuardar, fil, {headers:{'Content-Type':'multipart/form-data'}});
-    console.log(res.data)
     if (res.status === 200) {
       setLoading(false)
       mostrarAlertas("subido");
       //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
+      navigate("/admin/restaurar");
       //window.location.reload();
     } else {
       mostrarAlertas("error");
@@ -128,77 +106,96 @@ const EnviarBackup = async () => {
   } catch (error) {
     console.log(error);
     mostrarAlertas("error");
-    setLoading(false)
   }
- }else{
-  mostrarAlertas("vacio")
- }
       
   };
 
-  //Ventana modal para subir archivo
-  const [modalArchivo, setModalArchivo] = useState(false);
-  const abrirModalArchivo = () => setModalArchivo(!modalArchivo);
+  //Ventana modal de confirmación de eliminar
  
 
   return (
-    <div className='container principal'>
-       <h3 className="mb-3">Restaurar con Copia de Seguridad</h3>
-        <div className='secundario'>
-          <div className='row'>
-            <img src={imagen} className="img-backup" alt="Img"/>
-          </div>
-          <br /><br />
-          <div className='row'>
-            <button className='btn btn-success mb-3 me-2' onClick={()=>{abrirModalArchivo()}}>Restaurar</button>
-          </div>
-        </div>
-
-        <Modal size="sm" isOpen={loading} centered>
+    <>
+    
+      {
+        loading?
+          <Modal size="sm" isOpen={loading} centered>
             <ModalBody>
              <div className="text-center">
               <Spinner color="secondary" centered/>
-              <p>Subiendo...</p>
              </div>
             </ModalBody>
           </Modal>
+        
+        : 
+        <div className="container">
+        <Formik
+          
+          //Funcion para validar
+          validate={(valores) => {
+            let errores = {};
 
-          {/* Ventana Modal subir archivo*/}
-      <Modal isOpen={modalArchivo} centered>
-        <ModalHeader>Subir Copia de Seguridad</ModalHeader>
-        <ModalBody>
-         <div className="col-sm-12">
-            <div className="mb-3">
-              <label htmlFor="Archivo" className="form-label">
-                Seleccione una Copia de Seguridad:
-              </label>
-              <input
-                id="files"
-                type="file"
-                className="form-control"
-                name="files"
-                accept=".tar"
-                onChange={(e) => SubirArchivos(e.target.files)}
-              />
-            </div>
-          </div> 
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="success"
-            onClick={() => {
-              abrirModalArchivo();
-              EnviarBackup()
-            }}
-          >
-            Subir
-          </Button>
-          <Button color="secondary" onClick={abrirModalArchivo}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-      </div>  
+           
+
+            return errores;
+          }}
+
+          onSubmit={async (valores) => {
+            
+
+
+              
+
+          }}
+        >
+          {({ errors, values }) => (
+            <Form>
+              <h3 className="mb-3">Restaurar Copia de Seguridad</h3>
+              <div className="row g-3">
+              <div className="row g-3">
+                <div className="col-sm-4">
+                  <div className="mb-3">
+                    <label htmlFor="Archivo" className="form-label">
+                      Subir Copia de Seguridad:
+                    </label>
+                    <input
+                      id="imgs"
+                      type="file"
+                      className="form-control"
+                      name="files"
+                      onChange={(e) => subirArchivos(e.target.files)}
+                    />
+                  </div>
+                </div>  
+
+                {/**AQUI OTRA */}
+              </div>
+
+                              
+              </div>
+<br />
+
+              <button className="btn btn-success mb-3 me-2" type="submit">
+                Subir Archivo
+              </button>
+              <Link
+                to="/admin/restaurar"
+                type="button"
+                className="btn btn-danger mb-3 me-2"
+              >
+                Cancelar
+              </Link>
+            </Form>
+          )}
+        </Formik>
+
+         
+
+      </div>
+      }
+
+
+      
+    </>
   );
 };
 
