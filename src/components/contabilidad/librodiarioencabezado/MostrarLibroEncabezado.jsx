@@ -11,6 +11,7 @@ import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 
 const UrlMostrar = "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/0";
+const UrlMostrarDetalles = "http://190.53.243.69:3001/mc_librodetalle/getdiarioporenca/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 const fechaHoy = "2022-02-01"
 
@@ -23,7 +24,42 @@ const MostrarLibroDetalle = () => {
 
   const [opcionSelect, setOpcionSelect] = useState('');
 
+  const valoresIniciales = [
+    {
+        fecha: "",
+        usuario: null,
+        id_estado: null,
+        id_usuario: null,
+        descripcion: "",
+        tipo_estado: "",
+        descripcion_periodo: "",
+        id_periodo_contable: null,
+        id_libro_diario_enca: null       
+    }
+]
+
+const valoresInicialesSub = [
+  {
+      sinopsis: "",
+      monto_debe: 0,
+      id_sucursal: null,
+      monto_haber: 0,
+      id_subcuenta: null,
+      d_centro_costo: null,
+      nombre_subcuenta: "",
+      descripcion_sucursal: null,
+      id_libro_diario_deta: null,
+      id_libro_diario_enca: null,
+      descripcion_centro_costo: null
+  }
+]
+
   //Configurar los hooks
+  const [detalles, setDetalles] = useState(valoresIniciales);
+  const [subDetalles, setSubDetalles] = useState(valoresInicialesSub);
+  const [totalDebe, setTotalDebe] = useState(0);
+  const [totalHaber, setTotalHaber] = useState(0);
+
   const [registroDelete, setRegistroDelete] = useState('');
   const [fechaFinal, setFechaFinal] = useState('');
   const [registros, setRegistros] = useState([]);
@@ -77,7 +113,7 @@ const getPediodoSelect = async () => {
 };
 
 //opción seleccionada en el select
-const  handlerCargarPerido = function (e) {
+const  handlerCargarPeriodo = function (e) {
   const opcion = e.target.value;
   setOpcionSelect(opcion)
 }
@@ -89,7 +125,32 @@ useEffect(() => {
 }, [opcionSelect]);
 
 //************************************************/
+//petición a api para mostrar detalles
+const getDetalles = async (idEnca) => {
+  try {
+    const res = await axios.get(UrlMostrarDetalles+idEnca);
+    let valores = res.data;
+    setDetalles(res.data);
+    setSubDetalles(valores[0].detalle)
+  } catch (error) {
+    console.log(error);
+    //mostrarAlertas("errormostrar");
+  }
+};
 
+useEffect(() => {
+  setTotalDebe(0)
+  setTotalHaber(0)
+
+  subDetalles.map((list) =>
+    setTotalDebe((prevVal) => prevVal + (parseFloat(list.monto_debe || 0)))
+  );
+
+  subDetalles.map((list) =>
+    setTotalHaber((prevVal) => prevVal + (parseFloat(list.monto_haber || 0)))
+  );
+
+}, [subDetalles]);
 
 /*****Obtener y corroborar Permisos*****/
 const [temp, setTemp] = useState([]);
@@ -227,7 +288,6 @@ const TienePermisos = () =>{
   //Ventana modal para mostrar mas
   const [modalVerMas, setVerMas] = useState(false);
   const abrirModalVerMas = () => setVerMas(!modalVerMas);
-  const [encabezadoVerMas, setEncabezadoVerMas] = useState({});
 
   //Ventana modal de confirmación de eliminar
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -281,18 +341,18 @@ const TienePermisos = () =>{
       name: "ACCIONES",
       cell: (row) => (
         <>
-         {/*<Link
+         <button
             type="button"
             className="btn btn-light"
             title="Ver Más..."
             onClick={() => {
+              getDetalles(row.id_libro_diario_enca)
               abrirModalVerMas();
-              setEncabezadoVerMas(row);
-              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS LIBRO DIARIO ENCABEZADO");
+              //RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS LIBRO DIARIO ENCABEZADO");
             }}
           >
             <i className="bi bi-eye-fill"></i>
-          </Link>*/} 
+          </button>
           &nbsp;
           <button
             type="button"
@@ -434,7 +494,7 @@ const TienePermisos = () =>{
             />
           </div>
         </div>
-        <br />
+        <br /><br /><br />
         <div className="row">
               <div className="col-5">
                 <div className="mb-3">
@@ -446,7 +506,7 @@ const TienePermisos = () =>{
                     className="form-select"
                     id="id_periodo_contable"
                     name="id_periodo_contable"
-                    onClick={handlerCargarPerido}
+                    onClick={handlerCargarPeriodo}
                   >
                     <option value="">Seleccionar...</option>
                     {sucursal.map((item, i) => (
@@ -567,6 +627,80 @@ const TienePermisos = () =>{
           </Button>
           <Button color="secondary" onClick={abrirModalEliminar}>
             Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+
+            {/* Ventana Modal de ver más*/}
+            <Modal size="lg" isOpen={modalVerMas} toggle={abrirModalVerMas} centered>
+        <ModalHeader toggle={abrirModalVerMas}>Detalles</ModalHeader>
+        <ModalBody>
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                 <p><strong>FECHA: </strong>{(detalles[0].fecha||"")}</p>
+                </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                 <p><strong>DESCRIPCIÓN: </strong>{(detalles[0].descripcion||"")}</p>
+              </div>
+            </div>
+            <div className="row">
+                <div className="col">
+                <p><strong>DESCRIPCIÓN PERIODO: </strong>{(detalles[0].descripcion_periodo||"")}</p>
+                </div>
+            </div>
+            <hr />
+
+            <div className='row regul'>
+            <table class="table table-sm table-bordered border-dark table-responsive">
+                <thead class="color1 border-dark">
+                <tr>
+                    <th scope="col">SUBCUENTA</th>
+                    <th scope="col">MONTO DEBE</th>
+                    <th scope="col">MONTO HABER</th>
+                    <th scope="col">SINOPSIS</th>
+                    <th scope="col">SUCURSAL</th>
+                    <th scope="col">CENTRO DE COSTOS</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {subDetalles && 
+                        subDetalles.map((item, i) =>(
+                            <tr key={i}>
+                                <td>{item.nombre_subcuenta}</td>
+                                <td>{item.monto_debe}</td>
+                                <td>{item.monto_haber}</td>
+                                <td>{item.sinopsis}</td>
+                                <td>{item.descripcion_sucursal}</td>
+                                <td>{item.descripcion_centro_costo}</td>
+                             </tr>
+                        ))
+
+                    }     
+
+                <tr>                    
+                    <td  className='text-end' colspan="5"><strong>TOTAL DEBE:</strong></td>
+                    <td><strong>{parseFloat(totalDebe)}</strong></td>
+                </tr>
+                <tr>                    
+                    <td  className='text-end' colspan="5"><strong>TOTAL HABER:</strong></td>
+                    <td><strong>{totalHaber}</strong></td>
+                </tr>
+                <tr>                    
+                    <td  className='text-end' colspan="5"><strong>DIFERENCIA: </strong></td>
+                    <td><strong>{((totalDebe-totalHaber)||0)}</strong></td>
+                </tr>           
+                </tbody>
+            </table>
+        </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={abrirModalVerMas}>
+            Cerrar
           </Button>
         </ModalFooter>
       </Modal>
