@@ -131,7 +131,7 @@ const EditarCuenta = () => {
           codigo_cuenta: edit.codigo_cuenta,
           nombre_cuenta: edit.nombre_cuenta,
           id_categoria: edit.id_categoria,
-          id_destino_cuenta: "",
+          id_destino_cuenta: edit.id_destino_cuenta,
         }}
         //Funcion para validar
         validate={(valores) => {
@@ -174,16 +174,28 @@ const EditarCuenta = () => {
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto,"EDITAR", "EDITAR CATALOGO CUENTA"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "EDITAR CATALOGO CUENTA"
+              ); //Insertar bitacora
               navigate("/admin/mostrarcatalogo");
             } else {
               mostrarAlertas("error");
-              RegistroEnVitacora(permisos[0].id_objeto,"EDITAR", "ERROR AL EDITAR CATALOGO CUENTA"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "ERROR AL EDITAR CATALOGO CUENTA"
+              ); //Insertar bitacora
             }
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            RegistroEnVitacora(permisos[0].id_objeto,"EDITAR", "ERROR AL EDITAR CATALOGO CUENTA"); //Insertar bitacora
+            RegistroEnVitacora(
+              permisos[0].id_objeto,
+              "EDITAR",
+              "ERROR AL EDITAR CATALOGO CUENTA"
+            ); //Insertar bitacora
             navigate("/admin/mostrarcatalogo");
           }
         }}
