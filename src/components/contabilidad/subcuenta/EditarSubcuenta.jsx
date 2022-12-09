@@ -17,6 +17,7 @@ const objeto = "FORM_SUBCUENTA";
 
 const EditarSubCuenta = () => {
   const [edit] = useGlobalState("registroEdit");
+  //console.log(edit)
   const navigate = useNavigate();
 
   //===================Obtener datos del localstorage=====================
@@ -63,6 +64,7 @@ const EditarSubCuenta = () => {
     try {
       const res = await axios.get(UrlMostrar);
       setcuenta(res.data);
+      console.log(res.data)
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");

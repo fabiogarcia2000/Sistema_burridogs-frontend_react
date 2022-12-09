@@ -230,6 +230,7 @@ const MostrarCuentas = () => {
             title="Editar"
             onClick={() => {
               if (permisos[0].permiso_actualizacion) {
+                console.log(row)
                 setGlobalState("registroEdit", row);
                 navigate("/admin/editarcatalogo")
               } else {

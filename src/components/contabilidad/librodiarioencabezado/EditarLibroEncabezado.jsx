@@ -32,6 +32,7 @@ const EditarLibroEncabezado = () => {
 
   const [partida] = useGlobalState("registroEdit");
   const [detalles] = useGlobalState("dataDetalles");
+  console.log(detalles)
 
   const navigate = useNavigate();
 
@@ -138,7 +139,13 @@ const EditarLibroEncabezado = () => {
   };
 
   //procedimineto para obtener SUBCUENTA
-  const [subcuenta, setsubcuenta] = useState([]);
+   //procedimineto para obtener SUBCUENTA
+   const [subcuenta, setsubcuenta] = useState([]);
+   const [subCuentaSelect, setSubCuentaSelect] = useState([]);
+   const [sucursalSelect, setSucursalSelect] = useState([{descripcion_sucursal:""}]);
+   const [centroCostoSelect, setCentroCostoSelect] = useState([{descripcion:""}]);
+
+   
   useEffect(() => {
     getsubcuenta();
   }, []);
@@ -153,6 +160,25 @@ const EditarLibroEncabezado = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+//Capturar descripción de SubCuenta
+const SubCuent = (id) => {
+  const desc = subcuenta.filter((item) => item.id_subcuenta == id);
+  setSubCuentaSelect(desc);
+};
+
+//Capturar descripción de Sucursal
+const SucursalSelect = (id) => {
+  const desc = sucursal.filter((item) => item.id_sucursal == id);
+  setSucursalSelect(desc);
+};
+
+//Capturar descripción de Sucursal
+const CentroCostoSelect = (id) => {
+  const desc = centro.filter((item) => item.id_centro_costo == id);
+  setCentroCostoSelect(desc);
+};
+
 
   //procedimineto para obtener CENTRO COSTO
   const [centro, setcentro] = useState([]);
@@ -421,7 +447,7 @@ const EditarLibroEncabezado = () => {
   const columns = [
     {
       name: "SUBCUENTA",
-      selector: (row) => row.id_subcuenta,
+      selector: (row) => row.nombre_subcuenta,
       sortable: true,
     },
     {
@@ -441,12 +467,12 @@ const EditarLibroEncabezado = () => {
     },
     {
       name: "SUCURSAL",
-      selector: (row) => row.id_sucursal,
+      selector: (row) => row.descripcion_sucursal,
       sortable: true,
     },
     {
       name: "CENTRO COSTO",
-      selector: (row) => row.id_centro_costo,
+      selector: (row) => row.descripcion_centro_costo,
       sortable: true,
     },
     {
@@ -596,11 +622,14 @@ const EditarLibroEncabezado = () => {
               {
                 id_libro_diario_deta: indice,
                 id_subcuenta: parseFloat(valores.id_subcuenta),
+                nombre_subcuenta: (subCuentaSelect[0].nombre_subcuenta||""),
                 monto_debe: parseFloat(valores.monto_debe || 0),
                 monto_haber: parseFloat(valores.monto_haber || 0),
-                sinopsis: (valores.sinopsis||""),
+                sinopsis: valores.sinopsis,
                 id_sucursal: (valores.id_sucursal||null),
+                descripcion_sucursal:(sucursalSelect[0].descripcion_sucursal||""),
                 id_centro_costo: (valores.id_centro_costo||null),
+                descripcion_centro_costo:(centroCostoSelect[0].descripcion||"")
               },
             ]);
             setIndice(indice + 1);
@@ -626,6 +655,7 @@ const EditarLibroEncabezado = () => {
                     id="idsubcuenta"
                     type="text"
                     name="id_subcuenta"
+                    onBlur={(e) => SubCuent(e.target.value)}
                   >
                     <option value="">Seleccionar...</option>
                     {subcuenta.map((item, i) => (
@@ -719,6 +749,7 @@ const EditarLibroEncabezado = () => {
                     className="form-select"
                     id="pos"
                     name="id_sucursal"
+                    onBlur={(e) => SucursalSelect(e.target.value)}
                   >
                     <option value="">Seleccionar...</option>
                     {sucursal.map((item, i) => (
@@ -747,6 +778,7 @@ const EditarLibroEncabezado = () => {
                     className="form-select"
                     id="centrocosto"
                     name="id_centro_costo"
+                    onBlur={(e) => CentroCostoSelect(e.target.value)}
                   >
                     <option value="">Seleccionar...</option>
                     {centro.map((item, i) => (
@@ -777,6 +809,10 @@ const EditarLibroEncabezado = () => {
             <button
               type="reset"
               className="btn btn-warning mb-3 me-2 text-gray"
+              onClick={()=>{
+                setSucursalSelect([{descripcion_sucursal:""}])
+                setCentroCostoSelect([{descripcion:""}])
+              }}
             >
               Limpiar
             </button>
