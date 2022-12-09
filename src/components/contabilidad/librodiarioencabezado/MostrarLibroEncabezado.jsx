@@ -495,21 +495,6 @@ const MostrarLibroDetalle = () => {
           >
             <i className="bi bi-pencil-square"></i>
           </button>
-          &nbsp;
-          <button
-            className="btn btn-light"
-            title="Eliminar"
-            onClick={() => {
-              if (permisos[0].permiso_eliminacion) {
-                setRegistroDelete(row.id_libro_diario_enca);
-                abrirModalEliminar();
-              } else {
-                mostrarAlertas("permisos");
-              }
-            }}
-          >
-            <i className="bi bi-trash3-fill"></i>
-          </button>
         </>
       ),
       ignoreRowClick: true,
