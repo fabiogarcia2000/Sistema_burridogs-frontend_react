@@ -8,5 +8,6 @@ export const { setGlobalState, useGlobalState } = createGlobalState({
   dataVenta: {},
   dataCompra: {},
   datosEmpresa: {},
-  dataPartida: {},
+  dataPartida: [],
+  dataDetalles: [],
 });
