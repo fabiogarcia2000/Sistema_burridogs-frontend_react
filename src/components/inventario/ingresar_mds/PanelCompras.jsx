@@ -3,51 +3,55 @@ import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
-import { setGlobalState } from "../../../globalStates/globalStates";
-import Swal from "sweetalert2";
 
+import { useLocation, useNavigate } from "react-router-dom";
+
+//to="/admin/crearcompra"
+//  to="/admin/reporte-compra-fecha"
 function PanelCompras() {
+  let navigate = useNavigate();
+
   return (
     <div>
       <h2 id="Bienvenido">Panel de Compras</h2>
       <hr />
       <h4>Seleccione una opción</h4>
       <br />
+
       <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-4"
-              role="group"
-              aria-label="First group"
-            >
-              <Link
-                to="/admin/crearcompra"
+        <div className="container bootstrap snippets bootdey">
+          <div className="row">
+            <div className="col-md-3 col-sm-6 col-xs-12">
+              <div
+                className="panel panel-danger panel-colorful"
+                onClick={() => {
+                  navigate("/admin/crearcompra");
+                }}
                 type="button"
-                className="btn btn-danger m-4"
-                title="Nuevo Pedido"
               >
-                <i className="bi bi-truck"></i> Nuevo Pedido
-              </Link>
+                <div className="panel-body text-center">
+                  <p className="text-uppercase mar-btm text-sm">
+                    <strong>Orden de Compra</strong>
+                  </p>
+                  <i className="bi bi-bag-plus fs-1"></i>
+                </div>
+              </div>
             </div>
-            <div
-              className="btn-group me-4"
-              role="group"
-              aria-label="Second group"
-            >
-              <Link
-                to="/admin/reporte-compra-fecha"
+            <div className="col-md-3 col-sm-6 col-xs-12">
+              <div
+                className="panel panel-info panel-colorful"
+                onClick={() => {
+                  navigate("/admin/reporte-compra-fecha");
+                }}
                 type="button"
-                className="btn btn-primary m-4"
-                title="Ver Compras"
               >
-                <i className="bi bi-clipboard-data"></i> Ver Compras
-              </Link>
+                <div className="panel-body text-center">
+                  <p className="text-uppercase mar-btm text-sm">
+                    <strong>Reporte de Compras</strong>
+                  </p>
+                  <i className="bi bi-journal-plus fs-1"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>

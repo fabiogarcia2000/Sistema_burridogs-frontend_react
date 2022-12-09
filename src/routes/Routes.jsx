@@ -184,6 +184,7 @@ import EditarEstado from "../components/contabilidad/estado/EditarEstado";
 import MostrarLibroDetalle from "../components/contabilidad/librodiariodetalle/MostrarLibroDetalle";
 import CrearLibroDetalle from "../components/contabilidad/librodiariodetalle/CrearLibroDetalle";
 import EditarLibroDetalle from "../components/contabilidad/librodiariodetalle/EditarLibroDetalle";
+import MayorizarDiario from "../components/contabilidad/librodiarioencabezado/MayorizarDiaro";
 
 //ENCABEZADO LIBRO encabezado
 import MostrarLibroEncabezado from "../components/contabilidad/librodiarioencabezado/MostrarLibroEncabezado";
@@ -308,8 +309,7 @@ function Rutas() {
           <Route path="editarMesas" element={<EditarMesas />} />
           <Route path="productos" element={<Productos />} />
 
-          <Route path="index" element={<Index />} /> 
-
+          <Route path="index" element={<Index />} />
 
           {/*--------------------------------------Rutas inventario-----------------------------------*/}
           <Route path="mostrarcentrocosto" element={<MostrarCentroCosto />} />
@@ -382,6 +382,7 @@ function Rutas() {
           <Route path="mostrarlibrodetalle" element={<MostrarLibroDetalle />} />
           <Route path="editarlibrodetalle" element={<EditarLibroDetalle />} />
           <Route path="crearlibrodetalle" element={<CrearLibroDetalle />} />
+          <Route path="mayorizardiario" element={<MayorizarDiario />} />
           {/*ENCABEZADO LIBRO DIARIO*/}
           <Route
             path="mostrarlibroencabezado"

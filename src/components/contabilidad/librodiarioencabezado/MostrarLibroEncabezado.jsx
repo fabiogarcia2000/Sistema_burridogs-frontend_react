@@ -7,15 +7,12 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
-import { getCurrentDateShort } from "../../../utils/fechaYhora"
+import { getCurrentDateShort } from "../../../utils/fechaYhora";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
 import { cambiarAMayusculasDescripcion } from "../../../utils/cambiarAMayusculas";
-import {
-  getCurrentDate,
-  getCurrentTime,
-} from "../../../utils/fechaYhora";
+import { getCurrentDate, getCurrentTime } from "../../../utils/fechaYhora";
 
 const UrlMostrar =
   "http://190.53.243.69:3001/mc_libroencabezado/getallPorPeriodo/0";
@@ -482,13 +479,10 @@ const MostrarLibroDetalle = () => {
             onClick={() => {
               if (row.fecha_final < fechaHoy) {
                 mostrarAlertas("periodocerrado");
-
-
               } else {
                 getDetalles(row.id_libro_diario_enca);
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
-
               }
 
               if (permisos[0].permiso_actualizacion) {
@@ -496,7 +490,6 @@ const MostrarLibroDetalle = () => {
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
               } else {
-
               }
             }}
           >
@@ -675,7 +668,7 @@ const MostrarLibroDetalle = () => {
                       <button
                         className="btn btn-danger mb-3 me-2"
                         onClick={() => {
-                          abrirModalMayor();
+                          navigate("/admin/MayorizarDiario");
                         }}
                       >
                         Mayorizar
