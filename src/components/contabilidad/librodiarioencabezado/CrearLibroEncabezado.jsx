@@ -545,8 +545,8 @@ const CrearLibroEncabezado = () => {
                 monto_debe: parseFloat(valores.monto_debe || 0),
                 monto_haber: parseFloat(valores.monto_haber || 0),
                 sinopsis: valores.sinopsis,
-                id_sucursal: valores.id_sucursal,
-                id_centro_costo: valores.id_centro_costo,
+                id_sucursal: (valores.id_sucursal||null),
+                id_centro_costo: (valores.id_centro_costo||null),
               },
             ]);
             setIndice(indice + 1);
