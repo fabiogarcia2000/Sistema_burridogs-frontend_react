@@ -5,11 +5,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import axios from "axios";
 import { useGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
-import {
-  cambiarAMayusculasCentroCosto,
-  cambiarAMayusculasSinopsis,
-  cambiarAMayusculasSucursal,
-} from "../../../utils/cambiarAMayusculas";
+import {cambiarAMayusculasSinopsis} from "../../../utils/cambiarAMayusculas";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -22,6 +18,7 @@ const UrlCentroCost = "http://190.53.243.69:3001/centro_costo/getall";
 const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall";
 
 const URLEditar = "http://190.53.243.69:3001/mc_libroencabezado/update";
+const URLValidarFecha = "http://190.53.243.69:3001/mc_periodo/validar/";
 
 const URLMostrarUno = "";
 const current = new Date();
@@ -52,7 +49,7 @@ const EditarLibroEncabezado = () => {
   const [asiento, setAsiento] = useState({});
   const [enviar, setEnviar] = useState(false);
 
-  const [descripcion, setDescripcion] = useState("");
+  const [resData, setResData] = useState("");
 
   const [error, setError] = useState({
     errorFecha: false,
@@ -241,7 +238,7 @@ const EditarLibroEncabezado = () => {
       case "guardado":
         Swal.fire({
           title: "¡Guardado!",
-          text: "El detalle de libro diario se creó con éxito",
+          text: "Los cambios de guardaron con éxito",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -251,8 +248,8 @@ const EditarLibroEncabezado = () => {
 
       case "error":
         Swal.fire({
-          title: "Error",
-          text: "No se pudo crear el detalle de libro diario",
+          title: "Error al Guardar",
+          text: {resData},
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -268,11 +265,37 @@ const EditarLibroEncabezado = () => {
         });
 
         break;
+        case "fechaError":
+        Swal.fire({
+          text: "No hay un período abierto para la fecha seleccionada",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
+        break;
 
       default:
         break;
     }
   };
+
+  //Validar fecha
+  const ValidarFecha = async () => {
+    try {
+      const res = await axios.get(URLValidarFecha + datosEnc.fecha);
+      setValidarFecha(res.data);
+    } catch (error) {
+      console.log(error);
+      //mostrarAlertas("errormostrar");
+    }
+  };
+
+  useEffect(() => {
+    if (datosEnc.fecha) {
+      ValidarFecha();
+    }
+  }, [datosEnc]);
 
   //fecha encabezado
   const GuardarFecha = (valor) => {
@@ -282,7 +305,7 @@ const EditarLibroEncabezado = () => {
 
   //descripcion encabezado
   const GuardarDesc = (valor) => {
-    setDatosEnc({ ...datosEnc, descripcion: valor });
+    setDatosEnc({ ...datosEnc, descripcion: (valor.toUpperCase()) });
     setError({ ...error, errorDesc: false });
   };
 
@@ -334,11 +357,19 @@ const EditarLibroEncabezado = () => {
       console.log(asiento)
       const res = await axios.post(URLEditar, asiento);
       setEnviar(false);
-      mostrarAlertas("guardado");
-      navigate("/admin/mostrarlibroencabezado")
-      console.log(res)
+
+      if (res.status === 200) {
+        mostrarAlertas("guardado");
+        navigate("/admin/mostrarlibroencabezado")
+        console.log(res)
+      }else{
+        setResData(res.data)
+        mostrarAlertas("error");
+      }
+      
     } catch (error) {
       console.log(error);
+      mostrarAlertas("error");
     }
   };
 
@@ -491,28 +522,23 @@ const EditarLibroEncabezado = () => {
       <Formik
         //valores iniciales
         initialValues={{
-          id_libro_diario_enca: partida.id_libro_diario_enca,
-          id_estado: "2",
-          id_subcuenta: partida.id_subcuenta,
-          id_sucursal: partida.id_sucursal,
-          id_usuario: userdata.data.id,
-          monto_debe: partida.monto_debe,
-          monto_haber: partida.monto_haber,
-          sinopsis: partida.sinopsis,
-          sucursal: partida.sucursal,
-          id_centro_costo: partida.id_centro_costo,
-   
+          id_subcuenta: "",
+          monto_debe: "0",
+          monto_haber: "0",
+          sinopsis: "",
+          id_sucursal: "",
+          id_centro_costo: "",   
         }}
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
-          // Validacion de
+          // Validacion de subcuenta
           if (!valores.id_subcuenta) {
             errores.id_subcuenta = "Requerido";
           }
 
-          // Validacion de
+          // Validacion de debe y haber
           if (!valores.monto_debe) {
             valores.monto_debe = "0";
           } else if (!/^[0-9.]+$/.test(valores.monto_debe)) {
@@ -521,7 +547,7 @@ const EditarLibroEncabezado = () => {
             errores.monto_debe = "Ingrese un número válido";
           }
 
-          // Validacion de
+          // Validacion de debe y haber
           if (!valores.monto_haber) {
             valores.monto_haber = "0";
           } else if (!/^[0-9.]+$/.test(valores.monto_haber)) {
@@ -530,13 +556,13 @@ const EditarLibroEncabezado = () => {
             errores.monto_haber = "Ingrese un número válido";
           }
 
-          // Validacion de
+          // Validacion de debe y haber
           if (valores.monto_debe === "0" && valores.monto_haber === "0") {
             errores.monto_debe = "Requerido";
             errores.monto_haber = "Requerido";
           }
 
-          // Validacion de
+          // Validacion de debe y haber
           if (valores.monto_debe !== "0" && valores.monto_haber !== "0") {
             errores.monto_debe =
               "No puede ingresar en el debe y en el haber a la vez, solo en uno";
@@ -544,22 +570,18 @@ const EditarLibroEncabezado = () => {
               "No puede ingresar en el haber y en el debe a la vez, solo en uno";
           }
 
-          // Validacion de
+          // Validacion de sinopsis
           if (!valores.sinopsis) {
             errores.sinopsis = "Requerido";
           }
-          // Validacion de
+          // Validacion de id subcuenta
           if (!valores.id_subcuenta) {
             errores.id_subcuenta = "Requerido";
           }
 
-          // Validacion de
-          if (!valores.id_sucursal) {
+          // Validacion de debe y haber
+          if (!valores.id_sucursal && !valores.id_centro_costo) {
             errores.id_sucursal = "Requerido";
-          }
-
-          // Validacion de
-          if (!valores.id_centro_costo) {
             errores.id_centro_costo = "Requerido";
           }
 
@@ -576,7 +598,7 @@ const EditarLibroEncabezado = () => {
                 id_subcuenta: parseFloat(valores.id_subcuenta),
                 monto_debe: parseFloat(valores.monto_debe || 0),
                 monto_haber: parseFloat(valores.monto_haber || 0),
-                sinopsis: valores.sinopsis,
+                sinopsis: (valores.sinopsis||""),
                 id_sucursal: (valores.id_sucursal||null),
                 id_centro_costo: (valores.id_centro_costo||null),
               },
@@ -634,7 +656,7 @@ const EditarLibroEncabezado = () => {
                     placeholder="Monto debe..."
                   />
                   <ErrorMessage
-                    name="montodebe"
+                    name="monto_debe"
                     component={() => (
                       <div className="error">{errors.monto_debe}</div>
                     )}
@@ -655,7 +677,7 @@ const EditarLibroEncabezado = () => {
                     placeholder="Monto haber..."
                   />
                   <ErrorMessage
-                    name="montoHaber"
+                    name="monto_haber"
                     component={() => (
                       <div className="error">{errors.monto_haber}</div>
                     )}
@@ -676,6 +698,7 @@ const EditarLibroEncabezado = () => {
                     id="sinopsis"
                     name="sinopsis"
                     placeholder="Sinopsis..."
+                    onKeyUp={cambiarAMayusculasSinopsis(values)}
                   />
                   <ErrorMessage
                     name="sinopsis"
