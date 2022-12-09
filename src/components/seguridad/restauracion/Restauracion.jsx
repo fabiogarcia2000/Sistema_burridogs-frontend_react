@@ -6,29 +6,26 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import imagen from "../../../assets/img/img-restore.png";
 import "./styles.css";
-import {Spinner} from "reactstrap";
+import { Spinner } from "reactstrap";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 
 const URLGuardar = "http://190.53.243.69:3001/upload";
 
 const objeto = "FORM_ARTICULO";
 
-
-
 const Restaurar = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
   const [loading, setLoading] = useState(false);
   const [archivos, setArchivos] = useState(null);
 
-  const SubirArchivos = (archivo) =>{
-    setArchivos(archivo[0])
-  }
+  const SubirArchivos = (archivo) => {
+    setArchivos(archivo[0]);
+  };
 
   const navigate = useNavigate();
 
   /*****Obtener y corroborar Permisos*****/
- // const [img, setImg] = useState();
-
+  // const [img, setImg] = useState();
 
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
@@ -85,7 +82,7 @@ const Restaurar = () => {
         });
         break;
 
-        case "vacio":
+      case "vacio":
         Swal.fire({
           title: "Seleccione un Archivo",
           icon: "warning",
@@ -99,73 +96,77 @@ const Restaurar = () => {
     }
   };
 
-const EnviarBackup = async () => {
-  
- if(archivos){
+  const EnviarBackup = async () => {
+    if (archivos) {
+      setLoading(true);
 
-  setLoading(true)
+      try {
+        const fil = new FormData();
 
+        fil.append("file", archivos);
+        console.log(fil);
 
-  try {
-    const fil = new FormData();
-    for (let index = 0; index < archivos.length; index++) {
-      fil.append("restore", archivos[index]);
-      console.log(fil)      
+        axios
+          .post(URLGuardar, fil, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+          .then((res) => {
+            console.log(res);
+            mostrarAlertas("subido");
+            setLoading(false);
+          });
+
+        //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
+        //window.location.reload();
+      } catch (error) {
+        console.log(error);
+        mostrarAlertas("error");
+        setLoading(false);
+      }
+    } else {
+      mostrarAlertas("vacio");
     }
-
-    
-
-    const res = await axios.post(URLGuardar, fil, {headers:{'Content-Type':'multipart/form-data'}});
-    console.log(res.data)
-
-      setLoading(false)
-      mostrarAlertas("subido");
-      //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
-      //window.location.reload();
-
-  } catch (error) {
-    console.log(error);
-    mostrarAlertas("error");
-    setLoading(false)
-  }
- }else{
-  mostrarAlertas("vacio")
- }
-      
   };
 
   //Ventana modal para subir archivo
   const [modalArchivo, setModalArchivo] = useState(false);
   const abrirModalArchivo = () => setModalArchivo(!modalArchivo);
- 
 
   return (
-    <div className='container principal'>
-       <h3 className="mb-3">Restaurar con Copia de Seguridad</h3>
-        <div className='secundario'>
-          <div className='row'>
-            <img src={imagen} className="img-backup" alt="Img"/>
-          </div>
-          <br /><br />
-          <div className='row'>
-            <button className='btn btn-success mb-3 me-2' onClick={()=>{abrirModalArchivo()}}>Restaurar</button>
-          </div>
+    <div className="container principal">
+      <h3 className="mb-3">Restaurar con Copia de Seguridad</h3>
+      <div className="secundario">
+        <div className="row">
+          <img src={imagen} className="img-backup" alt="Img" />
         </div>
+        <br />
+        <br />
+        <div className="row">
+          <button
+            className="btn btn-success mb-3 me-2"
+            onClick={() => {
+              abrirModalArchivo();
+            }}
+          >
+            Restaurar
+          </button>
+        </div>
+      </div>
 
-        <Modal size="sm" isOpen={loading} centered>
-            <ModalBody>
-             <div className="text-center">
-              <Spinner color="secondary" centered/>
-              <p>Subiendo...</p>
-             </div>
-            </ModalBody>
-          </Modal>
+      <Modal size="sm" isOpen={loading} centered>
+        <ModalBody>
+          <div className="text-center">
+            <Spinner color="secondary" centered />
+            <p>Subiendo...</p>
+          </div>
+        </ModalBody>
+      </Modal>
 
-          {/* Ventana Modal subir archivo*/}
+      {/* Ventana Modal subir archivo*/}
       <Modal isOpen={modalArchivo} centered>
         <ModalHeader>Subir Copia de Seguridad</ModalHeader>
         <ModalBody>
-         <div className="col-sm-12">
+          <div className="col-sm-12">
             <div className="mb-3">
               <label htmlFor="Archivo" className="form-label">
                 Seleccione una Copia de Seguridad:
@@ -179,14 +180,14 @@ const EnviarBackup = async () => {
                 onChange={(e) => SubirArchivos(e.target.files)}
               />
             </div>
-          </div> 
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button
             color="success"
             onClick={() => {
               abrirModalArchivo();
-              EnviarBackup()
+              EnviarBackup();
             }}
           >
             Subir
@@ -196,7 +197,7 @@ const EnviarBackup = async () => {
           </Button>
         </ModalFooter>
       </Modal>
-      </div>  
+    </div>
   );
 };
 
