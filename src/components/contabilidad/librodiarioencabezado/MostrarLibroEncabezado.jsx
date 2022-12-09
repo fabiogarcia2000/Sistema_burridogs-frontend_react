@@ -422,7 +422,7 @@ const MostrarLibroDetalle = () => {
     },
     {
       name: "PERIODO CONTABLE",
-      selector: (row) => row.id_periodo_contable,
+      selector: (row) => ("Periodo "+row.id_periodo_contable+" - "+row.descripcion_periodo),
       sortable: true,
     },
     {
@@ -440,19 +440,24 @@ const MostrarLibroDetalle = () => {
       selector: (row) => row.descripcion,
       sortable: true,
     },
+    {
+      name: "TIPO PERIODO",
+      selector: (row) => row.descripcion_tipo_periodo,
+      sortable: true,
+    },
     /*{
       name: "MONTO HABER",
       selector: (row) => row.monto_haber,
       sortable: true,
     },*/
     {
-      name: "ESTADO",
-      selector: (row) => row.tipo_estado,
+      name: "ESTADO DEL PERIODO",
+      selector: (row) => row.descripcion_estado_periodo,
       sortable: true,
     },
     {
       name: "USUARIO",
-      selector: (row) => row.id_usuario,
+      selector: (row) => row.usuario,
       sortable: true,
     },
 
@@ -478,12 +483,13 @@ const MostrarLibroDetalle = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if (!permisos[0].permiso_actualizacion) {
-                mostrarAlertas("permisos");
-              } else {
+              if (permisos[0].permiso_actualizacion) {
                 getDetalles(row.id_libro_diario_enca);
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
+                
+              } else {
+                mostrarAlertas("permisos");
               }
             }}
           >
