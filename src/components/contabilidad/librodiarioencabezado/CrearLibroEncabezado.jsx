@@ -224,15 +224,14 @@ const CrearLibroEncabezado = () => {
     console.log(asiento);
     try {
       const res = await axios.post(URLCrear, asiento);
-      console.log("Data Respuesta");
       console.log(res.data);
-      setGlobalState("dataPartida", res.data);
       setEnviar(false);
       mostrarAlertas("guardado");
       navigate("/admin/mostrarlibroencabezado")
       console.log(res);
     } catch (error) {
       console.log(error);
+      mostrarAlertas("error");
     }
   };
 
@@ -526,16 +525,12 @@ const CrearLibroEncabezado = () => {
             errores.id_subcuenta = "Requerido";
           }
 
-          {/**
-          if (!valores.id_sucursal) {
+          // Validacion de debe y haber
+          if (!valores.id_sucursal && !valores.id_centro_costo) {
             errores.id_sucursal = "Requerido";
-          }
-
-          
-          if (!valores.id_centro_costo) {
             errores.id_centro_costo = "Requerido";
           }
-         */}
+
           return errores;
         }}
         onSubmit={async (valores) => {

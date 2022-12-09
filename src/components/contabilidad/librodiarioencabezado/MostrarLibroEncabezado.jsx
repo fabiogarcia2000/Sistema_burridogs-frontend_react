@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { setGlobalState } from "../../../globalStates/globalStates";
 import Swal from "sweetalert2";
+import { getCurrentDateShort } from "../../../utils/fechaYhora"
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import { Export_PDF } from "./generarPDF/Export_PDF";
 import { Export_Excel } from "./generarExcel/Export_Excel";
@@ -20,6 +21,7 @@ const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/"
 const objeto = "FORM_LIBRO_ENCABEZADO"
 
 const MostrarLibroDetalle = () => {
+  const fechaHoy = getCurrentDateShort();
   const navigate = useNavigate();
 
   const [opcionSelect, setOpcionSelect] = useState('');
@@ -361,8 +363,8 @@ const TienePermisos = () =>{
             onClick={() => {
               if(row.fecha_final < fechaHoy){
                 mostrarAlertas("periodocerrado");
-                setGlobalState("registroEdit", row);
               }else{
+                setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado")
               }
               
