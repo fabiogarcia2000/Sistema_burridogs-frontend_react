@@ -19,7 +19,6 @@ const UrlMostrar =
 const UrlMostrarDetalles =
   "http://190.53.243.69:3001/mc_librodetalle/getdiarioporenca/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
-const fechaHoy = "2022-02-01";
 
 const UrlMayorizar = "http://190.53.243.69:3001/mc_libromayor/mayorizar/";
 
@@ -175,6 +174,7 @@ const MostrarLibroDetalle = () => {
     try {
       const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
+      console.log(res.data)
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
