@@ -233,6 +233,8 @@ const MostrarLibroDetalle = () => {
       let valores = res.data;
       setDetalles(res.data);
       setSubDetalles(valores[0].detalle);
+      setGlobalState("dataPartida", valores[0]);
+      setGlobalState("dataDetalles", valores[0].detalle);
     } catch (error) {
       console.log(error);
       //mostrarAlertas("errormostrar");
@@ -483,12 +485,14 @@ const MostrarLibroDetalle = () => {
 
 
               } else {
+                getDetalles(row.id_libro_diario_enca);
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
 
               }
 
               if (permisos[0].permiso_actualizacion) {
+                getDetalles(row.id_libro_diario_enca);
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
               } else {

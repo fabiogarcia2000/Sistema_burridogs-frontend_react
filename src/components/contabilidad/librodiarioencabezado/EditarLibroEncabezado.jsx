@@ -16,13 +16,12 @@ import { useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
-const URLEditar = "http://190.53.243.69:3001/mc_libroencabezado/update";
 const UrlEstado = "http://190.53.243.69:3001/mc_estado/getall";
 const UrlSubcuenta = "http://190.53.243.69:3001/mc_subcuenta/getall";
 const UrlCentroCost = "http://190.53.243.69:3001/centro_costo/getall";
 const UrlMostrarSucursal = "http://190.53.243.69:3001/sucursal/getall";
 
-const URLCrear = "http://190.53.243.69:3001/mc_libroencabezado/insertar";
+const URLEditar = "http://190.53.243.69:3001/mc_libroencabezado/update";
 
 const URLMostrarUno = "";
 const current = new Date();
@@ -33,7 +32,10 @@ const date = `${current.getFullYear()}/${
 const objeto = "FORM_LIBRO_ENCABEZADO";
 
 const EditarLibroEncabezado = () => {
-  const [partida] = useGlobalState("dataPartida");
+
+  const [partida] = useGlobalState("registroEdit");
+  const [detalles] = useGlobalState("dataDetalles");
+
   const navigate = useNavigate();
 
 
@@ -50,6 +52,8 @@ const EditarLibroEncabezado = () => {
   const [asiento, setAsiento] = useState({});
   const [enviar, setEnviar] = useState(false);
 
+  const [descripcion, setDescripcion] = useState("");
+
   const [error, setError] = useState({
     errorFecha: false,
     errorDesc: false,
@@ -61,6 +65,32 @@ const EditarLibroEncabezado = () => {
 
   // ! Se creo un stado de lista de detalles.
   const [listDetail, setListDetail] = useState([]);
+  const [detallesEnca, setDetallesEnca] = useState([]);
+
+
+  useEffect(() => {
+    setListDetail(detalles)
+    setDetallesEnca(partida)
+    setDatosEnc({ ...datosEnc, descripcion: (partida.descripcion||"") });
+    
+  }, [detalles, partida])
+
+  useEffect(() => {
+    setDatosEnc({ ...datosEnc, fecha: partida.fecha });    
+  }, [partida])
+
+
+  useEffect(() => {
+    let temp = indice;
+    detalles.map((item) => {   
+
+      if (item.id_libro_diario_deta > temp) {
+        setIndice(item.id_libro_diario_deta +1)
+      };
+
+    });
+  }, [detalles])
+
 
   //Configurar la paginación de la tabla
   const paginationComponentOptions = {
@@ -163,7 +193,7 @@ const EditarLibroEncabezado = () => {
 
   //Eliminar una partida de la lista
   const eliminarPartida = () => {
-    const newLista = listDetail.filter((item) => item.i !== partidaDelete);
+    const newLista = listDetail.filter((item) => item.id_libro_diario_deta !== partidaDelete);
     setListDetail(newLista);
   };
 
@@ -286,7 +316,8 @@ const EditarLibroEncabezado = () => {
       mostrarAlertas("cuadrar");
     } else {
       setAsiento({
-        id_estado: 1,
+        id_estado: partida.id_estado,
+        id_libro_diario_enca: partida.id_libro_diario_enca,
         descripcion: datosEnc.descripcion,
         fecha: datosEnc.fecha,
         id_usuario: iDusuario,
@@ -299,10 +330,13 @@ const EditarLibroEncabezado = () => {
   //Enviar Data
   const PostAsiento = async () => {
     try {
-      const res = await axios.post(URLCrear, asiento);
+      console.log("data enviar")
+      console.log(asiento)
+      const res = await axios.post(URLEditar, asiento);
       setEnviar(false);
       mostrarAlertas("guardado");
-      console.log(res);
+      navigate("/admin/mostrarlibroencabezado")
+      console.log(res)
     } catch (error) {
       console.log(error);
     }
@@ -393,7 +427,7 @@ const EditarLibroEncabezado = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              setPartidaDelete(row.i);
+              setPartidaDelete(row.id_libro_diario_deta);
               abrirModalEliminarPartida();
             }}
           >
@@ -421,6 +455,7 @@ const EditarLibroEncabezado = () => {
               className="form-control"
               id="fechafinal"
               name="fecha_final"
+              value={datosEnc.fecha}
               onChange={(e) => GuardarFecha(e.target.value)}
             />
             {error.errorFecha === true ? (
@@ -441,6 +476,7 @@ const EditarLibroEncabezado = () => {
               className="form-control"
               id="descripcion"
               name="descripcion"
+              value={datosEnc.descripcion}
               onChange={(e) => GuardarDesc(e.target.value)}
             />
             {error.errorDesc === true ? (
@@ -456,8 +492,6 @@ const EditarLibroEncabezado = () => {
         //valores iniciales
         initialValues={{
           id_libro_diario_enca: partida.id_libro_diario_enca,
-          fecha: date,
-          descripcion: partida.descripcion,
           id_estado: "2",
           id_subcuenta: partida.id_subcuenta,
           id_sucursal: partida.id_sucursal,
@@ -467,7 +501,7 @@ const EditarLibroEncabezado = () => {
           sinopsis: partida.sinopsis,
           sucursal: partida.sucursal,
           id_centro_costo: partida.id_centro_costo,
-          detalle: [],
+   
         }}
         //Funcion para validar
         validate={(valores) => {
@@ -538,13 +572,13 @@ const EditarLibroEncabezado = () => {
             setListDetail([
               ...listDetail,
               {
-                i: indice,
+                id_libro_diario_deta: indice,
                 id_subcuenta: parseFloat(valores.id_subcuenta),
                 monto_debe: parseFloat(valores.monto_debe || 0),
                 monto_haber: parseFloat(valores.monto_haber || 0),
                 sinopsis: valores.sinopsis,
-                id_sucursal: valores.id_sucursal,
-                id_centro_costo: valores.id_centro_costo,
+                id_sucursal: (valores.id_sucursal||null),
+                id_centro_costo: (valores.id_centro_costo||null),
               },
             ]);
             setIndice(indice + 1);
