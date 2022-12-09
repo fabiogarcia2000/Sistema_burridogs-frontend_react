@@ -424,6 +424,7 @@ const MostrarLibroDetalle = () => {
       name: "PERIODO CONTABLE",
       selector: (row) => ("Periodo "+row.id_periodo_contable+" - "+row.descripcion_periodo),
       sortable: true,
+      minWidth: "250px",
     },
     {
       name: "FECHA",
@@ -439,11 +440,13 @@ const MostrarLibroDetalle = () => {
       name: "DESCRIPCIÓN",
       selector: (row) => row.descripcion,
       sortable: true,
+      minWidth: "250px",
     },
     {
       name: "TIPO PERIODO",
       selector: (row) => row.descripcion_tipo_periodo,
       sortable: true,
+      minWidth: "150px",
     },
     /*{
       name: "MONTO HABER",
@@ -454,11 +457,13 @@ const MostrarLibroDetalle = () => {
       name: "ESTADO DEL PERIODO",
       selector: (row) => row.descripcion_estado_periodo,
       sortable: true,
+      minWidth: "100px",
     },
     {
       name: "USUARIO",
       selector: (row) => row.usuario,
       sortable: true,
+      minWidth: "150px",
     },
 
     {
@@ -676,7 +681,7 @@ const MostrarLibroDetalle = () => {
                 paginationComponentOptions={paginationComponentOptions}
                 highlightOnHover
                 fixedHeader
-                fixedHeaderScrollHeight="550px"
+                fixedHeaderScrollHeight="600px"
               />
             ) : (
               <p className="text-center">Ninguna Categoría</p>
