@@ -477,19 +477,12 @@ const MostrarLibroDetalle = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if (row.fecha_final < fechaHoy) {
+              if (row.fecha_final < fechaHoy && permisos[0].permiso_actualizacion) {
                 mostrarAlertas("periodocerrado");
               } else {
                 getDetalles(row.id_libro_diario_enca);
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
-              }
-
-              if (permisos[0].permiso_actualizacion) {
-                getDetalles(row.id_libro_diario_enca);
-                setGlobalState("registroEdit", row);
-                navigate("/admin/EditarLibroEncabezado");
-              } else {
               }
             }}
           >
