@@ -5,11 +5,7 @@ import { setGlobalState } from "../../../globalStates/globalStates";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-import {
-  cambiarAMayusculasCentroCosto,
-  cambiarAMayusculasSinopsis,
-  cambiarAMayusculasSucursal,
-} from "../../../utils/cambiarAMayusculas";
+import {cambiarAMayusculasSinopsis} from "../../../utils/cambiarAMayusculas";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -174,7 +170,7 @@ const CrearLibroEncabezado = () => {
 
   //descripcion encabezado
   const GuardarDesc = (valor) => {
-    setDatosEnc({ ...datosEnc, descripcion: valor });
+    setDatosEnc({ ...datosEnc, descripcion: (valor.toUpperCase()) });
     setError({ ...error, errorDesc: false });
   };
 
@@ -454,6 +450,7 @@ const CrearLibroEncabezado = () => {
               className="form-control"
               id="descripcion"
               name="descripcion"
+              value={datosEnc.descripcion}
               onChange={(e) => GuardarDesc(e.target.value)}
             />
             {error.errorDesc === true ? (
@@ -644,6 +641,7 @@ const CrearLibroEncabezado = () => {
                     id="sinopsis"
                     name="sinopsis"
                     placeholder="Sinopsis..."
+                    onKeyUp={cambiarAMayusculasSinopsis(values)}
                   />
                   <ErrorMessage
                     name="sinopsis"
