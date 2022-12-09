@@ -640,7 +640,7 @@ const MostrarArticulos = () => {
                     <ErrorMessage
                       name="id_articulo_padre"
                       component={() => (
-                        <div className="error">{errors.id_articulo}</div>
+                        <div className="error">{errors.id_articulo_padre}</div>
                       )}
                     />
                   </div>

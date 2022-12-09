@@ -14,12 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 const UrlVentaTotal = "http://190.53.243.69:3001/venta/getreporteventas/";
 
-const objeto = "RPT_RESUMEN_VENTAS"
-
+const objeto = "RPT_RESUMEN_VENTAS";
 
 const ReporteVentaResumen = () => {
   var dataPar = JSON.parse(localStorage.getItem("bodsuc"));
-  var id_sucursal= dataPar[0].id_sucursal;
+  var id_sucursal = dataPar[0].id_sucursal;
 
   const [encabezado, setEncabezado] = useState([]);
   const navigate = useNavigate();
@@ -45,24 +44,22 @@ const ReporteVentaResumen = () => {
         dato.venta_total.toString().includes(busqueda.toLocaleLowerCase()) ||
         dato.correlativo.toString().includes(busqueda.toLocaleLowerCase())
     );
-  } 
-  
+  }
+
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
-  const Permisos = () =>{
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
-    if(data){
-      setTemp(JSON.parse(data))
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -70,21 +67,18 @@ const ReporteVentaResumen = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
-    if(permisos.length > 0){
+    if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
 
-  const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
-  }
+  /*******************/
 
-/*******************/
-
-  
   //Configuramos las columnas de la tabla
   const columns = [
     {
@@ -129,170 +123,183 @@ const ReporteVentaResumen = () => {
     <div className="container">
       <h3>Consultar el Total de las Ventas</h3>
       <br />
-      {permitido? (
-     
-     <div>
+      {permitido ? (
+        <div>
+          <div className="row">
+            <Formik
+              //valores iniciales
+              initialValues={{
+                id_sucursal: id_sucursal,
+                fecha_inicial: "",
+                fecha_final: "",
+              }}
+              //Funcion para validar
+              validate={(valores) => {
+                let errores = {};
 
-      <div className="row">
-        <Formik
-          //valores iniciales
-          initialValues={{
-            id_sucursal:id_sucursal,
-            fecha_inicial: "",
-            fecha_final: "",
-          }}
-          //Funcion para validar
-          validate={(valores) => {
-            let errores = {};
+                // Validacion de código
+                if (!valores.fecha_inicial) {
+                  errores.fecha_inicial = "Seleccione una fecha";
+                }
 
-            // Validacion de código
-            if (!valores.fecha_inicial) {
-              errores.fecha_inicial = "Seleccione una fecha";
-            }
+                // Validacion descripción
+                if (!valores.fecha_final) {
+                  errores.fecha_final = "Seleccione una fecha";
+                }
 
-            // Validacion descripción
-            if (!valores.fecha_final) {
-              errores.fecha_final = "Seleccione una fecha";
-            }
+                return errores;
+              }}
+              onSubmit={async (valores) => {
+                //procedimineto para guardar el los cambios
 
-            return errores;
-          }}
-          onSubmit={async (valores) => {
-            //procedimineto para guardar el los cambios
-            
-            try {
-              const res = await axios.post(UrlVentaTotal, valores);
-
-                if (res.status === 200) {
-                  setEncabezado(res.data);
-                  //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR POS");
-                } else {
+                try {
+                  const res = await axios.post(UrlVentaTotal, valores);
+                  console.log(valores);
+                  if (res.status === 200) {
+                    setEncabezado(res.data);
+                    console.log(res.data);
+                    //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR POS");
+                  } else {
+                    mostrarAlertas("error");
+                  }
+                } catch (error) {
+                  console.log(error);
                   mostrarAlertas("error");
                 }
-              
-            } catch (error) {
-              console.log(error);
-              mostrarAlertas("error");
-            }
-      }}
-        >
-          {({ errors, values }) => (
-            <Form>
-              <div className="row g-3">
-                <div className="col-sm-4">
-                  <div className="mb-3">
-                    <label htmlFor="inicio" className="form-label">
-                      Fecha Inicio:
-                    </label>
-                    <Field
-                      type="date"
-                      className="form-control"
-                      id="inicio"
-                      name="fecha_inicial"
-                    />
+              }}
+            >
+              {({ errors, values }) => (
+                <Form>
+                  <div className="row g-3">
+                    <div className="col-sm-4">
+                      <div className="mb-3">
+                        <label htmlFor="inicio" className="form-label">
+                          Fecha Inicio:
+                        </label>
+                        <Field
+                          type="date"
+                          className="form-control"
+                          id="inicio"
+                          name="fecha_inicial"
+                        />
 
-                    <ErrorMessage
-                      name="fecha_inicial"
-                      component={() => (
-                        <div className="error">{errors.fecha_inicial}</div>
-                      )}
-                    />
+                        <ErrorMessage
+                          name="fecha_inicial"
+                          component={() => (
+                            <div className="error">{errors.fecha_inicial}</div>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-sm-4">
+                      <div className="mb-3">
+                        <label htmlFor="final" className="form-label">
+                          Fecha Final:
+                        </label>
+                        <Field
+                          type="date"
+                          className="form-control"
+                          id="final"
+                          name="fecha_final"
+                        />
+
+                        <ErrorMessage
+                          name="fecha_final"
+                          component={() => (
+                            <div className="error">{errors.fecha_final}</div>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-sm-4 bottom-aligned">
+                      <button
+                        className="btn btn-primary mb-3 me-2"
+                        type="submit"
+                        onClick={() =>
+                          RegistroEnVitacora(
+                            permisos[0].id_objeto,
+                            "LECTURA",
+                            "CONSULTAR RESUMEN DE VENTAS"
+                          )
+                        }
+                      >
+                        Consultar
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
 
-                <div className="col-sm-4">
-                  <div className="mb-3">
-                    <label htmlFor="final" className="form-label">
-                      Fecha Final:
-                    </label>
-                    <Field
-                      type="date"
-                      className="form-control"
-                      id="final"
-                      name="fecha_final"
-                    />
+          <hr />
 
-                    <ErrorMessage
-                      name="fecha_final"
-                      component={() => (
-                        <div className="error">{errors.fecha_final}</div>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-sm-4 bottom-aligned">
-                  <button className="btn btn-primary mb-3 me-2" type="submit" 
-                    onClick={ () => (
-                      RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR RESUMEN DE VENTAS"))}>
-                    Consultar
-                  </button>
-                </div>
+          <div className="row">
+            {/*Mostrar la barra de busqueda*/}
+            <div className="col-6">
+              <div className="input-group flex-nowrap">
+                <Button
+                  type="button"
+                  className="btn btn-success"
+                  title="Exportar a Excel"
+                  onClick={() => {
+                    Export_Excel(results);
+                    RegistroEnVitacora(
+                      permisos[0].id_objeto,
+                      "EXPORTAR",
+                      "EXPORTAR EXCEL RPT DE RESUMEN DE VENTAS"
+                    );
+                  }}
+                >
+                  <i className="bi bi-file-earmark-excel-fill"></i>
+                </Button>
+                <Button
+                  type="button"
+                  className="btn btn-danger"
+                  title="Exportar a PDF"
+                  onClick={() => {
+                    Export_PDF(results);
+                    RegistroEnVitacora(
+                      permisos[0].id_objeto,
+                      "EXPORTAR",
+                      "EXPORTAR PDF RPT DE RESUMEN DE VENTAS"
+                    );
+                  }}
+                >
+                  <i className="bi bi-filetype-pdf"></i>
+                </Button>
               </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
+            </div>
+          </div>
+          <br />
 
-      <hr />
+          {/*Mostramos la tabla con los datos*/}
 
-      <div className="row">
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-6">
-          <div className="input-group flex-nowrap">
-            <Button
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-                onClick={()=>{
-                  Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL RPT DE RESUMEN DE VENTAS");
-                }}
-              >
-                <i className="bi bi-file-earmark-excel-fill"></i>
-              </Button>
-              <Button
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-                onClick={()=>{
-                  Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF RPT DE RESUMEN DE VENTAS");
-                }}
-              >
-                <i className="bi bi-filetype-pdf"></i>
-              </Button>
+          <div className="row">
+            {results.length > 0 ? (
+              <DataTable
+                columns={columns}
+                data={results}
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="600px"
+              />
+            ) : (
+              <p className="text-center">No hay registros que mostrar</p>
+            )}
           </div>
         </div>
-      </div>
-      <br />
-
-      {/*Mostramos la tabla con los datos*/}
-
-      <div className="row">
-        {results.length > 0 ? (
-          <DataTable
-            columns={columns}
-            data={results}
-            pagination
-            paginationComponentOptions={paginationComponentOptions}
-            highlightOnHover
-            fixedHeader
-            fixedHeaderScrollHeight="600px"
-          />
-        ) : (
-          <p className="text-center">No hay registros que mostrar</p>
-        )}
-      </div>
-      </div>
-
-) : (
-  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
-)}
-
+      ) : (
+        <p className="text-center text-danger">
+          Lo siento, no tienes permisos para realizar esta acción.
+        </p>
+      )}
     </div>
   );
 };
-  
 
 export default ReporteVentaResumen;
