@@ -340,7 +340,7 @@ const EditarCuenta = () => {
                     <option value="">Seleccionar...</option>
                     {destino.map((item, i) => (
                       <option key={i} value={item.id_destino_cuenta}>
-                        {item.descripcion_informe_financiero}
+                        {item.descripcion}
                       </option>
                     ))}
                   </Field>
