@@ -124,13 +124,27 @@ const CrearLibroEncabezado = () => {
   //Capturar descripción de Sucursal
   const SucursalSelect = (id) => {
     const desc = sucursal.filter((item) => item.id_sucursal == id);
-    setSucursalSelect(desc);
+
+    if(Object.entries(desc).length === 0){
+      setSucursalSelect([{descripcion_sucursal:""}])    
+    }else{
+      setSucursalSelect(desc)  
+        
+    }
+    
   };
 
   //Capturar descripción de Sucursal
   const CentroCostoSelect = (id) => {
     const desc = centro.filter((item) => item.id_centro_costo == id);
-    setCentroCostoSelect(desc);
+
+    if(Object.entries(desc).length === 0){
+      setCentroCostoSelect([{descripcion:""}]);
+
+    }else{
+      setCentroCostoSelect(desc);
+    }
+    
   };
 
 

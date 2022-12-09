@@ -26,6 +26,7 @@ const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/";
 
 const objeto = "FORM_LIBRO_ENCABEZADO";
 
+
 const MostrarLibroDetalle = () => {
   const fechaHoy = getCurrentDateShort();
   const navigate = useNavigate();
@@ -477,7 +478,7 @@ const MostrarLibroDetalle = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if (permisos[0].permiso_actualizacion) {
+              if (!permisos[0].permiso_actualizacion) {
                 mostrarAlertas("permisos");
               } else {
                 getDetalles(row.id_libro_diario_enca);
