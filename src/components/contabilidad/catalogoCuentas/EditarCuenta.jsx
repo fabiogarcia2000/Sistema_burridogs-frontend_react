@@ -18,6 +18,7 @@ const objeto = "FORM_CAT_CUENTAS";
 
 const EditarCuenta = () => {
   const [edit] = useGlobalState("registroEdit");
+  console.log(edit)
 
   const navigate = useNavigate();
 

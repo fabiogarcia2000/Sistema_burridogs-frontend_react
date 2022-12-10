@@ -96,6 +96,10 @@ const CrearLibroEncabezado = () => {
 
   //procedimineto para obtener SUBCUENTA
   const [subcuenta, setsubcuenta] = useState([]);
+  const [subCuentaSelect, setSubCuentaSelect] = useState([]);
+  const [sucursalSelect, setSucursalSelect] = useState([{descripcion_sucursal:""}]);
+  const [centroCostoSelect, setCentroCostoSelect] = useState([{descripcion:""}]);
+
   useEffect(() => {
     getsubcuenta();
   }, []);
@@ -110,6 +114,40 @@ const CrearLibroEncabezado = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+   //Capturar descripción de SubCuenta
+   const SubCuent = (id) => {
+    const desc = subcuenta.filter((item) => item.id_subcuenta == id);
+    setSubCuentaSelect(desc);
+  };
+
+  //Capturar descripción de Sucursal
+  const SucursalSelect = (id) => {
+    const desc = sucursal.filter((item) => item.id_sucursal == id);
+
+    if(Object.entries(desc).length === 0){
+      setSucursalSelect([{descripcion_sucursal:""}])    
+    }else{
+      setSucursalSelect(desc)  
+        
+    }
+    
+  };
+
+  //Capturar descripción de Sucursal
+  const CentroCostoSelect = (id) => {
+    const desc = centro.filter((item) => item.id_centro_costo == id);
+
+    if(Object.entries(desc).length === 0){
+      setCentroCostoSelect([{descripcion:""}]);
+
+    }else{
+      setCentroCostoSelect(desc);
+    }
+    
+  };
+
+
 
   //procedimineto para obtener CENTRO COSTO
   const [centro, setcentro] = useState([]);
@@ -144,6 +182,8 @@ const CrearLibroEncabezado = () => {
       mostrarAlertas("errormostrar");
     }
   };
+
+ 
 
   //Validar fecha
   const ValidarFecha = async () => {
@@ -365,7 +405,7 @@ const CrearLibroEncabezado = () => {
   const columns = [
     {
       name: "SUBCUENTA",
-      selector: (row) => row.id_subcuenta,
+      selector: (row) => row.nombre_subcuenta,
       sortable: true,
     },
     {
@@ -385,12 +425,12 @@ const CrearLibroEncabezado = () => {
     },
     {
       name: "SUCURSAL",
-      selector: (row) => row.id_sucursal,
+      selector: (row) => row.descripcion_sucursal,
       sortable: true,
     },
     {
       name: "CENTRO COSTO",
-      selector: (row) => row.id_centro_costo,
+      selector: (row) => row.descripcion_centro_costo,
       sortable: true,
     },
     {
@@ -531,22 +571,29 @@ const CrearLibroEncabezado = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
+          
+
           if (valores.monto_debe !== "0" && valores.monto_haber !== "0") {
             alert("Solo debe ingresar en el debe o en el haber, no en ambos");
           } else {
+          //SubCuent(valores.id_subcuenta)
             setListDetail([
               ...listDetail,
               {
                 i: indice,
                 id_subcuenta: parseFloat(valores.id_subcuenta),
+                nombre_subcuenta: (subCuentaSelect[0].nombre_subcuenta||""),
                 monto_debe: parseFloat(valores.monto_debe || 0),
                 monto_haber: parseFloat(valores.monto_haber || 0),
                 sinopsis: valores.sinopsis,
                 id_sucursal: (valores.id_sucursal||null),
+                descripcion_sucursal:(sucursalSelect[0].descripcion_sucursal||""),
                 id_centro_costo: (valores.id_centro_costo||null),
+                descripcion_centro_costo:(centroCostoSelect[0].descripcion||"")
               },
             ]);
             setIndice(indice + 1);
+            
           }
         }}
       >
@@ -569,6 +616,7 @@ const CrearLibroEncabezado = () => {
                     id="idsubcuenta"
                     type="text"
                     name="id_subcuenta"
+                    onBlur={(e) => SubCuent(e.target.value)}
                   >
                     <option value="">Seleccionar...</option>
                     {subcuenta.map((item, i) => (
@@ -662,6 +710,7 @@ const CrearLibroEncabezado = () => {
                     className="form-select"
                     id="pos"
                     name="id_sucursal"
+                    onBlur={(e) => SucursalSelect(e.target.value)}
                   >
                     <option value="">Seleccionar...</option>
                     {sucursal.map((item, i) => (
@@ -690,6 +739,7 @@ const CrearLibroEncabezado = () => {
                     className="form-select"
                     id="centrocosto"
                     name="id_centro_costo"
+                    onBlur={(e) => CentroCostoSelect(e.target.value)}
                   >
                     <option value="">Seleccionar...</option>
                     {centro.map((item, i) => (
@@ -720,6 +770,10 @@ const CrearLibroEncabezado = () => {
             <button
               type="reset"
               className="btn btn-warning mb-3 me-2 text-gray"
+              onClick={()=>{
+                setSucursalSelect([{descripcion_sucursal:""}])
+                setCentroCostoSelect([{descripcion:""}])
+              }}
             >
               Limpiar
             </button>

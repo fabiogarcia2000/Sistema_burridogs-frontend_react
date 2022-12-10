@@ -19,13 +19,13 @@ const UrlMostrar =
 const UrlMostrarDetalles =
   "http://190.53.243.69:3001/mc_librodetalle/getdiarioporenca/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
-const fechaHoy = "2022-02-01";
 
 const UrlMayorizar = "http://190.53.243.69:3001/mc_libromayor/mayorizar/";
 
 const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/";
 
 const objeto = "FORM_LIBRO_ENCABEZADO";
+
 
 const MostrarLibroDetalle = () => {
   const fechaHoy = getCurrentDateShort();
@@ -175,6 +175,7 @@ const MostrarLibroDetalle = () => {
     try {
       const res = await axios.get(UrlMostrar);
       setRegistros(res.data);
+      console.log(res.data)
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -421,8 +422,9 @@ const MostrarLibroDetalle = () => {
     },
     {
       name: "PERIODO CONTABLE",
-      selector: (row) => row.id_periodo_contable,
+      selector: (row) => ("Periodo "+row.id_periodo_contable+" - "+row.descripcion_periodo),
       sortable: true,
+      minWidth: "250px",
     },
     {
       name: "FECHA",
@@ -438,6 +440,13 @@ const MostrarLibroDetalle = () => {
       name: "DESCRIPCIÓN",
       selector: (row) => row.descripcion,
       sortable: true,
+      minWidth: "250px",
+    },
+    {
+      name: "TIPO PERIODO",
+      selector: (row) => row.descripcion_tipo_periodo,
+      sortable: true,
+      minWidth: "150px",
     },
     /*{
       name: "MONTO HABER",
@@ -445,14 +454,16 @@ const MostrarLibroDetalle = () => {
       sortable: true,
     },*/
     {
-      name: "ESTADO",
-      selector: (row) => row.tipo_estado,
+      name: "ESTADO DEL PERIODO",
+      selector: (row) => row.descripcion_estado_periodo,
       sortable: true,
+      minWidth: "100px",
     },
     {
       name: "USUARIO",
-      selector: (row) => row.id_usuario,
+      selector: (row) => row.usuario,
       sortable: true,
+      minWidth: "150px",
     },
 
     {
@@ -477,38 +488,17 @@ const MostrarLibroDetalle = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if (row.fecha_final < fechaHoy) {
-                mostrarAlertas("periodocerrado");
-              } else {
-                getDetalles(row.id_libro_diario_enca);
-                setGlobalState("registroEdit", row);
-                navigate("/admin/EditarLibroEncabezado");
-              }
-
               if (permisos[0].permiso_actualizacion) {
                 getDetalles(row.id_libro_diario_enca);
                 setGlobalState("registroEdit", row);
                 navigate("/admin/EditarLibroEncabezado");
-              } else {
-              }
-            }}
-          >
-            <i className="bi bi-pencil-square"></i>
-          </button>
-          &nbsp;
-          <button
-            className="btn btn-light"
-            title="Eliminar"
-            onClick={() => {
-              if (permisos[0].permiso_eliminacion) {
-                setRegistroDelete(row.id_libro_diario_enca);
-                abrirModalEliminar();
+                
               } else {
                 mostrarAlertas("permisos");
               }
             }}
           >
-            <i className="bi bi-trash3-fill"></i>
+            <i className="bi bi-pencil-square"></i>
           </button>
         </>
       ),
@@ -691,7 +681,7 @@ const MostrarLibroDetalle = () => {
                 paginationComponentOptions={paginationComponentOptions}
                 highlightOnHover
                 fixedHeader
-                fixedHeaderScrollHeight="550px"
+                fixedHeaderScrollHeight="600px"
               />
             ) : (
               <p className="text-center">Ninguna Categoría</p>
