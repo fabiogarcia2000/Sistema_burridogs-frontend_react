@@ -86,7 +86,7 @@ const Mayorizar = () => {
         initialValues={{
           id_periodo_contable: null,
           descripcion: "",
-          fecha_creacion: fecha,
+          fecha: fecha,
         }}
         //Funcion para validar
         validate={(valores) => {
