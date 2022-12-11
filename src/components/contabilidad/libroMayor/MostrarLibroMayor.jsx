@@ -15,6 +15,7 @@ const UrlMostrar = "http://190.53.243.69:3001/mc_libromayor/getallporperiodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 //BALANCE GENERAL
+const UrlBalance = "http://190.53.243.69:3001/mc_balance/getall/";
 const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
 const UrlMostrarPasivos = "http://190.53.243.69:3001/mc_pasivos/getall/";
 const UrlMostrarPatrimonio = "http://190.53.243.69:3001/mc_patrimonios/getall/";
@@ -51,6 +52,12 @@ const MostrarLibroMayor = () => {
   const [registroDelete, setRegistroDelete] = useState("");
 
   const [registros, setRegistros] = useState([]);
+
+  //Configurar los hooks BALANCE
+  const [registrosBalance, setRegistrosBalance] = useState([]);
+  useEffect(() => {
+    getRegistrosBalance();
+  }, []);
 
   //Configurar los hooks ACTIVO
   const [registrosActivos, setRegistrosActivos] = useState([]);
@@ -131,6 +138,18 @@ const MostrarLibroMayor = () => {
     try {
       const res = await axios.get(UrlMostrar);
       //setRegistros(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los registros BALANCE
+  const getRegistrosBalance = async () => {
+    try {
+      const res = await axios.get(UrlBalance + opcionSelect);
+
+      setRegistrosBalance(res.data); //--
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -306,6 +325,7 @@ const MostrarLibroMayor = () => {
   useEffect(() => {
     if (opcionSelect !== "") {
       getPediodoSelect();
+      getRegistrosBalance();
     }
   }, [opcionSelect]);
 
@@ -556,12 +576,13 @@ const MostrarLibroMayor = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF(
-                        registrosActivos,
-                        registrosPasivos,
-                        registrosPatrimonio,
-                        registrosTotal,
-                        registrosTotalPasivo,
-                        registrosTotalPatrimonio
+                        registrosBalance
+                        //registrosActivos,
+                        //registrosPasivos,
+                        //registrosPatrimonio,
+                        //registrosTotal,
+                        //registrosTotalPasivo,
+                        //registrosTotalPatrimonio
                       );
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
