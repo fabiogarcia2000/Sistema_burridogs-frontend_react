@@ -489,9 +489,15 @@ const MostrarLibroDetalle = () => {
             title="Editar"
             onClick={() => {
               if (permisos[0].permiso_actualizacion) {
-                getDetalles(row.id_libro_diario_enca);
-                setGlobalState("registroEdit", row);
-                navigate("/admin/EditarLibroEncabezado");
+                console.log(row.descripcion_estado_periodo)
+
+                if(row.descripcion_estado_periodo == "ABIERTO"){
+                  getDetalles(row.id_libro_diario_enca);
+                  setGlobalState("registroEdit", row);
+                  navigate("/admin/EditarLibroEncabezado");
+                }else{
+                  mostrarAlertas("periodocerrado");
+                }                
                 
               } else {
                 mostrarAlertas("permisos");
