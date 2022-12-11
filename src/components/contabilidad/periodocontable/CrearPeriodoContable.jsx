@@ -12,30 +12,29 @@ const URLCrear = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/0";
 const URLMostrarUno = "http://190.53.243.69:3001/mc_periodo/getone/";
 
 const current = new Date();
-const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
+const date = `${current.getFullYear()}/${
+  current.getMonth() + 1
+}/${current.getDate()}`;
 
-const objeto = "FORM_PERIODO_CONTABLE"
+const objeto = "FORM_PERIODO_CONTABLE";
 const PeriodoCrear = () => {
-
-  const [edit] = useGlobalState('registroEdit')
+  const [edit] = useGlobalState("registroEdit");
   const navigate = useNavigate();
-//===================Obtener datos del localstorage=====================
+  //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
-  const Permisos = () =>{
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
-    if(data){
-      setTemp(JSON.parse(data))
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -43,60 +42,56 @@ const PeriodoCrear = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
-    if(permisos.length > 0){
+    if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  //================================================================
 
-  const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
-  }
-//================================================================
-
-
-
-const userdata = JSON.parse(localStorage.getItem('data'))
+  const userdata = JSON.parse(localStorage.getItem("data"));
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
-      case 'guardado':
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "El periodo contable se creó con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
         break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo crear el periodo contable',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          title: "Error",
+          text: "No se pudo crear el periodo contable",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
         break;
 
-      case 'duplicado':
+      case "duplicado":
         Swal.fire({
-          text: 'Ya existe ese periodo contable',
-          icon: 'warning',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
+          text: "Ya existe ese periodo contable",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
         });
 
         break;
 
-      default: break;
+      default:
+        break;
     }
   };
-
 
   return (
     <div className="container">
@@ -107,10 +102,9 @@ const userdata = JSON.parse(localStorage.getItem('data'))
           fecha_inicial: "",
           fecha_final: "",
           fecha_creacion: date,
-          id_usuario: userdata.data.nameUser.replace('"', "").replace('"', ""),
-          tipo_periodo: "A",
+          id_usuario: userdata.data.id,
+          tipo_periodo: "",
           estado_periodo: "",
-
         }}
         //Funcion para validar
         validate={(valores) => {
@@ -118,8 +112,11 @@ const userdata = JSON.parse(localStorage.getItem('data'))
 
           // Validacion descripción periodo
           if (!valores.descripcion_periodo) {
-            errores.descripcion_periodo = "Por favor ingresa la descripción del periodo";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion_periodo)) {
+            errores.descripcion_periodo =
+              "Por favor ingresa la descripción del periodo";
+          } else if (
+            !/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion_periodo)
+          ) {
             errores.descripcion_periodo = "Escribir solo en MAYÚSCULAS";
           }
 
@@ -135,25 +132,33 @@ const userdata = JSON.parse(localStorage.getItem('data'))
           if (!valores.tipo_periodo) {
             errores.tipo_periodo = "Por favor seleccione el tipo de periodo";
           }
-          if (!valores.abierto) {
-            errores.abierto = "Por favor seleccione una opcion";
+          if (!valores.estado_periodo) {
+            errores.estado_periodo = "Por favor seleccione una opcion";
           }
 
           return errores;
-
         }}
         onSubmit={async (valores) => {
+          console.log(valores);
           //validar si existe un registro con el codigo ingresado    NO ESTOY SEGURA DE VALIDAR CON ESTE CAMPO
           try {
             const res = await axios.put(`${URLCrear}`, valores);
             if (res.status === 200) {
-              console.log(res)
+              console.log(res);
               mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR PERIODO CONTABLE"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "CREAR",
+                "CREAR PERIODO CONTABLE"
+              ); //Insertar bitacora
               navigate("/admin/mostrarperiodo");
             } else {
               mostrarAlertas("error");
-              RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PERIODO CONTABLE"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "CREAR",
+                "ERROR AL CREAR PERIODO CONTABLE"
+              ); //Insertar bitacora
             }
 
             // } else {
@@ -162,7 +167,11 @@ const userdata = JSON.parse(localStorage.getItem('data'))
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR PERIODO CONTABLE"); //Insertar bitacora
+            RegistroEnVitacora(
+              permisos[0].id_objeto,
+              "CREAR",
+              "ERROR AL CREAR PERIODO CONTABLE"
+            ); //Insertar bitacora
             navigate("/admin/mostrarperiodo");
           }
         }}
@@ -183,7 +192,6 @@ const userdata = JSON.parse(localStorage.getItem('data'))
                     name="descripcion_periodo"
                     placeholder="Descripción Periodo..."
                     onKeyUp={cambiarAMayusculasDescripcionPeriodo(values)}
-
                   />
 
                   <ErrorMessage
@@ -240,7 +248,7 @@ const userdata = JSON.parse(localStorage.getItem('data'))
               </div>
 
               <div className="col-sm-6">
-                <div className="mb-3" >
+                <div className="mb-3">
                   <label htmlFor="fechacreacion" className="form-label">
                     Fecha Creación:
                   </label>
@@ -295,9 +303,10 @@ const userdata = JSON.parse(localStorage.getItem('data'))
                     name="tipo_periodo"
                     placeholder="Tipo Periodo..."
                   >
-                    <option value="1">Mensual</option>
-                    <option value="0">Trimestral</option>
-                    <option value="0">Anual</option>
+                    <option value="">Seleccionar...</option>
+                    <option value="M">Mensual</option>
+                    <option value="T">Trimestral</option>
+                    <option value="A">Anual</option>
                   </Field>
 
                   <ErrorMessage
@@ -320,21 +329,21 @@ const userdata = JSON.parse(localStorage.getItem('data'))
                     as="select"
                     className="form-select"
                     id="estadoPeriodo"
-                    name="abierto"
-                  ><option value="">Seleccionar...</option>
+                    name="estado_periodo"
+                  >
+                    <option value="">Seleccionar...</option>
                     <option value="A">Abierto</option>
                     <option value="C">Cerrado</option>
                   </Field>
 
                   <ErrorMessage
-                    name="abierto"
+                    name="estado_periodo"
                     component={() => (
-                      <div className="error">{errors.abierto}</div>
+                      <div className="error">{errors.estado_periodo}</div>
                     )}
                   />
                 </div>
               </div>
-
             </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">
@@ -347,7 +356,6 @@ const userdata = JSON.parse(localStorage.getItem('data'))
             >
               Cancelar
             </Link>
-
           </Form>
         )}
       </Formik>
