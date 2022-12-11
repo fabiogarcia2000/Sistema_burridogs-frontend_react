@@ -130,9 +130,9 @@ export default function RecuperacionContra(props) {
           {" "}
           {message}{" "}
         </Alert>
-        <h2>Desbloquear usuario</h2>
+        <h2>Desbloquear Usuario</h2>
         <h5 className="caption">
-          Ingresa tu nombre de usuario y selecciona metodo de reinicio{" "}
+          Ingresa tu usuario y selecciona método de desbloqueo{" "}
         </h5>
 
         <Form
