@@ -477,7 +477,7 @@ const MostrarLibroDetalle = () => {
             onClick={() => {
               getDetalles(row.id_libro_diario_enca);
               abrirModalVerMas();
-              //RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS LIBRO DIARIO ENCABEZADO");
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR LIBRO DIARIO ENCABEZADO");
             }}
           >
             <i className="bi bi-eye-fill"></i>

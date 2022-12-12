@@ -3,11 +3,12 @@ import axios from "axios";
 import fileDownload from "js-file-download";
 import { useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
-
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 import Swal from "sweetalert2";
 import imagen from "../../../assets/img/img-backup.png";
 import "./styles.css";
 import { Spinner } from "reactstrap";
+import {  useEffect } from "react";
 
 //Para nombrar el archivo
 const date = new Date();
@@ -15,11 +16,47 @@ const today = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 const backupFile = `pg-backup-${today}.tar`;
 
 const UrlCrearCopia = "http://190.53.243.69:3001/backup";
+
+const objeto = "FORM_COPIA_SEGURIDAD";
+
 const CopiaSeguridad = () => {
   const [loading, setLoading] = useState(false);
   const [copia, setcopia] = useState();
 
   const navigate = useNavigate();
+
+   /*****Obtener y corroborar Permisos*****/
+   const [temp, setTemp] = useState([]);
+   const [permisos, setPermisos] = useState([]);
+   const [permitido, setPermitido] = useState(true);
+ 
+   const Permisos = () => {
+     const newData = temp.filter((item) => item.objeto === objeto);
+     setPermisos(newData);
+   };
+ 
+   useEffect(() => {
+     let data = localStorage.getItem("permisos");
+     if (data) {
+       setTemp(JSON.parse(data));
+     }
+   }, []);
+ 
+   useEffect(() => {
+     Permisos();
+   }, [temp]);
+ 
+   useEffect(() => {
+     if (permisos.length > 0) {
+       TienePermisos();
+     }
+   }, [permisos]);
+ 
+   const TienePermisos = () => {
+     setPermitido(permisos[0].permiso_consultar);
+   };
+   //================================================================
+ 
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -60,13 +97,21 @@ const CopiaSeguridad = () => {
         mostrarAlertas("creado");
       });
       //setcopia(res.data);
-
-      //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
+      RegistroEnVitacora(
+        permisos[0].id_objeto,
+        "CREAR",
+        "CREAR COPIA DE SEGURIDAD"
+      ); //Insertar bitacora
       //navigate("/admin/copiaseguridad");
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
       setLoading(false);
+      RegistroEnVitacora(
+        permisos[0].id_objeto,
+        "CREAR",
+        "ERROR AL CREAR COPIA DE SEGURIDAD"
+      ); //Insertar bitacora
     }
   };
 

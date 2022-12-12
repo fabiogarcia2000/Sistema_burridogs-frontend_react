@@ -397,15 +397,20 @@ const CentroCostoSelect = (id) => {
       if (res.status === 200) {
         mostrarAlertas("guardado");
         navigate("/admin/mostrarlibroencabezado")
+        RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR LIBRO ENCABEZO"); //Insertar bitacora
         console.log(res)
       }else{
         setResData(res.data)
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR LIBRO ENCABEZO"); //Insertar bitacora
+
       }
       
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR LIBRO ENCABEZO"); //Insertar bitacora
+
     }
   };
 

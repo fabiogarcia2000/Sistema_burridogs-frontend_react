@@ -263,11 +263,15 @@ const CrearLibroEncabezado = () => {
       console.log(res.data);
       setEnviar(false);
       mostrarAlertas("guardado");
+      RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "CREAR LIBRO ENCABEZADO"); //Insertar bitacora
+
       navigate("/admin/mostrarlibroencabezado")
       console.log(res);
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "CREAR", "ERROR AL CREAR LIBRO ENCABEZADO"); //Insertar bitacora
+
     }
   };
 

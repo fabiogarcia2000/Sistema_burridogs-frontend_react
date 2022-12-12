@@ -8,10 +8,11 @@ import imagen from "../../../assets/img/img-restore.png";
 import "./styles.css";
 import { Spinner } from "reactstrap";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const URLGuardar = "http://190.53.243.69:3001/upload";
 
-const objeto = "FORM_ARTICULO";
+const objeto = "FORM_RESTAURAR";
 
 const Restaurar = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
@@ -114,6 +115,11 @@ const Restaurar = () => {
             console.log(res);
             mostrarAlertas("subido");
             setLoading(false);
+            RegistroEnVitacora(
+              permisos[0].id_objeto,
+              "RESTAURAR",
+              "RESTAURAR COPIA DE SEGURIDAD"
+            ); //Insertar bitacora
           });
 
         //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
@@ -122,6 +128,11 @@ const Restaurar = () => {
         console.log(error);
         mostrarAlertas("error");
         setLoading(false);
+        RegistroEnVitacora(
+          permisos[0].id_objeto,
+          "RESTAURAR",
+          "ERROR AL RESTAURAR COPIA DE SEGURIDAD"
+        ); //Insertar bitacora
       }
     } else {
       mostrarAlertas("vacio");
