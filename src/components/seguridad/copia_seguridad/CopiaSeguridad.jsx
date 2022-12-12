@@ -95,13 +95,14 @@ const CopiaSeguridad = () => {
         fileDownload(res.data, backupFile);
         setLoading(false);
         mostrarAlertas("creado");
+        RegistroEnVitacora(
+          permisos[0].id_objeto,
+          "CREAR",
+          "CREAR COPIA DE SEGURIDAD"
+        ); //Insertar bitacora
       });
       //setcopia(res.data);
-      RegistroEnVitacora(
-        permisos[0].id_objeto,
-        "CREAR",
-        "CREAR COPIA DE SEGURIDAD"
-      ); //Insertar bitacora
+    
       //navigate("/admin/copiaseguridad");
     } catch (error) {
       console.log(error);
@@ -118,6 +119,7 @@ const CopiaSeguridad = () => {
   return (
     <div className="container principal">
       <h3 className="mb-3">Crear Copia de Seguridad</h3>
+      {permitido ? (
       <div className="secundario">
         <div className="row">
           <img src={imagen} className="img-backup" alt="Img" />
@@ -135,6 +137,12 @@ const CopiaSeguridad = () => {
           </button>
         </div>
       </div>
+      ) : (
+        <p className="text-center text-danger">
+          Lo siento, no tienes permisos para realizar esta acción.
+        </p>
+      )}
+
 
       <Modal size="sm" isOpen={loading} centered>
         <ModalBody>

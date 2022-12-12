@@ -110,16 +110,14 @@ const Restaurar = () => {
         axios
           .post(URLGuardar, fil, {
             headers: { "Content-Type": "multipart/form-data" },
+            
           })
+          
           .then((res) => {
             console.log(res);
             mostrarAlertas("subido");
             setLoading(false);
-            RegistroEnVitacora(
-              permisos[0].id_objeto,
-              "RESTAURAR",
-              "RESTAURAR COPIA DE SEGURIDAD"
-            ); //Insertar bitacora
+           
           });
 
         //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
@@ -146,6 +144,8 @@ const Restaurar = () => {
   return (
     <div className="container principal">
       <h3 className="mb-3">Restaurar con Copia de Seguridad</h3>
+
+      {permitido ? (
       <div className="secundario">
         <div className="row">
           <img src={imagen} className="img-backup" alt="Img" />
@@ -157,12 +157,19 @@ const Restaurar = () => {
             className="btn btn-success mb-3 me-2"
             onClick={() => {
               abrirModalArchivo();
+             
             }}
           >
             Restaurar
           </button>
         </div>
       </div>
+            ) : (
+              <p className="text-center text-danger">
+                Lo siento, no tienes permisos para realizar esta acción.
+              </p>
+            )}
+      
 
       <Modal size="sm" isOpen={loading} centered>
         <ModalBody>
@@ -188,6 +195,7 @@ const Restaurar = () => {
                 className="form-control"
                 name="files"
                 accept=".tar"
+                
                 onChange={(e) => SubirArchivos(e.target.files)}
               />
             </div>
