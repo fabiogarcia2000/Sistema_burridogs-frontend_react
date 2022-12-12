@@ -480,8 +480,8 @@ const MostrarLibroMayor = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
-      //dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+        dato.nombre_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.nombre_subcuenta.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -543,36 +543,6 @@ const MostrarLibroMayor = () => {
       sortable: true,
     },
 
-    {
-      name: "ACCIONES",
-      cell: (row) => (
-        <>
-          <Link
-            to="/admin/editarlibromayor"
-            type="button"
-            className="btn btn-light"
-            title="Editar"
-            onClick={() => setGlobalState("registroEdit", row)}
-          >
-            <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
-          &nbsp;
-          <button
-            className="btn btn-light"
-            title="Eliminar"
-            onClick={() => {
-              setRegistroDelete(row.id_cuenta);
-              abrirModalEliminar();
-            }}
-          >
-            <i className="bi bi-trash3-fill"></i>
-          </button>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
   ];
 
   //Configurar la paginación de la tabla
