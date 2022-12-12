@@ -27,9 +27,11 @@ const UrlMostrarTotalPatrimonio =
 
 //ESTADO DE RESULTADOS
 const UrlMostrarResultado =
-  "http://190.53.243.69:3001/mc_estado_resultado/getall";
+  "http://190.53.243.69:3001/mc_estado_resultado/getall/";
 
 //INGRESOS Y GASTOS
+const UrlIngresosGastos =
+  "http://190.53.243.69:3001/mc_ingresos_gastos/getall/";
 const UrlMostrarIngresos = "http://190.53.243.69:3001/mc_ingresos/getall";
 const UrlMostrarGastos = "http://190.53.243.69:3001/mc_gastos/getall";
 const UrlMostrarTotalIngresos =
@@ -105,6 +107,12 @@ const MostrarLibroMayor = () => {
   const [registrosIngreso, setRegistrosIngreso] = useState([]);
   useEffect(() => {
     getRegistrosIngreso();
+  }, []);
+
+  //Configurar los hooks INGRESOS GASTOS
+  const [registrosIngresoGasto, setRegistrosIngresoGasto] = useState([]);
+  useEffect(() => {
+    getRegistrosIngresoGasto();
   }, []);
 
   //Configurar los hooks GASTOS
@@ -225,8 +233,10 @@ const MostrarLibroMayor = () => {
   //procedimineto para obtener todos los registros ESTADO DE RESULTADOS
   const getRegistrosResultado = async () => {
     try {
-      const res = await axios.get(UrlMostrarResultado);
-      setRegistrosResultado(res.data);
+      if (opcionSelect) {
+        const res = await axios.get(UrlMostrarResultado + opcionSelect);
+        setRegistrosResultado(res.data);
+      }
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -238,6 +248,19 @@ const MostrarLibroMayor = () => {
     try {
       const res = await axios.get(UrlMostrarIngresos);
       setRegistrosIngreso(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los registros INGRESOS
+  const getRegistrosIngresoGasto = async () => {
+    try {
+      if (opcionSelect) {
+        const res = await axios.get(UrlIngresosGastos + opcionSelect);
+        setRegistrosIngresoGasto(res.data);
+      }
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -326,6 +349,8 @@ const MostrarLibroMayor = () => {
     if (opcionSelect !== "") {
       getPediodoSelect();
       getRegistrosBalance();
+      getRegistrosResultado();
+      getRegistrosIngresoGasto();
     }
   }, [opcionSelect]);
 
@@ -601,8 +626,8 @@ const MostrarLibroMayor = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF_R(
-                        registrosResultado,
-                        registrosTotalIngresoGasto
+                        registrosResultado //,
+                        //registrosTotalIngresoGasto
                       );
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
@@ -622,10 +647,11 @@ const MostrarLibroMayor = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF_IngresoGasto(
-                        registrosIngreso,
-                        registrosGasto,
-                        registrosTotalIngreso,
-                        registrosTotalGasto
+                        registrosIngresoGasto
+                        //registrosIngreso,
+                        //registrosGasto,
+                        //registrosTotalIngreso,
+                        //registrosTotalGasto
                       );
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
