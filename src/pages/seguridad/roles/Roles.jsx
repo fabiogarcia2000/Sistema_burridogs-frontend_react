@@ -389,7 +389,7 @@ export default function Roles(props) {
         // fixedHeaderScrollHeight="550px"
         />
       ) : (
-        <p className="text-center">Ninguna Categoría</p>
+        <p className="text-center">Ningún Registro</p>
       )}
     </div>
       </div>
