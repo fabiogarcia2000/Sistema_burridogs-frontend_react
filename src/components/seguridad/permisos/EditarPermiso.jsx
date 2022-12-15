@@ -11,32 +11,31 @@ import { useState, useEffect } from "react";
 
 const URLEditar = "http://190.53.243.69:3001/ms_permisos/actualizar-insertar/";
 
-
 const current = new Date();
-const date = `${current.getFullYear()}/${current.getMonth() + 1}/${current.getDate()}`;
+const date = `${current.getFullYear()}/${
+  current.getMonth() + 1
+}/${current.getDate()}`;
 
-const objeto = "FORM_PERMISOS"
+const objeto = "FORM_PERMISOS";
 
 const PermisoEditar = () => {
-  const [edit] = useGlobalState('registroEdit')
+  const [edit] = useGlobalState("registroEdit");
 
   //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
   const Permisos = () => {
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
+    let data = localStorage.getItem("permisos");
     if (data) {
-      setTemp(JSON.parse(data))
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -44,49 +43,47 @@ const PermisoEditar = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
     if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
-
   const TienePermisos = () => {
-    setPermitido(permisos[0].permiso_consultar)
-  }
+    setPermitido(permisos[0].permiso_consultar);
+  };
   //================================================================
 
-
   const navigate = useNavigate();
-  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR 
-  const userdata = JSON.parse(localStorage.getItem('data'))
+  //TRAER NOMBRE DE USUARIO PARA EL CREADO POR
+  const userdata = JSON.parse(localStorage.getItem("data"));
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
-      case 'guardado':
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "Los cambios se guardaron con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
         break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudieron guardar los cambios',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          title: "Error",
+          text: "No se pudieron guardar los cambios",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
         break;
 
-      default: break;
+      default:
+        break;
     }
   };
 
@@ -95,16 +92,18 @@ const PermisoEditar = () => {
       <Formik
         //valores iniciales
         initialValues={{
-         id_permiso: edit.id_permiso,
-          id_rol: edit.rol,
-          id_objeto: edit.objeto,
-          permiso_insercion: "1",
-          permiso_eliminacion: "1",
-          permiso_actualizacion: "1",
-          permiso_consultar: "1",
+          id_permiso: edit.id_permiso,
+          id_rol: edit.id_rol,
+          id_objeto: edit.id_objeto,
+          permiso_insercion: edit.permiso_insercion,
+          permiso_eliminacion: edit.permiso_eliminacion,
+          permiso_actualizacion: edit.permiso_actualizacion,
+          permiso_consultar: edit.permiso_consultar,
           activo: "1",
-          modificado_por: userdata.data.nameUser.replace('"', "").replace('"', ""),
-          fecha_modificacion: date
+          modificado_por: userdata.data.nameUser
+            .replace('"', "")
+            .replace('"', ""),
+          fecha_modificacion: date,
         }}
         //Funcion para validar
         validate={(valores) => {
@@ -122,32 +121,46 @@ const PermisoEditar = () => {
 
           return errores;
         }}
-
         onSubmit={async (valores) => {
           //procedimineto para guardar el nuevo registro
+
           try {
-            const res = await axios.put(`${URLEditar}${valores.id_permiso}`, valores);
+            const res = await axios.put(
+              `${URLEditar}${valores.id_permiso}`,
+              valores
+            );
 
             if (res.status === 200) {
-              console.log(valores)
+              console.log(valores);
               mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR PERMISO"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "EDITAR PERMISO"
+              ); //Insertar bitacora
               navigate("/admin/mostrarpermiso");
             } else {
               mostrarAlertas("error");
-              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERMISO"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "ERROR AL EDITAR PERMISO"
+              ); //Insertar bitacora
             }
-
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERMISO"); //Insertar bitacora
+            RegistroEnVitacora(
+              permisos[0].id_objeto,
+              "EDITAR",
+              "ERROR AL EDITAR PERMISO"
+            ); //Insertar bitacora
             navigate("/admin/mostrarpermiso");
           }
         }}
       >
         {({ errors, values }) => (
-          <Form >
+          <Form>
             <h3 className="mb-3">Editar Permisos</h3>
             <div className="row g-3">
               <div className="col-sm-6">
@@ -166,7 +179,9 @@ const PermisoEditar = () => {
 
                   <ErrorMessage
                     name="id_permiso"
-                    component={() => <div className="error">{errors.id_permiso}</div>}
+                    component={() => (
+                      <div className="error">{errors.id_permiso}</div>
+                    )}
                   />
                 </div>
               </div>
@@ -187,7 +202,9 @@ const PermisoEditar = () => {
 
                   <ErrorMessage
                     name="id_rol"
-                    component={() => <div className="error">{errors.id_rol}</div>}
+                    component={() => (
+                      <div className="error">{errors.id_rol}</div>
+                    )}
                   />
                 </div>
               </div>
@@ -208,7 +225,9 @@ const PermisoEditar = () => {
                   />
                   <ErrorMessage
                     name="id_objeto"
-                    component={() => <div className="error">{errors.id_objeto}</div>}
+                    component={() => (
+                      <div className="error">{errors.id_objeto}</div>
+                    )}
                   />
                 </div>
               </div>
@@ -222,11 +241,11 @@ const PermisoEditar = () => {
                     as="select"
                     className="form-select"
                     id="permisoinsercion"
-                    name="permisoinsercion"
+                    name="permiso_insercion"
                   >
                     <option value="">Seleccionar...</option>
-                    <option value="1">Permitir</option>
-                    <option value="0">No permitir</option>
+                    <option value="true">Permitir</option>
+                    <option value="false">No permitir</option>
                   </Field>
                   <ErrorMessage
                     name="permiso_insercion"
@@ -251,8 +270,8 @@ const PermisoEditar = () => {
                     name="permiso_eliminacion"
                   >
                     <option value="">Seleccionar...</option>
-                    <option value="1">Permitir</option>
-                    <option value="0">No permitir</option>
+                    <option value="true">Permitir</option>
+                    <option value="false">No permitir</option>
                   </Field>
 
                   <ErrorMessage
@@ -276,14 +295,16 @@ const PermisoEditar = () => {
                     name="permiso_actualizacion"
                   >
                     <option value="">Seleccionar...</option>
-                    <option value="1">Permitir</option>
-                    <option value="0">No permitir</option>
+                    <option value="true">Permitir</option>
+                    <option value="false">No permitir</option>
                   </Field>
 
                   <ErrorMessage
                     name="permiso_actualizacion"
                     component={() => (
-                      <div className="error">{errors.permiso_actualizacion}</div>
+                      <div className="error">
+                        {errors.permiso_actualizacion}
+                      </div>
                     )}
                   />
                 </div>
@@ -291,7 +312,7 @@ const PermisoEditar = () => {
             </div>
 
             <div className="row g-3">
-               <div className="col-sm-6">
+              <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="permisoconsultar" className="form-label">
                     Permiso Consultar:
@@ -303,8 +324,8 @@ const PermisoEditar = () => {
                     name="permiso_consultar"
                   >
                     <option value="">Seleccionar...</option>
-                    <option value="1">Permitir</option>
-                    <option value="0">No permitir</option>
+                    <option value="true">Permitir</option>
+                    <option value="false">No permitir</option>
                   </Field>
 
                   <ErrorMessage
@@ -314,7 +335,7 @@ const PermisoEditar = () => {
                     )}
                   />
                 </div>
-              </div> 
+              </div>
               <div className="col-sm-6">
                 <div className="mb-3">
                   <label htmlFor="modificado_por" className="form-label">

@@ -366,7 +366,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
           paginationPerPage="6"
         />
         ) : (
-          <p className="text-center">Ninguna Pregunta</p>
+          <p className="text-center">Ningún Registro</p>
         )}
       </div>
     </div>

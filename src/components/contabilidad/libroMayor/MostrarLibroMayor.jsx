@@ -15,6 +15,7 @@ const UrlMostrar = "http://190.53.243.69:3001/mc_libromayor/getallporperiodo/";
 const UrlEliminar = "https://jsonplaceholder.typicode.com/comments";
 
 //BALANCE GENERAL
+const UrlBalance = "http://190.53.243.69:3001/mc_balance/getall/";
 const UrlMostrarActivos = "http://190.53.243.69:3001/mc_activos/getall/";
 const UrlMostrarPasivos = "http://190.53.243.69:3001/mc_pasivos/getall/";
 const UrlMostrarPatrimonio = "http://190.53.243.69:3001/mc_patrimonios/getall/";
@@ -26,9 +27,11 @@ const UrlMostrarTotalPatrimonio =
 
 //ESTADO DE RESULTADOS
 const UrlMostrarResultado =
-  "http://190.53.243.69:3001/mc_estado_resultado/getall";
+  "http://190.53.243.69:3001/mc_estado_resultado/getall/";
 
 //INGRESOS Y GASTOS
+const UrlIngresosGastos =
+  "http://190.53.243.69:3001/mc_ingresos_gastos/getall/";
 const UrlMostrarIngresos = "http://190.53.243.69:3001/mc_ingresos/getall";
 const UrlMostrarGastos = "http://190.53.243.69:3001/mc_gastos/getall";
 const UrlMostrarTotalIngresos =
@@ -51,6 +54,12 @@ const MostrarLibroMayor = () => {
   const [registroDelete, setRegistroDelete] = useState("");
 
   const [registros, setRegistros] = useState([]);
+
+  //Configurar los hooks BALANCE
+  const [registrosBalance, setRegistrosBalance] = useState([]);
+  useEffect(() => {
+    getRegistrosBalance();
+  }, []);
 
   //Configurar los hooks ACTIVO
   const [registrosActivos, setRegistrosActivos] = useState([]);
@@ -100,6 +109,12 @@ const MostrarLibroMayor = () => {
     getRegistrosIngreso();
   }, []);
 
+  //Configurar los hooks INGRESOS GASTOS
+  const [registrosIngresoGasto, setRegistrosIngresoGasto] = useState([]);
+  useEffect(() => {
+    getRegistrosIngresoGasto();
+  }, []);
+
   //Configurar los hooks GASTOS
   const [registrosGasto, setRegistrosGasto] = useState([]);
   useEffect(() => {
@@ -131,6 +146,18 @@ const MostrarLibroMayor = () => {
     try {
       const res = await axios.get(UrlMostrar);
       //setRegistros(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los registros BALANCE
+  const getRegistrosBalance = async () => {
+    try {
+      const res = await axios.get(UrlBalance + opcionSelect);
+
+      setRegistrosBalance(res.data); //--
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -206,8 +233,10 @@ const MostrarLibroMayor = () => {
   //procedimineto para obtener todos los registros ESTADO DE RESULTADOS
   const getRegistrosResultado = async () => {
     try {
-      const res = await axios.get(UrlMostrarResultado);
-      setRegistrosResultado(res.data);
+      if (opcionSelect) {
+        const res = await axios.get(UrlMostrarResultado + opcionSelect);
+        setRegistrosResultado(res.data);
+      }
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -219,6 +248,19 @@ const MostrarLibroMayor = () => {
     try {
       const res = await axios.get(UrlMostrarIngresos);
       setRegistrosIngreso(res.data);
+    } catch (error) {
+      console.log(error);
+      mostrarAlertas("errormostrar");
+    }
+  };
+
+  //procedimineto para obtener todos los registros INGRESOS
+  const getRegistrosIngresoGasto = async () => {
+    try {
+      if (opcionSelect) {
+        const res = await axios.get(UrlIngresosGastos + opcionSelect);
+        setRegistrosIngresoGasto(res.data);
+      }
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -306,6 +348,9 @@ const MostrarLibroMayor = () => {
   useEffect(() => {
     if (opcionSelect !== "") {
       getPediodoSelect();
+      getRegistrosBalance();
+      getRegistrosResultado();
+      getRegistrosIngresoGasto();
     }
   }, [opcionSelect]);
 
@@ -435,8 +480,8 @@ const MostrarLibroMayor = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
-      //dato.nombre_cuenta.toString().includes(busqueda.toLocaleLowerCase())
+        dato.nombre_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.nombre_subcuenta.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -498,36 +543,6 @@ const MostrarLibroMayor = () => {
       sortable: true,
     },
 
-    {
-      name: "ACCIONES",
-      cell: (row) => (
-        <>
-          <Link
-            to="/admin/editarlibromayor"
-            type="button"
-            className="btn btn-light"
-            title="Editar"
-            onClick={() => setGlobalState("registroEdit", row)}
-          >
-            <i className="fa-solid fa-pen-to-square"></i>
-          </Link>
-          &nbsp;
-          <button
-            className="btn btn-light"
-            title="Eliminar"
-            onClick={() => {
-              setRegistroDelete(row.id_cuenta);
-              abrirModalEliminar();
-            }}
-          >
-            <i className="bi bi-trash3-fill"></i>
-          </button>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
   ];
 
   //Configurar la paginación de la tabla
@@ -556,12 +571,13 @@ const MostrarLibroMayor = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF(
-                        registrosActivos,
-                        registrosPasivos,
-                        registrosPatrimonio,
-                        registrosTotal,
-                        registrosTotalPasivo,
-                        registrosTotalPatrimonio
+                        registrosBalance
+                        //registrosActivos,
+                        //registrosPasivos,
+                        //registrosPatrimonio,
+                        //registrosTotal,
+                        //registrosTotalPasivo,
+                        //registrosTotalPatrimonio
                       );
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
@@ -580,8 +596,8 @@ const MostrarLibroMayor = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF_R(
-                        registrosResultado,
-                        registrosTotalIngresoGasto
+                        registrosResultado //,
+                        //registrosTotalIngresoGasto
                       );
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
@@ -601,10 +617,11 @@ const MostrarLibroMayor = () => {
                     title="Exportar a PDF"
                     onClick={() => {
                       Export_PDF_IngresoGasto(
-                        registrosIngreso,
-                        registrosGasto,
-                        registrosTotalIngreso,
-                        registrosTotalGasto
+                        registrosIngresoGasto
+                        //registrosIngreso,
+                        //registrosGasto,
+                        //registrosTotalIngreso,
+                        //registrosTotalGasto
                       );
                       RegistroEnVitacora(
                         permisos[0].id_objeto,

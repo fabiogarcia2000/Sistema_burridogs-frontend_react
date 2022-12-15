@@ -153,7 +153,7 @@ export default function RecuperacionPreguntas(props) {
       <img src={`data:image/png;base64,${logo2}`} alt="Imagen" />
 
       <div className="formulario steps">
-        <h2>Recuperaci&oacute;n por preguntas </h2>
+        <h2>Preguntas Secretas</h2>
         <h5>
           Antes de continuar es necesario que crees tus preguntas/respuestas de
           seguridad

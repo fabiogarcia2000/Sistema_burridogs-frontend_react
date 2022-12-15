@@ -169,22 +169,14 @@ const CrearPermiso = () => {
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
-          // Validacion descripción
-          if (!valores.creado_por) {
-            errores.creado_por = "Por favor ingrese un nombre";
-          }
-
-          // Validacion estado
-          if (!valores.activo) {
-            errores.activo = "Por favor seleccione un estado";
-          }
-          // Validacion estado
+   
+          // Validacion objeto
           if (!valores.id_objeto) {
-            errores.activo = "Por favor seleccione una opcion";
+            errores.id_objeto = "Por favor seleccione una opcion";
           }
-          // Validacion estado
+          // Validacion rol
           if (!valores.id_rol) {
-            errores.activo = "Por favor seleccione una opcion";
+            errores.id_rol = "Por favor seleccione una opcion";
           }
 
           return errores;

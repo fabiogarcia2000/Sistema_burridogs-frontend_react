@@ -485,7 +485,7 @@ const mostrarAlertas = (alerta) => {
         // fixedHeaderScrollHeight="550px"
         />
         ) : (
-          <p className="text-center">Ningun parametro</p>
+          <p className="text-center">Ningún Registro</p>
         )}
       </div>
       </div>

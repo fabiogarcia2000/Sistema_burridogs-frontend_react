@@ -8,10 +8,11 @@ import imagen from "../../../assets/img/img-restore.png";
 import "./styles.css";
 import { Spinner } from "reactstrap";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
+import { RegistroEnVitacora } from "../../seguridad/bitacora/RegistroBitacora";
 
 const URLGuardar = "http://190.53.243.69:3001/upload";
 
-const objeto = "FORM_ARTICULO";
+const objeto = "FORM_RESTAURAR";
 
 const Restaurar = () => {
   //const [DatosEmpresa] = useGlobalState('datosEmpresa');
@@ -109,11 +110,14 @@ const Restaurar = () => {
         axios
           .post(URLGuardar, fil, {
             headers: { "Content-Type": "multipart/form-data" },
+            
           })
+          
           .then((res) => {
             console.log(res);
             mostrarAlertas("subido");
             setLoading(false);
+           
           });
 
         //InsertarBitacora(permisos[0].id_objeto, "EDITAR", "EDITAR DATOS);
@@ -122,6 +126,11 @@ const Restaurar = () => {
         console.log(error);
         mostrarAlertas("error");
         setLoading(false);
+        RegistroEnVitacora(
+          permisos[0].id_objeto,
+          "RESTAURAR",
+          "ERROR AL RESTAURAR COPIA DE SEGURIDAD"
+        ); //Insertar bitacora
       }
     } else {
       mostrarAlertas("vacio");
@@ -135,6 +144,8 @@ const Restaurar = () => {
   return (
     <div className="container principal">
       <h3 className="mb-3">Restaurar con Copia de Seguridad</h3>
+
+      {permitido ? (
       <div className="secundario">
         <div className="row">
           <img src={imagen} className="img-backup" alt="Img" />
@@ -146,12 +157,19 @@ const Restaurar = () => {
             className="btn btn-success mb-3 me-2"
             onClick={() => {
               abrirModalArchivo();
+             
             }}
           >
             Restaurar
           </button>
         </div>
       </div>
+            ) : (
+              <p className="text-center text-danger">
+                Lo siento, no tienes permisos para realizar esta acción.
+              </p>
+            )}
+      
 
       <Modal size="sm" isOpen={loading} centered>
         <ModalBody>
@@ -177,6 +195,7 @@ const Restaurar = () => {
                 className="form-control"
                 name="files"
                 accept=".tar"
+                
                 onChange={(e) => SubirArchivos(e.target.files)}
               />
             </div>

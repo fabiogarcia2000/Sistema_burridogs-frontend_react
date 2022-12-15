@@ -12,30 +12,28 @@ import { useState, useEffect } from "react";
 const URLEditar = "http://190.53.243.69:3001/mc_periodo/actualizar-insertar/";
 
 //Identificador del formulario
-const objeto = "FORM_PERIODO_CONTABLE"
+const objeto = "FORM_PERIODO_CONTABLE";
 
 const EditarPeriodoContable = () => {
-  const [edit] = useGlobalState('registroEdit')
+  const [edit] = useGlobalState("registroEdit");
 
   const navigate = useNavigate();
 
-//===================Obtener datos del localstorage=====================
+  //===================Obtener datos del localstorage=====================
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
 
-  const Permisos = () =>{
-    const newData = temp.filter(
-      (item) => item.objeto === objeto
-    );
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
     setPermisos(newData);
-  }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem('permisos')
-    if(data){
-      setTemp(JSON.parse(data))
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
     }
   }, []);
 
@@ -43,45 +41,43 @@ const EditarPeriodoContable = () => {
     Permisos();
   }, [temp]);
 
-
   useEffect(() => {
-    if(permisos.length > 0){
+    if (permisos.length > 0) {
       TienePermisos();
     }
   }, [permisos]);
 
-
-  const TienePermisos = () =>{
-    setPermitido(permisos[0].permiso_consultar)
-  }
-//================================================================
-
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  //================================================================
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
     switch (alerta) {
-      case 'guardado':
+      case "guardado":
         Swal.fire({
-          title: '¡Guardado!',
+          title: "¡Guardado!",
           text: "Los cambios se guardaron con éxito",
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
         break;
 
-      case 'error':
+      case "error":
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudieron guardar los cambios',
-          icon: 'error',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
+          title: "Error",
+          text: "No se pudieron guardar los cambios",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
         break;
 
-      default: break;
+      default:
+        break;
     }
   };
 
@@ -95,19 +91,21 @@ const EditarPeriodoContable = () => {
           fecha_inicial: edit.fecha_inicial,
           fecha_final: edit.fecha_final,
           fecha_creacion: edit.fecha_creacion,
-          id_usuario: edit.nombre_usuario,
+          id_usuario: edit.id_usuario,
           tipo_periodo: edit.tipo_periodo,
           estado_periodo: edit.estado_periodo,
         }}
-
         //Funcion para validar
         validate={(valores) => {
           let errores = {};
 
           // Validacion descripción periodo
           if (!valores.descripcion_periodo) {
-            errores.descripcion_periodo = "Por favor ingresa la descripción del periodo";
-          } else if (!/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion_periodo)) {
+            errores.descripcion_periodo =
+              "Por favor ingresa la descripción del periodo";
+          } else if (
+            !/^^[A-Z-0-9-ÑÁÉÍÓÚ#* ]+$/.test(valores.descripcion_periodo)
+          ) {
             errores.descripcion_periodo = "Escribir solo en MAYÚSCULAS";
           }
 
@@ -129,32 +127,46 @@ const EditarPeriodoContable = () => {
           // Validacion de id usuario
           if (!valores.id_usuario) {
             errores.id_usuario = "Por favor ingresa id usuario";
-          } 
+          }
 
           // Validacion nombre usuario
           if (!valores.id_usuario) {
             errores.id_usuario = "Por favor ingresa id usuario";
-          } 
+          }
           return errores;
         }}
         onSubmit={async (valores) => {
           //procedimineto para guardar el los cambios
           try {
-            const res = await axios.put(`${URLEditar}${valores.id_periodo_contable}`, valores);
+            const res = await axios.put(
+              `${URLEditar}${valores.id_periodo_contable}`,
+              valores
+            );
 
             if (res.status === 200) {
               mostrarAlertas("guardado");
-              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR PERIODO CONTABLE"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "EDITAR PERIODO CONTABLE"
+              ); //Insertar bitacora
               navigate("/admin/mostrarperiodo");
             } else {
               mostrarAlertas("error");
-              RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERIODO CONTABLE"); //Insertar bitacora
+              RegistroEnVitacora(
+                permisos[0].id_objeto,
+                "EDITAR",
+                "ERROR AL EDITAR PERIODO CONTABLE"
+              ); //Insertar bitacora
             }
-
           } catch (error) {
             console.log(error);
             mostrarAlertas("error");
-            RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR PERIODO CONTABLE"); //Insertar bitacora
+            RegistroEnVitacora(
+              permisos[0].id_objeto,
+              "EDITAR",
+              "ERROR AL EDITAR PERIODO CONTABLE"
+            ); //Insertar bitacora
             navigate("/admin/mostrarperiodo");
           }
         }}
@@ -176,7 +188,6 @@ const EditarPeriodoContable = () => {
                     name="descripcion_periodo"
                     placeholder="Descripción Periodo..."
                     onKeyUp={cambiarAMayusculasDescripcionPeriodo(values)}
-
                   />
 
                   <ErrorMessage
@@ -232,9 +243,9 @@ const EditarPeriodoContable = () => {
                   />
                 </div>
               </div>
-            
+
               <div className="col-sm-6">
-                <div className="mb-3" >
+                <div className="mb-3">
                   <label htmlFor="fechacreacion" className="form-label">
                     Fecha Creación:
                   </label>
@@ -266,7 +277,7 @@ const EditarPeriodoContable = () => {
                     id="nombreUsuario"
                     name="id_usuario"
                     placeholder="Nombre usuario..."
-                    
+                    disabled
                   />
 
                   <ErrorMessage
@@ -289,7 +300,7 @@ const EditarPeriodoContable = () => {
                     id="tipoPeriodo"
                     name="tipo_periodo"
                     placeholder="Tipo Periodo..."
-                    >
+                  >
                     <option value="1">Mensual</option>
                     <option value="0">Trimestral</option>
                     <option value="0">Anual</option>
@@ -304,34 +315,31 @@ const EditarPeriodoContable = () => {
               </div>
             </div>
 
-            
             <div className="row g-3">
-                <div className="col-sm-6">
-                  <div className="mb-3">
-                    <label htmlFor="estadoPeriodo" className="form-label">
-                      Estado periodo:
-                    </label>
-                    <Field
-                      as="select"
-                      className="form-select"
-                      id="estadoPeriodo"
-                      name="abierto"
-                      >
-                      <option value="1">Abierto</option>
-                      <option value="0">Cerrado</option>
-                    </Field>
+              <div className="col-sm-6">
+                <div className="mb-3">
+                  <label htmlFor="estadoPeriodo" className="form-label">
+                    Estado periodo:
+                  </label>
+                  <Field
+                    as="select"
+                    className="form-select"
+                    id="estadoPeriodo"
+                    name="abierto"
+                  >
+                    <option value="1">Abierto</option>
+                    <option value="0">Cerrado</option>
+                  </Field>
 
-                    <ErrorMessage
-                      name="abierto"
-                      component={() => (
-                        <div className="error">{errors.abierto}</div>
-                      )}
-                    />
-                  </div>
+                  <ErrorMessage
+                    name="abierto"
+                    component={() => (
+                      <div className="error">{errors.abierto}</div>
+                    )}
+                  />
                 </div>
-              
               </div>
-
+            </div>
 
             <button className="btn btn-success mb-3 me-2" type="submit">
               Guardar

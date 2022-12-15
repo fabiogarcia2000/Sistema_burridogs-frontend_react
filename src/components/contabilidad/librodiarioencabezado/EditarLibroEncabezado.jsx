@@ -170,13 +170,23 @@ const SubCuent = (id) => {
 //Capturar descripción de Sucursal
 const SucursalSelect = (id) => {
   const desc = sucursal.filter((item) => item.id_sucursal == id);
-  setSucursalSelect(desc);
+  if(Object.entries(desc).length === 0){
+    setSucursalSelect([{descripcion_sucursal:""}])    
+  }else{
+    setSucursalSelect(desc)  
+      
+  }
 };
 
 //Capturar descripción de Sucursal
 const CentroCostoSelect = (id) => {
   const desc = centro.filter((item) => item.id_centro_costo == id);
-  setCentroCostoSelect(desc);
+  if(Object.entries(desc).length === 0){
+    setCentroCostoSelect([{descripcion:""}]);
+
+  }else{
+    setCentroCostoSelect(desc);
+  }
 };
 
 
@@ -387,15 +397,20 @@ const CentroCostoSelect = (id) => {
       if (res.status === 200) {
         mostrarAlertas("guardado");
         navigate("/admin/mostrarlibroencabezado")
+        RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR LIBRO ENCABEZO"); //Insertar bitacora
         console.log(res)
       }else{
         setResData(res.data)
         mostrarAlertas("error");
+        RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "EDITAR LIBRO ENCABEZO"); //Insertar bitacora
+
       }
       
     } catch (error) {
       console.log(error);
       mostrarAlertas("error");
+      RegistroEnVitacora(permisos[0].id_objeto, "EDITAR", "ERROR AL EDITAR LIBRO ENCABEZO"); //Insertar bitacora
+
     }
   };
 

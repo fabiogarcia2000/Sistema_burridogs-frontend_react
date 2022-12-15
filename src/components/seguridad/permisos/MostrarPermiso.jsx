@@ -371,7 +371,7 @@ const MostrarPermiso = () => {
                     fixedHeaderScrollHeight="550px"
                 />
                 ) : (
-                    <p className="text-center">Ningun permiso</p>
+                    <p className="text-center">Ningún Registro</p>
                   )}
                 </div>
             </div>

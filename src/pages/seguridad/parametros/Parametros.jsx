@@ -372,7 +372,7 @@ const [cuentaVerMas, setCuentaVerMas] = useState({});
     
         />
         ) : (
-          <p className="text-center">Ningun parametro</p>
+          <p className="text-center">Ningún Registro</p>
         )}
       </div>
         </div>

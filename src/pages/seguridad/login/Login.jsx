@@ -21,7 +21,7 @@ const getOneParam = (objectJson, nameParam) => {
   return objectJson.filter((item) => item.parametro === nameParam)[0] || {};
 };
 
-const UrlDatosEmpresa = "http://190.53.243.69:3001/empresa/getone/"
+const UrlDatosEmpresa = "http://190.53.243.69:3001/empresa/getone/";
 
 // const urlAPi = "http://localhost:3001";
 const URL_API_ENV = process.env.REACT_APP_URL_API;
@@ -64,6 +64,7 @@ export default function Login(props) {
         console.log(error);
       });
   };
+  getAllSettingsParams();
   useEffect(() => {
     console.log("Antes de getall");
     getAllSettingsParams();
@@ -74,22 +75,21 @@ export default function Login(props) {
   const getDatos = async () => {
     try {
       const res = await axios.get(UrlDatosEmpresa);
-      if(res.status === 200){
+      if (res.status === 200) {
         localStorage.setItem("dataEmpresa", JSON.stringify(res.data));
-        console.log(res.data)
+        console.log(res.data);
       }
-      
     } catch (error) {
       console.log(error);
     }
   };
-
+  getDatos();
   useEffect(() => {
     getDatos();
   }, []);
 
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
-  const logo2 =DatosEmpresa.logo2;
+  const logo2 = DatosEmpresa.logo2;
 
   var dataPar = JSON.parse(localStorage.getItem("params")) || [];
   var nombreParam = getOneParam(dataPar, "SYS_NOMBRE");
@@ -422,8 +422,10 @@ export default function Login(props) {
                 </div>
                 <div className="info-container">
                   <p>
-                    Para dudas o consultas comunicate al número <strong>{DatosEmpresa.telefono}</strong>
-                    <br />o escribe al correo <strong>{DatosEmpresa.correo}</strong>
+                    Para dudas o consultas comunicate al número{" "}
+                    <strong>{DatosEmpresa.telefono}</strong>
+                    <br />o escribe al correo{" "}
+                    <strong>{DatosEmpresa.correo}</strong>
                   </p>
                 </div>
               </form>

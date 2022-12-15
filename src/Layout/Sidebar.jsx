@@ -222,12 +222,12 @@ function Sidebar() {
               <li>
                 <Link to="/admin/mostrarcategoriacont">
                   <i className="bi bi-circle"></i>
-                  <span>Categoria contable</span>
+                  <span>Categoría contable</span>
                 </Link>
               </li>
               <Link to="/admin/mostrarcatalogo">
                 <i className="bi bi-circle"></i>
-                <span>Catalogo de cuentas</span>
+                <span>Catálogo de cuentas</span>
               </Link>
             </li>
             <li>
@@ -317,7 +317,7 @@ function Sidebar() {
           <Link
             className="nav-link collapsed"
             data-bs-target="#forms-nav-seg"
-            data-bs-toggle="collapse"
+           data-bs-toggle="collapse"
             to="#"
           >
             <i className="bi bi-shield-lock"></i>

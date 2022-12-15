@@ -127,7 +127,7 @@ export default function RecuperacionContra(props) {
         </Alert>
         <h2>¿Olvidaste tu contraseña?</h2>
         <h5 className="caption">
-          Ingresa tu nombre de usuario y selecciona metodo de reinicio{" "}
+          Ingresa tu usuario y selecciona método de recuperación{" "}
         </h5>
 
         <Form

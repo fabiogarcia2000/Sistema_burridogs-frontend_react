@@ -26,6 +26,7 @@ const UrlPeriodo = "http://190.53.243.69:3001/mc_periodo/getall/";
 
 const objeto = "FORM_LIBRO_ENCABEZADO";
 
+
 const MostrarLibroDetalle = () => {
   const fechaHoy = getCurrentDateShort();
   const navigate = useNavigate();
@@ -421,8 +422,9 @@ const MostrarLibroDetalle = () => {
     },
     {
       name: "PERIODO CONTABLE",
-      selector: (row) => row.id_periodo_contable,
+      selector: (row) => ("Periodo "+row.id_periodo_contable+" - "+row.descripcion_periodo),
       sortable: true,
+      minWidth: "250px",
     },
     {
       name: "FECHA",
@@ -438,6 +440,13 @@ const MostrarLibroDetalle = () => {
       name: "DESCRIPCIÓN",
       selector: (row) => row.descripcion,
       sortable: true,
+      minWidth: "250px",
+    },
+    {
+      name: "TIPO PERIODO",
+      selector: (row) => row.descripcion_tipo_periodo,
+      sortable: true,
+      minWidth: "150px",
     },
     /*{
       name: "MONTO HABER",
@@ -445,14 +454,16 @@ const MostrarLibroDetalle = () => {
       sortable: true,
     },*/
     {
-      name: "ESTADO",
-      selector: (row) => row.tipo_estado,
+      name: "ESTADO DEL PERIODO",
+      selector: (row) => row.descripcion_estado_periodo,
       sortable: true,
+      minWidth: "100px",
     },
     {
       name: "USUARIO",
-      selector: (row) => row.id_usuario,
+      selector: (row) => row.usuario,
       sortable: true,
+      minWidth: "150px",
     },
 
     {
@@ -466,7 +477,7 @@ const MostrarLibroDetalle = () => {
             onClick={() => {
               getDetalles(row.id_libro_diario_enca);
               abrirModalVerMas();
-              //RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS LIBRO DIARIO ENCABEZADO");
+              RegistroEnVitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR LIBRO DIARIO ENCABEZADO");
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -477,12 +488,19 @@ const MostrarLibroDetalle = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if (row.fecha_final < fechaHoy && permisos[0].permiso_actualizacion) {
-                mostrarAlertas("periodocerrado");
+              if (permisos[0].permiso_actualizacion) {
+                console.log(row.descripcion_estado_periodo)
+
+                if(row.descripcion_estado_periodo == "ABIERTO"){
+                  getDetalles(row.id_libro_diario_enca);
+                  setGlobalState("registroEdit", row);
+                  navigate("/admin/EditarLibroEncabezado");
+                }else{
+                  mostrarAlertas("periodocerrado");
+                }                
+                
               } else {
-                getDetalles(row.id_libro_diario_enca);
-                setGlobalState("registroEdit", row);
-                navigate("/admin/EditarLibroEncabezado");
+                mostrarAlertas("permisos");
               }
             }}
           >
@@ -669,10 +687,10 @@ const MostrarLibroDetalle = () => {
                 paginationComponentOptions={paginationComponentOptions}
                 highlightOnHover
                 fixedHeader
-                fixedHeaderScrollHeight="550px"
+                fixedHeaderScrollHeight="600px"
               />
             ) : (
-              <p className="text-center">Ninguna Categoría</p>
+              <p className="text-center">Ningún Registro</p>
             )}
           </div>
         </div>
