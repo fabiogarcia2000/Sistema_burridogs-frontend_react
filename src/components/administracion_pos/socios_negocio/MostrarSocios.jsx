@@ -16,7 +16,6 @@ const UrlEliminar = "http://190.53.243.69:3001/socio_negocio/eliminar/";
 const objeto = "FORM_SOCIOS_NEGOCIO";
 
 const MostrarSocios = () => {
-
   const navigate = useNavigate();
 
   //Configurar los hooks
@@ -37,49 +36,42 @@ const MostrarSocios = () => {
     }
   };
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true);
 
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
+    setPermisos(newData);
+  };
 
+  useEffect(() => {
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
+    }
+  }, []);
 
-   /*****Obtener y corroborar Permisos*****/
-   const [temp, setTemp] = useState([]);
-   const [permisos, setPermisos] = useState([]);
-   const [permitido, setPermitido] = useState(true)
- 
-   const Permisos = () =>{
-     const newData = temp.filter(
-       (item) => item.objeto === objeto
-     );
-     setPermisos(newData);
-   }
- 
-   useEffect(() => {
-     let data = localStorage.getItem('permisos')
-     if(data){
-       setTemp(JSON.parse(data))
-     }
-   }, []);
- 
-   useEffect(() => {
-     Permisos();
-   }, [temp]);
- 
- 
-   useEffect(() => {
-     if(permisos.length > 0){
-       TienePermisos();
-     }
-   }, [permisos]);
- 
-   const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar);
-     InsertarBitacora(permisos[0].id_objeto, "LECTURA", "CONSULTAR SOCIOS DE NEGOCIO")
-   }
- /*******************/  
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
 
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
 
-
-
-
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+    InsertarBitacora(
+      permisos[0].id_objeto,
+      "LECTURA",
+      "CONSULTAR SOCIOS DE NEGOCIO"
+    );
+  };
+  /*******************/
 
   //Alertas de éxito o error al eliminar
   const mostrarAlertas = (alerta) => {
@@ -87,7 +79,7 @@ const MostrarSocios = () => {
       case "eliminado":
         Swal.fire({
           title: "¡Eliminado!",
-          text: "El Socio se eliminó con éxito",
+          text: "El Socio de Negocio se eliminó con éxito",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -117,7 +109,7 @@ const MostrarSocios = () => {
 
         break;
 
-        case "permisos":
+      case "permisos":
         Swal.fire({
           title: "Lo siento, no tienes permisos para realizar esta acción.",
           icon: "error",
@@ -140,7 +132,11 @@ const MostrarSocios = () => {
       getRegistros();
       if (res.status === 200) {
         mostrarAlertas("eliminado");
-        InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR SOCIO DE NEGOCIO");
+        InsertarBitacora(
+          permisos[0].id_objeto,
+          "ELIMINAR",
+          "ELIMINAR SOCIO DE NEGOCIO"
+        );
       } else {
         mostrarAlertas("error");
       }
@@ -163,7 +159,9 @@ const MostrarSocios = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.cod_socio_negocio.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
+        dato.cod_socio_negocio
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
         dato.descripcion.toLowerCase().includes(busqueda.toLocaleLowerCase())
     );
   }
@@ -254,7 +252,11 @@ const MostrarSocios = () => {
             onClick={() => {
               abrirModalVerMas();
               setRegistroVerMas(row);
-              InsertarBitacora(permisos[0].id_objeto, "LECTURA", "MOSTRAR MAS SOCIO DE NEGOCIO")
+              InsertarBitacora(
+                permisos[0].id_objeto,
+                "LECTURA",
+                "MOSTRAR MAS SOCIO DE NEGOCIO"
+              );
             }}
           >
             <i className="bi bi-eye-fill"></i>
@@ -265,12 +267,12 @@ const MostrarSocios = () => {
             className="btn btn-light"
             title="Editar"
             onClick={() => {
-              if(permisos[0].permiso_actualizacion){
+              if (permisos[0].permiso_actualizacion) {
                 setGlobalState("registroEdit", row);
                 navigate("/admin/editarsocio");
-              }else{
+              } else {
                 mostrarAlertas("permisos");
-              }              
+              }
             }}
           >
             <i className="bi bi-pencil-square"></i>
@@ -280,13 +282,12 @@ const MostrarSocios = () => {
             className="btn btn-light"
             title="Eliminar"
             onClick={() => {
-              if(permisos[0].permiso_eliminacion){
+              if (permisos[0].permiso_eliminacion) {
                 setRegistroDelete(row.cod_socio_negocio);
                 abrirModalEliminar();
-              }else{
+              } else {
                 mostrarAlertas("permisos");
               }
-              
             }}
           >
             <i className="bi bi-trash3-fill"></i>
@@ -312,108 +313,116 @@ const MostrarSocios = () => {
       <h3>Socios de Negocio</h3>
       <br />
 
-{permitido? (
-     <div>      
-      {/*Mostrar los botones: Nuevo, Excel y PDF */}
-      <div className="row">
-        <div className="col">
-          <div
-            className="btn-toolbar"
-            role="toolbar"
-            aria-label="Toolbar with button groups"
-          >
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="First group"
-            >
-              <button
-                type="button"
-                className="btn btn-primary"
-                title="Agregar Nuevo"
-                onClick={() => {
-                  if(permisos[0].permiso_insercion){
-                    navigate("/admin/crearsocio")
-                  }else{
-                   mostrarAlertas("permisos");
-                  }              
-                }}
+      {permitido ? (
+        <div>
+          {/*Mostrar los botones: Nuevo, Excel y PDF */}
+          <div className="row">
+            <div className="col">
+              <div
+                className="btn-toolbar"
+                role="toolbar"
+                aria-label="Toolbar with button groups"
               >
-                <i className="bi bi-plus-lg"></i> Nuevo
-              </button>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="First group"
+                >
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    title="Agregar Nuevo"
+                    onClick={() => {
+                      if (permisos[0].permiso_insercion) {
+                        navigate("/admin/crearsocio");
+                      } else {
+                        mostrarAlertas("permisos");
+                      }
+                    }}
+                  >
+                    <i className="bi bi-plus-lg"></i> Nuevo
+                  </button>
+                </div>
+                <div
+                  className="btn-group me-2"
+                  role="group"
+                  aria-label="Second group"
+                >
+                  <Button
+                    type="button"
+                    className="btn btn-success"
+                    title="Exportar a Excel"
+                    onClick={() => {
+                      Export_Excel(results);
+                      InsertarBitacora(
+                        permisos[0].id_objeto,
+                        "EXPORTAR",
+                        "EXPORTAR EXCEL SOCIOS DE NEGOCIO"
+                      );
+                    }}
+                  >
+                    <i className="bi bi-file-earmark-excel-fill"></i>
+                  </Button>
+                  <Button
+                    type="button"
+                    className="btn btn-danger"
+                    title="Exportar a PDF"
+                    onClick={() => {
+                      Export_PDF(results);
+                      InsertarBitacora(
+                        permisos[0].id_objeto,
+                        "EXPORTAR",
+                        "EXPORTAR PDF SOCIOS DE NEGOCIO"
+                      );
+                    }}
+                  >
+                    <i className="bi bi-filetype-pdf"></i>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div
-              className="btn-group me-2"
-              role="group"
-              aria-label="Second group"
-            >
-              <Button
-                type="button"
-                className="btn btn-success"
-                title="Exportar a Excel"
-                onClick={() => {
-                  Export_Excel(results);
-                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR EXCEL SOCIOS DE NEGOCIO")
-                }}
-              >
-                <i className="bi bi-file-earmark-excel-fill"></i>
-              </Button>
-              <Button
-                type="button"
-                className="btn btn-danger"
-                title="Exportar a PDF"
-                onClick={() => {
-                  Export_PDF(results);
-                  InsertarBitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR PDF SOCIOS DE NEGOCIO")
-                }}
-              >
-                <i className="bi bi-filetype-pdf"></i>
-              </Button>
+
+            {/*Mostrar la barra de busqueda*/}
+            <div className="col-4">
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="addon-wrapping">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  className="form-control me-2"
+                  type="text"
+                  placeholder="Buscar por código o descripción..."
+                  aria-label="Search"
+                  value={busqueda}
+                  onChange={valorBuscar}
+                />
+              </div>
             </div>
           </div>
-        </div>
+          <br />
 
-        {/*Mostrar la barra de busqueda*/}
-        <div className="col-4">
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="addon-wrapping">
-            <i className="bi bi-search"></i>
-            </span>
-            <input
-              className="form-control me-2"
-              type="text"
-              placeholder="Buscar por código o descripción..."
-              aria-label="Search"
-              value={busqueda}
-              onChange={valorBuscar}
-            />
+          {/*Mostramos la tabla con los datos*/}
+          <div className="row">
+            {results.length > 0 ? (
+              <DataTable
+                columns={columns}
+                data={results}
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+                highlightOnHover
+                fixedHeader
+                fixedHeaderScrollHeight="550px"
+              />
+            ) : (
+              <p className="text-center">Ningún Registro</p>
+            )}
           </div>
         </div>
-      </div>
-      <br />
-
-      {/*Mostramos la tabla con los datos*/}
-      <div className="row">
-      {results.length > 0 ? (
-        <DataTable
-          columns={columns}
-          data={results}
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          highlightOnHover
-          fixedHeader
-          fixedHeaderScrollHeight="550px"
-        />
-        ) : (
-          <p className="text-center">Ningún Registro</p>
-        )}
-      </div>
-    </div>
-
-) : (
-  <p className="text-center text-danger">Lo siento, no tienes permisos para realizar esta acción.</p>
-)}
-
+      ) : (
+        <p className="text-center text-danger">
+          Lo siento, no tienes permisos para realizar esta acción.
+        </p>
+      )}
 
       {/* Ventana Modal de ver más*/}
       <Modal isOpen={modalVerMas} toggle={abrirModalVerMas} centered>

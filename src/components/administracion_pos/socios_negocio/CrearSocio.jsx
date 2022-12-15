@@ -12,62 +12,51 @@ import {
 } from "../../../utils/cambiarAMayusculas";
 import { useState, useEffect } from "react";
 import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
-import { getCurrentDateShort } from "../../../utils/fechaYhora"
+import { getCurrentDateShort } from "../../../utils/fechaYhora";
 
 const URLCrear = "http://190.53.243.69:3001/socio_negocio/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/socio_negocio/getone/";
-
 
 const objeto = "FORM_SOCIOS_NEGOCIO";
 
 const Formulario = () => {
   const navigate = useNavigate();
 
-
   const fecha = getCurrentDateShort();
   const userdata = JSON.parse(localStorage.getItem("data"));
   const usuario = userdata.data.nameUser;
 
+  /*****Obtener y corroborar Permisos*****/
+  const [temp, setTemp] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  const [permitido, setPermitido] = useState(true);
 
+  const Permisos = () => {
+    const newData = temp.filter((item) => item.objeto === objeto);
+    setPermisos(newData);
+  };
 
-   /*****Obtener y corroborar Permisos*****/
-   const [temp, setTemp] = useState([]);
-   const [permisos, setPermisos] = useState([]);
-   const [permitido, setPermitido] = useState(true)
- 
-   const Permisos = () =>{
-     const newData = temp.filter(
-       (item) => item.objeto === objeto
-     );
-     setPermisos(newData);
-   }
- 
-   useEffect(() => {
-     let data = localStorage.getItem('permisos')
-     if(data){
-       setTemp(JSON.parse(data))
-     }
-   }, []);
- 
-   useEffect(() => {
-     Permisos();
-   }, [temp]);
- 
- 
-   useEffect(() => {
-     if(permisos.length > 0){
-       TienePermisos();
-     }
-   }, [permisos]);
- 
-   const TienePermisos = () =>{
-     setPermitido(permisos[0].permiso_consultar)
-   }
- /*******************/ 
-  
+  useEffect(() => {
+    let data = localStorage.getItem("permisos");
+    if (data) {
+      setTemp(JSON.parse(data));
+    }
+  }, []);
 
+  useEffect(() => {
+    Permisos();
+  }, [temp]);
 
+  useEffect(() => {
+    if (permisos.length > 0) {
+      TienePermisos();
+    }
+  }, [permisos]);
 
+  const TienePermisos = () => {
+    setPermitido(permisos[0].permiso_consultar);
+  };
+  /*******************/
 
   //Alertas de éxito o error
   const mostrarAlertas = (alerta) => {
@@ -75,7 +64,7 @@ const Formulario = () => {
       case "guardado":
         Swal.fire({
           title: "¡Guardado!",
-          text: "La categoría se creó con éxito",
+          text: "El socio de negocio se creó con éxito",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -86,7 +75,7 @@ const Formulario = () => {
       case "error":
         Swal.fire({
           title: "Error",
-          text: "No se pudo crear la nueva categoría",
+          text: "No se pudo crear el socio de negocio",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -95,7 +84,7 @@ const Formulario = () => {
 
       case "duplicado":
         Swal.fire({
-          text: "Ya existe una categoría con el código ingresado",
+          text: "Ya existe un socio de negocio con el código ingresado",
           icon: "warning",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Ok",
@@ -134,10 +123,14 @@ const Formulario = () => {
           // Validacion de código
           if (!valores.cod_socio_negocio) {
             errores.cod_socio_negocio = "Por favor ingresa un código";
-          }else if (!/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,6}$/.test(valores.cod_socio_negocio)) {
-            errores.cod_socio_negocio = "Escribir números y letras sin espacios. Ejemplo: C0001";
+          } else if (
+            !/^^(?=[A-Za-z]+[0-9])[A-Za-z0-9]{2,6}$/.test(
+              valores.cod_socio_negocio
+            )
+          ) {
+            errores.cod_socio_negocio =
+              "Escribir números y letras sin espacios. Ejemplo: C0001";
           }
-
 
           // Validacion tipo
           if (!valores.tipo) {
@@ -171,7 +164,11 @@ const Formulario = () => {
           // Validacion correo
           if (!valores.correo) {
             errores.correo = "Por favor ingrese un correo";
-          }else if (! /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(valores.correo)) {
+          } else if (
+            !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(
+              valores.correo
+            )
+          ) {
             errores.correo = "Ingrese un correo válido";
           }
 
@@ -218,7 +215,11 @@ const Formulario = () => {
               );
               if (res.status === 200) {
                 mostrarAlertas("guardado");
-                InsertarBitacora(permisos[0].id_objeto, "CREAR", "CREAR SOCIO DE NEGOCIO");
+                InsertarBitacora(
+                  permisos[0].id_objeto,
+                  "CREAR",
+                  "CREAR SOCIO DE NEGOCIO"
+                );
                 navigate("/admin/mostrarsocios");
               } else {
                 mostrarAlertas("error");
@@ -389,7 +390,6 @@ const Formulario = () => {
                     id="correoSocio"
                     name="correo"
                     placeholder="Correo del Socio..."
-                    
                   />
 
                   <ErrorMessage
