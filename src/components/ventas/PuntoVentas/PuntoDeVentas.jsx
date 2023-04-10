@@ -73,8 +73,8 @@ const PuntoDeVentas = () => {
   const [tempIsv, setTempIsv] = useState(0.0);
   /***temp***/
 
-  const [tipoPago, setTipoPago] = useState(1);
-  const [tipoPedido, setTipoPedido] = useState(2);
+  const [tipoPago, setTipoPago] = useState(14);
+  const [tipoPedido, setTipoPedido] = useState(11);
   const [porcDescuento, setPorcDescuento] = useState([]);
 
   const [totalEnLetras, setTotalEnLetras] = useState("");
@@ -981,6 +981,7 @@ const PuntoDeVentas = () => {
                   setDetallesPago([]);
                   Detalles_Pago();
                   setTipoPedido(valores.id_modo_pedido);
+                  console.log("Modo pedido select: " +valores.id_modo_pedido)
                   setTotalEnLetras(numeroALetras(parseFloat(tempTotal)));
                   setDetallesDesc([]);
                   setNewDetalles([]);

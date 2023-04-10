@@ -361,6 +361,7 @@ const MostrarArticulos = () => {
             title="Editar"
             onClick={() => setGlobalState("registroEdit", row)}
           >
+            
             <i class="bi bi-pencil-square"></i>
           </Link>
           &nbsp;

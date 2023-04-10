@@ -6,6 +6,9 @@ import { Alert, Button, FormGroup, Input, Label } from "reactstrap";
 import md5 from "md5";
 // import { Field } from "formik";
 import { Form, Field } from "react-final-form";
+import { setGlobalState } from "../../../globalStates/globalStates";
+
+import { useLoggedStore } from '../../../globalStates/isLogged';
 
 import "./login.css";
 import {
@@ -29,8 +32,11 @@ const URL_API_ENV = process.env.REACT_APP_URL_API;
 console.log("URL_API_ENV===>", URL_API_ENV);
 //
 export default function Login(props) {
-  const [params, setParams] = useState("");
+    const [params, setParams] = useState("");
   const [permisos] = useState("");
+
+  const {removeIsLogged} = useLoggedStore();
+
 
   var nameCompany = "";
   var phone = "";
@@ -64,7 +70,7 @@ export default function Login(props) {
         console.log(error);
       });
   };
-  getAllSettingsParams();
+  //getAllSettingsParams();
   useEffect(() => {
     console.log("Antes de getall");
     getAllSettingsParams();
@@ -84,6 +90,7 @@ export default function Login(props) {
     }
   };
   getDatos();
+
   useEffect(() => {
     getDatos();
   }, []);
@@ -155,6 +162,10 @@ export default function Login(props) {
         };
         console.log("Ants del fetcj");
         localStorage.setItem("data", JSON.stringify(dataUser));
+        
+        removeIsLogged(true);
+        localStorage.setItem("IsLogged", "true");
+
         traerPermisos(urlAPi, data);
         traerBodSuc(urlAPi, data);
         navigate("/admin/home");

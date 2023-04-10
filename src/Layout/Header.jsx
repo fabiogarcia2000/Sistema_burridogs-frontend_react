@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { setGlobalState } from "./responseClass";
+import { useLoggedStore } from '../globalStates/isLogged'
 
 //import logoEmpresa from "../assets/img/logo1.png";
 import imgPerfil from "../assets/img/profile-img.png";
@@ -9,6 +10,9 @@ import { getOneParam } from "../utils/utils";
 function Header() {
   const DatosEmpresa = JSON.parse(localStorage.getItem("dataEmpresa"));
   const logo =DatosEmpresa.logo1;
+
+  const {removeIsLogged} = useLoggedStore();
+
   //(LineLink 9-24) Asignar valores de manerLink global, al dar click al boton de menu, estos valores seran usados en el Sidebar.jsx, Footer.jsx
   const [isMenuClicked, setIsMenuClicked] = useState(true);
   const userdata = JSON.parse(localStorage.getItem('data'))
@@ -185,6 +189,7 @@ function Header() {
                 <Link
                   className="dropdown-item d-flex align-items-center"
                   to="/login"
+                  onClick={() => localStorage.setItem("IsLogged", "false")}
                 >
                   <i className="bi bi-box-arrow-right"></i>
                   <span>Cerrar Sesión</span>

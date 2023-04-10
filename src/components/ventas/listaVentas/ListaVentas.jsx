@@ -250,6 +250,13 @@ useEffect(() => {
           confirmButtonText: "Ok",
         });
         break;
+        case "datos":
+        Swal.fire({
+          title: "¡No hay datos disponibles!",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
       default:
         break;
@@ -406,8 +413,14 @@ useEffect(() => {
                 className="btn btn-success"
                 title="Exportar a Excel"
                 onClick={()=>{
-                  Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT FACTURAS");
+
+                  if ( results.length > 0 ){
+                    Export_Excel(results);
+                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT FACTURAS");
+                  } else{
+                    mostrarAlertas("datos");
+                  }
+                  
 
                 }}
               >
@@ -418,8 +431,18 @@ useEffect(() => {
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT FACTURAS");
+                  
+                  if ( results.length > 0 ){
+                    Export_PDF(results);
+                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT FACTURAS");
+                  } else{
+                    mostrarAlertas("datos");
+                  }
+
+
+                  
+                  
+                  
 
                 }}
               >

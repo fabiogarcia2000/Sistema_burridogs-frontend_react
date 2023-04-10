@@ -149,6 +149,14 @@ const TienePermisos = () =>{
         });
         break;
 
+        case "datos":
+        Swal.fire({
+          title: "¡No hay datos disponibles!",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
       default:
         break;
     }
@@ -284,9 +292,15 @@ const TienePermisos = () =>{
                 className="btn btn-success"
                 title="Exportar a Excel"
                 onClick={()=>{
-                  Export_Excel(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
+                  if ( results.length > 0 ){
+                    Export_Excel(results);
+                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
 
+                  } else{
+                    mostrarAlertas("datos");
+                  }
+
+                  
                 }}
               >
                 <i className="bi bi-file-earmark-excel-fill"></i>
@@ -296,9 +310,14 @@ const TienePermisos = () =>{
                 className="btn btn-danger"
                 title="Exportar a PDF"
                 onClick={()=>{
-                  Export_PDF(results);
-                  RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
+                  if ( results.length > 0 ){
+                    Export_PDF(results);
+                    RegistroEnVitacora(permisos[0].id_objeto, "EXPORTAR", "EXPORTAR RPT POR PRODUCTO");
 
+                  } else{
+                    mostrarAlertas("datos");
+                  }
+                  
                 }}
               >
                 <i className="bi bi-filetype-pdf"></i>

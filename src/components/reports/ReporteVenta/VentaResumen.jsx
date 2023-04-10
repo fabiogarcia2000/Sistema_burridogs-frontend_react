@@ -113,6 +113,13 @@ const ReporteVentaResumen = () => {
           confirmButtonText: "Ok",
         });
         break;
+        case "datos":
+        Swal.fire({
+          title: "¡No hay datos disponibles!",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
 
       default:
         break;
@@ -245,12 +252,17 @@ const ReporteVentaResumen = () => {
                   className="btn btn-success"
                   title="Exportar a Excel"
                   onClick={() => {
-                    Export_Excel(results);
-                    RegistroEnVitacora(
+                    if ( results.length > 0 ){
+                      Export_Excel(results);
+                      RegistroEnVitacora(
                       permisos[0].id_objeto,
                       "EXPORTAR",
                       "EXPORTAR EXCEL RPT DE RESUMEN DE VENTAS"
                     );
+                    } else{
+                      mostrarAlertas("datos");
+                    }
+                    
                   }}
                 >
                   <i className="bi bi-file-earmark-excel-fill"></i>
@@ -260,12 +272,17 @@ const ReporteVentaResumen = () => {
                   className="btn btn-danger"
                   title="Exportar a PDF"
                   onClick={() => {
-                    Export_PDF(results);
-                    RegistroEnVitacora(
+                    if ( results.length > 0 ){
+                      Export_PDF(results);
+                      RegistroEnVitacora(
                       permisos[0].id_objeto,
                       "EXPORTAR",
                       "EXPORTAR PDF RPT DE RESUMEN DE VENTAS"
                     );
+                    } else{
+                      mostrarAlertas("datos");
+                    }
+                    
                   }}
                 >
                   <i className="bi bi-filetype-pdf"></i>
