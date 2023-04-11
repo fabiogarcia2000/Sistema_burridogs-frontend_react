@@ -155,9 +155,10 @@ const MostrarLibroMayor = () => {
   //procedimineto para obtener todos los registros BALANCE
   const getRegistrosBalance = async () => {
     try {
-      const res = await axios.get(UrlBalance + opcionSelect);
-
-      setRegistrosBalance(res.data); //--
+      if (opcionSelect) {
+        const res = await axios.get(UrlBalance + opcionSelect);
+        setRegistrosBalance(res.data);
+      }
     } catch (error) {
       console.log(error);
       mostrarAlertas("errormostrar");
@@ -411,6 +412,16 @@ const MostrarLibroMayor = () => {
         });
         break;
 
+      case "errorperiodo":
+        Swal.fire({
+          title: "Error",
+          text: "Debe seleccionar un periodo",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+        break;
+
       case "errormostrar":
         Swal.fire({
           title: "Error al Mostrar",
@@ -480,8 +491,12 @@ const MostrarLibroMayor = () => {
   } else {
     results = registros.filter(
       (dato) =>
-        dato.nombre_cuenta.toLowerCase().includes(busqueda.toLocaleLowerCase()) ||
-        dato.nombre_subcuenta.toLowerCase().includes(busqueda.toLocaleLowerCase())
+        dato.nombre_cuenta
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase()) ||
+        dato.nombre_subcuenta
+          .toLowerCase()
+          .includes(busqueda.toLocaleLowerCase())
     );
   }
 
@@ -542,7 +557,6 @@ const MostrarLibroMayor = () => {
       selector: (row) => row.saldo,
       sortable: true,
     },
-
   ];
 
   //Configurar la paginación de la tabla
@@ -570,15 +584,20 @@ const MostrarLibroMayor = () => {
                     className="btn btn-danger"
                     title="Exportar a PDF"
                     onClick={() => {
-                      Export_PDF(
-                        registrosBalance
-                        //registrosActivos,
-                        //registrosPasivos,
-                        //registrosPatrimonio,
-                        //registrosTotal,
-                        //registrosTotalPasivo,
-                        //registrosTotalPatrimonio
-                      );
+                      if (opcionSelect) {
+                        Export_PDF(
+                          registrosBalance
+                          //registrosActivos,
+                          //registrosPasivos,
+                          //registrosPatrimonio,
+                          //registrosTotal,
+                          //registrosTotalPasivo,
+                          //registrosTotalPatrimonio
+                        );
+                      } else {
+                        mostrarAlertas("errorperiodo");
+                      }
+
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
                         "EXPORTAR",
@@ -595,10 +614,14 @@ const MostrarLibroMayor = () => {
                     className="btn btn-danger"
                     title="Exportar a PDF"
                     onClick={() => {
-                      Export_PDF_R(
-                        registrosResultado //,
-                        //registrosTotalIngresoGasto
-                      );
+                      if (opcionSelect) {
+                        Export_PDF_R(
+                          registrosResultado //,
+                          //registrosTotalIngresoGasto
+                        );
+                      } else {
+                        mostrarAlertas("errorperiodo");
+                      }
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
                         "EXPORTAR",
@@ -616,13 +639,17 @@ const MostrarLibroMayor = () => {
                     className="btn btn-danger"
                     title="Exportar a PDF"
                     onClick={() => {
-                      Export_PDF_IngresoGasto(
-                        registrosIngresoGasto
-                        //registrosIngreso,
-                        //registrosGasto,
-                        //registrosTotalIngreso,
-                        //registrosTotalGasto
-                      );
+                      if (opcionSelect) {
+                        Export_PDF_IngresoGasto(
+                          registrosIngresoGasto
+                          //registrosIngreso,
+                          //registrosGasto,
+                          //registrosTotalIngreso,
+                          //registrosTotalGasto
+                        );
+                      } else {
+                        mostrarAlertas("errorperiodo");
+                      }
                       RegistroEnVitacora(
                         permisos[0].id_objeto,
                         "EXPORTAR",
