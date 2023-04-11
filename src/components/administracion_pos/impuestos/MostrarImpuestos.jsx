@@ -16,7 +16,7 @@ const objeto = "FORM_IMPUESTO";
 const MostrarRegistros = () => {
   const UrlServer = Server();
   const UrlMostrar = UrlServer+"impuesto/getall/";
-  const UrlEliminar = "impuesto/eliminar/";
+  const UrlEliminar = UrlServer+"impuesto/eliminar/";
 
 
   const navigate = useNavigate();
@@ -124,6 +124,14 @@ const MostrarRegistros = () => {
 
         break;
 
+        case "utilizado":
+        Swal.fire({
+          title: "No se puede eliminar el impuesto ya que está siendo utilizado.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
       default:
         break;
     }
@@ -139,11 +147,11 @@ const MostrarRegistros = () => {
         mostrarAlertas("eliminado");
         InsertarBitacora(permisos[0].id_objeto, "ELIMINAR", "ELIMINAR IMPUESTO");
       } else {
-        mostrarAlertas("error");
+        mostrarAlertas("utilizado");
       }
     } catch (error) {
       console.log(error);
-      mostrarAlertas("error");
+      mostrarAlertas("utilizado");
     }
   };
 

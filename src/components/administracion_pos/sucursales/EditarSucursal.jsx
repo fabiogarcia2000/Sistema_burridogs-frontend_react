@@ -148,9 +148,9 @@ const EditarSucursal = () => {
           // Validacion teléfono
           if (!valores.telefono) {
             errores.telefono = "Por favor ingresa un teléfono";
-          } else if (!/^^\+504[2389][0-9]{7}$/.test(valores.telefono)) {
+          } else if (!/^^(?=[2389]+[0-9])[0-9]{8}$/.test(valores.telefono)) {
             errores.telefono =
-              "Ingrese un teléfono válido. Ejemplo: +50499999999";
+              "Ingrese un teléfono válido. Ejemplo: 99999999";
           }
 
           // Validacion rtn
@@ -177,6 +177,8 @@ const EditarSucursal = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
+
+          console.log (valores)
           //procedimineto para guardar el nuevo registro
           try {
             const res = await axios.put(

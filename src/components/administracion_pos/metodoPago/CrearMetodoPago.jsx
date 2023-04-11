@@ -10,6 +10,7 @@ import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLCrear = "http://190.53.243.69:3001/metodo_pago/actualizar-insertar/";
 const URLMostrarUno = "http://190.53.243.69:3001/metodo_pago/getone/";
+const URLCuentas = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 const objeto = "FORM_METODO_PAGO";
 
@@ -24,7 +25,23 @@ const Formulario = () => {
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
+  const [cuentas, setCuentas] = useState([]);
+
+//procedimineto para obtener todos los registros
+const getCuentas = async () => {
+  try {
+    const res = await axios.get(URLCuentas);
+    setCuentas(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errorCargar");
+  }
+};
+
+useEffect(() => {
+  getCuentas();
+}, []);
 
   const Permisos = () =>{
     const newData = temp.filter(
@@ -89,6 +106,18 @@ const Formulario = () => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
         });
+
+        break;
+
+      case 'errorCargar': 
+      Swal.fire({
+        title: 'Error',
+        text:  'No se pudo cargar algunos datos',
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+      break;
 
       break;
 
@@ -230,9 +259,9 @@ const Formulario = () => {
                   name="tipo"
                 > 
                   <option value="">Seleccionar...</option>
-                  <option value="E">Efectivo</option>
-                  <option value="T">Tarjeta de crédito</option>
-                  <option value="C">Clientes</option>
+                  <option value="E">EFECTIVO</option>
+                  <option value="T">TARJETA DE CRÉDITO</option>
+                  <option value="C">CLIENTES</option>
                 </Field>
 
                   <ErrorMessage
@@ -256,8 +285,11 @@ const Formulario = () => {
                   name="cuenta_contable"
                 > 
                   <option value="">Seleccionar...</option>
-                  <option value="1">Cuenta 1</option>
-                  <option value="2">Cuenta 2</option>
+                    {cuentas.map((item, i) => (
+                      <option key={i} value={item.id_cuenta}>
+                        {item.id_cuenta}
+                      </option>
+                    ))}
                 </Field>
 
                   <ErrorMessage

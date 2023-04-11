@@ -10,6 +10,7 @@ import { InsertarBitacora } from "../../seguridad/bitacora/InsertarBitacora";
 import { getCurrentDateShort } from "../../../utils/fechaYhora"
 
 const URLEditar = "http://190.53.243.69:3001/metodo_pago/actualizar-insertar/";
+const URLCuentas = "http://190.53.243.69:3001/mc_catalogo/getall/";
 
 const objeto = "FORM_METODO_PAGO";
 
