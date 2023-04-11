@@ -159,6 +159,14 @@ const MostrarArticulos = () => {
 
         break;
 
+        case "utilizado":
+        Swal.fire({
+          title: "No se puede eliminar el artículo ya que está siendo referenciado.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
       default:
         break;
     }
@@ -178,11 +186,11 @@ const MostrarArticulos = () => {
           "ELIMINAR ARTICULO"
         );
       } else {
-        mostrarAlertas("error");
+        mostrarAlertas("utilizado");
       }
     } catch (error) {
       console.log(error);
-      mostrarAlertas("error");
+      mostrarAlertas("utilizado");
     }
   };
 

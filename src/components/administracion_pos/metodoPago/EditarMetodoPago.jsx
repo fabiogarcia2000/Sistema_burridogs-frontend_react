@@ -26,7 +26,25 @@ const Formulario = () => {
   /*****Obtener y corroborar Permisos*****/
   const [temp, setTemp] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  const [permitido, setPermitido] = useState(true)
+  const [permitido, setPermitido] = useState(true);
+  const [cuentas, setCuentas] = useState([]);
+
+
+  //procedimineto para obtener todas las cuentas
+const getCuentas = async () => {
+  try {
+    const res = await axios.get(URLCuentas);
+    setCuentas(res.data);
+  } catch (error) {
+    console.log(error);
+    mostrarAlertas("errorCargar");
+  }
+};
+
+useEffect(() => {
+  getCuentas();
+}, []);
+
 
   const Permisos = () =>{
     const newData = temp.filter(
@@ -157,7 +175,7 @@ const Formulario = () => {
       >
         {({ errors, values }) => (
           <Form >
-            <h3 className="mb-3">Nuevo Método de Pago</h3>
+            <h3 className="mb-3">Editar Método de Pago</h3>
             <div className="row g-3">
               <div className="col-sm-6">
                 <div className="mb-3">
@@ -242,7 +260,11 @@ const Formulario = () => {
                   name="cuenta_contable"
                 > 
                   <option value="">Seleccionar...</option>
-                  <option value="100012425">Efectivo</option>
+                    {cuentas.map((item, i) => (
+                      <option key={i} value={item.id_cuenta}>
+                        {item.nombre_cuenta}
+                      </option>
+                    ))}
                 </Field>
 
                   <ErrorMessage

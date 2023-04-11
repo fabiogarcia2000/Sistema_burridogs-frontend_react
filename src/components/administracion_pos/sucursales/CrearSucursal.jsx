@@ -202,6 +202,7 @@ const CrearSucursal = () => {
           return errores;
         }}
         onSubmit={async (valores) => {
+          console.log (valores)
           //validar si existe un registro con el codigo ingresado
           try {
             const res = await axios.get(`${URLMostrarUno}${valores.cod_sucursal}`);
@@ -306,7 +307,7 @@ const CrearSucursal = () => {
                     Teléfono:
                   </label>
                   <Field
-                    type="text"
+                    type="number"
                     className="form-control"
                     id="telefonoSucursal"
                     name="telefono"

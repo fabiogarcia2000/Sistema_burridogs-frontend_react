@@ -28,7 +28,7 @@ const Formulario = () => {
   const [permitido, setPermitido] = useState(true);
   const [cuentas, setCuentas] = useState([]);
 
-//procedimineto para obtener todos los registros
+//procedimineto para obtener todas las cuentas
 const getCuentas = async () => {
   try {
     const res = await axios.get(URLCuentas);
@@ -287,7 +287,7 @@ useEffect(() => {
                   <option value="">Seleccionar...</option>
                     {cuentas.map((item, i) => (
                       <option key={i} value={item.id_cuenta}>
-                        {item.id_cuenta}
+                        {item.nombre_cuenta}
                       </option>
                     ))}
                 </Field>

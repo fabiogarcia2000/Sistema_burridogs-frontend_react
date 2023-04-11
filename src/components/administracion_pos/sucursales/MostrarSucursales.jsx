@@ -130,6 +130,14 @@ const MostrarSucursales = () => {
 
         break;
 
+        case "utilizado":
+        Swal.fire({
+          title: "No se puede eliminar el impuesto ya que está siendo utilizado.",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok",
+        });
+
       default:
         break;
     }
