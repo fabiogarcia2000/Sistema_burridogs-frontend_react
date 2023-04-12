@@ -432,15 +432,13 @@ const OrdenCompra = () => {
           cantidad: cantidad,
           id_impuesto: articuloClick.id_impuesto,
           id_unidad_medida: articuloClick.id_unidad_medida,
-          monto_impuesto:
-            parseFloat(articuloClick.precio) *
-            parseFloat(cantidad) *
-            parseFloat(articuloClick.porcentaje),
-          monto_total:
-            parseFloat(articuloClick.precio) *
-              cantidad *
-              parseFloat(articuloClick.porcentaje) +
-            parseFloat(articuloClick.precio) * parseFloat(cantidad),
+          monto_impuesto: parseFloat(articuloClick.precio) *
+          parseFloat(cantidad) *
+          parseFloat(articuloClick.porcentaje),
+          monto_total: parseFloat(articuloClick.precio) *
+          cantidad *
+          parseFloat(articuloClick.porcentaje) +
+        parseFloat(articuloClick.precio) * parseFloat(cantidad),
         },
       ]);
 
@@ -634,7 +632,7 @@ const OrdenCompra = () => {
 
   //resetea el valores
   const Refrescar = () => {
-    //window.location.reload();
+    window.location.reload();
   };
 
   //calcular el cambio a entregar
@@ -655,14 +653,14 @@ const OrdenCompra = () => {
   const PrepararData = () => {
     setCompra({
       ...compra,
-      id_socio_negocio: tipoSocio,
-      descripcion: datosSocio.descripcion,
+      id_socio_negocio:parseInt(tipoSocio),
+      descripcion: (datosSocio.descripcion || "Compra de productos"),
       fecha: fechaCorta,
       referencia: referencia,
       fecha_creacion: fechaCorta,
       creado_por: userdata.data.nameUser,
       id_usuario: userdata.data.id,
-      id_centro_costo: idSucursal,
+      id_centro_costo: 11,
       cod_sucursal: codSucursal,
       secuencia_enc: parseInt(enc),
       detalle: porcDescuento.length > 0 ? newDetalles : detalles,
@@ -680,6 +678,8 @@ const OrdenCompra = () => {
 
   useEffect(() => {
     if (compra.detalle.length > 0) {
+      console.log(detalles)
+      console.log(compra)
       InsertCompra(compra);
       setListo(true);
     }

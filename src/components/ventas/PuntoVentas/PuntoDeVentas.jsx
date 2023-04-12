@@ -244,7 +244,7 @@ const PuntoDeVentas = () => {
           rtn: id,
           descripcion: "",
           creado_por: "Fabio",
-          fecha_creacion: "2022/11/30",
+          fecha_creacion: "2023/04/12",
           modificado_por: "",
           fecha_modificacion: "",
         });

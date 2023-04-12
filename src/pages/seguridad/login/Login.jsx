@@ -92,6 +92,7 @@ export default function Login(props) {
   getDatos();
 
   useEffect(() => {
+    localStorage.setItem("IsLogged", "false");
     getDatos();
   }, []);
 

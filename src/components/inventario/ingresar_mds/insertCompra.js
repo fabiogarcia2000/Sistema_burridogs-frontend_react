@@ -9,6 +9,7 @@ export const InsertCompra = async (valores) => {
   console.log(valores);
   try {
     const res = await axios.post(urlCompra, valores);
+    console.log("valores a recibidos");
     console.log("Data Respuesta");
     console.log(res.data);
     setGlobalState("dataCompra", res.data);
